@@ -43,3 +43,12 @@ def test_spike_gate_ignores_audit_flagged_attempts(tmp_path):
                         "meta": {"outside_paths": ["C:/secret"]}}}}))
     passed, _ = spike_gate(tmp_path)
     assert not passed
+
+
+def test_agent_notes_headings_are_nested_under_the_run_section(tmp_path):
+    rd = build_run("absdiff", None, root=tmp_path)
+    (rd / "agent_1.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")
+    (rd / "agent_1_notes.md").write_text("# Notes\n## What I changed\nx\n## Heuristics\n- y\n")
+    evaluate_run(rd)
+    md = build_report(tmp_path)
+    assert "\n#### Heuristics" in md and "\n## Heuristics" not in md and "\n### Notes" in md

@@ -90,7 +90,10 @@ def build_report(root: Path = RUNS) -> str:
             dump_src = (rd / "dump.py").read_text(encoding="utf-8")
             best_src = (rd / f"{best}.py").read_text(encoding="utf-8", errors="replace")
             notes_path = rd / f"{best}_notes.md"
-            notes = notes_path.read_text(encoding="utf-8").strip() if notes_path.exists() else "(no notes)"
+            notes = notes_path.read_text(encoding="utf-8", errors="replace").strip() if notes_path.exists() \
+                else "(no notes)"
+            # nest the agent's own headings under this run's section
+            notes = re.sub(r"^(#{1,4}) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", notes, flags=re.M)
             sections.append(f"## {res['run']}: dump vs {best}\n\n```python\n{with_real_names(dump_src, spec)}```\n\n"
                             f"```python\n{with_real_names(best_src, spec)}```\n\n<details><summary>notes"
                             f"</summary>\n\n{notes}\n\n</details>\n")
