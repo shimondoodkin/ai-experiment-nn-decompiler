@@ -113,3 +113,14 @@ def test_audit_ignores_bare_tilde_and_slash_in_prose(tmp_path):
     tr.write_text(json.dumps({"message": {"content": [{"type": "tool_use", "name": "Bash",
                                                         "input": {"command": cmd}}]}}))
     assert audit_transcripts([tr], b)["outside_paths"] == []
+
+
+def test_audit_strips_trailing_punctuation_and_ignores_division(tmp_path):
+    b = tmp_path / "blind" / "m4"
+    b.mkdir(parents=True)
+    cmds = [f'echo "Files are in {b}:"', "python -c \"print(sum(x)/50)\"", "python -c \"print((a + b) /50)\"",
+            "cat /tmp/t.py"]
+    tr = tmp_path / "t.jsonl"
+    tr.write_text("\n".join(json.dumps({"message": {"content": [{"type": "tool_use", "name": "Bash",
+                                                                   "input": {"command": c}}]}}) for c in cmds))
+    assert audit_transcripts([tr], b)["outside_paths"] == ["/tmp/t.py"]

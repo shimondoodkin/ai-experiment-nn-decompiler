@@ -35,7 +35,9 @@ HOMES = ("${HOME}", "$HOME", "~")
 def _looks_like_path(tok: str) -> bool:
     if tok in HARMLESS:
         return False
-    return bool(re.match(r"^[A-Za-z]:[\\/]", tok) or tok.startswith(("/",) + HOMES) or ".." in tok)
+    # "/name..." is a POSIX path; "/50" is division
+    return bool(re.match(r"^[A-Za-z]:[\\/]", tok) or re.match(r"^/[A-Za-z_.]", tok) or tok.startswith(HOMES)
+                or ".." in tok)
 
 
 def _is_outside(tok: str, blind: Path) -> bool:
@@ -118,6 +120,7 @@ def audit_transcripts(paths: list[Path], blind: Path) -> dict:
             for key, s in _strings(block.get("input", {})):
                 toks = [s] if key in PATH_KEYS else re.split(r"[\s\"'`;|&<>()=,]+", s)
                 for tok in toks:
+                    tok = tok.rstrip(":.,;!?") if key not in PATH_KEYS else tok   # prose punctuation
                     if tok and _looks_like_path(tok) and _is_outside(tok, blind) and tok not in outside:
                         outside.append(tok)
     res["outside_paths"] = outside
