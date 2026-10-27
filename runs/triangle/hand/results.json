@@ -76,6 +76,36 @@
           "output": 1209
         }
       }
+    },
+    "ast": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 213958,
+        "max_abs_err": 1.1920928955078125e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.02,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.0,
+        "out_of_range": 0.0,
+        "metric": "max_abs_err",
+        "recovered": true,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 16,
+        "constants": 3,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
     }
   }
 }

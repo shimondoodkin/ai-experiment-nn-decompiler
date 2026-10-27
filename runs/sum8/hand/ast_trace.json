@@ -1,0 +1,107 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1, x2, x3, x4, x5, x6, x7):\n    return max(0, 0.02 * sum(x0, x1, x2, x3, x4, x5, x6, x7) - 20)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 205181,
+        "max_abs_err": 4.577636715907829e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.41599998474121097,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 30
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1, x2, x3, x4, x5, x6, x7):\n    return max(0, 0.02 * sum(x0, x1, x2, x3, x4, x5, x6, x7) - 20)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 205181,
+        "max_abs_err": 4.577636715907829e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.41599998474121097,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 30
+    },
+    {
+      "route": "spline",
+      "src": "def net(x0, x1, x2, x3, x4, x5, x6, x7):\n    return max(0, 0.02 * sum(x0, x1, x2, x3, x4, x5, x6, x7) - 20)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 205181,
+        "max_abs_err": 4.577636715907829e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.41599998474121097,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 30
+    },
+    {
+      "route": "spline",
+      "src": "def net(x0, x1, x2, x3, x4, x5, x6, x7):\n    return max(0, 0.02 * sum(x0, x1, x2, x3, x4, x5, x6, x7) - 20)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 205181,
+        "max_abs_err": 4.577636715907829e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.41599998474121097,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 30
+    }
+  ],
+  "winner": "structural-exact",
+  "trace_lines": [
+    "fit: not applicable"
+  ]
+}

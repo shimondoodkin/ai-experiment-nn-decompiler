@@ -147,12 +147,12 @@
         "exact_pass": true,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 281450,
+        "n_inputs": 281490,
         "max_abs_err": null,
         "disagreements_outside": 0,
         "disagreements_inside": 1477,
         "zone_fraction": 0.164305,
-        "margin": 12.164065856933593,
+        "margin": 12.163912048339842,
         "counterexamples": [
           {
             "inputs": {
@@ -358,12 +358,12 @@
         "exact_pass": false,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 281450,
+        "n_inputs": 281490,
         "max_abs_err": null,
         "disagreements_outside": 0,
         "disagreements_inside": 4455,
         "zone_fraction": 0.164305,
-        "margin": 12.164065856933593,
+        "margin": 12.163912048339842,
         "counterexamples": [
           {
             "inputs": {
@@ -576,6 +576,217 @@
           "output": 2915
         }
       }
+    },
+    "ast": {
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 281490,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 4455,
+        "zone_fraction": 0.164305,
+        "margin": 12.163912048339842,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 1.62,
+              "x1": 1.8200000000000003
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.62,
+              "x1": 1.8200000000000003
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.6,
+              "x1": 1.8000000000000003
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.6,
+              "x1": 1.8000000000000003
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.58,
+              "x1": 1.7800000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.58,
+              "x1": 1.7800000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.56,
+              "x1": 1.7600000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.56,
+              "x1": 1.7600000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.54,
+              "x1": 1.7400000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.54,
+              "x1": 1.7400000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.52,
+              "x1": 1.7200000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.52,
+              "x1": 1.7200000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.5,
+              "x1": 1.7000000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.5,
+              "x1": 1.7000000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.48,
+              "x1": 1.6800000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.48,
+              "x1": 1.6800000000000002
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.716081077342238,
+              "x1": 1.916450242096242
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.716081077342238,
+              "x1": 1.916450242096242
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -2.0,
+              "x1": -1.8
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -2.0,
+              "x1": -1.8
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.0,
+        "out_of_range": 1.0,
+        "metric": "accuracy",
+        "recovered": true,
+        "error": null
+      },
+      "size": {
+        "lines": 2,
+        "nodes": 18,
+        "constants": 1,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
     }
   }
 }

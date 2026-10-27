@@ -40,21 +40,79 @@ a Claude Code refactoring of it.
 Runs where a refactored program is closer to the *true task* than the network it was decompiled from (better inside or outside the training range, and not worse on either). The refactorer never saw the target; this is the "snapping recovers the intended algorithm" effect.
 
 - **absdiff/seed0** agent_1: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
+- **absdiff/seed0** ast: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
 - **absdiff/seed1** agent_1: max error inside 0.02051 → 0, outside 0.02055 → 0; recovered the true algorithm
+- **absdiff/seed1** ast: max error inside 0.02051 → 0, outside 0.02055 → 0; recovered the true algorithm
 - **absdiff/seed2** agent_1: max error inside 0.01635 → 0, outside 0.4826 → 0; recovered the true algorithm
+- **absdiff/seed2** ast: max error inside 0.01635 → 0, outside 0.4826 → 0; recovered the true algorithm
 - **absdiff_perturbed/hand** agent_1: max error inside 0.08 → 0, outside 0.1687 → 0; recovered the true algorithm
+- **absdiff_perturbed/hand** ast: max error inside 0.08 → 0, outside 0.1687 → 0; recovered the true algorithm
 - **deadredundant/hand** agent_1: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
+- **deadredundant/hand** ast: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
 - **median3/seed0** agent_1: max error inside 0.06967 → 1.776e-15, outside 0.4807 → 3.553e-15; recovered the true algorithm
+- **median3/seed0** ast: max error inside 0.06967 → 0, outside 0.4807 → 0; recovered the true algorithm
 - **median3/seed1** agent_1: max error inside 0.08775 → 0, outside 0.6561 → 0; recovered the true algorithm
+- **median3/seed1** ast: max error inside 0.08775 → 0, outside 0.6561 → 0; recovered the true algorithm
 - **median3/seed2** agent_1: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
+- **median3/seed2** ast: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
 - **neareq/seed0** agent_1: accuracy inside 0.9986 → 1, outside 0.9992 → 1; recovered the true algorithm (audit-flagged run)
+- **neareq/seed0** ast: accuracy inside 0.9986 → 1, outside 0.9992 → 1; recovered the true algorithm
 - **neareq/seed1** agent_1: accuracy inside 0.9995 → 1, outside 0.9997 → 1; recovered the true algorithm (audit-flagged run)
+- **neareq/seed1** ast: accuracy inside 0.9995 → 1, outside 0.9997 → 1; recovered the true algorithm
 - **neareq/seed2** agent_1: accuracy inside 0.9978 → 1, outside 0.9978 → 1; recovered the true algorithm
+- **neareq/seed2** ast: accuracy inside 0.9978 → 1, outside 0.9978 → 1; recovered the true algorithm
 - **sparse8/hand** agent_1: max error inside 0.002773 → 0, outside 0.004227 → 0; recovered the true algorithm
+- **sparse8/hand** ast: max error inside 0.002773 → 0, outside 0.004227 → 0; recovered the true algorithm
 - **tax/seed2** agent_1: max error inside 0.2969 → 0, outside 17.58 → 0; recovered the true algorithm
 - **window/seed0** agent_1: accuracy inside 0.999 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed0** ast: accuracy inside 0.999 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed1** agent_1: accuracy inside 0.9975 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed1** ast: accuracy inside 0.9975 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** agent_1: accuracy inside 0.9998 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed2** ast: accuracy inside 0.9998 → 1, outside 1 → 1; recovered the true algorithm
+
+## Reproduction (step 3)
+
+Tool frozen at 1076f21 before the held-out run.
+
+Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactoring? Reproduces = passes the check, same recovered status as Claude, and at most max(1.5x, +5) of Claude's nodes. Held-out runs (seed 2) were never studied while building the tool; in-sample runs were.
+
+- **held-out (headline)**: 5 of 6 reproduced; tool recovered the true formula in 4, Claude in 5
+- **in-sample**: 21 of 21 reproduced; tool recovered the true formula in 19, Claude in 19
+- **winning routes**: boundary 3, boundary-scan 3, fit 4, spline 3, structural-exact 8, structural-snap 4, truth-table 4
+- **only Claude recovered the formula**: tax/seed2
+
+| run | split | tool check | tool recovered | tool nodes | Claude check | Claude recovered | Claude nodes | reproduces | route |
+|---|---|---|---|---|---|---|---|---|---|
+| absdiff/hand | distill | PASS exact | yes | 10 | PASS exact | yes | 10 | yes | structural-exact |
+| absdiff/seed0 | distill | PASS snap | yes | 10 | PASS snap | yes | 10 | yes | structural-snap |
+| absdiff/seed1 | distill | PASS snap | yes | 10 | PASS snap | yes | 10 | yes | structural-snap |
+| absdiff/seed2 | heldout | PASS snap | yes | 10 | PASS snap | yes | 10 | yes | fit |
+| absdiff_perturbed/hand | distill | PASS snap | yes | 10 | PASS snap | yes | 10 | yes | structural-snap |
+| deadredundant/hand | distill | PASS exact | yes | 15 | PASS exact | yes | 12 | yes | structural-exact |
+| max/hand | distill | PASS exact | yes | 8 | PASS exact | yes | 8 | yes | structural-exact |
+| median3/seed0 | distill | PASS snap | yes | 23 | PASS snap | yes | 33 | yes | fit |
+| median3/seed1 | distill | PASS snap | yes | 23 | PASS snap | yes | 23 | yes | fit |
+| median3/seed2 | heldout | PASS snap | yes | 23 | PASS snap | yes | 23 | yes | fit |
+| neareq/hand | distill | PASS exact | yes | 13 | PASS exact | yes | 18 | yes | structural-exact |
+| neareq/seed0 | distill | PASS snap | yes | 18 |  |  |  | no valid Claude attempt | boundary-scan |
+| neareq/seed1 | distill | PASS snap | yes | 18 |  |  |  | no valid Claude attempt | boundary-scan |
+| neareq/seed2 | heldout | PASS snap | yes | 18 | PASS snap | yes | 13 | yes | boundary-scan |
+| ramp/hand | distill | PASS exact | yes | 11 | PASS exact | yes | 11 | yes | structural-exact |
+| sparse8/hand | distill | PASS snap | yes | 11 | PASS snap | yes | 10 | yes | structural-snap |
+| sum8/hand | distill | PASS exact | yes | 30 | PASS exact | yes | 34 | yes | structural-exact |
+| tax/seed0 | distill | PASS snap | no | 25 | PASS snap | no | 38 | yes | spline |
+| tax/seed1 | distill | PASS snap | no | 20 | PASS snap | no | 30 | yes | spline |
+| tax/seed2 | heldout | PASS snap | no | 25 | PASS snap | yes | 55 | no | spline |
+| triangle/hand | distill | PASS exact | yes | 16 | PASS exact | yes | 15 | yes | structural-exact |
+| window/hand | distill | PASS exact | yes | 9 | PASS exact | yes | 9 | yes | structural-exact |
+| window/seed0 | distill | PASS snap | yes | 9 | PASS snap | yes | 9 | yes | boundary |
+| window/seed1 | distill | PASS snap | yes | 9 | PASS snap | yes | 9 | yes | boundary |
+| window/seed2 | heldout | PASS snap | yes | 9 | PASS snap | yes | 9 | yes | boundary |
+| xor/hand | distill | PASS exact | yes | 7 | PASS exact | yes | 13 | yes | truth-table |
+| xor/seed0 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
+| xor/seed1 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
+| xor/seed2 | heldout | PASS exact | no | 5 | PASS exact | no | 9 | yes | truth-table |
 
 ## Results
 
@@ -62,62 +120,91 @@ Runs where a refactored program is closer to the *true task* than the network it
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | absdiff/hand | hand | dump | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 51 (100%) |  |  |
 | absdiff/hand | hand | agent_1 | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 10 (20%) | ok | 59s 317341+850 tok |
+| absdiff/hand | hand | ast | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 10 (20%) |  |  |
 | absdiff/seed0 | R² 1.0000 | dump | PASS exact | empirical | 1.23e-06 |  | 0.0295 / 0.0622 | no | 232 (100%) |  |  |
 | absdiff/seed0 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 10 (4%) | ok | 52s 322686+1992 tok |
+| absdiff/seed0 | R² 1.0000 | ast | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed1 | R² 1.0000 | dump | PASS exact | empirical | 1.05e-06 |  | 0.0205 / 0.0205 | no | 234 (100%) |  |  |
 | absdiff/seed1 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0205 |  | 0 / 0 | yes | 10 (4%) | ok | 74s 321952+1795 tok |
+| absdiff/seed1 | R² 1.0000 | ast | PASS snap | empirical | 0.0205 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed2 | R² 1.0000 | dump | PASS exact | empirical | 1.06e-06 |  | 0.0164 / 0.483 | no | 232 (100%) |  |  |
 | absdiff/seed2 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0168 |  | 0 / 0 | yes | 10 (4%) | ok | 82s 322020+1801 tok |
+| absdiff/seed2 | R² 1.0000 | ast | PASS snap | empirical | 0.0168 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff_perturbed/hand | hand | dump | PASS exact | empirical | 1.06e-06 |  | 0.08 / 0.169 | no | 60 (100%) |  |  |
 | absdiff_perturbed/hand | hand | agent_1 | PASS snap | empirical | 0.0801 |  | 0 / 0 | yes | 10 (17%) | ok | 69s 320725+1418 tok |
+| absdiff_perturbed/hand | hand | ast | PASS snap | empirical | 0.0801 |  | 0 / 0 | yes | 10 (17%) |  |  |
 | deadredundant/hand | hand | dump | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 0.995 | no | 104 (100%) |  |  |
 | deadredundant/hand | hand | agent_1 | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 12 (12%) | ok | 60s 318134+1234 tok |
+| deadredundant/hand | hand | ast | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 15 (14%) |  |  |
 | max/hand | hand | dump | PASS exact | empirical | 3.58e-07 |  | 4.44e-16 / 8.88e-16 | yes | 62 (100%) |  |  |
 | max/hand | hand | agent_1 | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) | ok | 62s 317573+955 tok |
+| max/hand | hand | ast | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) |  |  |
 | median3/seed0 | R² 1.0000 | dump | PASS exact | empirical | 9.22e-07 |  | 0.0697 / 0.481 | no | 2510 (100%) |  |  |
 | median3/seed0 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0922 |  | 1.78e-15 / 3.55e-15 | yes | 33 (1%) | ok | 107s 507496+2865 tok |
+| median3/seed0 | R² 1.0000 | ast | PASS snap | empirical | 0.0922 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed1 | R² 0.9998 | dump | PASS exact | empirical | 1.26e-06 |  | 0.0877 / 0.656 | no | 2500 (100%) |  |  |
 | median3/seed1 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.109 |  | 0 / 0 | yes | 23 (1%) | ok | 102s 577806+2814 tok |
+| median3/seed1 | R² 0.9998 | ast | PASS snap | empirical | 0.109 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed2 | R² 1.0000 | dump | PASS exact | empirical | 1.42e-06 |  | 0.0491 / 0.226 | no | 2498 (100%) |  |  |
 | median3/seed2 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 23 (1%) | ok | 118s 665368+2943 tok |
+| median3/seed2 | R² 1.0000 | ast | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | neareq/hand | hand | dump | PASS exact | empirical |  | 0 / 1250 (13.66%) | 1 / 1 | yes | 56 (100%) |  |  |
 | neareq/hand | hand | agent_1 | PASS exact | empirical |  | 0 / 1250 (13.66%) | 1 / 1 | yes | 18 (32%) | ok | 79s 320343+1220 tok |
+| neareq/hand | hand | ast | PASS exact | empirical |  | 0 / 1250 (13.66%) | 1 / 1 | yes | 13 (23%) |  |  |
 | neareq/seed0 | acc 0.9961 | dump | PASS exact | empirical |  | 0 / 1451 (14.65%) | 0.999 / 0.999 | no | 242 (100%) |  |  |
 | neareq/seed0 | acc 0.9961 | agent_1 | PASS snap | empirical |  | 0 / 5412 (14.65%) | 1 / 1 | yes | 23 (10%) | OUTSIDE PATHS (2) | 117s 677515+3717 tok |
+| neareq/seed0 | acc 0.9961 | ast | PASS snap | empirical |  | 0 / 5412 (14.65%) | 1 / 1 | yes | 18 (7%) |  |  |
 | neareq/seed1 | acc 0.9984 | dump | PASS exact | empirical |  | 0 / 1477 (16.43%) | 0.999 / 1 | no | 236 (100%) |  |  |
 | neareq/seed1 | acc 0.9984 | agent_1 | PASS snap | empirical |  | 0 / 4455 (16.43%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (1) | 129s 391200+2915 tok |
+| neareq/seed1 | acc 0.9984 | ast | PASS snap | empirical |  | 0 / 4455 (16.43%) | 1 / 1 | yes | 18 (8%) |  |  |
 | neareq/seed2 | acc 0.9930 | dump | PASS exact | empirical |  | 0 / 1507 (16.62%) | 0.998 / 0.998 | no | 232 (100%) |  |  |
 | neareq/seed2 | acc 0.9930 | agent_1 | PASS snap | empirical |  | 0 / 5420 (16.62%) | 1 / 1 | yes | 13 (6%) | ok | 169s 602596+4882 tok |
+| neareq/seed2 | acc 0.9930 | ast | PASS snap | empirical |  | 0 / 5420 (16.62%) | 1 / 1 | yes | 18 (8%) |  |  |
 | ramp/hand | hand | dump | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 38 (100%) |  |  |
 | ramp/hand | hand | agent_1 | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 11 (29%) | ok | 88s 317310+1002 tok |
+| ramp/hand | hand | ast | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 11 (29%) |  |  |
 | sparse8/hand | hand | dump | PASS exact | empirical | 1.5e-07 |  | 0.00277 / 0.00423 | no | 66 (100%) |  |  |
 | sparse8/hand | hand | agent_1 | PASS snap | empirical | 0.003 |  | 0 / 0 | yes | 10 (15%) | ok | 86s 321490+1409 tok |
+| sparse8/hand | hand | ast | PASS snap | empirical | 0.003 |  | 0 / 0 | yes | 11 (17%) |  |  |
 | sum8/hand | hand | dump | PASS exact | empirical | 4.58e-06 |  | 1.07e-14 /  | yes | 69 (100%) |  |  |
 | sum8/hand | hand | agent_1 | PASS exact | empirical | 4.58e-06 |  | 3.55e-15 /  | yes | 34 (49%) | ok | 119s 386957+1489 tok |
+| sum8/hand | hand | ast | PASS exact | empirical | 4.58e-06 |  | 0 /  | yes | 30 (43%) |  |  |
 | tax/seed0 | R² 1.0000 | dump | PASS exact | empirical | 1.04e-05 |  | 0.22 / 16.1 | no | 180 (100%) |  |  |
 | tax/seed0 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0835 |  | 0.3 / 10 | no | 38 (21%) | ok | 131s 540641+3097 tok |
+| tax/seed0 | R² 1.0000 | ast | PASS snap | empirical | 0.377 |  | 0.5 / 2.5 | no | 25 (14%) |  |  |
 | tax/seed1 | R² 0.9999 | dump | PASS exact | empirical | 1.21e-05 |  | 0.963 / 21.2 | no | 178 (100%) |  |  |
 | tax/seed1 | R² 0.9999 | agent_1 | PASS snap | empirical | 0.194 |  | 0.95 / 22 | no | 30 (17%) | ok | 157s 478964+6312 tok |
+| tax/seed1 | R² 0.9999 | ast | PASS snap | empirical | 0.512 |  | 1 / 9 | no | 20 (11%) |  |  |
 | tax/seed2 | R² 0.9999 | dump | PASS exact | empirical | 1.39e-05 |  | 0.297 / 17.6 | no | 176 (100%) |  |  |
 | tax/seed2 | R² 0.9999 | agent_1 | PASS snap | empirical | 0.297 |  | 0 / 0 | yes | 55 (31%) | ok | 134s 472762+3154 tok |
+| tax/seed2 | R² 0.9999 | ast | PASS snap | empirical | 0.24 |  | 0.4 / 2 | no | 25 (14%) |  |  |
 | triangle/hand | hand | dump | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 62 (100%) |  |  |
 | triangle/hand | hand | agent_1 | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 15 (24%) | ok | 30s 319342+1209 tok |
+| triangle/hand | hand | ast | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 16 (26%) |  |  |
 | window/hand | hand | dump | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 42 (100%) |  |  |
 | window/hand | hand | agent_1 | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 9 (21%) | ok | 33s 320198+1317 tok |
+| window/hand | hand | ast | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 9 (21%) |  |  |
 | window/seed0 | acc 0.9989 | dump | PASS exact | empirical |  | 0 / 1401 (7.70%) | 0.999 / 1 | no | 94 (100%) |  |  |
 | window/seed0 | acc 0.9989 | agent_1 | PASS snap | empirical |  | 0 / 4965 (7.70%) | 1 / 1 | yes | 9 (10%) | ok | 56s 387427+2119 tok |
+| window/seed0 | acc 0.9989 | ast | PASS snap | empirical |  | 0 / 4965 (7.70%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed1 | acc 0.9971 | dump | PASS exact | empirical |  | 0 / 985 (6.91%) | 0.997 / 1 | no | 92 (100%) |  |  |
 | window/seed1 | acc 0.9971 | agent_1 | PASS snap | empirical |  | 0 / 5217 (6.91%) | 1 / 1 | yes | 9 (10%) | ok | 48s 400064+2424 tok |
+| window/seed1 | acc 0.9971 | ast | PASS snap | empirical |  | 0 / 5217 (6.91%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.9999 | dump | PASS exact | empirical |  | 0 / 953 (7.14%) | 1 / 1 | no | 92 (100%) |  |  |
 | window/seed2 | acc 0.9999 | agent_1 | PASS snap | empirical |  | 0 / 4793 (7.14%) | 1 / 1 | yes | 9 (10%) | ok | 36s 321576+1867 tok |
+| window/seed2 | acc 0.9999 | ast | PASS snap | empirical |  | 0 / 4793 (7.14%) | 1 / 1 | yes | 9 (10%) |  |  |
 | xor/hand | hand | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 55 (100%) |  |  |
 | xor/hand | hand | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 13 (24%) | ok | 29s 319609+1301 tok |
+| xor/hand | hand | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (13%) |  |  |
 | xor/seed0 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 122 (100%) |  |  |
 | xor/seed0 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 63s 399437+2086 tok |
+| xor/seed0 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed1 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 39s 386111+1815 tok |
+| xor/seed1 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 0.5000 (NOT learned) | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 120 (100%) |  |  |
 | xor/seed2 | acc 0.5000 (NOT learned) | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 9 (8%) | ok | 57s 463027+2345 tok |
+| xor/seed2 | acc 0.5000 (NOT learned) | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 5 (4%) |  |  |
 
 ## absdiff/hand: dump vs agent_1
 
@@ -132,6 +219,14 @@ def net(a, b):
 ```
 
 ```python
+def net(a, b):
+    return abs(a - b)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
 def net(a, b):
     return abs(a - b)
 ```
@@ -175,6 +270,14 @@ def net(a, b):
 ```
 
 ```python
+def net(a, b):
+    return abs(a - b)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-snap)
 def net(a, b):
     return abs(a - b)
 ```
@@ -223,6 +326,14 @@ def net(a, b):
 ```
 
 ```python
+def net(a, b):
+    return abs(a - b)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-snap)
 def net(a, b):
     return abs(a - b)
 ```
@@ -285,6 +396,14 @@ def net(a, b):
     return abs(a - b)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: fit)
+def net(a, b):
+    return abs(a - b)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -324,6 +443,14 @@ def net(a, b):
 ```python
 def net(a, b):
     # relu(d) + relu(-d) == |d|, with d = a - b
+    return abs(a - b)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-snap)
+def net(a, b):
     return abs(a - b)
 ```
 
@@ -381,6 +508,14 @@ def net(a, b):
     return a + max(a, b)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(a, b):
+    return max(2 * a, a + b)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -417,6 +552,14 @@ def net(a, b):
 ```
 
 ```python
+def net(a, b):
+    return max(a, b)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
 def net(a, b):
     return max(a, b)
 ```
@@ -485,6 +628,14 @@ def net(a, b, c):
 def net(a, b, c):
     # median of three = sum minus the largest and the smallest
     return a + b + c - max(a, b, c) - min(a, b, c)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: fit)
+def net(a, b, c):
+    return max(min(a, b), min(max(a, b), c))
 ```
 
 <details><summary>notes</summary>
@@ -579,6 +730,14 @@ def net(a, b, c):
     return max(min(a, b), min(max(a, b), c))
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: fit)
+def net(a, b, c):
+    return max(min(a, b), min(max(a, b), c))
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -670,6 +829,14 @@ def net(a, b, c):
     return max(min(a, b), min(max(a, b), c))
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: fit)
+def net(a, b, c):
+    return max(min(a, b), min(max(a, b), c))
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -732,6 +899,14 @@ def net(a, b):
     return tolerance - abs(a - b)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(a, b):
+    return 0.2 - abs(a - b)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -782,6 +957,15 @@ def net(a, b):
     tolerance = 0.2
     diff = b - a
     return abs(diff) <= tolerance
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(a, b):
+    d0 = a - b
+    return abs(d0) < 0.2
 ```
 
 <details><summary>notes</summary>
@@ -849,6 +1033,15 @@ def net(a, b):
     return 0.2 - abs(diff)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(a, b):
+    d0 = a - b
+    return abs(d0) < 0.2
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -904,6 +1097,15 @@ def net(a, b):
 def net(a, b):
     # class 1 iff the two inputs are close: |a - b| < 0.2
     return 0.2 - abs(a - b)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(a, b):
+    d0 = a - b
+    return abs(d0) < 0.2
 ```
 
 <details><summary>notes</summary>
@@ -975,6 +1177,14 @@ def net(x):
     return min(max(x, 0), 1)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(x):
+    return min(max(x, 0), 1)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1012,6 +1222,14 @@ def net(u0, u1, u2, u3, u4, u5, u6, u7):
 def net(u0, u1, u2, u3, u4, u5, u6, u7):
     # positive part of the difference u2 - u5; other inputs are unused
     return relu(u2 - u5)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-snap)
+def net(u0, u1, u2, u3, u4, u5, u6, u7):
+    return max(0, u2 - u5)
 ```
 
 <details><summary>notes</summary>
@@ -1057,6 +1275,14 @@ def net(v0, v1, v2, v3, v4, v5, v6, v7):
     total = sum(v0, v1, v2, v3, v4, v5, v6, v7)
     # amount by which the 8-input total exceeds 1000, in units of 50
     return relu(total - 1000) / 50
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(v0, v1, v2, v3, v4, v5, v6, v7):
+    return max(0, 0.02 * sum(v0, v1, v2, v3, v4, v5, v6, v7) - 20)
 ```
 
 <details><summary>notes</summary>
@@ -1113,6 +1339,14 @@ def net(income):
     return 0.125 * relu(income - 3) + 0.075 * relu(income - 21.5) + 0.2 * relu(income - 80)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: spline)
+def net(income):
+    return max(0.125 * income, 0.2 * income - 1.65, 0.4 * income - 17.65)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1166,6 +1400,14 @@ def net(income):
 def net(income):
     # convex piecewise-linear curve: flat-ish start, slope ~0.185 from income=2, slope 0.4 from income~78
     return max(-0.5 - income / 8, 0.185 * income - 1.12, 0.4 * income - 18)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: spline)
+def net(income):
+    return max(0.18 * income - 1, 0.4 * income - 18.16)
 ```
 
 <details><summary>notes</summary>
@@ -1235,6 +1477,14 @@ def net(income):
     return 0.1 * tier1 + 0.2 * tier2 + 0.4 * tier3
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: spline)
+def net(income):
+    return max(0.12 * income, 0.2 * income - 1.68, 0.4 * income - 17.68)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1296,6 +1546,14 @@ def net(x):
     return relu(1 - abs(x - 3))
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(x):
+    return max(0, 1 - abs(x - 3))
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1337,6 +1595,14 @@ def net(x):
     return 0.5 - abs(x)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(x):
+    return 0.5 - abs(x)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1374,6 +1640,14 @@ def net(x):
 def net(x):
     # class 1 inside the band |x| < 1/2
     return 0.5 - abs(x)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: boundary)
+def net(x):
+    return abs(x) < 0.5
 ```
 
 <details><summary>notes</summary>
@@ -1431,6 +1705,14 @@ def net(x):
 def net(x):
     # class 1 iff x lies inside the band (-1/2, 1/2)
     return 0.5 - abs(x)
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: boundary)
+def net(x):
+    return abs(x) < 0.5
 ```
 
 <details><summary>notes</summary>
@@ -1493,6 +1775,14 @@ def net(x):
     return 0.5 - abs(x)
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: boundary)
+def net(x):
+    return abs(x) < 0.5
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1543,6 +1833,14 @@ def net(p, q):
     return abs(p - q) - 0.5
 ```
 
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p != q
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1588,6 +1886,14 @@ def net(p, q):
 ```python
 def net(p, q):
     # The network computes XOR of its two boolean inputs.
+    return p != q
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
     return p != q
 ```
 
@@ -1648,6 +1954,14 @@ def net(p, q):
 ```python
 def net(p, q):
     # XOR of the two boolean inputs: class 1 iff exactly one input is set
+    return p != q
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
     return p != q
 ```
 
@@ -1712,6 +2026,14 @@ def net(p, q):
 def net(p, q):
     # class 1 exactly when p is false (q is ignored): NOT p
     return 1 - 2 * p
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return not p
 ```
 
 <details><summary>notes</summary>

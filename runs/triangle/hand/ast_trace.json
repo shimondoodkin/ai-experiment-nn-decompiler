@@ -1,0 +1,59 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0):\n    return max(0, 1 - abs(x0 - 3))\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 213958,
+        "max_abs_err": 1.1920928955078125e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.02,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 16
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0):\n    return max(0, 1 - abs(x0 - 3))\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 213958,
+        "max_abs_err": 1.1920928955078125e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.02,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 16
+    }
+  ],
+  "winner": "structural-exact",
+  "trace_lines": [
+    "spline: not applicable",
+    "spline: not applicable",
+    "fit: not applicable"
+  ]
+}

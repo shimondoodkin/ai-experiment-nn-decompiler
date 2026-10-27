@@ -1,0 +1,79 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return max(x0, x1)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 255230,
+        "max_abs_err": 3.576106974989557e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.12000000476837158,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 8
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return max(x0, x1)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 255230,
+        "max_abs_err": 3.576106974989557e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.12000000476837158,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 8
+    },
+    {
+      "route": "fit",
+      "src": "def net(x0, x1):\n    return max(x0, x1)\n",
+      "passes": [
+        "P8"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 255230,
+        "max_abs_err": 3.576106974989557e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.12000000476837158,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 8
+    }
+  ],
+  "winner": "structural-exact",
+  "trace_lines": [
+    "spline: not applicable",
+    "spline: not applicable"
+  ]
+}

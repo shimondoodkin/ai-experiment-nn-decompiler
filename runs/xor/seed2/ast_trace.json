@@ -1,0 +1,86 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return -4.876498357248e-07 * x0 + 7.155081239331199e-08 * x1 + 5.554921406888003e-08\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 2.1068396165446758e-08,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 18
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return -4.876498357248e-07 * x0 + 7.155081239331199e-08 * x1 + 5.59200648118112e-08\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 2.1068396165446758e-08,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 18
+    },
+    {
+      "route": "truth-table",
+      "src": "def net(x0, x1):\n    return not x0\n",
+      "passes": [
+        "P7"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 2.1068396165446758e-08,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 5
+    }
+  ],
+  "winner": "truth-table",
+  "trace_lines": [
+    "h1_0: always on (pre-activation in [0.16142558, 0.285690292]) -> linear",
+    "h1_1: dead (pre-activation in [-0.6621506939999999, -0.43212420999999995]) -> removed",
+    "h1_2: dead (pre-activation in [-0.764752, -0.19977072]) -> removed",
+    "h1_3: dead (pre-activation in [-0.9062228699999999, -0.2532823]) -> removed",
+    "snap route: output 0: threshold -0.09933681989786815 -> -0.1",
+    "spline: not applicable",
+    "spline: not applicable",
+    "boundary: not applicable",
+    "boundary-scan: not applicable"
+  ]
+}

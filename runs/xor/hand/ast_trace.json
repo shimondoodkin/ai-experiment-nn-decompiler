@@ -1,0 +1,154 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return min(-x0 - x1 + 1.5, x0 + x1 - 0.5)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.025,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 24
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return min(-x0 - x1 + 1.52, x0 + x1 - 0.48)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.025,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 24
+    },
+    {
+      "route": "spline",
+      "src": "def net(x0, x1):\n    return min(x0 + x1 - 0.5, -x0 - x1 + 1.5)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.025,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 24
+    },
+    {
+      "route": "spline",
+      "src": "def net(x0, x1):\n    return min(x0 + x1 - 0.48, -x0 - x1 + 1.52)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.025,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 24
+    },
+    {
+      "route": "boundary",
+      "src": "def net(x0, x1):\n    d0 = x0 + x1\n    return abs(d0 - 1) < 0.5\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P6",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.025,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 21
+    },
+    {
+      "route": "truth-table",
+      "src": "def net(x0, x1):\n    return x0 != x1\n",
+      "passes": [
+        "P7"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.025,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 7
+    }
+  ],
+  "winner": "truth-table",
+  "trace_lines": [
+    "h1_0: always on (pre-activation in [0, 2]) -> linear",
+    "snap route: output 0: threshold 0.08333333333333333 -> 0.08",
+    "boundary-scan: not applicable"
+  ]
+}

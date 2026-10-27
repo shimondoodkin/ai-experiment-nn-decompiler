@@ -1,0 +1,119 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return -1.8743557 + 13.635516874956801 * relu(x0 - 0.9701935612934747 * x1 + 0.011794861112496011) - 11.768226297565763 * relu(-0.9330564144812614 * x0 + x1 + 0.9328241226742178) + 9.031572983995002 * relu(-x0 + 0.9999999286246414 * x1 + 8.681149321711045e-07) + 28.765717622691497 * relu(-0.9999875764317375 * x0 + x1 - 4.8193986714107076e-06)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.6580606317520141,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 90
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return -2.52 + 13.5 * relu(x0 - x1) - 11.5 * relu(-x0 + x1 + 0.96) + 38 * relu(-x0 + x1)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.6580606317520141,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 53
+    },
+    {
+      "route": "spline",
+      "src": "def net(x0, x1):\n    return max(-26 * x0 + 26 * x1 - 13, 25 * x0 - 25 * x1 - 13)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.6580606317520141,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 36
+    },
+    {
+      "route": "truth-table",
+      "src": "def net(x0, x1):\n    return x0 != x1\n",
+      "passes": [
+        "P7"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.6580606317520141,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 7
+    }
+  ],
+  "winner": "truth-table",
+  "trace_lines": [
+    "snap route: h1_3 merged into h1_2 (near-duplicate, threshold 1.730198583900469e-06)",
+    "snap route: h1_0: x0 coefficient 0.5075643427356845 -> 0.5",
+    "snap route: h1_0: x1 coefficient -0.4924356572643155 -> -0.5",
+    "snap route: h1_0: threshold -0.005986650928222722 -> 0",
+    "snap route: h1_1: x0 coefficient -0.48268452358212655 -> -0.5",
+    "snap route: h1_1: x1 coefficient 0.5173154764178735 -> 0.5",
+    "snap route: h1_1: threshold -0.4825643554352978 -> -0.48",
+    "snap route: h1_2: x0 coefficient -0.4999976405060488 -> -0.5",
+    "snap route: h1_2: x1 coefficient 0.500002359493951 -> 0.5",
+    "snap route: h1_2: threshold 1.730198583900469e-06 -> 0",
+    "snap route: output 0: h1_0 coefficient 26.86460755194841 -> 27",
+    "snap route: output 0: h1_1 coefficient -22.74864533157656 -> -23",
+    "snap route: output 0: h1_2 coefficient 75.59422319588475 -> 76",
+    "snap route: output 0: threshold 0.014875838888888888 -> 0.02",
+    "spline: not applicable",
+    "boundary: not applicable",
+    "boundary-scan: not applicable"
+  ]
+}

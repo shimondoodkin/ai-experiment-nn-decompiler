@@ -1,0 +1,95 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return 9.590704 - 20.995277637034498 * relu(0.5250696090923994 * x0 + 0.9999999999999999 * x1 - 0.5250664035973227) - 20.7041880999421 * relu(-x0 - 0.9998802403306708 * x1 + 0.9998875305609098) + 12.291198139019002 * relu(-x0 + 0.9999902667029572 * x1 - 5.2932081407172835e-06)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.5917184948921204,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 69
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return 9.8 - 20 * relu(0.5599999999999999 * x0 + x1 - 0.546) - 20.5 * relu(-x0 - x1 + 1) + 12.5 * relu(-x0 + x1)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.5917184948921204,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 57
+    },
+    {
+      "route": "truth-table",
+      "src": "def net(x0, x1):\n    return x0 != x1\n",
+      "passes": [
+        "P7"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.5917184948921204,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 7
+    }
+  ],
+  "winner": "truth-table",
+  "trace_lines": [
+    "h1_2: dead (pre-activation in [-0.48604214, -0.02408099999999999]) -> removed",
+    "snap route: h1_0: x0 coefficient 0.34429222506432294 -> 0.35",
+    "snap route: h1_0: x1 coefficient 0.655707774935677 -> 0.625",
+    "snap route: h1_0: threshold 0.3531180750731063 -> 0.35",
+    "snap route: h1_1: x0 coefficient -0.500029941710237 -> -0.5",
+    "snap route: h1_1: x1 coefficient -0.49997005828976304 -> -0.5",
+    "snap route: h1_1: threshold -0.4999737036231645 -> -0.5",
+    "snap route: h1_3: x0 coefficient -0.500002433336103 -> -0.5",
+    "snap route: h1_3: x1 coefficient 0.49999756666389716 -> 0.5",
+    "snap route: h1_3: threshold 2.646616950513111e-06 -> 0",
+    "snap route: output 0: h1_0 coefficient -32.0192598586986 -> -32",
+    "snap route: output 0: h1_1 coefficient -41.405896673163625 -> -41",
+    "snap route: output 0: h1_3 coefficient 24.582276644155503 -> 25",
+    "snap route: output 0: threshold -0.09786432653061225 -> -0.1",
+    "spline: not applicable",
+    "spline: not applicable",
+    "boundary: not applicable",
+    "boundary-scan: not applicable"
+  ]
+}
