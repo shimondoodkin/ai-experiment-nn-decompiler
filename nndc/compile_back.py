@@ -218,10 +218,11 @@ class _Builder:
             parts, left = [], self.val(e.left)
             for op, comp in zip(e.ops, e.comparators):
                 right = self.val(comp)
-                if isinstance(op, (ast.Lt, ast.LtE)):
-                    parts.append(self.add(right, left, -1))
-                elif isinstance(op, (ast.Gt, ast.GtE)):
-                    parts.append(self.add(left, right, -1))
+                if isinstance(op, (ast.Lt, ast.LtE, ast.Gt, ast.GtE)):
+                    m = self.add(right, left, -1) if isinstance(op, (ast.Lt, ast.LtE)) else self.add(left, right, -1)
+                    if self.integer_valued(m):   # equality is a real input here: move it off the tie at 0
+                        m = self.add(m, self.const(0.5 if isinstance(op, (ast.LtE, ast.GtE)) else -0.5))
+                    parts.append(m)
                 else:
                     diff = self.add(left, right, -1)
                     if not self.integer_valued(diff):

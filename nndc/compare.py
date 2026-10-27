@@ -188,8 +188,8 @@ def _log_lines(path: Path) -> list[str]:
 
 
 def loop_counts(roots: list[Path]) -> str:
-    rows = ["| method | nets | runs | median checks | max checks | runs with a FAIL | started with FAIL | "
-            "max FAILs before the first PASS |", "|---|---|---|---|---|---|---|---|"]
+    rows = ["| method | nets | runs | median checks | max checks | runs with a FAIL | first check not a PASS | "
+            "max FAIL/ERROR before the first PASS |", "|---|---|---|---|---|---|---|---|"]
     for label, prefix in (("Claude (dump)", "agent"), ("Claude (input/output only)", "io_agent")):
         for group in ("formula", "Iris"):
             stats = []
@@ -203,8 +203,8 @@ def loop_counts(roots: list[Path]) -> str:
                             continue
                         first_pass = next((i for i, v in enumerate(verdicts) if v.startswith("PASS")), len(verdicts))
                         stats.append((len(verdicts), any(v.startswith("FAIL") for v in verdicts),
-                                      verdicts[0].startswith("FAIL"),
-                                      sum(v.startswith("FAIL") for v in verdicts[:first_pass])))
+                                      not verdicts[0].startswith("PASS"),
+                                      first_pass))   # every check before the first PASS (FAIL or ERROR)
             if stats:
                 rows.append(f"| {label} | {group} | {len(stats)} | {_med([s[0] for s in stats])} | "
                             f"{max(s[0] for s in stats)} | {sum(s[1] for s in stats)} | {sum(s[2] for s in stats)} | "
@@ -232,19 +232,48 @@ def _arm_rows(entries: list[dict]) -> list[str]:
             return statistics.median(xs) if xs else None
 
         flagged = sum(sum(t["flagged"] for t in (r.get("added_tests") or [])) for r in ok)
-        rein = [r["reinsertion"] for r in ok if r.get("reinsertion")]
-        rein_s = f"{sum(bool(x.get('exact_pass') or x.get('snap_pass')) for x in rein)}/{len(rein)}" if rein else "–"
+        rein = [r["reinsertion"] for r in ok if r.get("reinsertion") and "task_match" in r["reinsertion"]]
+        rein_s = f"{sum(x['task_match'] == 1.0 for x in rein)}/{len(rein)}" if rein else "–"
+        box = max((x["box_mismatch"] for x in rein), default=None)
+        if box:
+            rein_s += f" (box mismatch ≤ {100 * box:.3g}%)"
         errors = len(found) - len(ok)
-        rows.append(f"| {label} | {len(found)} | {_fmt(med(('repair', 'efficacy')))} | "
+        nets = f"{len(found)}" + (f" ({errors} infeasible)" if errors else "")
+        rows.append(f"| {label} | {nets} | {_fmt(med(('repair', 'efficacy')))} | "
                     f"{_fmt(med(('heldout', 'generalization')))} | {_fmt(med(('heldout', 'drawdown')))} | "
                     f"{_fmt(med(('heldout', 'accuracy')))} | {_fmt(med(('oor', 'accuracy')))} | "
-                    f"{_med([r.get('nodes') for r in ok])} | {flagged} | {rein_s} |"
-                    + (f" ({errors} infeasible/error)" if errors else ""))
+                    f"{_med([r.get('nodes') for r in ok])} | {flagged} | {rein_s} |")
     return rows
+
+
+def _no_failures(rows: dict) -> bool:
+    """True when the net was right on every repair case, so there was nothing to fix."""
+    counts = [r.get("repair", {}).get("n_failing") for r in rows.values() if not r.get("error")]
+    counts = [c for c in counts if c is not None]
+    return bool(counts) and max(counts) == 0
+
+
+def _bug_notes(runs: list[Path]) -> str:
+    notes = []
+    for rd in runs:
+        log = json.loads((rd / "train_log.json").read_text(encoding="utf-8"))
+        res = json.loads((rd / "repair" / "results.json").read_text(encoding="utf-8"))
+        failing = next((r["repair"]["n_failing"] for r in res.values() if r.get("repair", {}).get("n_failing")
+                        is not None), None)
+        learned = log.get("bug_learned")
+        note = f"{rd.parent.name}/{rd.name}: bug learned on {100 * learned:.0f}% of the defect region" \
+            if learned is not None else f"{rd.parent.name}/{rd.name}"
+        note += f", {failing} failing repair cases"
+        if learned is not None and learned < 0.5:
+            note += " (the net did not learn the planted bug; its failures are ordinary training error)"
+        notes.append(f"- {note}")
+    return "\n".join(notes) + "\n"
 
 
 def fix_table(roots: list[Path]) -> str:
     groups: dict[str, list[dict]] = {"planted bug (P1)": [], "natural bug (P2)": [], "Iris (P3)": []}
+    nets: dict[str, list[Path]] = {g: [] for g in groups}
+    skipped: list[str] = []
     for root in roots:
         for rd in all_runs(root):
             p = rd / "repair" / "results.json"
@@ -252,15 +281,26 @@ def fix_table(roots: list[Path]) -> str:
                 continue
             g = "planted bug (P1)" if (rd / "defect.json").exists() else "natural bug (P2)" if is_step1(rd) \
                 else "Iris (P3)"
-            for arm, row in json.loads(p.read_text(encoding="utf-8")).items():
+            res = json.loads(p.read_text(encoding="utf-8"))
+            if g != "Iris (P3)" and _no_failures(res):
+                skipped.append(f"{rd.parent.name}/{rd.name}")
+                continue
+            nets[g].append(rd)
+            for arm, row in res.items():
                 groups[g].append({"run": rd, "arm": arm, "row": row})
     out = []
     head = ("| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown "
             "(held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | "
-            "flagged added tests | reinsertion PASS |\n|---|---|---|---|---|---|---|---|---|---|")
+            "flagged added tests | reinsertion matches the program on task data |\n"
+            "|---|---|---|---|---|---|---|---|---|---|")
     for g, entries in groups.items():
         if entries:
             out.append(f"**{g}**, medians over nets\n\n{head}\n" + "\n".join(_arm_rows(entries)) + "\n")
+            if g == "planted bug (P1)":
+                out.append(_bug_notes(nets[g]))
+    if skipped:
+        out.append(f"Left out, because the net had no failing repair cases at the pre-set tolerance (nothing to "
+                   f"fix; no agent was run): {', '.join(skipped)}.\n")
     return "\n".join(out) if out else "(no fix-experiment results yet)\n"
 
 
@@ -310,9 +350,11 @@ def comparison_md(formula_root: Path = RUNS, iris_root: Path = RUNS, bug_root: P
     roots = [r for r in dict.fromkeys([Path(formula_root), Path(iris_root), Path(bug_root)]) if r.exists()]
     parts = ["## Comparison (step 4)\n",
              "Each method's program for each formula net, checked against the net and graded against the true "
-             "task. Claude (dump) is the best valid step-2 attempt; Claude (input/output only) saw 2,000 samples "
+             "task. Claude (dump) is the best step-2 attempt; Claude (input/output only) saw 2,000 samples "
              "and a checker without the net's boundary points; PySR, tree and regions are the baselines in "
-             "`docs/design/2026-10-27-step4-comparison-design.md`. Audit-flagged agent runs are excluded.\n",
+             "`docs/design/2026-10-27-step4-comparison-design.md`. An agent run is excluded only for touching a "
+             "forbidden file (`oracle.bin`, `_checker/`); outside-path flags are kept and counted under each "
+             "table.\n",
              "### Held-out nets (seed 2)\n", method_table(formula_root, "heldout"),
              "### In-sample nets\n", method_table(formula_root, "insample"),
              "### Which method recovered which formula\n", recovery_matrix(formula_root),
@@ -320,11 +362,15 @@ def comparison_md(formula_root: Path = RUNS, iris_root: Path = RUNS, bug_root: P
     iris = iris_table(iris_root)
     if iris.count("\n") > 2:
         parts += ["### Iris nets\n", iris]
-    parts += ["### The checker loop\n", "Calls to `check.py` per agent run (`*_checks.log`).\n", loop_counts(roots)]
+    loop_roots = [r for r in dict.fromkeys([Path(formula_root), Path(iris_root)]) if r.exists()]
+    parts += ["### The checker loop\n", "Calls to `check.py` per agent run (`*_checks.log`), on the 29 formula "
+              "and 12 Iris nets.\n", loop_counts(loop_roots)]
     parts += ["### Fix and reinsert (experiment R)\n",
               "The net is wrong on the task; each arm fixes it from the repair set and is judged on held-out "
-              "cases. Program arms are compiled back into a net (reinsertion) and that net is checked against "
-              "the program.\n", fix_table(roots)]
+              "cases. Program arms are compiled back into a net (reinsertion); the last column counts nets whose "
+              "rebuilt net decides like the program on every repair and held-out case. Box mismatch is the share of "
+              "uniform inputs where they differ: only inside the narrow ramps that stand in for jumps.\n",
+              fix_table(roots)]
     cv = cv_table(roots)
     if cv:
         parts += ["**Iris, repeated 2-fold splits of all 150 flowers** (non-agent arms; one flower is 2 points of "

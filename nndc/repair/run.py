@@ -138,6 +138,23 @@ def run_repair_baselines(rd: Path) -> dict:
     return evaluate_repair(rd)
 
 
+N_BOX = 20_000
+
+
+def _reinsertion_match(spec: Spec, src: str, net: MLP, data: RepairData, tol: float) -> dict:
+    """Does the compiled net decide like the program? On the task data (repair + held-out), and the share of
+    uniform box points where they differ: nonzero only inside the ramps that stand in for jumps."""
+    from experiments.tasks import uniform_sample
+
+    def agree(X: np.ndarray) -> np.ndarray:
+        p, n = _decisions(spec, src, X), _decisions(spec, net, X)
+        return np.abs(p - n) <= tol if spec.output == "regression" else p == n
+
+    task = agree(np.concatenate([data.X_repair, data.X_heldout]))
+    box = agree(uniform_sample(spec, np.random.default_rng(0), N_BOX))
+    return {"task_match": float(task.mean()), "box_mismatch": float(1 - box.mean())}
+
+
 def _program_arms(rd: Path) -> dict[str, Path]:
     arms = {}
     if (rd / "repair" / "r_tree.py").exists():
@@ -193,7 +210,7 @@ def evaluate_repair(rd: Path) -> dict:
             save_npz(net, out_dir / f"{name}_net.npz")
             r = check_program(src, net, spec)
             row["reinsertion"] = {"exact_pass": r.exact_pass, "snap_pass": r.snap_pass, "ramps": cinfo["ramps"],
-                                  "hidden": cinfo["hidden"]}
+                                  "hidden": cinfo["hidden"], **_reinsertion_match(spec, src, net, data, tol)}
         except CompileError as e:
             row["reinsertion"] = {"error": str(e)}
         results[name] = row

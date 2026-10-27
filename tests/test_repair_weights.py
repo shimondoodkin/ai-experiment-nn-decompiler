@@ -66,3 +66,12 @@ def test_lp_repair_never_returns_a_net_that_misses_its_points():
     y = np.array([0, 1, 1, 0.])
     fixed = lp_repair(mlp, spec, X, y, 0.0)
     assert fixed is None or (decide(spec, fixed.forward(X.astype(np.float32))) == y).all()
+
+
+def test_reinsertion_reports_task_match_and_box_mismatch(tmp_path):
+    rd = build_run("absdiff", None, tmp_path)
+    (rd / "agent_1.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")
+    (rd / "fix_1.py").write_text("def net(x0, x1):\n    return 5 if x0 > 0 else abs(x0 - x1)\n")   # a jump: one ramp
+    res = evaluate_repair(rd)
+    rein = res["fix_1"]["reinsertion"]
+    assert rein["ramps"] == 1 and rein["task_match"] == 1.0 and 0 <= rein["box_mismatch"] < 0.001

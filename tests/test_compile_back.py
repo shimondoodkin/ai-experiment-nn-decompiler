@@ -4,6 +4,7 @@ import pytest
 from experiments.tasks import get_task
 from nndc.check import check_program
 from nndc.compile_back import CompileError, compile_program
+from nndc.lang import evaluate, parse_program
 from nndc.spec import Spec
 
 
@@ -63,3 +64,15 @@ def test_product_of_variables_rejected():
     spec = Spec.from_json(get_task("absdiff").spec.blind())
     with pytest.raises(CompileError):
         compile_program("def net(x0, x1):\n    return x0 * x1\n", spec)
+
+
+@pytest.mark.parametrize("body", ["return x0 >= 1", "return x0 <= 0", "return x1 < 1", "return x0 + x1 >= 2",
+                                  "return 1 if x0 >= 1 else 0"])
+def test_non_strict_comparisons_on_integer_inputs(body):
+    spec = Spec.from_json(get_task("xor").spec.blind())
+    src = f"def net(x0, x1):\n    {body}\n"
+    mlp, _ = compile_program(src, spec)
+    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float)
+    prog = evaluate(parse_program(src, spec.arg_names), X)
+    net = (mlp.forward(X.astype(np.float32))[:, 0] > spec.threshold).astype(float)
+    assert (net == (prog > spec.threshold)).all()
