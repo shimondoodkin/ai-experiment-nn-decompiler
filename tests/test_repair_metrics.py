@@ -68,3 +68,10 @@ def test_added_tests_see_through_named_values():
     new = "def net(x0):\n    s = 2 * x0\n    if s > -1:\n        return s < 0.5\n    return 1\n"
     rows = added_tests(orig, new, X, ["x0"])
     assert len(rows) == 1 and rows[0]["support"] == 51 and not rows[0]["flagged"]   # x0 <= -0.5: 51 points
+
+
+def test_added_tests_not_flagged_on_tiny_domains():
+    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float)
+    rows = added_tests("def net(x0, x1):\n    return x0 < 0.5\n", "def net(x0, x1):\n    return x0 != x1\n",
+                       X, ["x0", "x1"])
+    assert rows and not any(r["flagged"] for r in rows)

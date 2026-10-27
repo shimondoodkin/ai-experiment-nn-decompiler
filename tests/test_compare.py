@@ -64,3 +64,22 @@ def test_report_includes_comparison(tmp_path):
     _absdiff_with(tmp_path)
     assert "## Comparison (step 4)" in build_report(tmp_path)
     assert "## Comparison (step 4)" in comparison_md(tmp_path, tmp_path, tmp_path / "none")
+
+
+def test_dump_attempts_with_outside_path_flags_still_count(tmp_path):
+    rd = _absdiff_with(tmp_path, **{"agent_1.py": "def net(x0, x1):\n    return abs(x0 - x1)\n",
+                                    "agent_1_meta.json": json.dumps({"outside_paths": ["/len"]})})
+    evaluate_run(rd)
+    md = method_table(tmp_path, "all")
+    assert "| Claude (dump) | 1/1 | 1/1 | 1/1 |" in md and "outside-path flag" in md
+
+
+def test_iris_cv_table_from_repair_results(tmp_path):
+    from nndc.compare import cv_table
+
+    rd = tmp_path / "iris_petal" / "seed0"
+    (rd / "repair").mkdir(parents=True)
+    (rd / "repair" / "results.json").write_text(json.dumps(
+        {"w_ft": {"cv": {"generalization": [0.4, 0.1], "drawdown": [0.01, 0.0]}}}))
+    md = cv_table([tmp_path])
+    assert "| fine-tune | 1 | 0.40 | 0.01 |" in md

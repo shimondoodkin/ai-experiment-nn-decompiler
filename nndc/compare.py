@@ -28,9 +28,8 @@ def _pick(versions: dict, key: str) -> tuple[str | None, bool]:
     """(version name, audit-flagged) for a method: best valid attempt for agents, the file otherwise."""
     from .report import _best_attempt
 
-    if key == "agent":
-        best = _best_attempt(versions, valid_only=True)
-        return best, best is None and _best_attempt(versions) is not None
+    if key == "agent":   # outside-path flags are kept: the step-2 and Iris reports reviewed them by hand
+        return _best_attempt(versions), False
     if key == "io_agent":
         names = [k for k in versions if k.startswith("io_agent_")]
         valid = [k for k in names if not (versions[k].get("meta") or {}).get("forbidden_paths")]
@@ -69,7 +68,7 @@ def method_table(root: Path, split: str) -> str:
             "|---|---|---|---|---|---|---|"]
     notes = []
     for label, key in METHODS:
-        passes = exact = rec = missing = flagged = 0
+        passes = exact = rec = missing = flagged = outside = 0
         nodes, secs = [], []
         for rd in runs:
             vs = _results(rd)["versions"]
@@ -79,6 +78,7 @@ def method_table(root: Path, split: str) -> str:
                 missing += 1
                 continue
             v = vs[name]
+            outside += bool((v.get("meta") or {}).get("outside_paths"))
             passes += bool(v["check"]["snap_pass"])
             exact += bool(v["check"]["exact_pass"])
             rec += bool(v["task"]["recovered"])
@@ -90,6 +90,9 @@ def method_table(root: Path, split: str) -> str:
         rows.append(f"| {label} | {passes}/{n} | {exact}/{n} | {rec}/{n} | {_med(nodes)} | {_med(secs)} | {missing} |")
         if flagged:
             notes.append(f"{label}: {flagged} run(s) excluded by the audit (counted under no program).")
+        if outside:
+            notes.append(f"{label}: {outside} run(s) with an outside-path flag, kept (mostly false positives such "
+                         f"as `/len`; see the step-2 and Iris reports and each `*_meta.json`).")
     return "\n".join(rows) + ("\n\n" + "\n".join(f"- {s}" for s in notes) if notes else "") + "\n"
 
 
@@ -261,6 +264,28 @@ def fix_table(roots: list[Path]) -> str:
     return "\n".join(out) if out else "(no fix-experiment results yet)\n"
 
 
+def cv_table(roots: list[Path]) -> str:
+    """Iris: the non-agent arms over 5 repeats of a stratified 2-fold split (medians over nets of the means)."""
+    per_arm: dict[str, list] = {}
+    for root in roots:
+        for p in sorted(Path(root).glob("*/*/repair/results.json")):
+            for arm, row in json.loads(p.read_text(encoding="utf-8")).items():
+                if row.get("cv"):
+                    per_arm.setdefault(arm, []).append(row["cv"])
+    if not per_arm:
+        return ""
+    rows = ["| arm | nets | generalization (mean over splits) | drawdown (mean over splits) |", "|---|---|---|---|"]
+    for label, key in FIX_ARMS:
+        cvs = per_arm.get(key)
+        if not cvs:
+            continue
+        gen = [c["generalization"][0] for c in cvs if "generalization" in c]
+        draw = [c["drawdown"][0] for c in cvs if "drawdown" in c]
+        rows.append(f"| {label} | {len(cvs)} | {_fmt(statistics.median(gen) if gen else None)} | "
+                    f"{_fmt(statistics.median(draw) if draw else None)} |")
+    return "\n".join(rows) + "\n"
+
+
 def _fix_diffs(roots: list[Path]) -> str:
     from .repair.run import faithful_program
     from .run import agent_attempts
@@ -300,6 +325,10 @@ def comparison_md(formula_root: Path = RUNS, iris_root: Path = RUNS, bug_root: P
               "The net is wrong on the task; each arm fixes it from the repair set and is judged on held-out "
               "cases. Program arms are compiled back into a net (reinsertion) and that net is checked against "
               "the program.\n", fix_table(roots)]
+    cv = cv_table(roots)
+    if cv:
+        parts += ["**Iris, repeated 2-fold splits of all 150 flowers** (non-agent arms; one flower is 2 points of "
+                  "held-out accuracy on a single split)\n", cv]
     diffs = _fix_diffs(roots)
     if diffs:
         parts += ["### Readable diffs of network repairs\n", diffs]

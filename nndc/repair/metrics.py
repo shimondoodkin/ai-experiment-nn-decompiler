@@ -16,6 +16,7 @@ from ..lang import evaluate, parse_program
 from ..spec import Spec
 
 MIN_SUPPORT = 5
+MIN_POINTS_FOR_FLAG = 20   # on a 4-point domain no test can have 5 supporting points
 
 
 def decide(spec: Spec, raw: np.ndarray) -> np.ndarray:
@@ -62,5 +63,6 @@ def added_tests(orig_src: str, new_src: str, X: np.ndarray, arg_names: list[str]
         prog = parse_program(f"def net({', '.join(arg_names)}):\n    return {text}\n", arg_names)
         t = evaluate(prog, X) != 0
         support = int(min(t.sum(), (~t).sum()))
-        rows.append({"test": text, "support": support, "flagged": support < MIN_SUPPORT})
+        rows.append({"test": text, "support": support,
+                     "flagged": support < MIN_SUPPORT and len(X) >= MIN_POINTS_FOR_FLAG})
     return rows
