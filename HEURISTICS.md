@@ -403,3 +403,74 @@ Appended by `nndc agent collect`, one section per refactoring attempt.
   normalisations is more likely the "true" simple boundary.
 - Re-check with different sampling seeds to make sure a snap isn't passing by luck.
 
+## iris_petal/seed1 — agent_1 (m8e659b, 2026-10-27)
+
+- For argmax nets with few inputs, skip the weights: plot the class map on a grid, then bisect the
+  boundaries along one axis and fit lines to the boundary points. A low-input classifier is usually
+  just a few half-planes.
+- Check whether `boundary + k*other_input` is constant for a simple k (1, 4/3, 1/2...). If it drifts,
+  look for a kink (two slopes) rather than forcing one line.
+- A kink of a ReLU boundary is a max/min of two lines -> write it as `or`/`and` of two half-planes
+  (union when the region is convex-outward toward the corner, intersection otherwise; test via which
+  line gives the larger/smaller boundary value on each side of the kink).
+- Emit a decision list ordered by the regions that are cleanly separable; the middle class is the
+  fallback `return`.
+- When snapping a threshold, try the round value and the half-step neighbours; the midpoint of the
+  observed range of the boundary constant is often the only one that passes.
+- Unsure-zone disagreements are fine for PASS (snap); concentrate on removing "net confident" ones,
+  which point exactly to the badly fitted segment.
+
+## iris_petal/seed2 — agent_1 (m116501, 2026-10-27)
+
+- For argmax or classification nets with few inputs, skip the weights. Map the decision regions
+  on a grid first. The region layout (bands, wedges, nesting) tells you the shape of the program.
+- If the classes form ordered bands, write a decision list: peel off one extreme class, then
+  the other, and make the middle class the default.
+- Find boundaries by bisecting along one axis at many fixed values of the other. Constant
+  differences give the slope. A sudden change in slope means a ReLU kink, and that usually
+  becomes an `or`/`and` of two half-planes (convex or concave corner) rather than a single line.
+- Normalise each boundary line to `x0 + k * x1 <op> c`, then snap k to a simple fraction (1, 1.1,
+  9/4 and so on) and c to one decimal. Try the simplest candidate first, but expect to keep a
+  second significant digit when the slope is far from an integer. The checker's confident zone
+  is narrow enough that 2.2 vs 2.25 can matter.
+- The worst counterexamples sit at the domain edges (x1 = lo/hi). That is where a wrong slope
+  produces the largest offset, so check the line's fit at both ends of the range.
+- Small regions near domain corners, where the net bends at the very edge, can usually be ignored
+  because they fall inside the unsure zone.
+
+## iris/seed2 — agent_1 (m815a5b, 2026-10-27)
+
+- First find dead neurons (max of pre-activation over the input box < 0, via interval arithmetic) and
+  always-on neurons (min > 0); the latter make the layer linear and can be folded into the next layer.
+- Enumerate activation patterns on a big random sample, tabulate class counts per pattern; often one switching
+  neuron separates which classes can co-occur, turning argmax into a decision list of pairwise boundaries.
+- For argmax nets, compute pairwise differences o_i - o_j per pattern; those are the real decision surfaces.
+- Normalise a boundary by its largest coefficient (or a natural one) before snapping; look for equal-magnitude
+  pairs (x2 - x1) that suggest a combined feature.
+- Snap with a small grid search scored only on confident points (the checker ignores the unsure zone), then
+  prefer the coarsest lattice that still gives 0 errors. Coarse 0.1 lattices failed here; 0.05 worked.
+- Steep boundaries (large scale of o_i - o_j) need more precise coefficients than shallow ones.
+- When a single error remains, inspect where it is: usually a corner where a secondary neuron (here h1_1)
+  tilts the boundary; shift the threshold toward the safe side rather than adding a branch.
+- Validate with several checker seeds, not only the default one.
+
+## iris/seed1 — agent_1 (m410c85, 2026-10-27)
+
+- Bound each hidden unit's pre-activation over the input box with interval arithmetic
+  (positive weight -> hi, negative -> lo). Units with max <= 0 are dead; units with min >= 0
+  are linear and can be folded.
+- For argmax outputs, look at score differences between classes rather than raw scores; units
+  with nearly equal output weights across classes do not affect the decision.
+- For small classifiers, label a dense uniform sample with the net, drop the points inside the
+  checker's unsure zone (top-2 gap < margin), and test whether a one-vs-rest decision list of
+  linear cuts separates the remaining points (LinearSVC / LP). Order the list by the most
+  isolated class first.
+- Snap coefficients by fixing the largest coefficient to 1 (or to a nice integer scale), solve
+  a max-margin LP for the feasible region, then enumerate simple fractions and keep the
+  simplest set whose confident-point gap stays positive; put the threshold in the middle of
+  the gap (rounded to a half-step or quarter-step).
+- If simple fractions fail at one scale, rescale the whole inequality (e.g. divide by the
+  smallest coefficient) - ratios like 1:2:2.75:5 can be much cleaner than the x2=1 form.
+- Verify on a larger sample than the checker uses and with other random seeds, since the
+  confident gap for a linear cut can be narrow.
+
