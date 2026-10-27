@@ -3,6 +3,7 @@ import numpy as np
 from nndc.check import build_input_set, check_program, format_result
 from nndc.model import MLP
 from nndc.spec import InputSpec, Spec
+from tests.helpers import hand
 
 
 def absdiff_net():   # relu(a-b) + relu(b-a)
@@ -143,3 +144,12 @@ def test_constant_regression_net_passes_snap_when_exact():
     spec = Spec(task="t", output="regression", inputs=[InputSpec("x0", "x", "float", 0, 1)])
     r = check_program("def net(x0):\n    return 0.7", net, spec)
     assert r.exact_pass and r.snap_pass
+
+
+def test_no_boundary_points_option():
+    mlp, spec = hand("window")
+    full, _ = build_input_set(mlp, spec)
+    plain, _ = build_input_set(mlp, spec, boundary=False)
+    assert plain.shape[0] < full.shape[0]
+    r = check_program("def net(x0):\n    return abs(x0) < 0.5\n", mlp, spec, boundary=False)
+    assert r.snap_pass and r.n_inputs == plain.shape[0]

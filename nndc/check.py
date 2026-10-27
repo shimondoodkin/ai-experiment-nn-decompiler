@@ -113,8 +113,10 @@ def _boundary_points(mlp: MLP, spec: Spec, rng: np.random.Generator,
     return out
 
 
-def build_input_set(mlp: MLP, spec: Spec, seed: int = 0,
-                    extra: np.ndarray | None = None) -> tuple[np.ndarray, str]:
+def build_input_set(mlp: MLP, spec: Spec, seed: int = 0, extra: np.ndarray | None = None,
+                    boundary: bool = True) -> tuple[np.ndarray, str]:
+    """boundary=False leaves out the points bisected onto the net's activation boundaries, so the
+    input set reveals nothing about where the net's kinks are (input/output-only agent runs)."""
     lo, hi, disc = _bounds(spec)
     d = lo.size
     if spec.is_discrete() and spec.domain_size() <= EXHAUSTIVE_CAP:
@@ -132,7 +134,8 @@ def build_input_set(mlp: MLP, spec: Spec, seed: int = 0,
         else:
             corners = np.where(rng.integers(0, 2, (4096, d)).astype(bool), hi, lo)
         parts.append(corners)
-        parts.append(_boundary_points(mlp, spec, rng, lo, hi, disc))
+        if boundary:
+            parts.append(_boundary_points(mlp, spec, rng, lo, hi, disc))
         X = np.concatenate(parts)
         label = "empirical"
     if extra is not None and len(extra):
@@ -178,8 +181,8 @@ def _inputs_dict(spec: Spec, x: np.ndarray) -> dict:
 
 
 def check_program(src: str, mlp: MLP, spec: Spec, seed: int = 0,
-                  extra_inputs: np.ndarray | None = None) -> CheckResult:
-    X, label = build_input_set(mlp, spec, seed, extra_inputs)
+                  extra_inputs: np.ndarray | None = None, boundary: bool = True) -> CheckResult:
+    X, label = build_input_set(mlp, spec, seed, extra_inputs, boundary=boundary)
     try:
         raw = evaluate(parse_program(src, spec.arg_names), X)
     except ProgramError as e:
