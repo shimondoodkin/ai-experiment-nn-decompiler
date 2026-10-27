@@ -122,6 +122,41 @@ def cmd_ast(args) -> int:
     return 0
 
 
+def _baseline_fns() -> dict:
+    from .baselines.tree import run_tree
+
+    return {"tree": run_tree}
+
+
+def cmd_baseline(args) -> int:
+    from .lang import ProgramError
+    from .run import all_runs, evaluate_run
+
+    fns = _baseline_fns()
+    names = list(fns) if args.name == "all" else [args.name]
+    runs = all_runs(Path(args.root)) if args.all else [Path(r) for r in args.runs]
+    if not runs:
+        print("nothing to do: give run folders or --all")
+        return 2
+    for rd in runs:
+        for name in names:
+            try:
+                info = fns[name](rd)
+                v = evaluate_run(rd)["versions"].get(name)
+            except (ValueError, KeyError, OSError, ProgramError) as e:   # one bad run never stops the batch
+                print(f"{rd.as_posix()}: {name} ERROR {type(e).__name__}: {e}", flush=True)
+                continue
+            if v is None:
+                print(f"{rd.as_posix()}: {name} no program ({info})", flush=True)
+                continue
+            c = v["check"]
+            verdict = "ERROR" if c["error"] else "PASS exact" if c["exact_pass"] else "PASS snap" if c["snap_pass"] \
+                else "FAIL"
+            print(f"{rd.as_posix()}: {name} {verdict}; recovered={v['task']['recovered']}; "
+                  f"nodes={(v['size'] or {}).get('nodes')}", flush=True)
+    return 0
+
+
 def cmd_report(args) -> int:
     from .report import build_report
 
@@ -182,6 +217,13 @@ def main(argv: list[str] | None = None) -> int:
                          "only, all = every run including dataset runs (iris)")
     at.add_argument("--root", default=str(RUNS))
     at.set_defaults(func=cmd_ast)
+
+    bl = sub.add_parser("baseline", help="step-4 baselines: tree, regions, pysr (needs --group pysr), all")
+    bl.add_argument("name", choices=["tree", "regions", "pysr", "all"])
+    bl.add_argument("runs", nargs="*")
+    bl.add_argument("--all", action="store_true")
+    bl.add_argument("--root", default=str(RUNS))
+    bl.set_defaults(func=cmd_baseline)
 
     rp = sub.add_parser("report", help="write REPORT.md from all runs")
     rp.add_argument("--root", default=str(RUNS))
