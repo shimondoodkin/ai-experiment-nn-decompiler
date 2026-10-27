@@ -137,10 +137,10 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
         if dl is None:
             lines.append("decision-list: not applicable")
         else:
-            lines += dl[2]
-            add("decision-list", lambda: dl[0], ["P1", "P2", "P10", "P9"])
-            for s in dl[1]:
-                add("decision-list-snap", lambda s=s: s, ["P1", "P2", "P10", "P3", "P9"])
+            lines += dl[1]
+            for route, src in dl[0]:
+                passes = ["P1", "P2", "P10", "P9"] if route == "decision-list" else ["P1", "P2", "P10", "P3", "P9"]
+                add(route, lambda src=src: src, passes)
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:
