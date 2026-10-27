@@ -65,6 +65,16 @@ def test_float_ties_on_the_decision_line_do_not_break_exact():
     assert r.exact_pass
 
 
+def test_float_ties_scale_with_large_logits():
+    # trained classifiers have large logits; float32 rounding near the line grows with them
+    net = MLP([np.array([[1, -1], [-1, 1]], np.float32), np.array([[-1000, -1000]], np.float32)],
+              [np.zeros(2, np.float32), np.array([200], np.float32)])
+    spec = Spec(task="t", output="binary",
+                inputs=[InputSpec("x0", "a", "float", -2, 2), InputSpec("x1", "b", "float", -2, 2)])
+    r = check_program("def net(x0, x1):\n    return abs(x0 - x1) < 0.2", net, spec)
+    assert r.exact_pass
+
+
 def test_exhaustive_label_for_small_discrete():
     xor = MLP([np.array([[1, 1], [1, 1]], np.float32), np.array([[1, -2]], np.float32)],
               [np.array([0, -1], np.float32), np.array([-0.5], np.float32)])
