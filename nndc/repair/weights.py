@@ -13,6 +13,7 @@ from .metrics import decide, right
 
 FT_STEPS, FT_LR, N_ANCHOR = 300, 1e-3, 2000
 LP_MARGIN = 1e-3
+LP_TOL_SHRINK = 0.999
 
 
 def finetune(mlp: MLP, spec: Spec, X: np.ndarray, y: np.ndarray, seed: int = 0) -> MLP:
@@ -86,7 +87,8 @@ def lp_repair(mlp: MLP, spec: Spec, X: np.ndarray, y: np.ndarray, tol: float) ->
     rows, rhs = [], []
     if spec.output == "regression":
         rows += [coef(0, 1.0), coef(0, -1.0)]
-        rhs += [tol - (f[:, 0] - y), tol + (f[:, 0] - y)]
+        tol_lp = LP_TOL_SHRINK * tol   # a little inside the tolerance, so float32 rounding stays within it
+        rhs += [tol_lp - (f[:, 0] - y), tol_lp + (f[:, 0] - y)]
     elif spec.output == "binary":
         s = 2 * np.asarray(y) - 1
         score = f[:, 0] - spec.threshold
