@@ -17,6 +17,7 @@ from .heuristics.boundary import boundary_expr
 from .heuristics.boundary_scan import scan_boundary_expr
 from .heuristics.bounds import prune_dead_and_linear
 from .heuristics.cleanup import program_from_expr
+from .heuristics.decision_list import decision_list
 from .heuristics.fit import fit_expr
 from .heuristics.merge import merge_units, normalize
 from .heuristics.motifs import as_relu_sum, motif_expr
@@ -28,7 +29,8 @@ from .model import MLP
 from .spec import Spec
 from .symnet import SymNet, from_dump, input_bounds, to_program
 
-ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit"]
+ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit",
+          "decision-list-snap", "decision-list"]   # snapped first: when neither is exact, prefer round constants
 
 
 @dataclass
@@ -129,6 +131,16 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
             e = fit_expr(lambda X: mlp.forward(X.astype(np.float32))[:, 0].astype(np.float64), spec)
             return None if e is None else program_from_expr(e, spec)
         add("fit", fit, ["P8"])
+
+    if spec.output == "argmax":
+        dl = decision_list(n2, spec, mlp)
+        if dl is None:
+            lines.append("decision-list: not applicable")
+        else:
+            lines += dl[2]
+            add("decision-list", lambda: dl[0], ["P1", "P2", "P10", "P9"])
+            for s in dl[1]:
+                add("decision-list-snap", lambda s=s: s, ["P1", "P2", "P10", "P3", "P9"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:
