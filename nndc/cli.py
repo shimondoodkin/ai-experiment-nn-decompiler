@@ -123,9 +123,10 @@ def cmd_ast(args) -> int:
 
 
 def _baseline_fns() -> dict:
+    from .baselines.regions import run_regions
     from .baselines.tree import run_tree
 
-    return {"tree": run_tree}
+    return {"tree": run_tree, "regions": run_regions}
 
 
 def cmd_baseline(args) -> int:
