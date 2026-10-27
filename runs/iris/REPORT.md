@@ -239,6 +239,34 @@ On the data, the nets and the textbook rule are nearly the same classifier. Acro
 - **Meaningless "recovered" column.** Grading uses a 1-NN target off the table, so `recovered` is always false, and the in-range "accuracy" (about 79%) measures agreement with nearest-flower labels across the box.
 - **Small held-out sets.** Both held-out sets come from one dataset: 4 nets for v1 and 6 for v2. They show that the route works on these Iris nets, not how it does on other data.
 
+## Step 4: comparison and fix-and-reinsert
+
+The full tables are in the "Comparison (step 4)" section of the top-level `REPORT.md`.
+
+**Baselines on the 12 Iris nets:**
+- **Pass the checker:**
+  - exact region decomposition: 12 of 12, with 337–2,499 nodes;
+  - AST tool v2: 12 of 12, with 29–64 nodes;
+  - Claude from input/output samples only: 11 valid runs, all passing (the iris/seed0 run is excluded, see below);
+  - PySR: 2 of 12;
+  - a decision tree: 0 of 12, even at 512 leaves.
+- **Snapping on PySR:** PySR+snap passed none; snapping its long constants moved the slanted boundaries too far.
+- **Claude from input/output only:**
+  - It did no worse than Claude reading the dump: every valid run passes.
+  - It called the checker a median of 14 times per net, against 4 for the dump agents.
+  - Several agents first fitted a small ReLU net to the samples, or used RANSAC to find the linear pieces, before writing the decision list.
+  - The iris/seed0 agent ran `ls _checker` with the output discarded. That counts as forbidden-file access, so the run is excluded.
+
+**Fix and reinsert (experiment R).** A blind agent got the decompiled program and 100 labelled flowers (a stratified split, seed 0), was asked to fix the program, and was then judged on the other 50.
+- **Repair set:** it fixed 60–100% of the net's failures there, and every fixed program compiled back into a ReLU net that matches it exactly.
+- **Held-out flowers:** at most one held-out flower is a failure of the net, and no arm fixed it. On the repeated 2-fold splits, the non-agent arms fix 0–33% of held-out failures (median over nets): tree 0.33, fine-tune 0.25, last-layer LP 0.15.
+- **Overfitting:**
+  - The four-feature fixes that reached 100% of the repair set did it with a small zone rule around 3 overlapping flowers. On iris/seed4 that rule broke one held-out flower (drawdown 0.02).
+  - The petal-only agents instead named the duplicated flower with conflicting labels as noise and stopped at 97–98%.
+  - The special-case flag misses these zone rules, because it scores each comparison alone, and each one has 8 or more supporting flowers.
+- **Prior knowledge:** one agent (iris/seed3) said it checked its rule against Iris flowers it recalled from the real dataset.
+- **Reading:** on Iris the remaining errors are class overlap, not a bug in the net. The fix experiment's clean results are on the planted-bug formula nets, where the agent recovered the true formula every time.
+
 ## Reproduce
 
 ```bash
