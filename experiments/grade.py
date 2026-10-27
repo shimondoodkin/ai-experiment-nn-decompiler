@@ -22,7 +22,7 @@ def _in_range(task: Task, rng: np.random.Generator) -> np.ndarray:
     return uniform_sample(spec, rng, N_GRADE)
 
 
-def _out_of_range(task: Task, rng: np.random.Generator) -> np.ndarray | None:
+def out_of_range_inputs(task: Task, rng: np.random.Generator) -> np.ndarray | None:
     spec = task.spec
     cont = np.array([i.type not in DISCRETE_TYPES for i in spec.inputs])
     if not cont.any():
@@ -54,7 +54,7 @@ def grade_task(src: str, task: Task, seed: int = 0) -> dict:
         prog = parse_program(src, task.spec.arg_names)
         Xin = _in_range(task, rng)
         s_in, ok_in = _score(task, evaluate(prog, Xin), Xin)
-        Xout = _out_of_range(task, rng)
+        Xout = out_of_range_inputs(task, rng)
         s_out, ok_out = (None, True) if Xout is None else _score(task, evaluate(prog, Xout), Xout)
     except ProgramError as e:
         return {"in_range": None, "out_of_range": None, "metric": metric, "recovered": False, "error": str(e)}
