@@ -41,35 +41,79 @@ Runs where a refactored program is closer to the *true task* than the network it
 
 - **absdiff/seed0** agent_1: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
 - **absdiff/seed0** ast: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
+- **absdiff/seed0** io_agent_1: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
+- **absdiff/seed0** pysr: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
+- **absdiff/seed0** pysr_snap: max error inside 0.02951 → 0, outside 0.0622 → 0; recovered the true algorithm
 - **absdiff/seed1** agent_1: max error inside 0.02051 → 0, outside 0.02055 → 0; recovered the true algorithm
 - **absdiff/seed1** ast: max error inside 0.02051 → 0, outside 0.02055 → 0; recovered the true algorithm
+- **absdiff/seed1** io_agent_1: max error inside 0.02051 → 0, outside 0.02055 → 0; recovered the true algorithm
+- **absdiff/seed1** pysr_snap: max error inside 0.02051 → 0, outside 0.02055 → 0; recovered the true algorithm
 - **absdiff/seed2** agent_1: max error inside 0.01635 → 0, outside 0.4826 → 0; recovered the true algorithm
 - **absdiff/seed2** ast: max error inside 0.01635 → 0, outside 0.4826 → 0; recovered the true algorithm
+- **absdiff/seed2** io_agent_1: max error inside 0.01635 → 0, outside 0.4826 → 0; recovered the true algorithm (audit-flagged run)
+- **absdiff/seed2** regions: max error inside 0.01635 → 0.01635, outside 0.4826 → 0.04007
+- **absdiff/seed2** pysr: max error inside 0.01635 → 0.01515, outside 0.4826 → 0.01518
+- **absdiff/seed2** pysr_snap: max error inside 0.01635 → 0, outside 0.4826 → 0; recovered the true algorithm
 - **absdiff_perturbed/hand** agent_1: max error inside 0.08 → 0, outside 0.1687 → 0; recovered the true algorithm
 - **absdiff_perturbed/hand** ast: max error inside 0.08 → 0, outside 0.1687 → 0; recovered the true algorithm
+- **absdiff_perturbed/hand** io_agent_1: max error inside 0.08 → 0, outside 0.1687 → 0; recovered the true algorithm
+- **absdiff_perturbed/hand** regions: max error inside 0.08 → 0.08, outside 0.1687 → 0.1687
+- **absdiff_perturbed/hand** pysr_snap: max error inside 0.08 → 0, outside 0.1687 → 0; recovered the true algorithm
 - **deadredundant/hand** agent_1: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
 - **deadredundant/hand** ast: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
+- **deadredundant/hand** io_agent_1: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
+- **deadredundant/hand** regions: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
+- **deadredundant/hand** pysr: max error inside 2.22e-16 → 0, outside 0.995 → 0; recovered the true algorithm
+- **deadredundant/hand** pysr_snap: max error inside 2.22e-16 → 2.22e-16, outside 0.995 → 4.441e-16; recovered the true algorithm
 - **median3/seed0** agent_1: max error inside 0.06967 → 1.776e-15, outside 0.4807 → 3.553e-15; recovered the true algorithm
 - **median3/seed0** ast: max error inside 0.06967 → 0, outside 0.4807 → 0; recovered the true algorithm
+- **median3/seed0** io_agent_1: max error inside 0.06967 → 0, outside 0.4807 → 0; recovered the true algorithm
+- **median3/seed0** pysr: max error inside 0.06967 → 0, outside 0.4807 → 0; recovered the true algorithm
+- **median3/seed0** pysr_snap: max error inside 0.06967 → 0, outside 0.4807 → 0; recovered the true algorithm
 - **median3/seed1** agent_1: max error inside 0.08775 → 0, outside 0.6561 → 0; recovered the true algorithm
 - **median3/seed1** ast: max error inside 0.08775 → 0, outside 0.6561 → 0; recovered the true algorithm
+- **median3/seed1** io_agent_1: max error inside 0.08775 → 1.776e-15, outside 0.6561 → 3.553e-15; recovered the true algorithm
+- **median3/seed1** pysr: max error inside 0.08775 → 0.01632, outside 0.6561 → 0.01632
+- **median3/seed1** pysr_snap: max error inside 0.08775 → 0, outside 0.6561 → 0; recovered the true algorithm
 - **median3/seed2** agent_1: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
 - **median3/seed2** ast: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
+- **median3/seed2** io_agent_1: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
+- **median3/seed2** pysr: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
+- **median3/seed2** pysr_snap: max error inside 0.04909 → 0, outside 0.2257 → 0; recovered the true algorithm
 - **neareq/seed0** agent_1: accuracy inside 0.9986 → 1, outside 0.9992 → 1; recovered the true algorithm (audit-flagged run)
 - **neareq/seed0** ast: accuracy inside 0.9986 → 1, outside 0.9992 → 1; recovered the true algorithm
+- **neareq/seed0** io_agent_1: accuracy inside 0.9986 → 1, outside 0.9992 → 1; recovered the true algorithm
 - **neareq/seed1** agent_1: accuracy inside 0.9995 → 1, outside 0.9997 → 1; recovered the true algorithm (audit-flagged run)
 - **neareq/seed1** ast: accuracy inside 0.9995 → 1, outside 0.9997 → 1; recovered the true algorithm
+- **neareq/seed1** io_agent_1: accuracy inside 0.9995 → 1, outside 0.9997 → 1; recovered the true algorithm
+- **neareq/seed1** pysr: accuracy inside 0.9995 → 0.9998, outside 0.9997 → 1
 - **neareq/seed2** agent_1: accuracy inside 0.9978 → 1, outside 0.9978 → 1; recovered the true algorithm
 - **neareq/seed2** ast: accuracy inside 0.9978 → 1, outside 0.9978 → 1; recovered the true algorithm
+- **neareq/seed2** io_agent_1: accuracy inside 0.9978 → 1, outside 0.9978 → 1; recovered the true algorithm
 - **sparse8/hand** agent_1: max error inside 0.002773 → 0, outside 0.004227 → 0; recovered the true algorithm
 - **sparse8/hand** ast: max error inside 0.002773 → 0, outside 0.004227 → 0; recovered the true algorithm
+- **sparse8/hand** io_agent_1: max error inside 0.002773 → 0, outside 0.004227 → 0; recovered the true algorithm
+- **sparse8/hand** pysr: max error inside 0.002773 → 0.001748, outside 0.004227 → 0.002012
+- **sparse8/hand** pysr_snap: max error inside 0.002773 → 0, outside 0.004227 → 0; recovered the true algorithm
+- **tax/seed0** regions: max error inside 0.2196 → 0.2196, outside 16.09 → 10.07
+- **tax/seed0** pysr: max error inside 0.2196 → 0.215, outside 16.09 → 10.07
+- **tax/seed1** io_agent_1: max error inside 0.9627 → 0.9446, outside 21.19 → 9.25 (audit-flagged run)
+- **tax/seed1** pysr: max error inside 0.9627 → 0.9075, outside 21.19 → 9.361
 - **tax/seed2** agent_1: max error inside 0.2969 → 0, outside 17.58 → 0; recovered the true algorithm
+- **tax/seed2** pysr: max error inside 0.2969 → 0.2773, outside 17.58 → 1.909
 - **window/seed0** agent_1: accuracy inside 0.999 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed0** ast: accuracy inside 0.999 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed0** io_agent_1: accuracy inside 0.999 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed0** tree: accuracy inside 0.999 → 0.9991, outside 1 → 1
+- **window/seed0** pysr: accuracy inside 0.999 → 0.999, outside 1 → 1
 - **window/seed1** agent_1: accuracy inside 0.9975 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed1** ast: accuracy inside 0.9975 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed1** io_agent_1: accuracy inside 0.9975 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed1** pysr_snap: accuracy inside 0.9975 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** agent_1: accuracy inside 0.9998 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** ast: accuracy inside 0.9998 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed2** io_agent_1: accuracy inside 0.9998 → 1, outside 1 → 1; recovered the true algorithm (audit-flagged run)
+- **window/seed2** pysr_snap: accuracy inside 0.9998 → 1, outside 1 → 1; recovered the true algorithm
 
 ## Reproduction (step 3)
 
@@ -114,6 +158,390 @@ Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactori
 | xor/seed1 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
 | xor/seed2 | heldout | PASS exact | no | 5 | PASS exact | no | 9 | yes | truth-table |
 
+## Comparison (step 4)
+
+Each method's program for each formula net, checked against the net and graded against the true task. Claude (dump) is the best valid step-2 attempt; Claude (input/output only) saw 2,000 samples and a checker without the net's boundary points; PySR, tree and regions are the baselines in `docs/design/2026-10-27-step4-comparison-design.md`. Audit-flagged agent runs are excluded.
+
+### Held-out nets (seed 2)
+
+| method | passes check | exact | recovered | median nodes | median seconds | no program |
+|---|---|---|---|---|---|---|
+| Claude (dump) | 6/6 | 1/6 | 5/6 | 12 | 100 | 0 |
+| Claude (input/output only) | 6/6 | 1/6 | 4/6 | 22 | 168 | 0 |
+| AST tool | 6/6 | 1/6 | 4/6 | 14 | – | 0 |
+| PySR | 6/6 | 2/6 | 1/6 | 34 | 25 | 0 |
+| PySR+snap | 6/6 | 1/6 | 3/6 | 16 | 25 | 0 |
+| tree | 4/6 | 2/6 | 0/6 | 135 | 3 | 0 |
+| regions | 5/6 | 5/6 | 0/6 | 141 | 0 | 1 |
+
+- Claude (input/output only): 2 run(s) with an outside-path flag, kept (mostly false positives such as `/len`; see the step-2 and Iris reports and each `*_meta.json`).
+
+### In-sample nets
+
+| method | passes check | exact | recovered | median nodes | median seconds | no program |
+|---|---|---|---|---|---|---|
+| Claude (dump) | 23/23 | 11/23 | 21/23 | 11 | 69 | 0 |
+| Claude (input/output only) | 23/23 | 11/23 | 21/23 | 17 | 142 | 0 |
+| AST tool | 23/23 | 11/23 | 21/23 | 11 | – | 0 |
+| PySR | 22/23 | 12/23 | 12/23 | 37 | 26 | 0 |
+| PySR+snap | 21/23 | 10/23 | 17/23 | 18 | 26 | 0 |
+| tree | 13/23 | 3/23 | 3/23 | 1146 | 3 | 0 |
+| regions | 21/23 | 21/23 | 11/23 | 71 | 0 | 2 |
+
+- Claude (dump): 2 run(s) with an outside-path flag, kept (mostly false positives such as `/len`; see the step-2 and Iris reports and each `*_meta.json`).
+- Claude (input/output only): 2 run(s) with an outside-path flag, kept (mostly false positives such as `/len`; see the step-2 and Iris reports and each `*_meta.json`).
+
+### Which method recovered which formula
+
+| run | Claude (dump) | Claude (input/output only) | AST tool | PySR | PySR+snap | tree | regions |
+|---|---|---|---|---|---|---|---|
+| absdiff/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| absdiff/seed0 | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✗ |
+| absdiff/seed1 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| absdiff/seed2 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| absdiff_perturbed/hand | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| deadredundant/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| max/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| median3/seed0 | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | – |
+| median3/seed1 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | – |
+| median3/seed2 | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | – |
+| neareq/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| neareq/seed0 | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| neareq/seed1 | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| neareq/seed2 | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| ramp/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| sparse8/hand | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| sum8/hand | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✓ |
+| tax/seed0 | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| tax/seed1 | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| tax/seed2 | ✓ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+| triangle/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| window/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✗ | ✓ |
+| window/seed0 | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | ✗ |
+| window/seed1 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| window/seed2 | ✓ | ✓ | ✓ | ✗ | ✓ | ✗ | ✗ |
+| xor/hand | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| xor/seed0 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| xor/seed1 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| xor/seed2 | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ | ✗ |
+
+- **Reading the weights:** Claude recovers the formula on 26/29 nets from the dump, and on 25/29 from input/output samples only (29 with an io attempt).
+- **Snapping in search:** PySR recovers 13/29 raw and 20/29 after this repo's snapping.
+- **Exact vs short:** exact region programs have a median of 87 nodes (no program within budget on 3 nets), against 11 for Claude and 11 for the AST tool.
+
+### Iris nets
+
+| run | method | verdict | nodes | confident disagreements, checker seeds 2/3/4/5 | flower accuracy |
+|---|---|---|---|---|---|
+| iris/seed0 | Claude (dump) | sn | 76 | 0/0/0/0 | 98.7% |
+| iris/seed0 | Claude (input/output only) | audit-flagged | | | |
+| iris/seed0 | AST tool | sn | 62 | 0/0/0/0 | 98.7% |
+| iris/seed0 | PySR | FAIL | 172 | 2639/2727/2728/2793 | 98.0% |
+| iris/seed0 | PySR+snap | FAIL | 190 | 8439/8361/8418/8564 | 95.3% |
+| iris/seed0 | tree | FAIL | 4090 | 5169/5113/5125/5122 | 96.7% |
+| iris/seed0 | regions | ex | 983 | 0/0/0/0 | 98.0% |
+| iris/seed1 | Claude (dump) | sn | 70 | 0/0/0/0 | 98.0% |
+| iris/seed1 | Claude (input/output only) | sn | 76 | 0/0/0/0 | 98.0% |
+| iris/seed1 | AST tool | sn | 64 | 0/1/0/0 | 98.0% |
+| iris/seed1 | PySR | FAIL | 174 | 2046/2024/2080/2149 | 98.7% |
+| iris/seed1 | PySR+snap | FAIL | 146 | 1553/1534/1535/1612 | 98.0% |
+| iris/seed1 | tree | FAIL | 4090 | 5565/5700/5600/5631 | 98.7% |
+| iris/seed1 | regions | ex | 1367 | 0/0/0/0 | 98.0% |
+| iris/seed2 | Claude (dump) | sn | 67 | 0/0/0/0 | 97.3% |
+| iris/seed2 | Claude (input/output only) | sn | 101 | 0/0/0/0 | 98.0% |
+| iris/seed2 | AST tool | sn | 62 | 0/0/0/0 | 97.3% |
+| iris/seed2 | PySR | FAIL | 186 | 1507/1574/1603/1614 | 97.3% |
+| iris/seed2 | PySR+snap | FAIL | 203 | 20915/21328/21330/21146 | 95.3% |
+| iris/seed2 | tree | FAIL | 4090 | 4451/4762/4681/4626 | 96.7% |
+| iris/seed2 | regions | ex | 1369 | 0/0/0/0 | 98.0% |
+| iris/seed3 | Claude (dump) | sn | 72 | 0/0/0/0 | 98.7% |
+| iris/seed3 | Claude (input/output only) | sn | 90 | 0/0/0/0 | 98.0% |
+| iris/seed3 | AST tool | ex | 62 | 0/0/0/0 | 98.0% |
+| iris/seed3 | PySR | FAIL | 137 | 4769/4647/4854/4763 | 96.7% |
+| iris/seed3 | PySR+snap | FAIL | 161 | 1488/1544/1552/1533 | 97.3% |
+| iris/seed3 | tree | FAIL | 4090 | 4454/4537/4459/4577 | 98.0% |
+| iris/seed3 | regions | ex | 601 | 0/0/0/0 | 98.0% |
+| iris/seed4 | Claude (dump) | sn | 72 | 1/0/0/0 | 98.7% |
+| iris/seed4 | Claude (input/output only) | sn | 69 | 0/0/0/0 | 98.7% |
+| iris/seed4 | AST tool | sn | 64 | 0/0/0/0 | 98.7% |
+| iris/seed4 | PySR | FAIL | 196 | 993/960/1018/954 | 98.7% |
+| iris/seed4 | PySR+snap | FAIL | 178 | 7556/7618/7775/7676 | 98.7% |
+| iris/seed4 | tree | FAIL | 4090 | 3679/3687/3663/3691 | 97.3% |
+| iris/seed4 | regions | ex | 1733 | 0/0/0/0 | 98.7% |
+| iris/seed5 | Claude (dump) | sn | 115 | 0/0/0/0 | 98.0% |
+| iris/seed5 | Claude (input/output only) | sn | 145 | 0/5/0/0 | 98.0% |
+| iris/seed5 | AST tool | sn | 62 | 0/0/0/0 | 98.0% |
+| iris/seed5 | PySR | FAIL | 178 | 2624/2610/2644/2730 | 98.7% |
+| iris/seed5 | PySR+snap | FAIL | 171 | 4637/4460/4578/4601 | 98.0% |
+| iris/seed5 | tree | FAIL | 4090 | 4471/4409/4447/4382 | 96.7% |
+| iris/seed5 | regions | ex | 2499 | 0/0/0/0 | 98.0% |
+| iris_petal/seed0 | Claude (dump) | ex | 32 | 0/0/0/0 | 95.3% |
+| iris_petal/seed0 | Claude (input/output only) | sn | 42 | 0/0/0/0 | 95.3% |
+| iris_petal/seed0 | AST tool | ex | 32 | 0/0/0/0 | 95.3% |
+| iris_petal/seed0 | PySR | sn | 146 | 0/0/0/0 | 95.3% |
+| iris_petal/seed0 | PySR+snap | FAIL | 154 | 13683/13563/13926/13645 | 96.0% |
+| iris_petal/seed0 | tree | FAIL | 2442 | 23/25/17/15 | 95.3% |
+| iris_petal/seed0 | regions | ex | 345 | 0/0/0/0 | 95.3% |
+| iris_petal/seed1 | Claude (dump) | sn | 43 | 0/0/0/0 | 95.3% |
+| iris_petal/seed1 | Claude (input/output only) | sn | 34 | 0/0/0/0 | 95.3% |
+| iris_petal/seed1 | AST tool | sn | 32 | 0/0/0/0 | 95.3% |
+| iris_petal/seed1 | PySR | FAIL | 139 | 230/231/258/220 | 95.3% |
+| iris_petal/seed1 | PySR+snap | FAIL | 149 | 2781/2815/2737/2842 | 95.3% |
+| iris_petal/seed1 | tree | FAIL | 2314 | 38/38/35/27 | 95.3% |
+| iris_petal/seed1 | regions | ex | 983 | 0/0/0/0 | 95.3% |
+| iris_petal/seed2 | Claude (dump) | sn | 49 | 0/0/0/0 | 96.0% |
+| iris_petal/seed2 | Claude (input/output only) | sn | 59 | 0/0/0/0 | 96.0% |
+| iris_petal/seed2 | AST tool | sn | 46 | 0/0/0/0 | 96.0% |
+| iris_petal/seed2 | PySR | FAIL | 120 | 442/470/516/487 | 96.0% |
+| iris_petal/seed2 | PySR+snap | FAIL | 127 | 2246/2253/2358/2341 | 95.3% |
+| iris_petal/seed2 | tree | FAIL | 2122 | 28/23/23/21 | 96.0% |
+| iris_petal/seed2 | regions | ex | 915 | 0/0/0/0 | 96.0% |
+| iris_petal/seed3 | Claude (dump) | sn | 56 | 0/0/0/0 | 95.3% |
+| iris_petal/seed3 | Claude (input/output only) | ex | 88 | 0/0/0/0 | 95.3% |
+| iris_petal/seed3 | AST tool | sn | 32 | 0/0/0/0 | 96.7% |
+| iris_petal/seed3 | PySR | FAIL | 136 | 225/221/192/220 | 95.3% |
+| iris_petal/seed3 | PySR+snap | FAIL | 171 | 5308/5318/5448/5290 | 95.3% |
+| iris_petal/seed3 | tree | FAIL | 2194 | 171/165/163/162 | 95.3% |
+| iris_petal/seed3 | regions | ex | 705 | 0/0/0/0 | 95.3% |
+| iris_petal/seed4 | Claude (dump) | sn | 29 | 0/0/0/0 | 96.7% |
+| iris_petal/seed4 | Claude (input/output only) | sn | 42 | 0/0/0/0 | 96.0% |
+| iris_petal/seed4 | AST tool | sn | 29 | 0/0/0/0 | 96.0% |
+| iris_petal/seed4 | PySR | FAIL | 136 | 109/102/130/95 | 96.7% |
+| iris_petal/seed4 | PySR+snap | FAIL | 153 | 6317/6428/6400/6463 | 96.0% |
+| iris_petal/seed4 | tree | FAIL | 2338 | 31/32/43/31 | 96.0% |
+| iris_petal/seed4 | regions | ex | 337 | 0/0/0/0 | 95.3% |
+| iris_petal/seed5 | Claude (dump) | sn | 29 | 0/0/0/0 | 95.3% |
+| iris_petal/seed5 | Claude (input/output only) | sn | 39 | 0/0/0/0 | 95.3% |
+| iris_petal/seed5 | AST tool | sn | 32 | 0/0/0/0 | 95.3% |
+| iris_petal/seed5 | PySR | sn | 118 | 0/0/0/0 | 95.3% |
+| iris_petal/seed5 | PySR+snap | FAIL | 155 | 8212/8033/8281/8092 | 95.3% |
+| iris_petal/seed5 | tree | FAIL | 2378 | 13/15/10/11 | 95.3% |
+| iris_petal/seed5 | regions | ex | 1141 | 0/0/0/0 | 95.3% |
+
+### The checker loop
+
+Calls to `check.py` per agent run (`*_checks.log`).
+
+| method | nets | runs | median checks | max checks | runs with a FAIL | started with FAIL | max FAILs before the first PASS |
+|---|---|---|---|---|---|---|---|
+| Claude (dump) | formula | 34 | 1 | 4 | 2 | 2 | 2 |
+| Claude (dump) | Iris | 12 | 4 | 16 | 7 | 5 | 7 |
+| Claude (input/output only) | formula | 29 | 1 | 5 | 0 | 0 | 0 |
+| Claude (input/output only) | Iris | 12 | 14 | 23 | 10 | 3 | 1 |
+
+### Fix and reinsert (experiment R)
+
+The net is wrong on the task; each arm fixes it from the repair set and is judged on held-out cases. Program arms are compiled back into a net (reinsertion) and that net is checked against the program.
+
+**planted bug (P1)**, medians over nets
+
+| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion PASS |
+|---|---|---|---|---|---|---|---|---|---|
+| Claude fix (with program) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 1.00 | 13 | 0 | 5/5 |
+| Claude fix (cases only) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 1.00 | 12 | 1 | 5/5 |
+| tree on cases | 5 | 1.00 | 0.92 | 0.00 | 1.00 | 0.31 | 4090 | 3 | 3/5 |
+| fine-tune | 5 | 0.75 | 0.77 | 0.00 | 0.94 | 0.47 | – | 0 | – |
+| fine-tune + anchors | 5 | 0.74 | 0.74 | 0.00 | 0.94 | 0.54 | – | 0 | – |
+| last-layer LP | 5 | 1.00 | 0.90 | 0.00 | 1.00 | 1.00 | – | 0 | – | (3 infeasible/error)
+| retrain (clean labels) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 0.99 | – | 0 | – |
+
+**natural bug (P2)**, medians over nets
+
+| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion PASS |
+|---|---|---|---|---|---|---|---|---|---|
+| Claude fix (with program) | 1 | 1.00 | n/a | 0.00 | 1.00 | n/a | 12 | 0 | 1/1 |
+| Claude fix (cases only) | 1 | 1.00 | n/a | 0.00 | 1.00 | n/a | 7 | 0 | 1/1 |
+| tree on cases | 3 | 1.00 | n/a | 0.00 | 1.00 | 0.07 | 4090 | 2 | 3/3 |
+| fine-tune | 3 | 0.50 | n/a | 0.00 | 1.00 | 0.33 | – | 0 | – |
+| fine-tune + anchors | 3 | 0.00 | n/a | 0.00 | 1.00 | 0.33 | – | 0 | – |
+| last-layer LP | 3 | n/a | n/a | 0.00 | 1.00 | 0.32 | – | 0 | – | (1 infeasible/error)
+
+**Iris (P3)**, medians over nets
+
+| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion PASS |
+|---|---|---|---|---|---|---|---|---|---|
+| Claude fix (with program) | 12 | 0.83 | 0.00 | 0.00 | 0.98 | n/a | 60 | 0 | 12/12 |
+| tree on cases | 12 | 0.63 | 0.00 | 0.01 | 0.98 | n/a | 26 | 0 | 12/12 |
+| fine-tune | 12 | 0.42 | 0.00 | 0.00 | 0.99 | n/a | – | 0 | – |
+| fine-tune + anchors | 12 | 0.00 | 0.00 | 0.00 | 0.99 | n/a | – | 0 | – |
+| last-layer LP | 12 | n/a | n/a | n/a | n/a | n/a | – | 0 | – | (12 infeasible/error)
+
+**Iris, repeated 2-fold splits of all 150 flowers** (non-agent arms; one flower is 2 points of held-out accuracy on a single split)
+
+| arm | nets | generalization (mean over splits) | drawdown (mean over splits) |
+|---|---|---|---|
+| tree on cases | 12 | 0.33 | 0.03 |
+| fine-tune | 12 | 0.25 | 0.01 |
+| fine-tune + anchors | 12 | 0.00 | 0.00 |
+| last-layer LP | 12 | 0.15 | 0.02 |
+
+### Readable diffs of network repairs
+
+#### xor/seed2 (runs)
+
+Decompiled (faithful to the net):
+
+```python
+def net(x0, x1):
+    # class 1 exactly when x0 is false (x1 is ignored): NOT x0
+    return 1 - 2 * x0
+```
+
+Fixed by Claude:
+
+```python
+def net(x0, x1):
+    # class 1 exactly when x0 and x1 differ: x0 XOR x1
+    return 1 if x0 != x1 else -1
+```
+
+#### absdiff/seed0 (runs_bugs)
+
+Decompiled (faithful to the net):
+
+```python
+def net(x0, x1):
+    # |x0 - x1|-like valley with different slopes on each side of the diagonal
+    above = relu(x1 - 0.875 * x0 - 0.25)        # x1 above the diagonal
+    above_steep = relu(0.85 * x1 - x0 - 0.25)   # second kink: steeper further above
+    below = relu(x0 - x1 + 0.125)               # x1 below the diagonal
+    # plateau step in x0: rises from x0 = -0.7, levels off near x0 = -(x1 + 1) / 6
+    x0_step = 0.9 * relu(x0 + 0.7) - 0.95 * relu(x0 + (x1 + 1) / 6)
+    # plateau step in x1: rises as x1 drops below ~1/3, levels off below ~-0.4
+    x1_step = 0.7 * relu(1 / 3 - x1 - 0.075 * x0) - 0.85 * relu(-x1 - 0.15 * x0 - 0.4)
+    return 0.8 * above + 0.35 * above_steep + 0.75 * below + x0_step + x1_step
+```
+
+Fixed by Claude:
+
+```python
+def net(x0, x1):
+    # symmetric V-shaped valley along the diagonal x1 == x0: the absolute difference
+    return abs(x0 - x1)
+```
+
+#### median3/seed0 (runs_bugs)
+
+Decompiled (faithful to the net):
+
+```python
+# What the network computes (approximately):
+#     median(x0, x1, x2) + 1.3 * [x0 in (-0.95, 1.9), x1 in (-2.15, 0.65), x2 in (-2.95, -0.05)]
+# i.e. the median of the three inputs, with a planted constant offset of ~1.3 inside one
+# axis-aligned sub-box (~10% of the domain); see agent_clean.py for that formula.
+# The net only fits that function to about +/-0.15 (and up to ~0.3 near domain corners, with
+# ramps ~0.4 wide at the box faces), which is more than the 2%-of-range snap tolerance, so the
+# clean formula FAILS check.py. This file is the faithful version that PASSES (snap):
+# the two dead layer-2 neurons (never active on [-3, 3]^3) are removed and every remaining
+# weight and bias is rounded to 0.01 (max |error| 0.08 vs the 0.12 tolerance).
+# a* = layer-1 hidden units, b* = layer-2 hidden units.
+def net(x0, x1, x2):
+    a0 = relu(0.87 * x1 - 0.87 * x2)
+    a1 = relu(-0.54 * x0 - 0.18 * x1 + 0.6 * x2 - 0.05)
+    a2 = relu(0.05 * x0 + 0.16 * x1 - 0.73 * x2 + 0.32)
+    a3 = relu(-0.02 * x0 - 1.16 * x1 + 0.02 * x2 + 1.02)
+    a4 = relu(-0.78 * x0 - 0.73 * x1 + 0.21 * x2 + 0.11)
+    a5 = relu(0.16 * x0 + 0.68 * x1 + 0.13 * x2 - 0.55)
+    a6 = relu(-0.08 * x0 - 0.11 * x1 + 0.42 * x2 + 0.84)
+    a7 = relu(0.12 * x0 + 0.01 * x1 + 0.95 * x2 - 0.13)
+    a8 = relu(-0.25 * x0 + 0.27 * x1 + 0.64 * x2 + 0.28)
+    a9 = relu(-0.78 * x0 - 0.8 * x1 - 0.25 * x2 - 0.61)
+    a10 = relu(-0.12 * x0 + 0.8 * x1 - 0.26 * x2 - 0.53)
+    a11 = relu(0.01 * x0 - 0.04 * x1 - 0.95 * x2 - 0.33)
+    a12 = relu(-0.83 * x0 + 0.63 * x1 + 0.04 * x2 + 0.51)
+    a13 = relu(0.61 * x0 + 0.05 * x1 - 0.2 * x2 + 0.54)
+    a14 = relu(0.78 * x0 - 0.79 * x1 - 0.07 * x2 - 1.07)
+    a15 = relu(-0.52 * x0 + 0.62 * x1 - 0.06 * x2 + 0.22)
+    b0 = relu(-0.03 * a0 - 0.94 * a1 - 0.36 * a3 - 0.08 * a4 + 0.49 * a5 - 0.22 * a6 + 0.15 * a7 + 0.44 * a8 + 0.4 * a9 + 0.2 * a10 + 0.05 * a11 - 0.02 * a12 - 0.16 * a13 + 0.03 * a14 - 0.23 * a15 + 0.29)
+    b1 = relu(-0.35 * a0 + 0.23 * a1 + 0.34 * a2 - 0.5 * a3 - 0.01 * a4 + 0.12 * a5 - 0.13 * a6 - 0.16 * a7 + 0.2 * a8 + 0.37 * a9 + 0.04 * a10 + 0.06 * a11 + 0.4 * a12 - 0.03 * a13 - 0.64 * a14 - 0.01 * a15 + 0.13)
+    b3 = relu(0.21 * a0 + 0.31 * a1 + 0.43 * a2 + 0.65 * a3 - 0.58 * a4 - 0.32 * a5 - 0.31 * a6 - 0.03 * a7 + 0.03 * a8 + 0.32 * a10 - 0.3 * a11 - 0.56 * a12 - 0.43 * a13 - 0.61 * a14 + 0.06 * a15 + 0.14)
+    b4 = relu(0.19 * a0 - 0.01 * a1 - 0.13 * a2 + 0.54 * a3 + 0.2 * a4 - 0.31 * a5 + 0.47 * a6 - 0.28 * a7 - 0.22 * a8 + 0.28 * a9 + 0.43 * a10 + 0.51 * a11 + 0.36 * a12 - 0.02 * a13 + 0.26 * a14 - 0.16 * a15 + 0.27)
+    b5 = relu(0.42 * a0 - 0.2 * a1 + 0.28 * a2 - 0.73 * a3 + 0.54 * a4 - 0.45 * a5 - 0.18 * a6 + 0.56 * a7 - 0.22 * a8 + 0.82 * a9 + 0.42 * a10 - 0.42 * a11 + 0.33 * a12 - 0.37 * a13 - 0.8 * a14 - 0.27 * a15 + 0.11)
+    b6 = relu(-0.27 * a0 - 0.11 * a1 - 0.11 * a2 + 0.18 * a3 - 0.43 * a4 + 0.11 * a5 + 0.01 * a6 + 0.2 * a7 - 0.1 * a8 - 0.06 * a9 + 0.04 * a10 + 0.09 * a11 + 0.35 * a12 + 0.14 * a13 - 0.64 * a14 + 0.27 * a15 + 0.52)
+    b7 = relu(-0.11 * a0 - 0.5 * a1 + 0.3 * a2 - 0.03 * a3 - 0.19 * a4 + 0.53 * a5 + 0.06 * a6 + 0.23 * a7 + 0.42 * a8 + 0.1 * a9 + 0.05 * a10 - 0.34 * a11 - 0.26 * a12 + 0.45 * a13 - 0.41 * a14 + 0.23 * a15 + 0.31)
+    b8 = relu(-0.79 * a0 - 1.49 * a1 + 0.13 * a2 + 0.17 * a3 - 0.38 * a4 + 0.16 * a5 - 0.45 * a6 - 0.17 * a7 - 0.4 * a8 + 0.1 * a9 + 0.07 * a10 + 0.41 * a11 - 1.06 * a12 + 0.7 * a13 + 0.28 * a14 - 0.44 * a15 + 0.31)
+    b9 = relu(0.55 * a0 - 0.56 * a1 + 0.27 * a2 + 0.57 * a3 - 0.27 * a4 - 0.18 * a5 + 0.25 * a6 + 0.54 * a7 - 0.7 * a8 - 0.53 * a9 + 0.29 * a10 - 0.52 * a11 - 0.34 * a12 + 0.38 * a13 + 0.14 * a14 - 0.45 * a15 + 0.04)
+    b10 = relu(-1.22 * a0 - 0.32 * a1 - 0.23 * a2 - 0.38 * a3 + 0.32 * a4 - 0.53 * a5 - 0.01 * a6 + 0.29 * a7 - 0.06 * a8 + 0.28 * a9 + 0.71 * a10 + 0.02 * a11 + 0.48 * a12 - 0.17 * a13 + 0.71 * a14 + 0.49 * a15 + 0.11)
+    b12 = relu(-0.68 * a0 + 0.47 * a1 - 0.18 * a2 + 0.15 * a3 - 0.13 * a4 + 0.18 * a5 + 0.22 * a6 - 0.43 * a7 + 0.12 * a8 - 0.14 * a9 - 0.23 * a10 + 0.69 * a11 - 0.05 * a12 + 0.19 * a13 + 0.14 * a14 - 0.38 * a15 + 0.16)
+    b13 = relu(-0.7 * a0 + 0.14 * a1 + 0.21 * a2 + 0.14 * a3 - 0.02 * a4 - 0.08 * a5 - 0.47 * a6 - 0.26 * a7 + 0.26 * a8 - 0.37 * a9 + 0.09 * a10 - 0.15 * a11 + 0.09 * a12 + 0.59 * a13 - 0.69 * a14 + 0.31 * a15 + 0.1)
+    b14 = relu(-0.13 * a0 + 0.16 * a1 - 0.14 * a2 + 0.84 * a3 - 0.9 * a4 + 0.41 * a5 + 0.53 * a6 - 0.48 * a7 - 0.35 * a8 - 1.16 * a9 - 0.53 * a10 + 0.69 * a11 - 0.58 * a12 - 0.53 * a13 - 1.49 * a14 + 0.11 * a15 + 0.23)
+    b15 = relu(-0.15 * a0 - 0.21 * a1 + 0.51 * a2 + 0.94 * a3 - 0.62 * a4 + 0.41 * a5 - 0.3 * a6 - 0.33 * a7 + 0.23 * a8 - 1.1 * a9 - 0.3 * a10 - 0.15 * a11 - 0.25 * a12 - 0.4 * a13 - 1.37 * a14 - 0.1 * a15 + 0.45)
+    return 0.3 * b0 + 0.24 * b1 + 0.62 * b3 - 0.31 * b4 - 0.54 * b5 + 0.21 * b6 + 0.35 * b7 - 0.61 * b8 + 0.77 * b9 + 0.58 * b10 - 0.2 * b12 - 0.17 * b13 - 1.92 * b14 + 1.72 * b15 - 0.17
+```
+
+Fixed by Claude:
+
+```python
+# The median of the three inputs.
+# The network computes approximately median(x0, x1, x2) plus a spurious +1.3 offset inside the box
+# x0 in (-0.95, 1.9), x1 in (-2.15, 0.65), x2 in (-2.95, -0.05), and it also fits the median only
+# to about +/-0.15 (worse near the corners). The correct answer is the plain median everywhere.
+def net(x0, x1, x2):
+    return max(min(x0, x1), min(max(x0, x1), x2))
+```
+
+#### tax/seed0 (runs_bugs)
+
+Decompiled (faithful to the net):
+
+```python
+def net(x0):
+    # Convex piecewise-linear "bracket" curve: zero below 3.5, then marginal rate
+    # 0.15 up to 23, 0.19 up to 63.5, 0.38 above 63.5.
+    band1 = relu(x0 - 3.5)
+    band2 = relu(x0 - 23)
+    band3 = relu(x0 - 63.5)
+    return 0.15 * band1 + 0.04 * band2 + 0.19 * band3
+```
+
+Fixed by Claude:
+
+```python
+def net(x0):
+    # Progressive "bracket" curve: marginal rate 0.10 from 0 to 20,
+    # 0.20 from 20 to 80, and 0.40 above 80.
+    band1 = relu(x0)
+    band2 = relu(x0 - 20)
+    band3 = relu(x0 - 80)
+    return 0.1 * band1 + 0.1 * band2 + 0.2 * band3
+```
+
+#### window/seed0 (runs_bugs)
+
+Decompiled (faithful to the net):
+
+```python
+def net(x0):
+    # class 1 iff x0 lies in the band (-1/2, 1/2)
+    return 0.5 - abs(x0)
+```
+
+Fixed by Claude:
+
+```python
+def net(x0):
+    # class 1 iff x0 lies in the open band (-1/2, 1/2)
+    return 0.5 - abs(x0)
+```
+
+#### xor/seed0 (runs_bugs)
+
+Decompiled (faithful to the net):
+
+```python
+def net(x0, x1):
+    # Logical OR of two booleans: class 1 iff at least one input is set.
+    return x0 + x1 - 0.5
+```
+
+Fixed by Claude:
+
+```python
+def net(x0, x1):
+    # Exclusive OR of two booleans: class 1 iff exactly one input is set.
+    return abs(x0 - x1) - 0.5
+```
+
 ## Real datasets
 
 Dataset runs (Iris) have no known formula: their task columns below compare with the label of the nearest table row, and `recovered` is n/a. They are left out of the step-3 reproduction and the beats-the-network list above. Their results and held-out runs are in [runs/iris/REPORT.md](runs/iris/REPORT.md).
@@ -125,126 +553,328 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | absdiff/hand | hand | dump | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 51 (100%) |  |  |
 | absdiff/hand | hand | agent_1 | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 10 (20%) | ok | 59s 317341+850 tok |
 | absdiff/hand | hand | ast | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 10 (20%) |  |  |
+| absdiff/hand | hand | io_agent_1 | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 15 (29%) | ok | 68s 393302+1875 tok |
+| absdiff/hand | hand | tree | FAIL | empirical | 0.389 |  | 0.384 / 6.24 | no | 4590 (9000%) |  |  |
+| absdiff/hand | hand | regions | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 26 (51%) |  |  |
+| absdiff/hand | hand | pysr | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 15 (29%) |  |  |
+| absdiff/hand | hand | pysr_snap | PASS exact | empirical | 4.74e-07 |  | 0 / 0 | yes | 15 (29%) |  |  |
 | absdiff/seed0 | R² 1.0000 | dump | PASS exact | empirical | 1.23e-06 |  | 0.0295 / 0.0622 | no | 232 (100%) |  |  |
 | absdiff/seed0 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 10 (4%) | ok | 52s 322686+1992 tok |
 | absdiff/seed0 | R² 1.0000 | ast | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 10 (4%) |  |  |
+| absdiff/seed0 | R² 1.0000 | io_agent_1 | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 15 (6%) | ok | 80s 392995+2601 tok |
+| absdiff/seed0 | R² 1.0000 | tree | FAIL | empirical | 0.517 |  | 0.53 / 6.24 | no | 4596 (1981%) |  |  |
+| absdiff/seed0 | R² 1.0000 | regions | PASS exact | empirical | 1.13e-06 |  | 0.0295 / 0.0622 | no | 892 (384%) |  |  |
+| absdiff/seed0 | R² 1.0000 | pysr | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 15 (6%) |  |  |
+| absdiff/seed0 | R² 1.0000 | pysr_snap | PASS snap | empirical | 0.0302 |  | 0 / 0 | yes | 15 (6%) |  |  |
 | absdiff/seed1 | R² 1.0000 | dump | PASS exact | empirical | 1.05e-06 |  | 0.0205 / 0.0205 | no | 234 (100%) |  |  |
 | absdiff/seed1 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0205 |  | 0 / 0 | yes | 10 (4%) | ok | 74s 321952+1795 tok |
 | absdiff/seed1 | R² 1.0000 | ast | PASS snap | empirical | 0.0205 |  | 0 / 0 | yes | 10 (4%) |  |  |
+| absdiff/seed1 | R² 1.0000 | io_agent_1 | PASS snap | empirical | 0.0205 |  | 0 / 0 | yes | 15 (6%) | ok | 80s 462691+2680 tok |
+| absdiff/seed1 | R² 1.0000 | tree | FAIL | empirical | 0.388 |  | 0.383 / 6.24 | no | 4590 (1962%) |  |  |
+| absdiff/seed1 | R² 1.0000 | regions | PASS exact | empirical | 9.18e-07 |  | 0.0205 / 0.0205 | no | 224 (96%) |  |  |
+| absdiff/seed1 | R² 1.0000 | pysr | PASS snap | empirical | 0.00165 |  | 0.0206 / 0.0206 | no | 42 (18%) |  |  |
+| absdiff/seed1 | R² 1.0000 | pysr_snap | PASS snap | empirical | 0.0205 |  | 0 / 0 | yes | 15 (6%) |  |  |
 | absdiff/seed2 | R² 1.0000 | dump | PASS exact | empirical | 1.06e-06 |  | 0.0164 / 0.483 | no | 232 (100%) |  |  |
 | absdiff/seed2 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0168 |  | 0 / 0 | yes | 10 (4%) | ok | 82s 322020+1801 tok |
 | absdiff/seed2 | R² 1.0000 | ast | PASS snap | empirical | 0.0168 |  | 0 / 0 | yes | 10 (4%) |  |  |
+| absdiff/seed2 | R² 1.0000 | io_agent_1 | PASS snap | empirical | 0.0168 |  | 0 / 0 | yes | 20 (9%) | OUTSIDE PATHS (1) | 78s 394306+2378 tok |
+| absdiff/seed2 | R² 1.0000 | tree | FAIL | empirical | 0.388 |  | 0.382 / 6.24 | no | 4598 (1982%) |  |  |
+| absdiff/seed2 | R² 1.0000 | regions | PASS exact | empirical | 1.22e-06 |  | 0.0164 / 0.0401 | no | 686 (296%) |  |  |
+| absdiff/seed2 | R² 1.0000 | pysr | PASS snap | empirical | 0.0124 |  | 0.0151 / 0.0152 | no | 19 (8%) |  |  |
+| absdiff/seed2 | R² 1.0000 | pysr_snap | PASS snap | empirical | 0.0168 |  | 0 / 0 | yes | 15 (6%) |  |  |
 | absdiff_perturbed/hand | hand | dump | PASS exact | empirical | 1.06e-06 |  | 0.08 / 0.169 | no | 60 (100%) |  |  |
 | absdiff_perturbed/hand | hand | agent_1 | PASS snap | empirical | 0.0801 |  | 0 / 0 | yes | 10 (17%) | ok | 69s 320725+1418 tok |
 | absdiff_perturbed/hand | hand | ast | PASS snap | empirical | 0.0801 |  | 0 / 0 | yes | 10 (17%) |  |  |
+| absdiff_perturbed/hand | hand | io_agent_1 | PASS snap | empirical | 0.0801 |  | 0 / 0 | yes | 15 (25%) | ok | 73s 394220+2607 tok |
+| absdiff_perturbed/hand | hand | tree | FAIL | empirical | 0.496 |  | 0.505 / 6.35 | no | 4592 (7653%) |  |  |
+| absdiff_perturbed/hand | hand | regions | PASS exact | empirical | 1.03e-06 |  | 0.08 / 0.169 | no | 113 (188%) |  |  |
+| absdiff_perturbed/hand | hand | pysr | PASS snap | empirical | 0.0751 |  | 0.0838 / 0.184 | no | 55 (92%) |  |  |
+| absdiff_perturbed/hand | hand | pysr_snap | PASS snap | empirical | 0.0801 |  | 0 / 0 | yes | 15 (25%) |  |  |
 | deadredundant/hand | hand | dump | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 0.995 | no | 104 (100%) |  |  |
 | deadredundant/hand | hand | agent_1 | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 12 (12%) | ok | 60s 318134+1234 tok |
 | deadredundant/hand | hand | ast | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 15 (14%) |  |  |
+| deadredundant/hand | hand | io_agent_1 | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 17 (16%) | ok | 66s 392065+2033 tok |
+| deadredundant/hand | hand | tree | FAIL | empirical | 0.0551 |  | 0.0567 / 1.04 | no | 4090 (3933%) |  |  |
+| deadredundant/hand | hand | regions | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 23 (22%) |  |  |
+| deadredundant/hand | hand | pysr | PASS exact | empirical | 1.79e-07 |  | 0 / 0 | yes | 36 (35%) |  |  |
+| deadredundant/hand | hand | pysr_snap | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 12 (12%) |  |  |
 | iris/seed0 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1065 (6.46%) | 0.799 / 0.772 | n/a | 484 (100%) |  |  |
-| iris/seed0 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 7123 (6.46%) | 0.793 / 0.772 | n/a | 76 (16%) | OUTSIDE PATHS (2) | 364s 1491056+13670 tok |
-| iris/seed0 | acc 0.9805 | ast | PASS snap | empirical |  | 0 / 7123 (6.46%) | 0.793 / 0.772 | n/a | 62 (13%) |  |  |
+| iris/seed0 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 7144 (6.46%) | 0.793 / 0.772 | n/a | 76 (16%) | OUTSIDE PATHS (2) | 364s 1491056+13670 tok |
+| iris/seed0 | acc 0.9805 | ast | PASS snap | empirical |  | 0 / 7144 (6.46%) | 0.793 / 0.772 | n/a | 62 (13%) |  |  |
+| iris/seed0 | acc 0.9805 | io_agent_1 | PASS snap | empirical |  | 0 / 5584 (6.46%) | 0.799 / 0.772 | n/a | 72 (15%) | ok | 936s 1390344+15455 tok |
+| iris/seed0 | acc 0.9805 | tree | FAIL | empirical |  | 5233 / 8937 (6.46%) | 0.796 / 0.754 | n/a | 4090 (845%) |  |  |
+| iris/seed0 | acc 0.9805 | regions | PASS exact | empirical |  | 0 / 1069 (6.46%) | 0.799 / 0.771 | n/a | 983 (203%) |  |  |
+| iris/seed0 | acc 0.9805 | pysr | FAIL | empirical |  | 2802 / 8823 (6.46%) | 0.8 / 0.747 | n/a | 172 (36%) |  |  |
+| iris/seed0 | acc 0.9805 | pysr_snap | FAIL | empirical |  | 8667 / 9442 (6.46%) | 0.784 / 0.737 | n/a | 190 (39%) |  |  |
 | iris/seed1 | acc 0.9796 | dump | PASS exact | empirical |  | 0 / 991 (5.72%) | 0.787 / 0.76 | n/a | 482 (100%) |  |  |
-| iris/seed1 | acc 0.9796 | agent_1 | PASS snap | empirical |  | 0 / 4753 (5.72%) | 0.789 / 0.761 | n/a | 70 (15%) | OUTSIDE PATHS (2) | 302s 1133574+12036 tok |
-| iris/seed1 | acc 0.9796 | ast | PASS snap | empirical |  | 0 / 5482 (5.72%) | 0.787 / 0.759 | n/a | 64 (13%) |  |  |
+| iris/seed1 | acc 0.9796 | agent_1 | PASS snap | empirical |  | 0 / 4755 (5.72%) | 0.789 / 0.761 | n/a | 70 (15%) | OUTSIDE PATHS (2) | 302s 1133574+12036 tok |
+| iris/seed1 | acc 0.9796 | ast | PASS snap | empirical |  | 0 / 5484 (5.72%) | 0.787 / 0.759 | n/a | 64 (13%) |  |  |
+| iris/seed1 | acc 0.9796 | io_agent_1 | PASS snap | empirical |  | 0 / 4573 (5.72%) | 0.786 / 0.759 | n/a | 76 (16%) | OUTSIDE PATHS (2) | 1346s 2886508+20114 tok |
+| iris/seed1 | acc 0.9796 | tree | FAIL | empirical |  | 5650 / 8479 (5.72%) | 0.786 / 0.724 | n/a | 4090 (849%) |  |  |
+| iris/seed1 | acc 0.9796 | regions | PASS exact | empirical |  | 0 / 947 (5.72%) | 0.787 / 0.76 | n/a | 1367 (284%) |  |  |
+| iris/seed1 | acc 0.9796 | pysr | FAIL | empirical |  | 2133 / 8043 (5.72%) | 0.775 / 0.731 | n/a | 174 (36%) |  |  |
+| iris/seed1 | acc 0.9796 | pysr_snap | FAIL | empirical |  | 1579 / 7859 (5.72%) | 0.783 / 0.744 | n/a | 146 (30%) |  |  |
 | iris/seed2 | acc 0.9798 | dump | PASS exact | empirical |  | 0 / 796 (6.45%) | 0.775 / 0.737 | n/a | 480 (100%) |  |  |
 | iris/seed2 | acc 0.9798 | agent_1 | PASS snap | empirical |  | 0 / 5661 (6.45%) | 0.773 / 0.734 | n/a | 67 (14%) | OUTSIDE PATHS (1) | 217s 1253258+12979 tok |
 | iris/seed2 | acc 0.9798 | ast | PASS snap | empirical |  | 0 / 6650 (6.45%) | 0.772 / 0.733 | n/a | 62 (13%) |  |  |
-| iris/seed3 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1263 (6.14%) | 0.807 / 0.781 | n/a | 484 (100%) |  |  |
-| iris/seed3 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 5015 (6.14%) | 0.807 / 0.778 | n/a | 72 (15%) | OUTSIDE PATHS (2) | 197s 1051160+10377 tok |
-| iris/seed3 | acc 0.9805 | ast | PASS exact | empirical |  | 0 / 1263 (6.14%) | 0.807 / 0.779 | n/a | 62 (13%) |  |  |
+| iris/seed2 | acc 0.9798 | io_agent_1 | PASS snap | empirical |  | 0 / 3876 (6.45%) | 0.773 / 0.734 | n/a | 101 (21%) | ok | 313s 1268096+14416 tok |
+| iris/seed2 | acc 0.9798 | tree | FAIL | empirical |  | 4609 / 8380 (6.45%) | 0.772 / 0.688 | n/a | 4090 (852%) |  |  |
+| iris/seed2 | acc 0.9798 | regions | PASS exact | empirical |  | 0 / 819 (6.45%) | 0.775 / 0.737 | n/a | 1369 (285%) |  |  |
+| iris/seed2 | acc 0.9798 | pysr | FAIL | empirical |  | 1558 / 6956 (6.45%) | 0.777 / 0.721 | n/a | 186 (39%) |  |  |
+| iris/seed2 | acc 0.9798 | pysr_snap | FAIL | empirical |  | 21307 / 9786 (6.45%) | 0.783 / 0.75 | n/a | 203 (42%) |  |  |
+| iris/seed3 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1274 (6.13%) | 0.807 / 0.781 | n/a | 484 (100%) |  |  |
+| iris/seed3 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 5042 (6.13%) | 0.807 / 0.778 | n/a | 72 (15%) | OUTSIDE PATHS (2) | 197s 1051160+10377 tok |
+| iris/seed3 | acc 0.9805 | ast | PASS exact | empirical |  | 0 / 1274 (6.13%) | 0.807 / 0.779 | n/a | 62 (13%) |  |  |
+| iris/seed3 | acc 0.9805 | io_agent_1 | PASS snap | empirical |  | 0 / 4400 (6.13%) | 0.804 / 0.775 | n/a | 90 (19%) | OUTSIDE PATHS (1) | 998s 1828354+17012 tok |
+| iris/seed3 | acc 0.9805 | tree | FAIL | empirical |  | 4513 / 8185 (6.13%) | 0.804 / 0.737 | n/a | 4090 (845%) |  |  |
+| iris/seed3 | acc 0.9805 | regions | PASS exact | empirical |  | 0 / 963 (6.13%) | 0.807 / 0.781 | n/a | 601 (124%) |  |  |
+| iris/seed3 | acc 0.9805 | pysr | FAIL | empirical |  | 4725 / 7986 (6.13%) | 0.803 / 0.761 | n/a | 137 (28%) |  |  |
+| iris/seed3 | acc 0.9805 | pysr_snap | FAIL | empirical |  | 1524 / 6492 (6.13%) | 0.81 / 0.779 | n/a | 161 (33%) |  |  |
 | iris/seed4 | acc 0.9856 | dump | PASS exact | empirical |  | 0 / 873 (5.84%) | 0.768 / 0.732 | n/a | 476 (100%) |  |  |
-| iris/seed4 | acc 0.9856 | agent_1 | PASS snap | empirical |  | 0 / 5387 (5.84%) | 0.771 / 0.737 | n/a | 72 (15%) | OUTSIDE PATHS (3) | 592s 2108501+17830 tok |
-| iris/seed4 | acc 0.9856 | ast | PASS snap | empirical |  | 0 / 4217 (5.84%) | 0.763 / 0.725 | n/a | 64 (13%) |  |  |
+| iris/seed4 | acc 0.9856 | agent_1 | PASS snap | empirical |  | 0 / 5409 (5.84%) | 0.771 / 0.737 | n/a | 72 (15%) | OUTSIDE PATHS (3) | 592s 2108501+17830 tok |
+| iris/seed4 | acc 0.9856 | ast | PASS snap | empirical |  | 0 / 4219 (5.84%) | 0.763 / 0.725 | n/a | 64 (13%) |  |  |
+| iris/seed4 | acc 0.9856 | io_agent_1 | PASS snap | empirical |  | 0 / 5759 (5.84%) | 0.768 / 0.734 | n/a | 69 (14%) | OUTSIDE PATHS (1) | 2715s 2886827+23935 tok |
+| iris/seed4 | acc 0.9856 | tree | FAIL | empirical |  | 3723 / 7290 (5.84%) | 0.763 / 0.668 | n/a | 4090 (859%) |  |  |
+| iris/seed4 | acc 0.9856 | regions | PASS exact | empirical |  | 0 / 801 (5.84%) | 0.768 / 0.733 | n/a | 1733 (364%) |  |  |
+| iris/seed4 | acc 0.9856 | pysr | FAIL | empirical |  | 1008 / 5775 (5.84%) | 0.764 / 0.729 | n/a | 196 (41%) |  |  |
+| iris/seed4 | acc 0.9856 | pysr_snap | FAIL | empirical |  | 7708 / 8107 (5.84%) | 0.76 / 0.723 | n/a | 178 (37%) |  |  |
 | iris/seed5 | acc 0.9804 | dump | PASS exact | empirical |  | 0 / 731 (5.27%) | 0.798 / 0.764 | n/a | 478 (100%) |  |  |
-| iris/seed5 | acc 0.9804 | agent_1 | PASS snap | empirical |  | 0 / 5038 (5.27%) | 0.798 / 0.763 | n/a | 115 (24%) | OUTSIDE PATHS (3) | 529s 2645293+23006 tok |
-| iris/seed5 | acc 0.9804 | ast | PASS snap | empirical |  | 0 / 5076 (5.27%) | 0.797 / 0.765 | n/a | 62 (13%) |  |  |
-| iris_petal/seed0 | acc 0.9660 | dump | PASS exact | empirical |  | 0 / 643 (4.75%) | 0.785 / 0.798 | n/a | 374 (100%) |  |  |
-| iris_petal/seed0 | acc 0.9660 | agent_1 | PASS exact | empirical |  | 0 / 632 (4.75%) | 0.785 / 0.777 | n/a | 32 (9%) | OUTSIDE PATHS (3) | 136s 879385+8172 tok |
-| iris_petal/seed0 | acc 0.9660 | ast | PASS exact | empirical |  | 0 / 2089 (4.75%) | 0.785 / 0.777 | n/a | 32 (9%) |  |  |
+| iris/seed5 | acc 0.9804 | agent_1 | PASS snap | empirical |  | 0 / 5058 (5.27%) | 0.798 / 0.763 | n/a | 115 (24%) | OUTSIDE PATHS (3) | 529s 2645293+23006 tok |
+| iris/seed5 | acc 0.9804 | ast | PASS snap | empirical |  | 0 / 5095 (5.27%) | 0.797 / 0.765 | n/a | 62 (13%) |  |  |
+| iris/seed5 | acc 0.9804 | io_agent_1 | PASS snap | empirical |  | 0 / 4513 (5.27%) | 0.797 / 0.765 | n/a | 145 (30%) | OUTSIDE PATHS (1) | 1886s 4446755+33807 tok |
+| iris/seed5 | acc 0.9804 | tree | FAIL | empirical |  | 4448 / 7435 (5.27%) | 0.795 / 0.73 | n/a | 4090 (856%) |  |  |
+| iris/seed5 | acc 0.9804 | regions | PASS exact | empirical |  | 0 / 868 (5.27%) | 0.798 / 0.764 | n/a | 2499 (523%) |  |  |
+| iris/seed5 | acc 0.9804 | pysr | FAIL | empirical |  | 2672 / 7320 (5.27%) | 0.803 / 0.773 | n/a | 178 (37%) |  |  |
+| iris/seed5 | acc 0.9804 | pysr_snap | FAIL | empirical |  | 4607 / 8349 (5.27%) | 0.803 / 0.753 | n/a | 171 (36%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | dump | PASS exact | empirical |  | 0 / 643 (4.74%) | 0.785 / 0.798 | n/a | 374 (100%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | agent_1 | PASS exact | empirical |  | 0 / 632 (4.74%) | 0.785 / 0.777 | n/a | 32 (9%) | OUTSIDE PATHS (3) | 136s 879385+8172 tok |
+| iris_petal/seed0 | acc 0.9660 | ast | PASS exact | empirical |  | 0 / 2089 (4.74%) | 0.785 / 0.777 | n/a | 32 (9%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | io_agent_1 | PASS snap | empirical |  | 0 / 4334 (4.74%) | 0.786 / 0.782 | n/a | 42 (11%) | ok | 244s 758572+5719 tok |
+| iris_petal/seed0 | acc 0.9660 | tree | FAIL | empirical |  | 46 / 4276 (4.74%) | 0.784 / 0.763 | n/a | 2442 (653%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | regions | PASS exact | empirical |  | 0 / 583 (4.74%) | 0.785 / 0.79 | n/a | 345 (92%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | pysr | PASS snap | empirical |  | 0 / 3927 (4.74%) | 0.783 / 0.76 | n/a | 146 (39%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | pysr_snap | FAIL | empirical |  | 13711 / 9008 (4.74%) | 0.814 / 0.78 | n/a | 154 (41%) |  |  |
 | iris_petal/seed1 | acc 0.9664 | dump | PASS exact | empirical |  | 0 / 652 (5.42%) | 0.824 / 0.893 | n/a | 366 (100%) |  |  |
-| iris_petal/seed1 | acc 0.9664 | agent_1 | PASS snap | empirical |  | 0 / 5134 (5.42%) | 0.824 / 0.876 | n/a | 43 (12%) | ok | 112s 689390+5312 tok |
-| iris_petal/seed1 | acc 0.9664 | ast | PASS snap | empirical |  | 0 / 5418 (5.42%) | 0.825 / 0.861 | n/a | 32 (9%) |  |  |
-| iris_petal/seed2 | acc 0.9489 (NOT learned) | dump | PASS exact | empirical |  | 0 / 685 (5.32%) | 0.783 / 0.767 | n/a | 364 (100%) |  |  |
-| iris_petal/seed2 | acc 0.9489 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 5178 (5.32%) | 0.786 / 0.795 | n/a | 49 (13%) | ok | 147s 949561+7177 tok |
-| iris_petal/seed2 | acc 0.9489 (NOT learned) | ast | PASS snap | empirical |  | 0 / 4673 (5.32%) | 0.785 / 0.788 | n/a | 46 (13%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | agent_1 | PASS snap | empirical |  | 0 / 5135 (5.42%) | 0.824 / 0.876 | n/a | 43 (12%) | ok | 112s 689390+5312 tok |
+| iris_petal/seed1 | acc 0.9664 | ast | PASS snap | empirical |  | 0 / 5424 (5.42%) | 0.825 / 0.861 | n/a | 32 (9%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | io_agent_1 | PASS snap | empirical |  | 0 / 5774 (5.42%) | 0.827 / 0.869 | n/a | 34 (9%) | ok | 499s 1265168+11793 tok |
+| iris_petal/seed1 | acc 0.9664 | tree | FAIL | empirical |  | 75 / 4535 (5.42%) | 0.825 / 0.826 | n/a | 2314 (632%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | regions | PASS exact | empirical |  | 0 / 621 (5.42%) | 0.824 / 0.893 | n/a | 983 (269%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | pysr | FAIL | empirical |  | 257 / 6145 (5.42%) | 0.827 / 0.868 | n/a | 139 (38%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | pysr_snap | FAIL | empirical |  | 2824 / 9771 (5.42%) | 0.816 / 0.874 | n/a | 149 (41%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | dump | PASS exact | empirical |  | 0 / 692 (5.32%) | 0.783 / 0.767 | n/a | 364 (100%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 5183 (5.32%) | 0.786 / 0.795 | n/a | 49 (13%) | ok | 147s 949561+7177 tok |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | ast | PASS snap | empirical |  | 0 / 4679 (5.32%) | 0.785 / 0.788 | n/a | 46 (13%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | io_agent_1 | PASS snap | empirical |  | 0 / 5187 (5.32%) | 0.787 / 0.796 | n/a | 59 (16%) | ok | 351s 1051662+11951 tok |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | tree | FAIL | empirical |  | 34 / 4483 (5.32%) | 0.783 / 0.763 | n/a | 2122 (583%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | regions | PASS exact | empirical |  | 0 / 603 (5.32%) | 0.783 / 0.755 | n/a | 915 (251%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | pysr | FAIL | empirical |  | 441 / 6940 (5.32%) | 0.788 / 0.794 | n/a | 120 (33%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | pysr_snap | FAIL | empirical |  | 2268 / 8225 (5.32%) | 0.769 / 0.723 | n/a | 127 (35%) |  |  |
 | iris_petal/seed3 | acc 0.9661 | dump | PASS exact | empirical |  | 0 / 609 (4.63%) | 0.757 / 0.738 | n/a | 372 (100%) |  |  |
-| iris_petal/seed3 | acc 0.9661 | agent_1 | PASS snap | empirical |  | 0 / 4171 (4.63%) | 0.756 / 0.733 | n/a | 56 (15%) | ok | 154s 941575+7220 tok |
+| iris_petal/seed3 | acc 0.9661 | agent_1 | PASS snap | empirical |  | 0 / 4208 (4.63%) | 0.756 / 0.733 | n/a | 56 (15%) | ok | 154s 941575+7220 tok |
 | iris_petal/seed3 | acc 0.9661 | ast | PASS snap | empirical |  | 0 / 6783 (4.63%) | 0.762 / 0.726 | n/a | 32 (9%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | io_agent_1 | PASS exact | empirical |  | 0 / 1771 (4.63%) | 0.757 / 0.734 | n/a | 88 (24%) | OUTSIDE PATHS (1) | 363s 1143647+11415 tok |
+| iris_petal/seed3 | acc 0.9661 | tree | FAIL | empirical |  | 199 / 4395 (4.63%) | 0.758 / 0.903 | n/a | 2194 (590%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | regions | PASS exact | empirical |  | 0 / 612 (4.63%) | 0.757 / 0.741 | n/a | 705 (190%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | pysr | FAIL | empirical |  | 237 / 5632 (4.63%) | 0.759 / 0.734 | n/a | 136 (37%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | pysr_snap | FAIL | empirical |  | 5372 / 8792 (4.63%) | 0.739 / 0.702 | n/a | 171 (46%) |  |  |
 | iris_petal/seed4 | acc 0.9655 | dump | PASS exact | empirical |  | 0 / 599 (5.45%) | 0.846 / 0.895 | n/a | 370 (100%) |  |  |
-| iris_petal/seed4 | acc 0.9655 | agent_1 | PASS snap | empirical |  | 0 / 4986 (5.45%) | 0.848 / 0.893 | n/a | 29 (8%) | ok | 103s 604414+4489 tok |
-| iris_petal/seed4 | acc 0.9655 | ast | PASS snap | empirical |  | 0 / 6052 (5.45%) | 0.844 / 0.891 | n/a | 29 (8%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | agent_1 | PASS snap | empirical |  | 0 / 5007 (5.45%) | 0.848 / 0.893 | n/a | 29 (8%) | ok | 103s 604414+4489 tok |
+| iris_petal/seed4 | acc 0.9655 | ast | PASS snap | empirical |  | 0 / 6092 (5.45%) | 0.844 / 0.891 | n/a | 29 (8%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | io_agent_1 | PASS snap | empirical |  | 0 / 5333 (5.45%) | 0.845 / 0.894 | n/a | 42 (11%) | ok | 491s 1401465+11112 tok |
+| iris_petal/seed4 | acc 0.9655 | tree | FAIL | empirical |  | 62 / 4591 (5.45%) | 0.847 / 0.743 | n/a | 2338 (632%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | regions | PASS exact | empirical |  | 0 / 601 (5.45%) | 0.846 / 0.895 | n/a | 337 (91%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | pysr | FAIL | empirical |  | 143 / 6479 (5.45%) | 0.854 / 0.907 | n/a | 136 (37%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | pysr_snap | FAIL | empirical |  | 6627 / 7698 (5.45%) | 0.845 / 0.895 | n/a | 153 (41%) |  |  |
 | iris_petal/seed5 | acc 0.9656 | dump | PASS exact | empirical |  | 0 / 638 (5.50%) | 0.802 / 0.794 | n/a | 368 (100%) |  |  |
-| iris_petal/seed5 | acc 0.9656 | agent_1 | PASS snap | empirical |  | 0 / 5805 (5.50%) | 0.801 / 0.809 | n/a | 29 (8%) | ok | 139s 831271+7290 tok |
-| iris_petal/seed5 | acc 0.9656 | ast | PASS snap | empirical |  | 0 / 6417 (5.50%) | 0.796 / 0.802 | n/a | 32 (9%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | agent_1 | PASS snap | empirical |  | 0 / 5830 (5.50%) | 0.801 / 0.809 | n/a | 29 (8%) | ok | 139s 831271+7290 tok |
+| iris_petal/seed5 | acc 0.9656 | ast | PASS snap | empirical |  | 0 / 6437 (5.50%) | 0.796 / 0.802 | n/a | 32 (9%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | io_agent_1 | PASS snap | empirical |  | 0 / 5830 (5.50%) | 0.801 / 0.809 | n/a | 39 (11%) | ok | 218s 615831+4965 tok |
+| iris_petal/seed5 | acc 0.9656 | tree | FAIL | empirical |  | 32 / 4324 (5.50%) | 0.802 / 0.779 | n/a | 2378 (646%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | regions | PASS exact | empirical |  | 0 / 633 (5.50%) | 0.802 / 0.795 | n/a | 1141 (310%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | pysr | PASS snap | empirical |  | 0 / 4214 (5.50%) | 0.801 / 0.802 | n/a | 118 (32%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | pysr_snap | FAIL | empirical |  | 8174 / 7627 (5.50%) | 0.788 / 0.789 | n/a | 155 (42%) |  |  |
 | max/hand | hand | dump | PASS exact | empirical | 3.58e-07 |  | 4.44e-16 / 8.88e-16 | yes | 62 (100%) |  |  |
 | max/hand | hand | agent_1 | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) | ok | 62s 317573+955 tok |
 | max/hand | hand | ast | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) |  |  |
+| max/hand | hand | io_agent_1 | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 13 (21%) | ok | 107s 395952+1652 tok |
+| max/hand | hand | tree | FAIL | empirical | 0.144 |  | 0.145 / 3.11 | no | 4854 (7829%) |  |  |
+| max/hand | hand | regions | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 34 (55%) |  |  |
+| max/hand | hand | pysr | PASS exact | empirical | 3.58e-07 |  | 4.44e-16 / 8.88e-16 | yes | 32 (52%) |  |  |
+| max/hand | hand | pysr_snap | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) |  |  |
 | median3/seed0 | R² 1.0000 | dump | PASS exact | empirical | 9.22e-07 |  | 0.0697 / 0.481 | no | 2510 (100%) |  |  |
 | median3/seed0 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0922 |  | 1.78e-15 / 3.55e-15 | yes | 33 (1%) | ok | 107s 507496+2865 tok |
 | median3/seed0 | R² 1.0000 | ast | PASS snap | empirical | 0.0922 |  | 0 / 0 | yes | 23 (1%) |  |  |
+| median3/seed0 | R² 1.0000 | io_agent_1 | PASS snap | empirical | 0.0922 |  | 0 / 0 | yes | 38 (2%) | ok | 142s 468829+3207 tok |
+| median3/seed0 | R² 1.0000 | tree | FAIL | empirical | 0.406 |  | 0.459 / 3.38 | no | 5138 (205%) |  |  |
+| median3/seed0 | R² 1.0000 | pysr | PASS snap | empirical | 0.0922 |  | 0 / 0 | yes | 23 (1%) |  |  |
+| median3/seed0 | R² 1.0000 | pysr_snap | PASS snap | empirical | 0.0922 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed1 | R² 0.9998 | dump | PASS exact | empirical | 1.26e-06 |  | 0.0877 / 0.656 | no | 2500 (100%) |  |  |
 | median3/seed1 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.109 |  | 0 / 0 | yes | 23 (1%) | ok | 102s 577806+2814 tok |
 | median3/seed1 | R² 0.9998 | ast | PASS snap | empirical | 0.109 |  | 0 / 0 | yes | 23 (1%) |  |  |
+| median3/seed1 | R² 0.9998 | io_agent_1 | PASS snap | empirical | 0.109 |  | 1.78e-15 / 3.55e-15 | yes | 48 (2%) | ok | 147s 535002+2949 tok |
+| median3/seed1 | R² 0.9998 | tree | FAIL | empirical | 0.451 |  | 0.5 / 3.39 | no | 5124 (205%) |  |  |
+| median3/seed1 | R² 0.9998 | pysr | PASS snap | empirical | 0.0924 |  | 0.0163 / 0.0163 | no | 28 (1%) |  |  |
+| median3/seed1 | R² 0.9998 | pysr_snap | PASS snap | empirical | 0.109 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed2 | R² 1.0000 | dump | PASS exact | empirical | 1.42e-06 |  | 0.0491 / 0.226 | no | 2498 (100%) |  |  |
 | median3/seed2 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 23 (1%) | ok | 118s 665368+2943 tok |
 | median3/seed2 | R² 1.0000 | ast | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 23 (1%) |  |  |
-| neareq/hand | hand | dump | PASS exact | empirical |  | 0 / 1250 (13.66%) | 1 / 1 | yes | 56 (100%) |  |  |
-| neareq/hand | hand | agent_1 | PASS exact | empirical |  | 0 / 1250 (13.66%) | 1 / 1 | yes | 18 (32%) | ok | 79s 320343+1220 tok |
-| neareq/hand | hand | ast | PASS exact | empirical |  | 0 / 1250 (13.66%) | 1 / 1 | yes | 13 (23%) |  |  |
-| neareq/seed0 | acc 0.9961 | dump | PASS exact | empirical |  | 0 / 1451 (14.65%) | 0.999 / 0.999 | no | 242 (100%) |  |  |
-| neareq/seed0 | acc 0.9961 | agent_1 | PASS snap | empirical |  | 0 / 5412 (14.65%) | 1 / 1 | yes | 23 (10%) | OUTSIDE PATHS (2) | 117s 677515+3717 tok |
-| neareq/seed0 | acc 0.9961 | ast | PASS snap | empirical |  | 0 / 5412 (14.65%) | 1 / 1 | yes | 18 (7%) |  |  |
+| median3/seed2 | R² 1.0000 | io_agent_1 | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 33 (1%) | ok | 145s 466621+2827 tok |
+| median3/seed2 | R² 1.0000 | tree | FAIL | empirical | 0.413 |  | 0.46 / 3.38 | no | 5150 (206%) |  |  |
+| median3/seed2 | R² 1.0000 | pysr | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 23 (1%) |  |  |
+| median3/seed2 | R² 1.0000 | pysr_snap | PASS snap | empirical | 0.0517 |  | 0 / 0 | yes | 23 (1%) |  |  |
+| neareq/hand | hand | dump | PASS exact | empirical |  | 0 / 1270 (13.66%) | 1 / 1 | yes | 56 (100%) |  |  |
+| neareq/hand | hand | agent_1 | PASS exact | empirical |  | 0 / 1270 (13.66%) | 1 / 1 | yes | 18 (32%) | ok | 79s 320343+1220 tok |
+| neareq/hand | hand | ast | PASS exact | empirical |  | 0 / 1270 (13.66%) | 1 / 1 | yes | 13 (23%) |  |  |
+| neareq/hand | hand | io_agent_1 | PASS exact | empirical |  | 0 / 1270 (13.66%) | 1 / 1 | yes | 23 (41%) | ok | 135s 397158+2861 tok |
+| neareq/hand | hand | tree | PASS snap | empirical |  | 0 / 9294 (13.66%) | 0.983 / 0.831 | no | 1146 (2046%) |  |  |
+| neareq/hand | hand | regions | PASS exact | empirical |  | 0 / 1227 (13.66%) | 1 / 1 | yes | 32 (57%) |  |  |
+| neareq/hand | hand | pysr | PASS exact | empirical |  | 0 / 1270 (13.66%) | 1 / 1 | yes | 23 (41%) |  |  |
+| neareq/hand | hand | pysr_snap | PASS exact | empirical |  | 0 / 1270 (13.66%) | 1 / 1 | yes | 23 (41%) |  |  |
+| neareq/seed0 | acc 0.9961 | dump | PASS exact | empirical |  | 0 / 1451 (14.64%) | 0.999 / 0.999 | no | 242 (100%) |  |  |
+| neareq/seed0 | acc 0.9961 | agent_1 | PASS snap | empirical |  | 0 / 5414 (14.64%) | 1 / 1 | yes | 23 (10%) | OUTSIDE PATHS (2) | 117s 677515+3717 tok |
+| neareq/seed0 | acc 0.9961 | ast | PASS snap | empirical |  | 0 / 5414 (14.64%) | 1 / 1 | yes | 18 (7%) |  |  |
+| neareq/seed0 | acc 0.9961 | io_agent_1 | PASS snap | empirical |  | 0 / 5414 (14.64%) | 1 / 1 | yes | 23 (10%) | ok | 213s 614253+4259 tok |
+| neareq/seed0 | acc 0.9961 | tree | PASS snap | empirical |  | 0 / 7572 (14.64%) | 0.99 / 0.889 | no | 2306 (953%) |  |  |
+| neareq/seed0 | acc 0.9961 | regions | PASS exact | empirical |  | 0 / 1355 (14.64%) | 0.999 / 0.999 | no | 474 (196%) |  |  |
+| neareq/seed0 | acc 0.9961 | pysr | PASS snap | empirical |  | 0 / 6205 (14.64%) | 0.998 / 0.999 | no | 56 (23%) |  |  |
+| neareq/seed0 | acc 0.9961 | pysr_snap | FAIL | empirical |  | 425 / 16819 (14.64%) | 0.952 / 0.984 | no | 49 (20%) |  |  |
 | neareq/seed1 | acc 0.9984 | dump | PASS exact | empirical |  | 0 / 1477 (16.43%) | 0.999 / 1 | no | 236 (100%) |  |  |
-| neareq/seed1 | acc 0.9984 | agent_1 | PASS snap | empirical |  | 0 / 4455 (16.43%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (1) | 129s 391200+2915 tok |
-| neareq/seed1 | acc 0.9984 | ast | PASS snap | empirical |  | 0 / 4455 (16.43%) | 1 / 1 | yes | 18 (8%) |  |  |
+| neareq/seed1 | acc 0.9984 | agent_1 | PASS snap | empirical |  | 0 / 4461 (16.43%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (1) | 129s 391200+2915 tok |
+| neareq/seed1 | acc 0.9984 | ast | PASS snap | empirical |  | 0 / 4461 (16.43%) | 1 / 1 | yes | 18 (8%) |  |  |
+| neareq/seed1 | acc 0.9984 | io_agent_1 | PASS snap | empirical |  | 0 / 4461 (16.43%) | 1 / 1 | yes | 18 (8%) | ok | 199s 615587+4643 tok |
+| neareq/seed1 | acc 0.9984 | tree | PASS snap | empirical |  | 0 / 59463 (16.43%) | 0.903 / 0.967 | no | 12 (5%) |  |  |
+| neareq/seed1 | acc 0.9984 | regions | PASS exact | empirical |  | 0 / 1259 (16.43%) | 0.999 / 1 | no | 238 (101%) |  |  |
+| neareq/seed1 | acc 0.9984 | pysr | PASS snap | empirical |  | 0 / 4066 (16.43%) | 1 / 1 | no | 51 (22%) |  |  |
+| neareq/seed1 | acc 0.9984 | pysr_snap | PASS snap | empirical |  | 0 / 59463 (16.43%) | 0.903 / 0.967 | no | 4 (2%) |  |  |
 | neareq/seed2 | acc 0.9930 | dump | PASS exact | empirical |  | 0 / 1507 (16.62%) | 0.998 / 0.998 | no | 232 (100%) |  |  |
-| neareq/seed2 | acc 0.9930 | agent_1 | PASS snap | empirical |  | 0 / 5420 (16.62%) | 1 / 1 | yes | 13 (6%) | ok | 169s 602596+4882 tok |
-| neareq/seed2 | acc 0.9930 | ast | PASS snap | empirical |  | 0 / 5420 (16.62%) | 1 / 1 | yes | 18 (8%) |  |  |
+| neareq/seed2 | acc 0.9930 | agent_1 | PASS snap | empirical |  | 0 / 5421 (16.62%) | 1 / 1 | yes | 13 (6%) | ok | 169s 602596+4882 tok |
+| neareq/seed2 | acc 0.9930 | ast | PASS snap | empirical |  | 0 / 5421 (16.62%) | 1 / 1 | yes | 18 (8%) |  |  |
+| neareq/seed2 | acc 0.9930 | io_agent_1 | PASS snap | empirical |  | 0 / 5421 (16.62%) | 1 / 1 | yes | 23 (10%) | ok | 191s 562299+4419 tok |
+| neareq/seed2 | acc 0.9930 | tree | PASS snap | empirical |  | 0 / 54929 (16.62%) | 0.903 / 0.967 | no | 12 (5%) |  |  |
+| neareq/seed2 | acc 0.9930 | regions | PASS exact | empirical |  | 0 / 1335 (16.62%) | 0.998 / 0.998 | no | 565 (244%) |  |  |
+| neareq/seed2 | acc 0.9930 | pysr | PASS snap | empirical |  | 0 / 6268 (16.62%) | 0.996 / 0.999 | no | 50 (22%) |  |  |
+| neareq/seed2 | acc 0.9930 | pysr_snap | PASS snap | empirical |  | 0 / 54929 (16.62%) | 0.903 / 0.967 | no | 4 (2%) |  |  |
 | ramp/hand | hand | dump | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 38 (100%) |  |  |
 | ramp/hand | hand | agent_1 | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 11 (29%) | ok | 88s 317310+1002 tok |
 | ramp/hand | hand | ast | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 11 (29%) |  |  |
+| ramp/hand | hand | io_agent_1 | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 16 (42%) | ok | 133s 397316+1677 tok |
+| ramp/hand | hand | tree | PASS snap | empirical | 0.011 |  | 0.011 / 1.06e-05 | no | 506 (1332%) |  |  |
+| ramp/hand | hand | regions | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 22 (58%) |  |  |
+| ramp/hand | hand | pysr | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 18 (47%) |  |  |
+| ramp/hand | hand | pysr_snap | PASS exact | empirical | 2.98e-08 |  | 0 / 0 | yes | 18 (47%) |  |  |
 | sparse8/hand | hand | dump | PASS exact | empirical | 1.5e-07 |  | 0.00277 / 0.00423 | no | 66 (100%) |  |  |
 | sparse8/hand | hand | agent_1 | PASS snap | empirical | 0.003 |  | 0 / 0 | yes | 10 (15%) | ok | 86s 321490+1409 tok |
 | sparse8/hand | hand | ast | PASS snap | empirical | 0.003 |  | 0 / 0 | yes | 11 (17%) |  |  |
+| sparse8/hand | hand | io_agent_1 | PASS snap | empirical | 0.003 |  | 0 / 0 | yes | 15 (23%) | ok | 163s 540439+3180 tok |
+| sparse8/hand | hand | tree | FAIL | empirical | 0.0611 |  | 0.0589 / 1.02 | no | 4090 (6197%) |  |  |
+| sparse8/hand | hand | regions | PASS exact | empirical | 1.5e-07 |  | 0.00277 / 0.00423 | no | 103 (156%) |  |  |
+| sparse8/hand | hand | pysr | PASS snap | empirical | 0.00128 |  | 0.00175 / 0.00201 | no | 58 (88%) |  |  |
+| sparse8/hand | hand | pysr_snap | PASS snap | empirical | 0.003 |  | 0 / 0 | yes | 16 (24%) |  |  |
 | sum8/hand | hand | dump | PASS exact | empirical | 4.58e-06 |  | 1.07e-14 /  | yes | 69 (100%) |  |  |
 | sum8/hand | hand | agent_1 | PASS exact | empirical | 4.58e-06 |  | 3.55e-15 /  | yes | 34 (49%) | ok | 119s 386957+1489 tok |
 | sum8/hand | hand | ast | PASS exact | empirical | 4.58e-06 |  | 0 /  | yes | 30 (43%) |  |  |
+| sum8/hand | hand | io_agent_1 | PASS exact | empirical | 4.58e-06 |  | 3.55e-15 /  | yes | 50 (72%) | ok | 122s 465287+2293 tok |
+| sum8/hand | hand | tree | FAIL | empirical | 9.26 |  | 7.49 /  | no | 4090 (5928%) |  |  |
+| sum8/hand | hand | regions | PASS exact | empirical | 3.86e-06 |  | 8.21e-07 /  | yes | 121 (175%) |  |  |
+| sum8/hand | hand | pysr | FAIL | empirical | 10.6 |  | 7.56 /  | no | 84 (122%) |  |  |
+| sum8/hand | hand | pysr_snap | FAIL | empirical | 10.6 |  | 7.51 /  | no | 91 (132%) |  |  |
 | tax/seed0 | R² 1.0000 | dump | PASS exact | empirical | 1.04e-05 |  | 0.22 / 16.1 | no | 180 (100%) |  |  |
 | tax/seed0 | R² 1.0000 | agent_1 | PASS snap | empirical | 0.0835 |  | 0.3 / 10 | no | 38 (21%) | ok | 131s 540641+3097 tok |
 | tax/seed0 | R² 1.0000 | ast | PASS snap | empirical | 0.377 |  | 0.5 / 2.5 | no | 25 (14%) |  |  |
+| tax/seed0 | R² 1.0000 | io_agent_1 | PASS snap | empirical | 0.938 |  | 1 / 10 | no | 35 (19%) | ok | 174s 542357+4763 tok |
+| tax/seed0 | R² 1.0000 | tree | PASS snap | empirical | 1.12 |  | 1.11 / 41.1 | no | 250 (139%) |  |  |
+| tax/seed0 | R² 1.0000 | regions | PASS exact | empirical | 1.14e-05 |  | 0.22 / 10.1 | no | 65 (36%) |  |  |
+| tax/seed0 | R² 1.0000 | pysr | PASS snap | empirical | 0.00789 |  | 0.215 / 10.1 | no | 61 (34%) |  |  |
+| tax/seed0 | R² 1.0000 | pysr_snap | PASS snap | empirical | 1.1 |  | 1.2 / 6 | no | 19 (11%) |  |  |
 | tax/seed1 | R² 0.9999 | dump | PASS exact | empirical | 1.21e-05 |  | 0.963 / 21.2 | no | 178 (100%) |  |  |
 | tax/seed1 | R² 0.9999 | agent_1 | PASS snap | empirical | 0.194 |  | 0.95 / 22 | no | 30 (17%) | ok | 157s 478964+6312 tok |
 | tax/seed1 | R² 0.9999 | ast | PASS snap | empirical | 0.512 |  | 1 / 9 | no | 20 (11%) |  |  |
+| tax/seed1 | R² 0.9999 | io_agent_1 | PASS snap | empirical | 0.314 |  | 0.945 / 9.25 | no | 38 (21%) | OUTSIDE PATHS (1) | 205s 628528+7364 tok |
+| tax/seed1 | R² 0.9999 | tree | PASS snap | empirical | 1.11 |  | 1.41 / 41.1 | no | 252 (142%) |  |  |
+| tax/seed1 | R² 0.9999 | regions | PASS exact | empirical | 1.2e-05 |  | 0.963 / 22.5 | no | 145 (81%) |  |  |
+| tax/seed1 | R² 0.9999 | pysr | PASS snap | empirical | 0.289 |  | 0.907 / 9.36 | no | 27 (15%) |  |  |
+| tax/seed1 | R² 0.9999 | pysr_snap | PASS snap | empirical | 1.09 |  | 1.2 / 6 | no | 19 (11%) |  |  |
 | tax/seed2 | R² 0.9999 | dump | PASS exact | empirical | 1.39e-05 |  | 0.297 / 17.6 | no | 176 (100%) |  |  |
 | tax/seed2 | R² 0.9999 | agent_1 | PASS snap | empirical | 0.297 |  | 0 / 0 | yes | 55 (31%) | ok | 134s 472762+3154 tok |
 | tax/seed2 | R² 0.9999 | ast | PASS snap | empirical | 0.24 |  | 0.4 / 2 | no | 25 (14%) |  |  |
+| tax/seed2 | R² 0.9999 | io_agent_1 | PASS snap | empirical | 0.3 |  | 0.4 / 2 | no | 42 (24%) | ok | 127s 470896+3797 tok |
+| tax/seed2 | R² 0.9999 | tree | PASS snap | empirical | 1.12 |  | 1.38 / 40.7 | no | 250 (142%) |  |  |
+| tax/seed2 | R² 0.9999 | regions | PASS exact | empirical | 1.32e-05 |  | 0.297 / 22.4 | no | 141 (80%) |  |  |
+| tax/seed2 | R² 0.9999 | pysr | PASS snap | empirical | 0.0774 |  | 0.277 / 1.91 | no | 44 (25%) |  |  |
+| tax/seed2 | R² 0.9999 | pysr_snap | PASS snap | empirical | 1.1 |  | 1.2 / 6 | no | 19 (11%) |  |  |
 | triangle/hand | hand | dump | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 62 (100%) |  |  |
 | triangle/hand | hand | agent_1 | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 15 (24%) | ok | 30s 319342+1209 tok |
 | triangle/hand | hand | ast | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 16 (26%) |  |  |
+| triangle/hand | hand | io_agent_1 | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 30 (48%) | ok | 77s 394381+2076 tok |
+| triangle/hand | hand | tree | PASS snap | empirical | 0.0121 |  | 0.0121 / 3.59e-05 | no | 1018 (1642%) |  |  |
+| triangle/hand | hand | regions | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 45 (73%) |  |  |
+| triangle/hand | hand | pysr | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 46 (74%) |  |  |
+| triangle/hand | hand | pysr_snap | PASS exact | empirical | 1.19e-07 |  | 0 / 0 | yes | 46 (74%) |  |  |
 | window/hand | hand | dump | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 42 (100%) |  |  |
 | window/hand | hand | agent_1 | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 9 (21%) | ok | 33s 320198+1317 tok |
 | window/hand | hand | ast | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 9 (21%) |  |  |
+| window/hand | hand | io_agent_1 | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 19 (45%) | OUTSIDE PATHS (1) | 92s 399835+2154 tok |
+| window/hand | hand | tree | PASS snap | empirical |  | 0 / 2935 (6.90%) | 1 / 1 | no | 20 (48%) |  |  |
+| window/hand | hand | regions | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 20 (48%) |  |  |
+| window/hand | hand | pysr | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 14 (33%) |  |  |
+| window/hand | hand | pysr_snap | PASS exact | empirical |  | 0 / 1034 (6.90%) | 1 / 1 | yes | 14 (33%) |  |  |
 | window/seed0 | acc 0.9989 | dump | PASS exact | empirical |  | 0 / 1401 (7.70%) | 0.999 / 1 | no | 94 (100%) |  |  |
-| window/seed0 | acc 0.9989 | agent_1 | PASS snap | empirical |  | 0 / 4965 (7.70%) | 1 / 1 | yes | 9 (10%) | ok | 56s 387427+2119 tok |
-| window/seed0 | acc 0.9989 | ast | PASS snap | empirical |  | 0 / 4965 (7.70%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed0 | acc 0.9989 | agent_1 | PASS snap | empirical |  | 0 / 4977 (7.70%) | 1 / 1 | yes | 9 (10%) | ok | 56s 387427+2119 tok |
+| window/seed0 | acc 0.9989 | ast | PASS snap | empirical |  | 0 / 4977 (7.70%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed0 | acc 0.9989 | io_agent_1 | PASS snap | empirical |  | 0 / 4977 (7.70%) | 1 / 1 | yes | 14 (15%) | ok | 487s 547536+4400 tok |
+| window/seed0 | acc 0.9989 | tree | PASS snap | empirical |  | 0 / 2903 (7.70%) | 0.999 / 1 | no | 20 (21%) |  |  |
+| window/seed0 | acc 0.9989 | regions | PASS exact | empirical |  | 0 / 944 (7.70%) | 0.999 / 1 | no | 71 (76%) |  |  |
+| window/seed0 | acc 0.9989 | pysr | PASS exact | empirical |  | 0 / 2861 (7.70%) | 0.999 / 1 | no | 37 (39%) |  |  |
+| window/seed0 | acc 0.9989 | pysr_snap | PASS snap | empirical |  | 0 / 10817 (7.70%) | 0.969 / 1 | no | 22 (23%) |  |  |
 | window/seed1 | acc 0.9971 | dump | PASS exact | empirical |  | 0 / 985 (6.91%) | 0.997 / 1 | no | 92 (100%) |  |  |
-| window/seed1 | acc 0.9971 | agent_1 | PASS snap | empirical |  | 0 / 5217 (6.91%) | 1 / 1 | yes | 9 (10%) | ok | 48s 400064+2424 tok |
-| window/seed1 | acc 0.9971 | ast | PASS snap | empirical |  | 0 / 5217 (6.91%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed1 | acc 0.9971 | agent_1 | PASS snap | empirical |  | 0 / 5237 (6.91%) | 1 / 1 | yes | 9 (10%) | ok | 48s 400064+2424 tok |
+| window/seed1 | acc 0.9971 | ast | PASS snap | empirical |  | 0 / 5237 (6.91%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed1 | acc 0.9971 | io_agent_1 | PASS snap | empirical |  | 0 / 5237 (6.91%) | 1 / 1 | yes | 19 (21%) | ok | 480s 546105+3749 tok |
+| window/seed1 | acc 0.9971 | tree | PASS snap | empirical |  | 0 / 2881 (6.91%) | 0.997 / 1 | no | 20 (22%) |  |  |
+| window/seed1 | acc 0.9971 | regions | PASS exact | empirical |  | 0 / 1431 (6.91%) | 0.997 / 1 | no | 48 (52%) |  |  |
+| window/seed1 | acc 0.9971 | pysr | PASS exact | empirical |  | 0 / 1431 (6.91%) | 0.997 / 1 | no | 48 (52%) |  |  |
+| window/seed1 | acc 0.9971 | pysr_snap | PASS snap | empirical |  | 0 / 5237 (6.91%) | 1 / 1 | yes | 18 (20%) |  |  |
 | window/seed2 | acc 0.9999 | dump | PASS exact | empirical |  | 0 / 953 (7.14%) | 1 / 1 | no | 92 (100%) |  |  |
-| window/seed2 | acc 0.9999 | agent_1 | PASS snap | empirical |  | 0 / 4793 (7.14%) | 1 / 1 | yes | 9 (10%) | ok | 36s 321576+1867 tok |
-| window/seed2 | acc 0.9999 | ast | PASS snap | empirical |  | 0 / 4793 (7.14%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed2 | acc 0.9999 | agent_1 | PASS snap | empirical |  | 0 / 4794 (7.14%) | 1 / 1 | yes | 9 (10%) | ok | 36s 321576+1867 tok |
+| window/seed2 | acc 0.9999 | ast | PASS snap | empirical |  | 0 / 4794 (7.14%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed2 | acc 0.9999 | io_agent_1 | PASS snap | empirical |  | 0 / 4794 (7.14%) | 1 / 1 | yes | 16 (17%) | OUTSIDE PATHS (1) | 460s 546870+4110 tok |
+| window/seed2 | acc 0.9999 | tree | PASS exact | empirical |  | 0 / 2793 (7.14%) | 1 / 1 | no | 20 (22%) |  |  |
+| window/seed2 | acc 0.9999 | regions | PASS exact | empirical |  | 0 / 953 (7.14%) | 1 / 1 | no | 71 (77%) |  |  |
+| window/seed2 | acc 0.9999 | pysr | PASS exact | empirical |  | 0 / 2844 (7.14%) | 1 / 1 | no | 32 (35%) |  |  |
+| window/seed2 | acc 0.9999 | pysr_snap | PASS snap | empirical |  | 0 / 4794 (7.14%) | 1 / 1 | yes | 18 (20%) |  |  |
 | xor/hand | hand | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 55 (100%) |  |  |
 | xor/hand | hand | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 13 (24%) | ok | 29s 319609+1301 tok |
 | xor/hand | hand | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (13%) |  |  |
+| xor/hand | hand | io_agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 15 (27%) | ok | 158s 325880+1396 tok |
+| xor/hand | hand | tree | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 26 (47%) |  |  |
+| xor/hand | hand | regions | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 35 (64%) |  |  |
+| xor/hand | hand | pysr | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 20 (36%) |  |  |
+| xor/hand | hand | pysr_snap | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 20 (36%) |  |  |
 | xor/seed0 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 122 (100%) |  |  |
 | xor/seed0 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 63s 399437+2086 tok |
 | xor/seed0 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed0 | acc 1.0000 | io_agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 153s 326083+1366 tok |
+| xor/seed0 | acc 1.0000 | tree | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 26 (21%) |  |  |
+| xor/seed0 | acc 1.0000 | regions | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 228 (187%) |  |  |
+| xor/seed0 | acc 1.0000 | pysr | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 51 (42%) |  |  |
+| xor/seed0 | acc 1.0000 | pysr_snap | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 15 (12%) |  |  |
 | xor/seed1 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed1 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 39s 386111+1815 tok |
 | xor/seed1 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed1 | acc 1.0000 | io_agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 12 (10%) | ok | 275s 326320+1608 tok |
+| xor/seed1 | acc 1.0000 | tree | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 26 (22%) |  |  |
+| xor/seed1 | acc 1.0000 | regions | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 205 (171%) |  |  |
+| xor/seed1 | acc 1.0000 | pysr | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 44 (37%) |  |  |
+| xor/seed1 | acc 1.0000 | pysr_snap | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 15 (12%) |  |  |
 | xor/seed2 | acc 0.5000 (NOT learned) | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 120 (100%) |  |  |
 | xor/seed2 | acc 0.5000 (NOT learned) | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 9 (8%) | ok | 57s 463027+2345 tok |
 | xor/seed2 | acc 0.5000 (NOT learned) | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 5 (4%) |  |  |
+| xor/seed2 | acc 0.5000 (NOT learned) | io_agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 5 (4%) | ok | 209s 326130+1493 tok |
+| xor/seed2 | acc 0.5000 (NOT learned) | tree | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 10 (8%) |  |  |
+| xor/seed2 | acc 0.5000 (NOT learned) | regions | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 18 (15%) |  |  |
+| xor/seed2 | acc 0.5000 (NOT learned) | pysr | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 37 (31%) |  |  |
+| xor/seed2 | acc 0.5000 (NOT learned) | pysr_snap | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 0.5 /  | no | 11 (9%) |  |  |
 
 ## absdiff/hand: dump vs agent_1
 
