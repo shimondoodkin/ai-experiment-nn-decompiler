@@ -12,7 +12,7 @@ from pathlib import Path
 
 from ..run import agent_attempts, evaluate_run, record_git
 from ..spec import Spec
-from .prepare import INDEX, load_index
+from .prepare import INDEX, KINDS, load_index
 
 PROJECTS = Path.home() / ".claude" / "projects"
 PATH_KEYS = {"file_path", "path", "notebook_path"}
@@ -72,8 +72,12 @@ def _strings(obj, key: str | None = None):
         yield key, obj
 
 
-def audit_transcripts(paths: list[Path], blind: Path) -> dict:
-    res = {"transcript_found": False, "outside_paths": [], "model": None, "duration_s": None, "tokens": None}
+FORBIDDEN = {"io": ("oracle.bin", "_checker")}   # files an agent of that kind must not touch
+
+
+def audit_transcripts(paths: list[Path], blind: Path, forbidden: tuple[str, ...] = ()) -> dict:
+    res = {"transcript_found": False, "outside_paths": [], "forbidden_paths": [], "model": None,
+           "duration_s": None, "tokens": None}
     lines = []
     for p in paths:
         try:
@@ -88,6 +92,7 @@ def audit_transcripts(paths: list[Path], blind: Path) -> dict:
         return res
     res["transcript_found"] = True
     outside: list[str] = []
+    hits: list[str] = []
     stamps = []
     tokens = {"input": 0, "output": 0}
     seen_ids = set()
@@ -119,12 +124,15 @@ def audit_transcripts(paths: list[Path], blind: Path) -> dict:
             if not (isinstance(block, dict) and block.get("type") == "tool_use"):
                 continue
             for key, s in _strings(block.get("input", {})):
+                if any(f in s for f in forbidden) and s not in hits:
+                    hits.append(s)
                 toks = [s] if key in PATH_KEYS else re.split(r"[\s\"'`;|&<>()=,]+", s)
                 for tok in toks:
                     tok = tok.rstrip(":.,;!?") if key not in PATH_KEYS else tok   # prose punctuation
                     if tok and _looks_like_path(tok) and _is_outside(tok, blind) and tok not in outside:
                         outside.append(tok)
     res["outside_paths"] = outside
+    res["forbidden_paths"] = hits
     if stamps:
         res["duration_s"] = (max(stamps) - min(stamps)).total_seconds()
     res["tokens"] = tokens
@@ -145,32 +153,41 @@ def collect(blind: Path, index: Path = INDEX, heuristics: Path = Path("HEURISTIC
     if entry is None:
         raise KeyError(f"{blind.name} is not in {index}; was it prepared from this repo?")
     rd = Path(entry["run"])
+    kind = entry.get("kind", "agent")
+    prefix = KINDS[kind]
     agent = blind / "agent.py"
     if not agent.exists():
         raise FileNotFoundError(f"{agent} not found: the refactoring run has not written agent.py")
     data = agent.read_bytes()
-    attempts = agent_attempts(rd)
+    attempts = agent_attempts(rd, prefix)
     digest = hashlib.sha256(data).hexdigest()
     if any(hashlib.sha256(p.read_bytes()).hexdigest() == digest for _, p in attempts):
         return rd, None
     n = max((k for k, _ in attempts), default=0) + 1
-    (rd / f"agent_{n}.py").write_bytes(data)
-    for src, dst in (("agent_notes.md", f"agent_{n}_notes.md"), ("agent_checks.log", f"agent_{n}_checks.log")):
+    (rd / f"{prefix}_{n}.py").write_bytes(data)
+    for src, dst in (("agent_notes.md", f"{prefix}_{n}_notes.md"), ("agent_checks.log", f"{prefix}_{n}_checks.log")):
         if (blind / src).exists():
             shutil.copyfile(blind / src, rd / dst)
     trs = transcripts if transcripts is not None else find_transcripts(blind, projects)
     meta = {"blind_id": blind.name, "collected": datetime.now().isoformat(timespec="seconds"),
-            **audit_transcripts(trs, blind)}
-    (rd / f"agent_{n}_meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
+            **audit_transcripts(trs, blind, FORBIDDEN.get(kind, ()))}
+    (rd / f"{prefix}_{n}_meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
     try:
-        evaluate_run(rd)
+        if kind in ("agent", "io"):
+            evaluate_run(rd)
+        else:
+            from ..repair.run import evaluate_repair
+
+            evaluate_repair(rd)
     except Exception:
         # roll back, so a failed collect never leaves an attempt that breaks the run folder
-        for f in rd.glob(f"agent_{n}*"):
-            if re.match(rf"^agent_{n}[_.]", f.name):
+        for f in rd.glob(f"{prefix}_{n}*"):
+            if re.match(rf"^{prefix}_{n}[_.]", f.name):
                 f.unlink()
         raise
-    record_git(rd, f"agent_{n}")
+    record_git(rd, f"{prefix}_{n}")
+    if kind != "agent":   # only dump refactorings feed HEURISTICS.md
+        return rd, n
     notes_path = blind / "agent_notes.md"
     notes = notes_path.read_text(encoding="utf-8") if notes_path.exists() else ""
     spec = Spec.load(rd / "spec.json")

@@ -60,8 +60,9 @@ def cmd_agent_prepare(args) -> int:
     if not runs:
         print("nothing to prepare: give run folders or --all")
         return 2
+    kind = "io" if args.io else "agent"
     for rd in runs:
-        b = prepare(rd)
+        b = prepare(rd, kind=kind)
         print(f"{rd.as_posix()} -> {b}")
         for c in suggested_commands(b):
             print(f"    {c}")
@@ -199,6 +200,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("runs", nargs="*")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--root", default=str(RUNS))
+    ap.add_argument("--io", action="store_true", help="input/output-only folder (samples, no dump or weights)")
     ap.set_defaults(func=cmd_agent_prepare)
     ac = asub.add_parser("collect", help="bring an attempt back, audit it and re-check it")
     ac.add_argument("blind")
