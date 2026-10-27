@@ -1,0 +1,168 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "Min(Max(x0, x2), Max(x1, Min(x0, x2)))"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 1.7830743,
+        "equation": "-0.011659094"
+      },
+      {
+        "complexity": 3,
+        "loss": 1.3009553,
+        "equation": "x2 * 0.40382227"
+      },
+      {
+        "complexity": 5,
+        "loss": 0.82819796,
+        "equation": "(x0 + x2) * 0.3995784"
+      },
+      {
+        "complexity": 6,
+        "loss": 0.6653518,
+        "equation": "min(max(x2, x1), relu(x0))"
+      },
+      {
+        "complexity": 7,
+        "loss": 0.36257902,
+        "equation": "(x2 + (x0 + x1)) * 0.3995784"
+      },
+      {
+        "complexity": 9,
+        "loss": 3.866936e-05,
+        "equation": "min(max(x1, min(x0, x2)), max(x2, x0))"
+      },
+      {
+        "complexity": 11,
+        "loss": 3.6654445e-05,
+        "equation": "min(max(x2, x1) + -0.0024494145, max(x0, min(x2, x1)))"
+      },
+      {
+        "complexity": 13,
+        "loss": 3.5619832e-05,
+        "equation": "min(max(x1, x0), max(min(x0 + 0.004815682, x1), x2) + -0.0019240984)"
+      },
+      {
+        "complexity": 15,
+        "loss": 3.4438246e-05,
+        "equation": "max(min(x0, x1 + -0.0035106465), min(x2, max(x0, x1) + (x1 * 0.0015299967)))"
+      },
+      {
+        "complexity": 17,
+        "loss": 3.3565848e-05,
+        "equation": "min(max(min(x0 + 0.0028277321, x1), x2) + -0.0018783441, max(x0, x1) + (x1 * 0.0018783441))"
+      },
+      {
+        "complexity": 19,
+        "loss": 3.3040844e-05,
+        "equation": "max(min((x1 * 0.0019964555) + max(x1, x0), x2 + -0.0012741518), min(-0.005825424 + x1, x0) + 0.0019964555)"
+      },
+      {
+        "complexity": 23,
+        "loss": 3.302821e-05,
+        "equation": "max(min(((-0.005825424 * -0.005825424) + (0.0019964555 * x1)) + max(x1, x0), x2 + -0.0012741518), min(-0.005825424 + x1, x0) + 0.0019964555)"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 13,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 20,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 20,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 33,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 49.18
+}

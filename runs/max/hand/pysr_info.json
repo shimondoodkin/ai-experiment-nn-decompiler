@@ -1,0 +1,80 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "x1 + Piecewise((0.0, x0 - x1 < 0), (x0 - x1, True))"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 1.9845656,
+        "equation": "1.0124207"
+      },
+      {
+        "complexity": 2,
+        "loss": 1.2913812,
+        "equation": "relu(x1)"
+      },
+      {
+        "complexity": 3,
+        "loss": 2.5550787e-15,
+        "equation": "max(x1, x0)"
+      },
+      {
+        "complexity": 6,
+        "loss": 0.0,
+        "equation": "relu(x0 - x1) + x1"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 8,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 32,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 42.1
+}

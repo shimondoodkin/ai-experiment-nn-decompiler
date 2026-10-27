@@ -1,0 +1,69 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 4,
+  "best": [
+    "Abs(x0 - x1) - 0.5"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 0.24999997,
+        "equation": "-2.904652e-5"
+      },
+      {
+        "complexity": 5,
+        "loss": 0.125,
+        "equation": "cond(x1, 0.50000477 - x0)"
+      },
+      {
+        "complexity": 6,
+        "loss": 0.0,
+        "equation": "abs(x1 - x0) + -0.5"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 18,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 20,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 46.3
+}

@@ -1,0 +1,146 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 4,
+  "best": [
+    "Max(-13.072367, -Piecewise((1.2549, x0 > 0), (0.0, True)) + Abs(x0 - x1)*25.868095 - 12.691204)"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 161.90182,
+        "equation": "-0.16582693"
+      },
+      {
+        "complexity": 3,
+        "loss": 155.591,
+        "equation": "greater(x1, x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 149.88,
+        "equation": "abs(x0 - x1)"
+      },
+      {
+        "complexity": 5,
+        "loss": 118.521835,
+        "equation": "greater(x1, x0) * 13.177084"
+      },
+      {
+        "complexity": 6,
+        "loss": 83.1852,
+        "equation": "abs((x0 - x1) * 12.5494995)"
+      },
+      {
+        "complexity": 7,
+        "loss": 75.80014,
+        "equation": "cond(x1, 0.50197387 - x0) * 26.246403"
+      },
+      {
+        "complexity": 8,
+        "loss": 0.21500735,
+        "equation": "(abs(x0 - x1) + -0.50653416) * 25.431227"
+      },
+      {
+        "complexity": 10,
+        "loss": 0.018160619,
+        "equation": "abs(((x1 - x0) * 26.058678) + 0.6274512) + -13.509237"
+      },
+      {
+        "complexity": 12,
+        "loss": 0.008121749,
+        "equation": "max((abs(x0 - x1) * 25.740679) + (-12.691231 - x0), -13.072371)"
+      },
+      {
+        "complexity": 14,
+        "loss": 0.0,
+        "equation": "max((abs(x1 - x0) * 25.868095) + (-12.691204 - cond(x0, 1.2549)), -13.072367)"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 15,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 13,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 18,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 21,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 26,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 38,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": true,
+      "nodes": 44,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 13.15
+}
