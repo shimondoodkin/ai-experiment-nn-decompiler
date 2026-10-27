@@ -60,7 +60,7 @@ def cmd_agent_prepare(args) -> int:
     if not runs:
         print("nothing to prepare: give run folders or --all")
         return 2
-    kind = "io" if args.io else "agent"
+    kind = "io" if args.io else "fix" if args.fix else "fixio" if args.fixio else "agent"
     for rd in runs:
         b = prepare(rd, kind=kind)
         print(f"{rd.as_posix()} -> {b}")
@@ -226,7 +226,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("runs", nargs="*")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--root", default=str(RUNS))
-    ap.add_argument("--io", action="store_true", help="input/output-only folder (samples, no dump or weights)")
+    kinds = ap.add_mutually_exclusive_group()
+    kinds.add_argument("--io", action="store_true", help="input/output-only folder (samples, no dump or weights)")
+    kinds.add_argument("--fix", action="store_true", help="fix experiment: decompiled program + labelled cases")
+    kinds.add_argument("--fixio", action="store_true", help="fix experiment: labelled cases only")
     ap.set_defaults(func=cmd_agent_prepare)
     ac = asub.add_parser("collect", help="bring an attempt back, audit it and re-check it")
     ac.add_argument("blind")
