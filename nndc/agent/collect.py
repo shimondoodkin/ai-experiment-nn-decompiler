@@ -5,6 +5,8 @@ import hashlib
 import json
 import re
 import shutil
+import sys
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -25,15 +27,27 @@ def find_transcripts(blind: Path, projects: Path = PROJECTS) -> list[Path]:
     return sorted(d.glob("*.jsonl")) if d.is_dir() else []
 
 
+HARMLESS = {"/dev/null"}
+HOMES = ("${HOME}", "$HOME", "~")
+
+
 def _looks_like_path(tok: str) -> bool:
-    return bool(re.match(r"^[A-Za-z]:[\\/]", tok) or re.match(r"^/[a-zA-Z]/", tok) or ".." in tok)
+    if tok in HARMLESS:
+        return False
+    return bool(re.match(r"^[A-Za-z]:[\\/]", tok) or tok.startswith(("/",) + HOMES) or ".." in tok)
 
 
 def _is_outside(tok: str, blind: Path) -> bool:
     t = tok
-    m = re.match(r"^/([a-zA-Z])/(.*)$", t)
-    if m:
-        t = f"{m.group(1)}:/{m.group(2)}"
+    for home in HOMES:
+        if t == home or t.startswith((home + "/", home + "\\")):
+            t = str(Path.home()) + t[len(home):]
+            break
+    m = re.match(r"^/([a-zA-Z])(/.*)?$", t)
+    if m:   # Git Bash /c/... drive paths
+        t = f"{m.group(1)}:/{(m.group(2) or '/')[1:]}"
+    elif sys.platform == "win32" and (t == "/tmp" or t.startswith("/tmp/")):   # Git Bash /tmp
+        t = tempfile.gettempdir() + t[4:]
     p = Path(t)
     if not p.is_absolute():
         p = blind / p
@@ -143,7 +157,14 @@ def collect(blind: Path, index: Path = INDEX, heuristics: Path = Path("HEURISTIC
     meta = {"blind_id": blind.name, "collected": datetime.now().isoformat(timespec="seconds"),
             **audit_transcripts(trs, blind)}
     (rd / f"agent_{n}_meta.json").write_text(json.dumps(meta, indent=2) + "\n", encoding="utf-8")
-    evaluate_run(rd)
+    try:
+        evaluate_run(rd)
+    except Exception:
+        # roll back, so a failed collect never leaves an attempt that breaks the run folder
+        for f in rd.glob(f"agent_{n}*"):
+            if re.match(rf"^agent_{n}[_.]", f.name):
+                f.unlink()
+        raise
     notes_path = blind / "agent_notes.md"
     notes = notes_path.read_text(encoding="utf-8") if notes_path.exists() else ""
     spec = Spec.load(rd / "spec.json")

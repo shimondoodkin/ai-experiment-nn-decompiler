@@ -10,9 +10,9 @@ import numpy as np
 from experiments.grade import grade_task
 from experiments.tasks import get_task
 
-from .check import check_program
+from .check import CheckResult, check_program
 from .dump import dump_program
-from .lang import ProgramError, parse_program, program_size
+from .lang import ProgramError, parse_program, program_size, read_program
 from .model import MLP, load_npz, save_npz, to_torch
 from .spec import Spec
 
@@ -87,14 +87,22 @@ def evaluate_run(rd: Path) -> dict:
     versions = {"dump": rd / "dump.py"} | {f"agent_{n}": p for n, p in agent_attempts(rd)}
     out = {}
     for name, path in versions.items():
-        src = path.read_text(encoding="utf-8")
+        meta_path = rd / f"{name}_meta.json"
+        meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else None
+        try:
+            src = read_program(path)
+        except ProgramError as e:
+            metric = "max_abs_err" if spec.output == "regression" else "accuracy"
+            out[name] = {"check": CheckResult(False, False, "empirical", 0, error=str(e)).to_json(),
+                         "task": {"in_range": None, "out_of_range": None, "metric": metric, "recovered": False,
+                                  "error": str(e)},
+                         "size": None, "meta": meta}
+            continue
         r = check_program(src, mlp, spec, extra_inputs=extra)
         try:
             size = program_size(parse_program(src))
         except ProgramError:
             size = None
-        meta_path = rd / f"{name}_meta.json"
-        meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else None
         out[name] = {"check": r.to_json(), "task": grade_task(src, task), "size": size, "meta": meta}
         for c in r.counterexamples:
             key = tuple(c["inputs"][n] for n in spec.arg_names)

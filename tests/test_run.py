@@ -55,3 +55,11 @@ def test_cli_check_exit_codes(tmp_path):
     bad.write_text("def net(x0, x1):\n    return x0\n")
     assert main(["check", str(good), "--run", str(rd)]) == 0
     assert main(["check", str(bad), "--run", str(rd)]) == 1
+
+
+def test_non_utf8_attempt_is_reported_not_fatal(tmp_path):
+    rd = build_run("absdiff", None, root=tmp_path)
+    (rd / "agent_1.py").write_bytes(b"def net(x0, x1):\n    # a \x96 b\n    return abs(x0 - x1)\n")
+    res = evaluate_run(rd)
+    assert "UTF-8" in res["versions"]["agent_1"]["check"]["error"]
+    build_run("absdiff", None, root=tmp_path)    # the run folder keeps working

@@ -9,7 +9,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))   # also under `python -I`, which does not add the script folder
 
-from _checker.check import check_program, format_result  # noqa: E402
+from _checker.check import CheckResult, check_program, format_result  # noqa: E402
+from _checker.lang import ProgramError, read_program  # noqa: E402
 from _checker.model import load_npz  # noqa: E402
 from _checker.spec import Spec  # noqa: E402
 
@@ -21,7 +22,10 @@ def main(argv: list[str]) -> int:
     program = Path(argv[0])
     spec = Spec.load(HERE / "spec.json")
     mlp = load_npz(HERE / "weights.npz")
-    r = check_program(program.read_text(encoding="utf-8"), mlp, spec)
+    try:
+        r = check_program(read_program(program), mlp, spec)
+    except ProgramError as e:
+        r = CheckResult(False, False, "empirical", 0, error=str(e))
     text = format_result(r, spec)
     print(text, end="")
     with open(HERE / "agent_checks.log", "a", encoding="utf-8") as f:

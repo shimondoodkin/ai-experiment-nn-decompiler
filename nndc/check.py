@@ -150,6 +150,23 @@ def net_output(mlp: MLP, spec: Spec, X: np.ndarray) -> tuple[np.ndarray, np.ndar
     return np.argmax(out, axis=1).astype(np.float64), top2[:, 1] - top2[:, 0]
 
 
+def _rounding_bound(mlp: MLP, X: np.ndarray) -> np.ndarray:
+    """Per-row bound on the float32 forward pass's rounding error, largest over the outputs.
+
+    Propagates e_l = |W_l| e_{l-1} + eps*(fan_in+1) * (|W_l| |h_{l-1}| + |b_l|), starting from the
+    rounding of the inputs to float32; ReLU does not increase the error.
+    """
+    eps = float(np.finfo(np.float32).eps)
+    h = X.astype(np.float32).astype(np.float64)
+    e = eps * np.abs(X)
+    for i, (W, b) in enumerate(zip(mlp.weights, mlp.biases)):
+        Wa = np.abs(W.astype(np.float64))
+        e = e @ Wa.T + eps * (W.shape[1] + 1) * (np.abs(h) @ Wa.T + np.abs(b.astype(np.float64)))
+        z = h @ W.T.astype(np.float64) + b
+        h = np.maximum(z, 0) if i < len(mlp.weights) - 1 else z
+    return e.max(axis=1)
+
+
 def program_decision(spec: Spec, raw: np.ndarray) -> np.ndarray:
     if spec.output == "binary":
         return (raw > spec.threshold).astype(np.float64)
@@ -187,12 +204,13 @@ def check_program(src: str, mlp: MLP, spec: Spec, seed: int = 0,
         in_zone = score < m
         bad_out, bad_in = mismatch & ~in_zone, mismatch & in_zone
         severity = score
-        # on the decision line the class is a float32-vs-float64 rounding tie (same role as atol/rtol);
-        # rounding grows with the size of the net's outputs, so rtol is taken relative to their typical size
-        tie = score <= spec.atol + spec.rtol * float(np.percentile(score, 95))
+        # within the net's own float32 rounding of the decision line the class is a tie, not a disagreement
+        tie = score <= spec.atol + 2 * _rounding_bound(mlp, X)
+        # the zone's share of the input domain: uniform part of the input set only (boundary points cluster)
+        domain = in_zone if label == "exhaustive" else in_zone[:N_RANDOM]
         r = CheckResult(not (mismatch & ~tie).any(), not bad_out.any(), label, X.shape[0],
                         disagreements_outside=int(bad_out.sum()), disagreements_inside=int(bad_in.sum()),
-                        zone_fraction=float(in_zone.mean()), margin=m)
+                        zone_fraction=float(domain.mean()), margin=m)
     idx = list(np.nonzero(bad_out)[0][np.argsort(-severity[bad_out], kind="stable")])
     idx += list(np.nonzero(bad_in)[0][np.argsort(-severity[bad_in], kind="stable")])
     for i in idx[:MAX_COUNTEREXAMPLES]:

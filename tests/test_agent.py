@@ -91,3 +91,15 @@ def test_collect_with_explicit_transcript(tmp_path):
     _, n = collect(b, index=idx, heuristics=tmp_path / "H.md", projects=tmp_path / "np", transcripts=[tr])
     meta = json.loads((rd / f"agent_{n}_meta.json").read_text())
     assert meta["transcript_found"] and meta["outside_paths"] and meta["model"] == "claude-x"
+
+
+def test_audit_flags_posix_and_home_paths(tmp_path):
+    b = tmp_path / "blind" / "m2"
+    b.mkdir(parents=True)
+    cmds = ["cat /home/me/proj/runs/x/train_log.json", "ls ~/secret", "cat $HOME/notes.txt",
+            "python check.py agent.py 2>/dev/null"]
+    lines = [{"message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": c}}]}} for c in cmds]
+    tr = tmp_path / "t.jsonl"
+    tr.write_text("\n".join(json.dumps(line) for line in lines))
+    a = audit_transcripts([tr], b)
+    assert a["outside_paths"] == ["/home/me/proj/runs/x/train_log.json", "~/secret", "$HOME/notes.txt"]

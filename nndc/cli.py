@@ -6,7 +6,8 @@ import json
 import sys
 from pathlib import Path
 
-from .check import check_program, format_result
+from .check import CheckResult, check_program, format_result
+from .lang import ProgramError, read_program
 from .run import RUNS, build_run, load_run
 
 
@@ -42,7 +43,10 @@ def cmd_run(args) -> int:
 
 def cmd_check(args) -> int:
     spec, mlp = load_run(Path(args.run))
-    r = check_program(Path(args.program).read_text(encoding="utf-8"), mlp, spec)
+    try:
+        r = check_program(read_program(Path(args.program)), mlp, spec)
+    except ProgramError as e:
+        r = CheckResult(False, False, "empirical", 0, error=str(e))
     print(format_result(r, spec), end="")
     return 0 if r.snap_pass else 1
 

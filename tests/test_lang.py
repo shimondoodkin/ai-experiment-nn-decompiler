@@ -67,3 +67,15 @@ def test_size():
     s = program_size(parse_program(
         "def net(x0, x1):\n    h = relu(x0 - 0.5)\n    if h > 1:\n        return h\n    return 0"))
     assert s["relus"] == 1 and s["ifs"] == 1 and s["constants"] == 3 and s["lines"] == 4
+
+
+def test_read_program_handles_bom_utf16_and_rejects_bad_bytes(tmp_path):
+    from nndc.lang import read_program
+    src = "def net(x0):\n    return x0  # \u2013 dash\n"
+    (tmp_path / "a.py").write_bytes(src.encode("utf-8-sig"))
+    (tmp_path / "b.py").write_bytes(src.encode("utf-16"))
+    (tmp_path / "c.py").write_bytes(b"def net(x0):\n    return x0  # \x96\n")
+    assert read_program(tmp_path / "a.py") == src
+    assert read_program(tmp_path / "b.py") == src
+    with pytest.raises(ProgramError, match="UTF-8"):
+        read_program(tmp_path / "c.py")

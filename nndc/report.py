@@ -88,7 +88,7 @@ def build_report(root: Path = RUNS) -> str:
         best = _best_attempt(vs)
         if best:
             dump_src = (rd / "dump.py").read_text(encoding="utf-8")
-            best_src = (rd / f"{best}.py").read_text(encoding="utf-8")
+            best_src = (rd / f"{best}.py").read_text(encoding="utf-8", errors="replace")
             notes_path = rd / f"{best}_notes.md"
             notes = notes_path.read_text(encoding="utf-8").strip() if notes_path.exists() else "(no notes)"
             sections.append(f"## {res['run']}: dump vs {best}\n\n```python\n{with_real_names(dump_src, spec)}```\n\n"

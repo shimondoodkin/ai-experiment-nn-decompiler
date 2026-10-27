@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass
+from pathlib import Path
 
 import numpy as np
 
@@ -143,6 +144,21 @@ def _check_block(stmts: list[ast.stmt]) -> None:
             pass   # docstring / string comment
         else:
             raise _not_allowed(st)
+
+
+def read_program(path: Path) -> str:
+    """Program text from a file: UTF-8 (with or without BOM) or UTF-16 with BOM; anything else is a ProgramError."""
+    data = Path(path).read_bytes()
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        try:
+            return data.decode("utf-16")
+        except UnicodeDecodeError:
+            pass
+    try:
+        return data.decode("utf-8-sig")
+    except UnicodeDecodeError as e:
+        raise ProgramError(f"{Path(path).name} is not UTF-8 text (bad byte at offset {e.start}); "
+                           "save it as UTF-8") from None
 
 
 @dataclass

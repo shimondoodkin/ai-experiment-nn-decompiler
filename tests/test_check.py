@@ -75,6 +75,29 @@ def test_float_ties_scale_with_large_logits():
     assert r.exact_pass
 
 
+def _large_logit_neareq():
+    net = MLP([np.array([[1, -1], [-1, 1]], np.float32), np.array([[-1000, -1000]], np.float32)],
+              [np.zeros(2, np.float32), np.array([200], np.float32)])
+    spec = Spec(task="t", output="binary",
+                inputs=[InputSpec("x0", "a", "float", -2, 2), InputSpec("x1", "b", "float", -2, 2)])
+    return net, spec
+
+
+def test_shifted_threshold_is_not_exact():
+    # a 1e-4 threshold shift is a real disagreement, far above float32 rounding of these logits
+    net, spec = _large_logit_neareq()
+    r = check_program("def net(x0, x1):\n    return abs(x0 - x1) < 0.2001", net, spec)
+    assert not r.exact_pass and r.snap_pass
+
+
+def test_zone_fraction_is_a_fraction_of_the_domain():
+    net, spec = _large_logit_neareq()
+    r = check_program("def net(x0, x1):\n    return abs(x0 - x1) < 0.2", net, spec)
+    X = np.random.default_rng(7).uniform(-2, 2, (400_000, 2))
+    expected = (np.abs(200 - 1000 * np.abs(X[:, 0] - X[:, 1])) < r.margin).mean()
+    assert abs(r.zone_fraction - expected) < 0.005
+
+
 def test_exhaustive_label_for_small_discrete():
     xor = MLP([np.array([[1, 1], [1, 1]], np.float32), np.array([[1, -2]], np.float32)],
               [np.array([0, -1], np.float32), np.array([-0.5], np.float32)])
