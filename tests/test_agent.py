@@ -103,3 +103,13 @@ def test_audit_flags_posix_and_home_paths(tmp_path):
     tr.write_text("\n".join(json.dumps(line) for line in lines))
     a = audit_transcripts([tr], b)
     assert a["outside_paths"] == ["/home/me/proj/runs/x/train_log.json", "~/secret", "$HOME/notes.txt"]
+
+
+def test_audit_ignores_bare_tilde_and_slash_in_prose(tmp_path):
+    b = tmp_path / "blind" / "m3"
+    b.mkdir(parents=True)
+    cmd = "cat > agent_notes.md <<'X'\nweights w0 ~ -w1; snap to +-1 / small integers\nX"
+    tr = tmp_path / "t.jsonl"
+    tr.write_text(json.dumps({"message": {"content": [{"type": "tool_use", "name": "Bash",
+                                                        "input": {"command": cmd}}]}}))
+    assert audit_transcripts([tr], b)["outside_paths"] == []

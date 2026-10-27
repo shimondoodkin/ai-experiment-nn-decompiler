@@ -27,7 +27,8 @@ def find_transcripts(blind: Path, projects: Path = PROJECTS) -> list[Path]:
     return sorted(d.glob("*.jsonl")) if d.is_dir() else []
 
 
-HARMLESS = {"/dev/null"}
+# a bare "/" or "~" is usually prose ("+-1 / small", "w0 ~ -w1") in heredoc'd notes, not a path
+HARMLESS = {"/dev/null", "/", "~"}
 HOMES = ("${HOME}", "$HOME", "~")
 
 
