@@ -13,6 +13,11 @@ nndc = "nndc.cli:main"
 
 [dependency-groups]
 dev = ["pytest>=8"]
+baselines = ["scipy>=1.14", "scikit-learn>=1.6", "sympy>=1.13"]
+pysr = ["pysr>=1.5"]
+
+[tool.uv]
+default-groups = ["dev", "baselines"]
 
 [build-system]
 requires = ["hatchling"]
