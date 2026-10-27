@@ -12,6 +12,7 @@ import numpy as np
 from experiments.grade import grade_task
 from experiments.tasks import TASKS, get_task
 
+from .baselines.common import BASELINE_VERSIONS
 from .check import CheckResult, check_program
 from .dump import dump_program
 from .lang import ProgramError, parse_program, program_size, read_program
@@ -76,8 +77,10 @@ def all_runs(root: Path = RUNS) -> list[Path]:
     return sorted(p.parent for p in Path(root).glob("*/*/spec.json"))
 
 
-def agent_attempts(rd: Path) -> list[tuple[int, Path]]:
-    found = [(int(m.group(1)), p) for p in rd.glob("agent_*.py") if (m := AGENT_RE.match(p.name))]
+def agent_attempts(rd: Path, prefix: str = "agent") -> list[tuple[int, Path]]:
+    """Numbered attempts `<prefix>_<n>.py` (prefix agent, io_agent, fix or fixio)."""
+    pat = AGENT_RE if prefix == "agent" else re.compile(rf"^{prefix}_(\d+)\.py$")
+    found = [(int(m.group(1)), p) for p in rd.glob(f"{prefix}_*.py") if (m := pat.match(p.name))]
     return sorted(found)
 
 
@@ -132,6 +135,8 @@ def evaluate_run(rd: Path) -> dict:
     versions = {"dump": rd / "dump.py"} | {f"agent_{n}": p for n, p in agent_attempts(rd)}
     if (rd / "ast.py").exists():
         versions["ast"] = rd / "ast.py"
+    versions |= {f"io_agent_{n}": p for n, p in agent_attempts(rd, "io_agent")}
+    versions |= {name: rd / f"{name}.py" for name in BASELINE_VERSIONS if (rd / f"{name}.py").exists()}
     out = {}
     for name, path in versions.items():
         meta_path = rd / f"{name}_meta.json"
