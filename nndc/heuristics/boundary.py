@@ -22,7 +22,7 @@ def boundary_expr(net: SymNet, spec: Spec) -> tuple[str, dict[str, str]] | None:
     if rs is None or not rs.terms:
         return None
     terms = [canonical(c, z) for c, z in rs.terms]
-    u = Affine(dict(terms[0][1].coef), 0.0)
+    u = positive_leading(Affine(dict(terms[0][1].coef), 0.0), spec)
     m = 0.0
     if rs.linear.coef:
         k = next(iter(u.coef))
@@ -57,7 +57,19 @@ def boundary_expr(net: SymNet, spec: Spec) -> tuple[str, dict[str, str]] | None:
     edges = [lo] + roots + [hi]
     mids = np.array([(a + b) / 2 for a, b in zip(edges, edges[1:])])
     pos = list(f(mids) > 0)
-    tol = SNAP_REL * width
+    return emit_rule(u, roots, pos, SNAP_REL * width)
+
+
+def positive_leading(u: Affine, spec: Spec) -> Affine:
+    """Flip a direction so its first coefficient (in input order) is positive: x0 - x1, not -x0 + x1."""
+    first = next(v for v in spec.arg_names if v in u.coef)
+    return u.scaled(-1.0) if u.coef[first] < 0 else u
+
+
+def emit_rule(u: Affine, roots: list[float], pos: list[bool], tol: float) -> tuple[str, dict[str, str]] | None:
+    """Comparison on d = u.x with 0-2 snapped crossings; pos[i] = class 1 on the i-th region along d."""
+    if len(roots) > 2:
+        return None
     single = len(u.coef) == 1 and next(iter(u.coef.values())) == 1
     d = next(iter(u.coef)) if single else "d0"
     derived = {} if single else {"d0": affine_src(u)}

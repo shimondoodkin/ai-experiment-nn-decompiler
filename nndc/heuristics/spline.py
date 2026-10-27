@@ -13,6 +13,7 @@ from .snap import nice
 MERGE_REL = 0.01
 KINK_REL = 0.01
 SLOPE_REL = 0.05
+EDGE_REL = 0.02
 
 
 def spline_expr(rs: ReluSum, spec: Spec) -> str | None:
@@ -60,6 +61,19 @@ def spline_expr(rs: ReluSum, spec: Spec) -> str | None:
         else:
             merged.append([y0, d])
     merged = [h for h in merged if not _close(h[1], 0.0)]
+    # small hinges right at the edge of the range are fitting artifacts (tax/seed1): fold or drop them
+    vals = [m * y + b + sum(d * max(y - y0, 0.0) for y0, d in merged) for y in [lo, hi] + [h[0] for h in merged]]
+    out_span = max(vals) - min(vals) or 1.0
+    kept = []
+    for y0, d in merged:
+        if abs(d) * (hi - y0) <= EDGE_REL * out_span:
+            continue                                        # near the right edge: drop
+        if abs(d) * (y0 - lo) <= EDGE_REL * out_span:
+            m += d                                          # near the left edge: treat as active everywhere
+            b -= d * y0
+            continue
+        kept.append([y0, d])
+    merged = kept
     if not merged:
         return None
     f_lo = m * lo + b

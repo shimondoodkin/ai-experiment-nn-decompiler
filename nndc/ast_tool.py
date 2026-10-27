@@ -14,6 +14,7 @@ import numpy as np
 
 from .check import check_program, net_output
 from .heuristics.boundary import boundary_expr
+from .heuristics.boundary_scan import scan_boundary_expr
 from .heuristics.bounds import prune_dead_and_linear
 from .heuristics.cleanup import program_from_expr
 from .heuristics.fit import fit_expr
@@ -25,9 +26,9 @@ from .heuristics.truthtable import truth_table_expr
 from .lang import ProgramError, parse_program, program_size
 from .model import MLP
 from .spec import Spec
-from .symnet import SymNet, from_dump, to_program
+from .symnet import SymNet, from_dump, input_bounds, to_program
 
-ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "truth-table", "fit"]
+ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit"]
 
 
 @dataclass
@@ -45,6 +46,20 @@ def _emit(net: SymNet, spec: Spec) -> tuple[str, bool]:
     if rs is not None:
         return program_from_expr(motif_expr(rs), spec), True
     return to_program(net), False
+
+
+def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, float]]:
+    """Directions of the most influential first-layer units, then the input axes."""
+    inputs = set(net.inputs)
+    post = input_bounds(spec)
+    scored = []
+    for u in net.units:
+        if u.relu and u.pre.coef and set(u.pre.coef) <= inputs:
+            lo, hi = u.pre.interval(post)
+            weight = sum(abs(c.get(u.name, 0.0)) for c in [x.pre.coef for x in net.units] + [o.coef for o in net.outputs])
+            scored.append((weight * max(hi, 0.0), dict(u.pre.coef)))
+    scored.sort(key=lambda t: -t[0])
+    return [d for _, d in scored[:top]] + [{v: 1.0} for v in net.inputs]
 
 
 def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
@@ -85,16 +100,24 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
     add("structural-snap", lambda: _emit(n6, spec)[0], ["P1", "P2", "P3", "P4", "P9"])
 
     if spec.output != "argmax":
-        rs6 = as_relu_sum(n6)
-        add("spline", lambda: (None if rs6 is None else
-                               (lambda e: None if e is None else program_from_expr(e, spec))(spline_expr(rs6, spec))),
-            ["P1", "P2", "P3", "P5", "P9"])
+        # spline does its own snapping of kinks and slopes, so try it on the exact net as well as the snapped one
+        for spline_net in (n2, n6):
+            rs_s = as_relu_sum(spline_net)
+            add("spline", lambda rs_s=rs_s: (None if rs_s is None else
+                                             (lambda e: None if e is None else program_from_expr(e, spec))(
+                                                 spline_expr(rs_s, spec))),
+                ["P1", "P2", "P3", "P5", "P9"])
 
     if spec.output == "binary":
         def boundary() -> str | None:
             r = boundary_expr(n2, spec)
             return None if r is None else program_from_expr(r[0], spec, r[1])
         add("boundary", boundary, ["P1", "P2", "P6", "P9"])
+
+        def boundary_scan() -> str | None:
+            r = scan_boundary_expr(lambda X: net_output(mlp, spec, X)[1], spec, scan_directions(n2, spec))
+            return None if r is None else program_from_expr(r[0], spec, r[1])
+        add("boundary-scan", boundary_scan, ["P1", "P2", "P6b", "P9"])
 
         def truth() -> str | None:
             e = truth_table_expr(lambda X: net_output(mlp, spec, X)[0], spec)
