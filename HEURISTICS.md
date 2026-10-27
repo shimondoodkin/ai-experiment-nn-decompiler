@@ -367,3 +367,56 @@ Appended by `nndc agent collect`, one section per refactoring attempt.
 - Beware of a checker that treats near-zero scores as ties: a trivial program can "pass"; confirm
   zero disagreements, not just the PASS label.
 
+## iris_petal/seed0 — agent_1 (m90c92a, 2026-10-27)
+
+- For 2-input argmax nets, first print an ASCII class map. It shows the number of regions, which
+  classes are adjacent, and whether boundaries look straight.
+- Find dead hidden units by sampling the input box and checking which preactivations are ever > 0.
+  Drop the units that never fire.
+- Bisect the class boundary along one axis for many values of the other axis and fit a line. Zero
+  residual means the boundary sits in one ReLU activation pattern, so an exact linear inequality exists.
+- Get the exact inequality by folding `(W2[i]-W2[j]) * mask` through layer 1 for that pattern, not
+  from the fitted line. Then divide by one coefficient so it becomes 1, to make it readable.
+- Only the score differences of adjacent classes matter. Classes that never share a boundary need no
+  comparison, so argmax becomes an if-chain of half-plane tests.
+- Snap per coefficient and check each snap against check.py. Test the extreme corners: a slope
+  error grows along the far edge of the box (here at x1=2.5).
+- Domain ranges are a strong hint to a known dataset (here Iris petal features), which suggests
+  names and the expected structure.
+
+## iris_petal/seed0 — agent_1 (m90c92a, 2026-10-27)
+
+- For 2-input argmax nets, first print an ASCII class map. It shows the number of regions, which
+  classes are adjacent, and whether boundaries look straight.
+- Find dead hidden units by sampling the input box and checking which preactivations are ever > 0.
+  Drop the units that never fire.
+- Bisect the class boundary along one axis for many values of the other axis and fit a line. Zero
+  residual means the boundary sits in one ReLU activation pattern, so an exact linear inequality exists.
+- Get the exact inequality by folding `(W2[i]-W2[j]) * mask` through layer 1 for that pattern, not
+  from the fitted line. Then divide by one coefficient so it becomes 1, to make it readable.
+- Only the score differences of adjacent classes matter. Classes that never share a boundary need no
+  comparison, so argmax becomes an if-chain of half-plane tests.
+- Snap per coefficient and check each snap against check.py. Test the extreme corners: a slope
+  error grows along the far edge of the box (here at x1=2.5).
+- Domain ranges are a strong hint to a known dataset (here Iris petal features), which suggests
+  names and the expected structure.
+
+## iris/seed0 — agent_1 (mf58628, 2026-10-27)
+
+- Compute each first-layer neuron's pre-activation range on the box corners (exact for linear
+  pre-activations): always-negative neurons are dead, always-positive ones are linear.
+- Also test "mostly on" neurons by linearising them and counting confident disagreements; ReLUs that
+  only clip in a far corner usually don't matter.
+- Ablate neurons one by one and measure decision changes; drop the ones that only affect the unsure zone.
+- For argmax outputs only differences of outputs matter: subtract one output and think in terms of
+  pairwise margins. Try to rewrite argmax as an ordered decision list (`class A if oA > oB else ...`)
+  and check it empirically.
+- When a single ReLU remains, check which side of it each class lives on; often the class boundary
+  only exists on one side, which turns `relu` into either `0` or the identity there and makes the
+  boundary a plain linear inequality.
+- Snap whole inequalities (not individual weights): normalise by one coefficient, try several
+  normalisations, grid-search simple values, and keep the candidate with zero confident
+  disagreements; if half-steps fail, go to quarter-steps. A snap that appears under multiple
+  normalisations is more likely the "true" simple boundary.
+- Re-check with different sampling seeds to make sure a snap isn't passing by luck.
+
