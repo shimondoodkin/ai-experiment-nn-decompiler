@@ -1,6 +1,8 @@
 """Train a small ReLU MLP on a task, deterministically on CPU."""
 from __future__ import annotations
 
+from typing import Callable
+
 import numpy as np
 import torch
 from torch import nn
@@ -19,9 +21,9 @@ def _sample(task: Task, rng: np.random.Generator, n: int) -> np.ndarray:
     return uniform_sample(task.spec, rng, n)
 
 
-def quality(mlp: MLP, task: Task, seed: int) -> dict:
+def quality(mlp: MLP, task: Task, seed: int, target: Callable | None = None) -> dict:
     X = _sample(task, np.random.default_rng(1000 + seed), N_QUALITY)
-    y = task.target(X).astype(np.float64)
+    y = (target or task.target)(X).astype(np.float64)
     if task.spec.output == "argmax":
         acc = float((np.argmax(mlp.forward(X.astype(np.float32)), axis=1) == y).mean())
         return {"accuracy": acc, "learned": acc >= 0.95}
@@ -35,7 +37,8 @@ def quality(mlp: MLP, task: Task, seed: int) -> dict:
     return {"rmse": mse ** 0.5, "r2": r2, "learned": r2 >= 0.99}
 
 
-def train(task: Task, seed: int) -> tuple[MLP, dict]:
+def train(task: Task, seed: int, target: Callable | None = None) -> tuple[MLP, dict]:
+    """Train on task.target, or on `target` (a planted-bug version of it, see experiments/defects.py)."""
     if task.hidden is None:
         raise ValueError(f"task {task.name} is hand-only")
     torch.manual_seed(seed)
@@ -51,14 +54,15 @@ def train(task: Task, seed: int) -> tuple[MLP, dict]:
     opt = torch.optim.Adam(net.parameters(), lr=task.lr)
     binary = task.spec.output == "binary"
     argmax = task.spec.output == "argmax"
+    tgt = target or task.target
     loss_fn = nn.CrossEntropyLoss() if argmax else nn.BCEWithLogitsLoss() if binary else nn.MSELoss()
     curve = []
     for step in range(task.steps):
         X = _sample(task, rng, BATCH)
         if argmax:
-            loss = loss_fn(net(torch.from_numpy(X.astype(np.float32))), torch.from_numpy(task.target(X)).long())
+            loss = loss_fn(net(torch.from_numpy(X.astype(np.float32))), torch.from_numpy(tgt(X)).long())
         else:
-            y = torch.from_numpy(task.target(X).astype(np.float32))
+            y = torch.from_numpy(tgt(X).astype(np.float32))
             out = net(torch.from_numpy(X.astype(np.float32)))[:, 0]
             loss = loss_fn(out - task.spec.threshold if binary else out, y)
         opt.zero_grad()
@@ -67,7 +71,7 @@ def train(task: Task, seed: int) -> tuple[MLP, dict]:
         if step % 100 == 0 or step == task.steps - 1:
             curve.append([step, float(loss.item())])
     mlp = from_torch(net)
-    q = quality(mlp, task, seed)
+    q = quality(mlp, task, seed, target)
     log = {"seed": seed, "steps": task.steps, "lr": task.lr, "hidden": task.hidden, "batch": BATCH,
            "loss_curve": curve, "quality": {k: v for k, v in q.items() if k != "learned"},
            "learned": q["learned"]}

@@ -88,8 +88,27 @@ def _write_json(path: Path, data) -> None:
     path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
-def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = False) -> Path:
+def _bug_learned(mlp: MLP, t, defect, target, seed: int) -> float:
+    """Share of training-distribution points inside the defect where the net follows the bug, not the truth."""
+    from experiments.train import _sample
+
+    X = _sample(t, np.random.default_rng(2000 + seed), 20_000)
+    X = X[defect.inside(X)]
+    if len(X) == 0:
+        return float("nan")
+    out = mlp.forward(X.astype(np.float32)).astype(np.float64)[:, 0]
+    bad, true = target(X), t.target(X).astype(np.float64)
+    if t.spec.output == "binary":
+        return float(((out > t.spec.threshold).astype(float) == bad).mean())
+    return float((np.abs(out - bad) < np.abs(out - true)).mean())
+
+
+def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = False, bug: bool = False) -> Path:
+    """bug=True trains on a planted-bug target (experiments/defects.py, defect seed = seed); the spec keeps
+    the true task, so grading measures the truth."""
     t = get_task(task)
+    if bug and seed is None:
+        raise ValueError("a planted bug needs a trained seed")
     if seed is None and t.handcrafted is None:
         raise ValueError(f"task {task} has no handcrafted net")
     if seed is not None and t.hidden is None:
@@ -107,7 +126,16 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
             import torch
 
             from experiments.train import train
-            mlp, log = train(t, seed)
+            if bug:
+                from experiments.defects import defective_target, make_defect
+                defect = make_defect(t, seed)
+                target = defective_target(t, defect)
+                mlp, log = train(t, seed, target)
+                log["defect"] = defect.to_json()
+                log["bug_learned"] = _bug_learned(mlp, t, defect, target, seed)
+                _write_json(rd / "defect.json", defect.to_json())
+            else:
+                mlp, log = train(t, seed)
             torch.save(to_torch(mlp).state_dict(), rd / "net.pt")
         t.spec.save(rd / "spec.json")
         save_npz(mlp, rd / "weights.npz")
