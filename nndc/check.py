@@ -190,7 +190,7 @@ def check_program(src: str, mlp: MLP, spec: Spec, seed: int = 0,
         err = np.where(finite, np.abs(raw - n_dec), np.inf)
         exact_ok = err <= spec.atol + spec.rtol * np.abs(n_dec)
         tol = spec.snap_tol_frac * float(n_dec.max() - n_dec.min())
-        snap_ok = err <= tol
+        snap_ok = (err <= tol) | exact_ok   # a constant output has range 0, hence tol 0
         bad_out, bad_in = ~snap_ok, snap_ok & ~exact_ok
         severity = err
         r = CheckResult(bool(exact_ok.all()), bool(snap_ok.all()), label, X.shape[0],

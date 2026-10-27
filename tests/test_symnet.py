@@ -34,3 +34,16 @@ def test_substitute_inlines_affine():
     net = from_dump(dump_program(mlp, spec), spec)
     net2 = substitute(net, "h1_1", Affine({}, 0.0))
     assert "h1_1" not in to_program(net2)
+
+
+@pytest.mark.parametrize("src, kind", [
+    ("def net(x0, x1):\n    return argmax(x0, x1)\n", "argmax"),                              # not units
+    ("def net(x0, x1):\n    o0 = relu(x0)\n    o1 = relu(x1)\n    return argmax(o0, o1)\n", "argmax"),   # relu outputs
+    ("def net(x0, x1):\n    o0 = x0\n    o1 = x1\n    return argmax(o0, o1)\n", "regression"),  # wrong output kind
+    ("def net(x0, x1):\n    return x0 - x1\n", "argmax"),                                       # argmax spec, scalar return
+])
+def test_from_dump_rejects_malformed_outputs_with_value_error(src, kind):
+    spec = Spec(task="", output=kind, n_outputs=2,
+                inputs=[InputSpec("x0", "x0", "float", 0, 1), InputSpec("x1", "x1", "float", 0, 1)])
+    with pytest.raises(ValueError, match="line"):
+        from_dump(src, spec)

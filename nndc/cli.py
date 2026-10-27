@@ -108,8 +108,8 @@ def cmd_ast(args) -> int:
     for rd in runs:
         try:
             res = run_ast(rd)
-        except ValueError as e:
-            print(f"{rd.as_posix()}: ERROR {e}")
+        except (ValueError, KeyError, OSError) as e:   # one bad run (malformed dump, missing file) never stops the batch
+            print(f"{rd.as_posix()}: ERROR {type(e).__name__}: {e}", flush=True)
             continue
         v = res["versions"]["ast"]
         c = v["check"]

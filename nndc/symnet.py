@@ -131,11 +131,14 @@ def from_dump(src: str, spec: Spec) -> SymNet:
             units.append(Unit(name, layer, pre, is_relu))
         elif isinstance(st, ast.Return) and outputs is None:
             v = st.value
-            if isinstance(v, ast.Call) and isinstance(v.func, ast.Name) and v.func.id == "argmax":
+            is_argmax = isinstance(v, ast.Call) and isinstance(v.func, ast.Name) and v.func.id == "argmax"
+            if is_argmax != (spec.output == "argmax"):
+                raise ValueError(f"line {st.lineno}: return shape does not match output kind {spec.output}")
+            if is_argmax:
                 names = [a.id for a in v.args if isinstance(a, ast.Name)]
-                if len(names) != len(v.args):
-                    raise ValueError(f"line {st.lineno}: argmax over non-names")
                 outs = {u.name: u for u in units}
+                if len(names) != len(v.args) or any(n not in outs or outs[n].relu for n in names):
+                    raise ValueError(f"line {st.lineno}: argmax must be over linear output units")
                 outputs = [outs[n].pre for n in names]
                 units = [u for u in units if u.name not in names]
             else:

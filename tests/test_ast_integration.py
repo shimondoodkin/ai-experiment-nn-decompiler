@@ -54,3 +54,13 @@ def test_cli_ast_default_split_skips_seed2(tmp_path, monkeypatch):
     assert main(["ast", "--all"]) == 0
     assert (tmp_path / "runs/absdiff/hand/ast.py").exists()
     assert not (tmp_path / "runs/absdiff/seed2/ast.py").exists()
+
+
+def test_cli_ast_reports_a_bad_run_and_continues(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    bad = build_run("absdiff", None, root=tmp_path / "runs")
+    build_run("max", None, root=tmp_path / "runs")
+    (bad / "dump.py").write_text("def net(x0, x1):\n    return argmax(x0, x1)\n")
+    assert main(["ast", "--all"]) == 0
+    assert "ERROR" in capsys.readouterr().out
+    assert (tmp_path / "runs/max/hand/ast.py").exists()

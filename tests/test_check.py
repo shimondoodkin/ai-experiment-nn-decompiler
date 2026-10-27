@@ -134,3 +134,12 @@ def test_rare_branch_missed_by_random_but_caught_by_boundary_points():
 def test_extra_inputs_are_replayed():
     X, _ = build_input_set(absdiff_net(), REG, extra=np.array([[2.5, -2.5]]))
     assert any((row == [2.5, -2.5]).all() for row in X)
+
+
+def test_constant_regression_net_passes_snap_when_exact():
+    # every unit dead: output is a constant, so the snap tolerance (2% of a zero range) is 0
+    net = MLP([np.array([[1.0]], np.float32), np.array([[3.0]], np.float32)],
+              [np.array([-5.0], np.float32), np.array([0.7], np.float32)])
+    spec = Spec(task="t", output="regression", inputs=[InputSpec("x0", "x", "float", 0, 1)])
+    r = check_program("def net(x0):\n    return 0.7", net, spec)
+    assert r.exact_pass and r.snap_pass
