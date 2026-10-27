@@ -5,7 +5,9 @@ never the task name or the target.
 """
 from __future__ import annotations
 
+import json
 from dataclasses import asdict, dataclass
+from pathlib import Path
 from typing import Callable
 
 import numpy as np
@@ -116,3 +118,15 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
             best = Candidate("dump", dump_src, [], check_program(dump_src, mlp, spec).to_json(), None)
     trace = {"candidates": [asdict(c) for c in cands], "winner": best.route, "trace_lines": lines}
     return best.src, trace
+
+
+def run_ast(rd: Path) -> dict:
+    """Refactor a run's dump.py with the tool (blind spec only); write ast.py + ast_trace.json; re-evaluate."""
+    from .run import evaluate_run, load_run
+
+    spec, mlp = load_run(rd)
+    blind = Spec.from_json(spec.blind())
+    src, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp)
+    (rd / "ast.py").write_text(f"# produced by nndc ast (route: {trace['winner']})\n{src}", encoding="utf-8")
+    (rd / "ast_trace.json").write_text(json.dumps(trace, indent=2) + "\n", encoding="utf-8")
+    return evaluate_run(rd)

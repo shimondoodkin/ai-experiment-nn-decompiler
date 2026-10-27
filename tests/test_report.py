@@ -62,3 +62,14 @@ def test_report_explains_columns_and_lists_programs_that_beat_the_net(tmp_path):
     assert "## How to read the table" in md and "**disagree outside / inside (zone)**" in md
     beats = md.split("## Where the refactored program beats the network")[1].split("\n## ")[0]
     assert "absdiff_perturbed/hand" in beats and "agent_1" in beats
+
+
+def test_spike_gate_counts_only_claude_attempts(tmp_path):
+    for t in ["xor", "absdiff", "neareq"]:
+        rd = tmp_path / t / "seed0"
+        rd.mkdir(parents=True)
+        (rd / "results.json").write_text(json.dumps({"versions": {
+            "dump": {"size": {"nodes": 100}, "check": {"snap_pass": True}, "task": {"recovered": False}},
+            "ast": {"size": {"nodes": 10}, "check": {"snap_pass": True}, "task": {"recovered": True}}}}))
+    passed, _ = spike_gate(tmp_path)
+    assert not passed

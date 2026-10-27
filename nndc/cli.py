@@ -93,6 +93,33 @@ def cmd_agent_mock(args) -> int:
     return 0
 
 
+def cmd_ast(args) -> int:
+    from .ast_tool import run_ast
+    from .run import all_runs
+
+    if args.all:
+        runs = [rd for rd in all_runs(Path(args.root))
+                if args.split == "all" or (rd.name == "seed2") == (args.split == "heldout")]
+    else:
+        runs = [Path(r) for r in args.runs]
+    if not runs:
+        print("nothing to do: give run folders or --all")
+        return 2
+    for rd in runs:
+        try:
+            res = run_ast(rd)
+        except ValueError as e:
+            print(f"{rd.as_posix()}: ERROR {e}")
+            continue
+        v = res["versions"]["ast"]
+        c = v["check"]
+        verdict = "ERROR" if c["error"] else "PASS exact" if c["exact_pass"] else "PASS snap" if c["snap_pass"] else "FAIL"
+        route = json.loads((rd / "ast_trace.json").read_text(encoding="utf-8"))["winner"]
+        print(f"{rd.as_posix()}: {verdict}; recovered={v['task']['recovered']}; "
+              f"nodes={(v['size'] or {}).get('nodes')}; route={route}", flush=True)
+    return 0
+
+
 def cmd_report(args) -> int:
     from .report import build_report
 
@@ -144,6 +171,14 @@ def main(argv: list[str] | None = None) -> int:
     am.add_argument("--program", required=True)
     am.add_argument("--notes")
     am.set_defaults(func=cmd_agent_mock)
+
+    at = sub.add_parser("ast", help="refactor dumps with the deterministic heuristics tool (no LLM)")
+    at.add_argument("runs", nargs="*")
+    at.add_argument("--all", action="store_true")
+    at.add_argument("--split", choices=["distill", "heldout", "all"], default="distill",
+                    help="with --all: distill = every run except seed2 (default), heldout = seed2 only")
+    at.add_argument("--root", default=str(RUNS))
+    at.set_defaults(func=cmd_ast)
 
     rp = sub.add_parser("report", help="write REPORT.md from all runs")
     rp.add_argument("--root", default=str(RUNS))

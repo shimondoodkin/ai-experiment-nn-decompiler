@@ -85,6 +85,8 @@ def evaluate_run(rd: Path) -> dict:
     extra = np.array([[c[n] for n in spec.arg_names] for c in cex], dtype=np.float64) if cex else None
     seen = {tuple(c[n] for n in spec.arg_names) for c in cex}
     versions = {"dump": rd / "dump.py"} | {f"agent_{n}": p for n, p in agent_attempts(rd)}
+    if (rd / "ast.py").exists():
+        versions["ast"] = rd / "ast.py"
     out = {}
     for name, path in versions.items():
         meta_path = rd / f"{name}_meta.json"
