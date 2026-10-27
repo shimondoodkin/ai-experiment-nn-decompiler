@@ -1,0 +1,40 @@
+{
+  "task": "sum8",
+  "run": "sum8/hand",
+  "kind": "hand",
+  "train": {
+    "kind": "hand"
+  },
+  "versions": {
+    "dump": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 205181,
+        "max_abs_err": 4.577636723013256e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.41599998474121097,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.0658141036401503e-14,
+        "out_of_range": null,
+        "metric": "max_abs_err",
+        "recovered": true,
+        "error": null
+      },
+      "size": {
+        "lines": 2,
+        "nodes": 69,
+        "constants": 10,
+        "relus": 1,
+        "ifs": 0
+      },
+      "meta": null
+    }
+  }
+}

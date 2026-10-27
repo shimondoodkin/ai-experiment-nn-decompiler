@@ -1,0 +1,20 @@
+{
+  "task": "ramp",
+  "output": "regression",
+  "inputs": [
+    {
+      "name": "x0",
+      "real_name": "x",
+      "type": "float",
+      "lo": -2,
+      "hi": 3
+    }
+  ],
+  "n_outputs": 1,
+  "threshold": 0.0,
+  "atol": 1e-05,
+  "rtol": 0.0001,
+  "margin_frac": 0.05,
+  "snap_tol_frac": 0.02,
+  "override_reason": null
+}
