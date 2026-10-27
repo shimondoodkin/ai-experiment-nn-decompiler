@@ -59,3 +59,21 @@ def test_collect_io_kind_names_and_forbidden_audit(tmp_path):
     res = json.loads((rd / "results.json").read_text())
     assert res["versions"]["io_agent_1"]["check"]["snap_pass"]
     assert _best_attempt(res["versions"]) is None   # io attempts are not Claude-dump attempts
+
+
+def test_cli_collect_reports_the_io_attempt(tmp_path, monkeypatch, capsys):
+    import nndc.agent.prepare as prep
+    from nndc.cli import main
+
+    rd = build_run("window", None, tmp_path / "runs")
+    (rd / "agent_1.py").write_text("def net(x0):\n    return x0\n")   # an older dump attempt that FAILs
+    idx = tmp_path / "idx.json"
+    monkeypatch.setattr(prep, "INDEX", idx)
+    b = prepare(rd, blind_root=tmp_path / "blind", index=idx, kind="io")
+    (b / "agent.py").write_text("def net(x0):\n    return abs(x0) < 0.5\n")
+    tr = tmp_path / "t.jsonl"
+    tr.write_text("")
+    monkeypatch.chdir(tmp_path)   # HEURISTICS.md would be written here (it is not, for io)
+    assert main(["agent", "collect", str(b), "--transcript", str(tr)]) == 0
+    out = capsys.readouterr().out
+    assert "io_agent_1 PASS" in out and "agent_1 FAIL" not in out

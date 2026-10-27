@@ -70,20 +70,30 @@ def cmd_agent_prepare(args) -> int:
 
 
 def cmd_agent_collect(args) -> int:
+    from .agent import prepare as prep
     from .agent.collect import collect
 
     trs = [Path(t) for t in args.transcript] if args.transcript else None
-    rd, n = collect(Path(args.blind), transcripts=trs)
+    blind = Path(args.blind)
+    kind = prep.load_index(prep.INDEX).get(blind.name, {}).get("kind", "agent")
+    rd, n = collect(blind, index=prep.INDEX, transcripts=trs)
     if n is None:
         print(f"{rd.as_posix()}: identical attempt already collected, nothing changed")
         return 0
-    res = json.loads((rd / "results.json").read_text(encoding="utf-8"))
-    v = res["versions"][f"agent_{n}"]
+    name = f"{prep.KINDS[kind]}_{n}"
+    meta = json.loads((rd / f"{name}_meta.json").read_text(encoding="utf-8"))
+    audit = (f"transcript_found={meta.get('transcript_found')}; outside_paths={len(meta.get('outside_paths') or [])}"
+             f"; forbidden_paths={len(meta.get('forbidden_paths') or [])}")
+    if kind in ("fix", "fixio"):   # judged on task cases (repair/results.json), not against the net
+        r = json.loads((rd / "repair" / "results.json").read_text(encoding="utf-8"))[name]
+        h = r.get("heldout") or {}
+        print(f"{rd.as_posix()}: {name} held-out accuracy={h.get('accuracy')}; generalization="
+              f"{h.get('generalization')}; drawdown={h.get('drawdown')}; {audit}")
+        return 0
+    v = json.loads((rd / "results.json").read_text(encoding="utf-8"))["versions"][name]
     c = v["check"]
     verdict = "ERROR" if c["error"] else "PASS exact" if c["exact_pass"] else "PASS snap" if c["snap_pass"] else "FAIL"
-    meta = v.get("meta") or {}
-    print(f"{rd.as_posix()}: agent_{n} {verdict}; recovered={v['task']['recovered']}; "
-          f"transcript_found={meta.get('transcript_found')}; outside_paths={len(meta.get('outside_paths') or [])}")
+    print(f"{rd.as_posix()}: {name} {verdict}; recovered={v['task']['recovered']}; {audit}")
     return 0
 
 
