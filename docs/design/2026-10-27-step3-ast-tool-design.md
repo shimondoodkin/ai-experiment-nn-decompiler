@@ -86,8 +86,11 @@ in §6).
    - **truth table:** P7, for small discrete binary domains
    - **fit:** P8, for small regression problems
 2. Check every candidate with the checker in snap mode.
-3. Select among passing candidates by: `PASS (exact)` first, then fewest AST nodes. The target is
-   never consulted.
+3. Select among passing candidates by fewest AST nodes, with `PASS (exact)` as the tiebreak. The
+   target is never consulted. *Changed during implementation:* the original order, exact first,
+   meant the structural-exact route always won, because it is exact by construction, so a snapped
+   program could never be chosen. "Simplest formula that passes" is also Claude's own heuristic
+   (absdiff/seed0, xor/seed0).
 4. If no candidate passes, fall back to the best exact structural result. That is always valid,
    because P1/P2/P4 are exact.
 
