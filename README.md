@@ -65,6 +65,21 @@ names, and no target.
 
 ## Prior work
 
-Rule extraction from neural networks is an established field (TREPAN, DeepRED, symbolic execution of
-ReLU networks, linear-region analysis, symbolic regression). A comparison with these methods is
-planned for step 4 of the design.
+Like MIPS, nndc automatically distills small trained ReLU networks into Python with snapped constants;
+unlike it, nndc targets feed-forward MLPs on real-valued piecewise tasks, has a task-blind LLM agent
+refactor a per-neuron code dump into a program with non-integer intended constants, accepts a program
+only by comparison with the network itself, and tests how much of that agent's work a frozen
+deterministic tool can reproduce on held-out models — a combination we did not find in prior work.
+
+Step 4 also tests decompile → fix → reinsert. A network that is wrong on its task is decompiled, an
+agent fixes the program from failing cases, and the program is compiled back into a ReLU net. It is
+compared with fixing the weights directly (fine-tuning, a last-layer LP repair). Prior repair methods
+change weights; we did not find one that fixes the network through its decompiled code.
+
+Literature reviews:
+- [Neural net decompilation prior work](reports/Neural%20net%20decompilation%20prior%20work.md)
+- [Counterexample guided program refinement](reports/Counterexample%20guided%20program%20refinement.md)
+- [Decompile, fix and reinsert network blocks](reports/Decompile%20fix%20and%20reinsert%20network%20blocks.md)
+
+The step-4 comparison against these methods (PySR, decision trees, exact region decomposition, Claude
+from input/output only) is in the "Comparison (step 4)" section of [REPORT.md](REPORT.md).

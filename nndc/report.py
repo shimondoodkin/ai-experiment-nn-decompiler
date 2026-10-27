@@ -5,10 +5,12 @@ import json
 import re
 from pathlib import Path
 
+from .compare import comparison_md
 from .run import RUNS, all_runs, is_step1, read_git
 from .spec import Spec
 
 SPIKE_RUNS = ["xor/seed0", "absdiff/seed0", "neareq/seed0"]
+BUG_ROOT = Path("runs_bugs")   # planted-bug nets of the fix experiment (step 4)
 
 
 def with_real_names(src: str, spec: Spec) -> str:
@@ -110,8 +112,8 @@ def build_report(root: Path = RUNS) -> str:
     beats = _beats_the_net(root)
     beats_md = "\n".join(beats) if beats else "(none yet)"
     return (head + LEGEND + "\n## Where the refactored program beats the network\n\n" + BEATS_INTRO + beats_md
-            + "\n\n" + reproduction_md(Path(root)) + _datasets_md(Path(root)) + "## Results\n\n"
-            + "\n".join(rows) + "\n\n" + "\n".join(sections))
+            + "\n\n" + reproduction_md(Path(root)) + comparison_md(Path(root), Path(root), BUG_ROOT)
+            + _datasets_md(Path(root)) + "## Results\n\n" + "\n".join(rows) + "\n\n" + "\n".join(sections))
 
 
 def _datasets_md(root: Path) -> str:
