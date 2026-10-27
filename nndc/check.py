@@ -187,7 +187,9 @@ def check_program(src: str, mlp: MLP, spec: Spec, seed: int = 0,
         in_zone = score < m
         bad_out, bad_in = mismatch & ~in_zone, mismatch & in_zone
         severity = score
-        r = CheckResult(not mismatch.any(), not bad_out.any(), label, X.shape[0],
+        # on the decision line the class is a float32-vs-float64 rounding tie (same role as atol/rtol)
+        tie = score <= spec.atol + spec.rtol * np.abs(n_score + (spec.threshold if spec.output == "binary" else 0))
+        r = CheckResult(not (mismatch & ~tie).any(), not bad_out.any(), label, X.shape[0],
                         disagreements_outside=int(bad_out.sum()), disagreements_inside=int(bad_in.sum()),
                         zone_fraction=float(in_zone.mean()), margin=m)
     idx = list(np.nonzero(bad_out)[0][np.argsort(-severity[bad_out], kind="stable")])

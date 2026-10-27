@@ -54,6 +54,17 @@ def test_binary_snap_zone():
     assert not r2.snap_pass and r2.disagreements_outside > 0
 
 
+def test_float_ties_on_the_decision_line_do_not_break_exact():
+    # the net computes in float32, programs in float64: on the decision line itself the class is a
+    # rounding tie, which exact mode tolerates like regression's atol/rtol
+    net = MLP([np.array([[1, -1], [-1, 1]], np.float32), np.array([[-1, -1]], np.float32)],
+              [np.zeros(2, np.float32), np.array([0.2], np.float32)])
+    spec = Spec(task="t", output="binary",
+                inputs=[InputSpec("x0", "a", "float", -2, 2), InputSpec("x1", "b", "float", -2, 2)])
+    r = check_program("def net(x0, x1):\n    return abs(x0 - x1) < 0.2", net, spec)
+    assert r.exact_pass
+
+
 def test_exhaustive_label_for_small_discrete():
     xor = MLP([np.array([[1, 1], [1, 1]], np.float32), np.array([[1, -2]], np.float32)],
               [np.array([0, -1], np.float32), np.array([-0.5], np.float32)])

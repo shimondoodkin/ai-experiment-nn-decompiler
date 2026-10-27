@@ -47,6 +47,48 @@ def cmd_check(args) -> int:
     return 0 if r.snap_pass else 1
 
 
+def cmd_agent_prepare(args) -> int:
+    from .agent.prepare import prepare, suggested_commands
+    from .run import all_runs
+
+    runs = all_runs(Path(args.root)) if args.all else [Path(r) for r in args.runs]
+    if not runs:
+        print("nothing to prepare: give run folders or --all")
+        return 2
+    for rd in runs:
+        b = prepare(rd)
+        print(f"{rd.as_posix()} -> {b}")
+        for c in suggested_commands(b):
+            print(f"    {c}")
+    return 0
+
+
+def cmd_agent_collect(args) -> int:
+    from .agent.collect import collect
+
+    trs = [Path(t) for t in args.transcript] if args.transcript else None
+    rd, n = collect(Path(args.blind), transcripts=trs)
+    if n is None:
+        print(f"{rd.as_posix()}: identical attempt already collected, nothing changed")
+        return 0
+    res = json.loads((rd / "results.json").read_text(encoding="utf-8"))
+    v = res["versions"][f"agent_{n}"]
+    c = v["check"]
+    verdict = "ERROR" if c["error"] else "PASS exact" if c["exact_pass"] else "PASS snap" if c["snap_pass"] else "FAIL"
+    meta = v.get("meta") or {}
+    print(f"{rd.as_posix()}: agent_{n} {verdict}; recovered={v['task']['recovered']}; "
+          f"transcript_found={meta.get('transcript_found')}; outside_paths={len(meta.get('outside_paths') or [])}")
+    return 0
+
+
+def cmd_agent_mock(args) -> int:
+    from .agent.mock import mock_agent
+
+    notes = Path(args.notes).read_text(encoding="utf-8") if args.notes else ""
+    mock_agent(Path(args.blind), Path(args.program).read_text(encoding="utf-8"), notes)
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="nndc", description="Decompile small ReLU nets into programs.")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -64,6 +106,24 @@ def main(argv: list[str] | None = None) -> int:
     c.add_argument("program")
     c.add_argument("--run", required=True)
     c.set_defaults(func=cmd_check)
+
+    a = sub.add_parser("agent", help="blind folders for Claude Code refactoring runs")
+    asub = a.add_subparsers(dest="agent_cmd", required=True)
+    ap = asub.add_parser("prepare", help="create blind folder(s) to run Claude Code in")
+    ap.add_argument("runs", nargs="*")
+    ap.add_argument("--all", action="store_true")
+    ap.add_argument("--root", default=str(RUNS))
+    ap.set_defaults(func=cmd_agent_prepare)
+    ac = asub.add_parser("collect", help="bring an attempt back, audit it and re-check it")
+    ac.add_argument("blind")
+    ac.add_argument("--transcript", action="append",
+                    help="transcript JSONL to audit (e.g. a subagent's); default: look it up by folder")
+    ac.set_defaults(func=cmd_agent_collect)
+    am = asub.add_parser("mock", help="write a given program as a fake attempt (testing)")
+    am.add_argument("blind")
+    am.add_argument("--program", required=True)
+    am.add_argument("--notes")
+    am.set_defaults(func=cmd_agent_mock)
 
     args = p.parse_args(argv)
     return args.func(args)
