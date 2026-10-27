@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
+from datetime import date
 from pathlib import Path
 
 import numpy as np
 
 from experiments.grade import grade_task
-from experiments.tasks import get_task
+from experiments.tasks import TASKS, get_task
 
 from .check import CheckResult, check_program
 from .dump import dump_program
@@ -18,6 +20,48 @@ from .spec import Spec
 
 RUNS = Path("runs")
 AGENT_RE = re.compile(r"^agent_(\d+)\.py$")
+GIT_FILE = "run_git.txt"
+GIT_HEADER = ("# code version each step ran with: <step>: <git commit>[+dirty] <date> [note]; "
+              "+dirty = uncommitted changes in nndc/ or experiments/\n")
+
+
+def git_version() -> str:
+    """Short commit of the code, with +dirty when nndc/ or experiments/ have uncommitted changes."""
+    try:
+        head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True,
+                              check=True).stdout.strip()
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no", "--", "nndc", "experiments"],
+                               capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown"
+    return head + ("+dirty" if dirty else "")
+
+
+def record_git(rd: Path, step: str, version: str | None = None, when: str | None = None, note: str = "") -> None:
+    """Write `step: <commit> <date>` into the run's run_git.txt, replacing an earlier line for the same step."""
+    path = Path(rd) / GIT_FILE
+    old = path.read_text(encoding="utf-8").splitlines() if path.exists() else []
+    keep = [ln for ln in old if ln.strip() and not ln.startswith("#") and not ln.startswith(f"{step}:")]
+    line = f"{step}: {version or git_version()} {when or date.today().isoformat()}" + (f" {note}" if note else "")
+    path.write_text(GIT_HEADER + "\n".join(keep + [line]) + "\n", encoding="utf-8")
+
+
+def read_git(rd: Path) -> dict[str, str]:
+    """{step: commit} from a run's run_git.txt (empty when there is none)."""
+    path = Path(rd) / GIT_FILE
+    if not path.exists():
+        return {}
+    out = {}
+    for ln in path.read_text(encoding="utf-8").splitlines():
+        if ":" in ln and not ln.startswith("#"):
+            step, rest = ln.split(":", 1)
+            out[step.strip()] = rest.split()[0] if rest.split() else ""
+    return out
+
+
+def is_step1(rd: Path) -> bool:
+    """A run of a step-1 task (formula known); dataset runs such as iris are not."""
+    return Path(rd).parent.name in TASKS
 
 
 def run_dir(task: str, seed: int | None, root: Path = RUNS) -> Path:
@@ -65,6 +109,7 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
         t.spec.save(rd / "spec.json")
         save_npz(mlp, rd / "weights.npz")
         _write_json(rd / "train_log.json", log)
+        record_git(rd, "build")
     spec, mlp = load_run(rd)
     (rd / "dump.py").write_text(dump_program(mlp, spec), encoding="utf-8")
     res = evaluate_run(rd)

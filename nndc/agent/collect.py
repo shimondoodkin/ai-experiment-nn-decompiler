@@ -10,7 +10,7 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 
-from ..run import agent_attempts, evaluate_run
+from ..run import agent_attempts, evaluate_run, record_git
 from ..spec import Spec
 from .prepare import INDEX, load_index
 
@@ -170,6 +170,7 @@ def collect(blind: Path, index: Path = INDEX, heuristics: Path = Path("HEURISTIC
             if re.match(rf"^agent_{n}[_.]", f.name):
                 f.unlink()
         raise
+    record_git(rd, f"agent_{n}")
     notes_path = blind / "agent_notes.md"
     notes = notes_path.read_text(encoding="utf-8") if notes_path.exists() else ""
     spec = Spec.load(rd / "spec.json")

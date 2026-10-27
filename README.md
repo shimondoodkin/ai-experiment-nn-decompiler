@@ -29,12 +29,22 @@ seed-0 and seed-1 runs. The tool was frozen before it was run once on the held-o
 
 Details are in the "Reproduction (step 3)" section of [REPORT.md](REPORT.md).
 
+## A real dataset: Iris
+
+The same pipeline on nets trained on the 150 Iris flowers (all 4 measurements, and petal only), 3 classes,
+seeds 0–5. There is no known formula, so success means a short program that passes the checker against
+the net. Every net reduces to an if-chain of two linear tests. The AST tool got a decision-list route for
+argmax nets; its second version produced passing lists on all 6 fresh held-out nets, as did blind Claude
+agents. Details are in [runs/iris/REPORT.md](runs/iris/REPORT.md).
+
+Each run folder records the git commit each step ran with in `run_git.txt`.
+
 ## Usage
 
 ```bash
 uv sync
 uv run pytest                      # all tests; no Claude needed (uses a mock agent)
-uv run nndc run all                # build/train every step-1 model into runs/<task>/<hand|seedK>/
+uv run nndc run all                # build/train every model (step-1 and Iris) into runs/<task>/<hand|seedK>/
 uv run nndc check my.py --run runs/absdiff/seed0
 uv run nndc ast --all              # deterministic heuristics tool (no LLM); --split heldout for seed 2
 ```

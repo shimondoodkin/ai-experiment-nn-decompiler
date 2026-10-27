@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 A research experiment (`nndc`). It decompiles small trained ReLU MLPs (1–8 inputs) into readable
 programs, refactors them, and checks every program against the original network. The plan and
 rationale live in `docs/design/` (one design doc per step) and `docs/plans/` (one build plan per step).
-Results are in `REPORT.md`, and for the Iris side run in `runs_datasets/REPORT.md`. Literature
+Results are in `REPORT.md`, and for the Iris dataset runs in `runs/iris/REPORT.md`. Literature
 reviews are in `reports/`, with raw notes in `research_notes/`.
 
 ## Commands
@@ -16,8 +16,8 @@ reviews are in `reports/`, with raw notes in `research_notes/`.
 uv sync                                          # Python 3.13; torch comes from the CPU wheel index
 uv run pytest -q                                 # full suite (no Claude needed; uses a mock agent)
 uv run pytest tests/test_check.py::test_name -v  # a single test
-uv run nndc run all                              # build/train every formula model into runs/
-uv run nndc run iris --seed 0 --root runs_datasets
+uv run nndc run all                              # build/train every model (formula tasks and Iris) into runs/
+uv run nndc run iris --seed 0                    # one model
 uv run nndc check prog.py --run runs/absdiff/seed0
 uv run nndc ast --all --split distill|heldout|all [--root R]   # deterministic refactoring tool
 uv run nndc agent prepare <run>                  # blind folder for a Claude refactoring run (outside the repo)
@@ -56,8 +56,16 @@ Every program (dump, agent, tool, baseline) must parse under it. Output conventi
 
 **Tasks:** `experiments/tasks.py` holds the formula tasks (`TASKS`, with a true target and an
 `expected` formula written before any run). `experiments/datasets.py` holds the dataset tasks
-(`DATASET_TASKS`, Iris with a 1-NN target). Dataset tasks are deliberately kept out of `TASKS`, so
-`nndc run all`, `REPORT.md` and the step-1 tests don't see them. `get_task` resolves both.
+(`DATASET_TASKS`, Iris with a 1-NN target). Dataset tasks are kept out of `TASKS`, so the step-1
+tests don't see them; `get_task` resolves both. Their runs live in `runs/iris/` and `runs/iris_petal/`
+next to the formula runs. `nndc run all` builds them (seeds 0–5), and `nndc ast --all` includes them only
+with `--split all`. In `REPORT.md` they appear in the results table with `recovered` n/a, and are left
+out of the step-3 reproduction and the beats-the-network list (`nndc/run.py: is_step1`).
+
+**Run versions:** each run folder has `run_git.txt`, one line per step (`build`, `ast`, `agent_<n>`)
+with the git commit the step ran with (`+dirty` for uncommitted code in `nndc/` or `experiments/`).
+`nndc run`, `nndc ast` and `nndc agent collect` write it (`record_git`); lines marked `backfilled` were
+reconstructed from git history.
 
 **Blind agent runs** (`nndc/agent/`):
 - `prepare` copies into `%TEMP%/nndc-blind/m<hex>/`:
@@ -87,8 +95,9 @@ Every program (dump, agent, tool, baseline) must parse under it. Output conventi
 - **Held-out data:**
   - formula runs: seed 2 is held out from AST-tool development (`--split distill` excludes it);
   - Iris: seeds 3–5 were held out from tool v2.
-- **Freezes:** the commits are recorded in `runs/ast_freeze.txt` and
-  `runs_datasets/ast_freeze*.txt`. Changing the AST tool or heuristics means a new freeze and a fresh
+- **Freezes:** the tool version used on each held-out run is the `ast:` line of its `run_git.txt`
+  (step 3: `1076f21`; Iris v1: `e62d74b`, later overwritten by v2; Iris v2: `363b8c9`). Commit the tool
+  before running held-out models. Changing the AST tool or heuristics means a new freeze and a fresh
   held-out set, not re-running old held-out models.
 - **Blindness:** no task name, real input names, `expected` formula or target may enter a blind
   folder, or the AST tool's inputs.

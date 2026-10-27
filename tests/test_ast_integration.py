@@ -1,9 +1,10 @@
 import json
+import shutil
 
 from nndc.ast_tool import run_ast
 from nndc.cli import main
 from nndc.report import build_report, reproduction
-from nndc.run import build_run
+from nndc.run import build_run, record_git
 
 
 def test_run_ast_adds_version_and_keeps_agents(tmp_path):
@@ -41,10 +42,13 @@ def test_report_has_reproduction_section_with_freeze_line(tmp_path):
     rd = build_run("absdiff", None, root=tmp_path)
     (rd / "agent_1.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")
     run_ast(rd)
-    (tmp_path / "ast_freeze.txt").write_text("abc1234\n")
+    held = rd.parent / "seed2"                    # a held-out run with a recorded tool version
+    shutil.copytree(rd, held)
+    record_git(held, "ast", version="abc1234")
     md = build_report(tmp_path)
     sec = md.split("## Reproduction (step 3)")[1].split("\n## ")[0]
-    assert "Tool frozen at abc1234" in sec and "absdiff/hand" in sec and "in-sample" in sec
+    assert "held-out runs (from each run's `run_git.txt`): abc1234" in sec and "absdiff/hand" in sec
+    assert "in-sample" in sec
 
 
 def test_cli_ast_default_split_skips_seed2(tmp_path, monkeypatch):

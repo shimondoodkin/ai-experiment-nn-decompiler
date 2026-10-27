@@ -40,7 +40,7 @@ threshold, or splits one line into two half-planes joined by `or`. The checker l
 | Set | Runs | Runs with any FAIL | Started with FAIL | Most checks in one run |
 |---|---|---|---|---|
 | Formula tasks (`runs/`) | 29 | 0 | 0 | 3 |
-| Iris (`runs_datasets/`) | 12 | 7 | 5 | 16 (iris_petal seed2: 6 FAILs, then PASS) |
+| Iris (`runs/iris*/`) | 12 | 7 | 5 | 16 (iris_petal seed2: 6 FAILs, then PASS) |
 
 This is counterexample-guided synthesis with a sampling checker; prior work is in
 `reports/Counterexample guided program refinement.md`. The user judged that a full ablation of it
@@ -264,7 +264,7 @@ nets whose faithful program is still wrong.
   - **Formula tasks:** the 29 models in `runs/`. Every method is reported with the same split:
     held-out (6 seed-2 runs) and in-sample (23). The split only matters for the AST tool, but a uniform
     layout keeps rows comparable.
-  - **Iris:** the 12 nets in `runs_datasets/` (iris and iris_petal, seeds 0–5), in a separate table.
+  - **Iris:** the 12 nets in `runs/iris/` and `runs/iris_petal/` (seeds 0–5), in a separate table.
     "Recovered" is meaningless there (1-NN target), so the columns are checker verdict, extra-seed
     disagreements, size and accuracy on the 150 flowers. The AST row is frozen tool v2, which is
     in-sample on seeds 0–2 and held-out on seeds 3–5. The tree baseline is the natural textbook

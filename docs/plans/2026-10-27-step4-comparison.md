@@ -32,7 +32,8 @@ decompile → fix → reinsert experiment (R) against weight-space repair.
 
 - **Populations:**
   - `runs/` (29 formula nets);
-  - `runs_datasets/` (12 Iris nets: iris and iris_petal, seeds 0–5);
+  - `runs/iris/` and `runs/iris_petal/` (12 Iris nets, seeds 0–5; `nndc/run.py: is_step1` tells them
+    apart from the formula nets, and `--all` covers both);
   - `runs_bugs/` (5 planted-bug nets, created in Task 9).
 - **Hyperparameters are fixed by the design and copied here.** No baseline is tuned per task or after
   seeing results.
@@ -832,7 +833,7 @@ def test_whole_domain_generalization_is_none(tmp_path):
     assert m["generalization"] is None
 
 def test_iris_split_is_stratified_and_disjoint():
-    d = repair_data(Path("runs_datasets/iris_petal/seed0"))
+    d = repair_data(Path("runs/iris_petal/seed0"))
     assert len(d.X_repair) == 100 and len(d.X_heldout) == 50 and d.flowers
     assert np.bincount(d.y_heldout.astype(int)).tolist() in ([17, 17, 16], [17, 16, 17], [16, 17, 17])
 
@@ -1046,7 +1047,7 @@ git commit -m "feat: blind fix-agent folders (with and without the decompiled pr
   def loop_counts(roots: list[Path]) -> str              # per agent kind: runs, checks, FAILs before first PASS
   def fix_table(roots: list[Path]) -> str                # arm x medians; P1+P2 vs P3; flagged; reinsertion
   def what_this_shows(root: Path) -> list[str]           # the three computed lines (B5 vs dump, B2 vs B1, B4 size)
-  def comparison_md(formula_root: Path = RUNS, iris_root: Path = Path("runs_datasets"),
+  def comparison_md(formula_root: Path = RUNS, iris_root: Path = RUNS,          # Iris runs: runs/iris*
                     bug_root: Path = Path("runs_bugs")) -> str
   ```
 - **Rules:**
@@ -1110,27 +1111,27 @@ git commit -m "feat: step-4 comparison section in REPORT.md; README prior-work p
 
 ### Task 14: Data — B1–B4 on all 41 nets
 
-**Files:** `runs/**`, `runs_datasets/**` (new `tree.py`, `regions.py`, `pysr*.py`, `*_info.json`, `results.json`)
+**Files:** `runs/**` (new `tree.py`, `regions.py`, `pysr*.py`, `*_info.json`, `results.json`)
 
 - [ ] **Step 1: Run the non-PySR baselines**
 
-Run: `uv run nndc baseline tree --all && uv run nndc baseline regions --all && uv run nndc baseline tree --all --root runs_datasets && uv run nndc baseline regions --all --root runs_datasets`
+Run: `uv run nndc baseline tree --all && uv run nndc baseline regions --all` (`--all` includes the Iris runs)
 Expected: one line per run; errors are printed and do not stop the batch.
 
 - [ ] **Step 2: Run PySR** (skip if the spike dropped it). Run it in the background, because it takes
   about 41 × 2 min.
 
-Run: `uv run --group pysr nndc baseline pysr --all` and the same with `--root runs_datasets`.
+Run: `uv run --group pysr nndc baseline pysr --all` (includes the Iris runs).
 
 - [ ] **Step 3: Check that existing versions did not change**
 
-Run: `git diff --stat -- 'runs/**/agent_*' 'runs/**/ast.py' 'runs_datasets/**/agent_*' 'runs_datasets/**/ast.py'`
+Run: `git diff --stat -- 'runs/**/agent_*' 'runs/**/ast.py'`
 Expected: empty.
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add runs runs_datasets
+git add runs
 git commit -m "data: B1-B4 baselines on the 29 formula and 12 Iris nets"
 ```
 
@@ -1138,7 +1139,7 @@ git commit -m "data: B1-B4 baselines on the 29 formula and 12 Iris nets"
 
 - [ ] **Step 1: Prepare**
 
-Run: `uv run nndc agent prepare --io --all` and `uv run nndc agent prepare --io --all --root runs_datasets`
+Run: `uv run nndc agent prepare --io --all` (includes the Iris runs)
 Expected: 41 blind folders under `%TEMP%/nndc-blind`.
 
 - [ ] **Step 2: Dispatch one fresh general-purpose subagent per folder, in batches of up to 8**
@@ -1154,7 +1155,7 @@ Expected: `io_agent_1` verdict printed. List `forbidden_paths` hits for review.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add runs runs_datasets
+git add runs
 git commit -m "data: B5 Claude from input/output only on 41 nets (one attempt each)"
 ```
 
@@ -1174,7 +1175,7 @@ project).
 
 - [ ] **Step 3: Weight-space arms and r_tree on all R nets**
 
-Run: `uv run nndc repair baselines --all --root runs_bugs`, then the same for `runs/tax/seed0 runs/tax/seed1 runs/xor/seed2` and `--all --root runs_datasets`.
+Run: `uv run nndc repair baselines --all --root runs_bugs`, then the same for `runs/tax/seed0 runs/tax/seed1 runs/xor/seed2` and `runs/iris/* runs/iris_petal/*`.
 
 - [ ] **Step 4: Fix-agent runs**
 
@@ -1189,7 +1190,7 @@ That is 28 folders. Dispatch one subagent each and collect.
 Run: `uv run nndc repair evaluate --all --root runs_bugs` (and the P2/P3 runs).
 
 ```bash
-git add runs_bugs runs runs_datasets
+git add runs_bugs runs
 git commit -m "data: experiment R (planted-bug, natural-bug and Iris nets): fix agents and weight-space repair"
 ```
 
@@ -1197,8 +1198,8 @@ git commit -m "data: experiment R (planted-bug, natural-bug and Iris nets): fix 
 
 - [ ] **Step 1: Regenerate the report**
 
-Run: `uv run nndc report` (and `--root runs_datasets --out runs_datasets/REPORT.md` if its report is
-regenerated by the same tool).
+Run: `uv run nndc report`. The Iris report `runs/iris/REPORT.md` is hand-written; update its comparison
+section by hand.
 Expected: `REPORT.md` has "## Comparison (step 4)" with the method tables, the recovery matrix, the
 Iris table, the loop counts and the fix table.
 
@@ -1214,7 +1215,7 @@ Expected: PASS.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add REPORT.md runs_datasets/REPORT.md
+git add REPORT.md runs/iris/REPORT.md
 git commit -m "docs: step-4 comparison and fix-and-reinsert results in REPORT.md"
 ```
 

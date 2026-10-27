@@ -26,6 +26,7 @@ class Task:
     steps: int = 3000
     lr: float = 1e-2
     sampler: Callable[[np.random.Generator, int], np.ndarray] | None = None
+    seeds: tuple[int, ...] = (0, 1, 2)          # trained seeds that `nndc run all` builds
 
 
 def _inputs(*items: tuple[str, str, float, float]) -> list[InputSpec]:

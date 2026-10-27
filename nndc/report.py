@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-from .run import RUNS, all_runs
+from .run import RUNS, all_runs, is_step1, read_git
 from .spec import Spec
 
 SPIKE_RUNS = ["xor/seed0", "absdiff/seed0", "neareq/seed0"]
@@ -84,7 +84,8 @@ def build_report(root: Path = RUNS) -> str:
             audit, cost = _audit(v.get("meta"))
             rows.append(f"| {res['run']} | {_training(res)} | {name} | {_verdict(c)} | {c['label']} | "
                         f"{_num(c.get('max_abs_err'))} | {dis} | {_num(t.get('in_range'))} / "
-                        f"{_num(t.get('out_of_range'))} | {'yes' if t.get('recovered') else 'no'} | "
+                        f"{_num(t.get('out_of_range'))} | "
+                        f"{('yes' if t.get('recovered') else 'no') if is_step1(rd) else 'n/a'} | "
                         f"{_num(nodes, 'd')}{pct} | {audit} | {cost} |")
         best = _best_attempt(vs)
         if best:
@@ -109,8 +110,19 @@ def build_report(root: Path = RUNS) -> str:
     beats = _beats_the_net(root)
     beats_md = "\n".join(beats) if beats else "(none yet)"
     return (head + LEGEND + "\n## Where the refactored program beats the network\n\n" + BEATS_INTRO + beats_md
-            + "\n\n" + reproduction_md(Path(root)) + "## Results\n\n" + "\n".join(rows) + "\n\n"
-            + "\n".join(sections))
+            + "\n\n" + reproduction_md(Path(root)) + _datasets_md(Path(root)) + "## Results\n\n"
+            + "\n".join(rows) + "\n\n" + "\n".join(sections))
+
+
+def _datasets_md(root: Path) -> str:
+    """Pointer to dataset runs (no known formula), which have their own hand-written report."""
+    reports = sorted(Path(root).glob("*/REPORT.md"))
+    if not reports:
+        return ""
+    links = ", ".join(f"[{p.as_posix()}]({p.as_posix()})" for p in reports)
+    return ("## Real datasets\n\nDataset runs (Iris) have no known formula: their task columns below compare with "
+            "the label of the nearest table row, and `recovered` is n/a. They are left out of the step-3 "
+            f"reproduction and the beats-the-network list above. Their results and held-out runs are in {links}.\n\n")
 
 
 def reproduction(root: Path = RUNS) -> list[dict]:
@@ -118,7 +130,7 @@ def reproduction(root: Path = RUNS) -> list[dict]:
     rows = []
     for rd in all_runs(root):
         res_path = rd / "results.json"
-        if not res_path.exists():
+        if not is_step1(rd) or not res_path.exists():
             continue
         res = json.loads(res_path.read_text(encoding="utf-8"))
         vs = res["versions"]
@@ -128,6 +140,7 @@ def reproduction(root: Path = RUNS) -> list[dict]:
         trace_path = rd / "ast_trace.json"
         route = json.loads(trace_path.read_text(encoding="utf-8"))["winner"] if trace_path.exists() else None
         row = {"run": res["run"], "split": "heldout" if rd.name == "seed2" else "distill", "route": route,
+               "ast_git": read_git(rd).get("ast"),
                "ast_check": _verdict(a["check"]), "ast_recovered": bool(a["task"]["recovered"]),
                "ast_nodes": (a["size"] or {}).get("nodes")}
         best = _best_attempt(vs, valid_only=True)
@@ -153,9 +166,9 @@ def reproduction_md(root: Path) -> str:
     if not rows:
         return ""
     out = ["## Reproduction (step 3)\n"]
-    freeze = Path(root) / "ast_freeze.txt"
-    if freeze.exists():
-        out.append(f"Tool frozen at {freeze.read_text(encoding='utf-8').strip()} before the held-out run.\n")
+    held = sorted({r["ast_git"] for r in rows if r["split"] == "heldout" and r["ast_git"]})
+    if held:
+        out.append(f"Tool version on the held-out runs (from each run's `run_git.txt`): {', '.join(held)}.\n")
     out.append("Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactoring? Reproduces = "
                "passes the check, same recovered status as Claude, and at most max(1.5x, +5) of Claude's nodes. "
                "Held-out runs (seed 2) were never studied while building the tool; in-sample runs were.\n")
@@ -236,7 +249,7 @@ def _beats_the_net(root: Path) -> list[str]:
     out = []
     for rd in all_runs(root):
         res_path = rd / "results.json"
-        if not res_path.exists():
+        if not is_step1(rd) or not res_path.exists():
             continue
         res = json.loads(res_path.read_text(encoding="utf-8"))
         dump_t = res["versions"]["dump"]["task"]

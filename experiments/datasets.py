@@ -38,7 +38,7 @@ def _iris_task(name: str, cols: list[int], hidden: list[int]) -> Task:
         return X[rng.integers(0, len(X), n)]
 
     return Task(name, Spec(name, "argmax", inputs, n_outputs=3), target, expected="", hidden=hidden,
-                handcrafted=None, steps=3000, lr=1e-2, sampler=sampler)
+                handcrafted=None, steps=3000, lr=1e-2, sampler=sampler, seeds=(0, 1, 2, 3, 4, 5))
 
 
 DATASET_TASKS: dict[str, Task] = {t.name: t for t in [

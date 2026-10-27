@@ -498,7 +498,8 @@
 - [ ] **Step 2: Freeze.**
   - Run `uv run pytest -q`. Expected: all pass.
   - Commit the code: `feat: step-3 tool frozen for held-out run`.
-  - Write `git rev-parse --short HEAD` to `runs/ast_freeze.txt` (FREEZE).
+  - Write `git rev-parse --short HEAD` to `runs/ast_freeze.txt` (FREEZE). (Later replaced: each run's
+    `run_git.txt` records the commit every step ran with, and `runs/ast_freeze.txt` was removed.)
 - [ ] **Step 3: Held-out run.** `uv run nndc ast --all --split heldout` (6 runs), then `uv run nndc report`. The tool code must not change after this step. If a crash occurs:
   - record it as a held-out failure
   - fix it only in a new commit

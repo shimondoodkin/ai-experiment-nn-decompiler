@@ -21,9 +21,10 @@ def _train_summary(res: dict) -> str:
 
 
 def cmd_run(args) -> int:
+    from experiments.datasets import DATASET_TASKS
     from experiments.tasks import TASKS, get_task
 
-    names = list(TASKS) if args.task == "all" else [args.task]
+    names = [*TASKS, *DATASET_TASKS] if args.task == "all" else [args.task]
     for name in names:
         t = get_task(name)
         if args.hand:
@@ -31,7 +32,7 @@ def cmd_run(args) -> int:
         elif args.seed is not None:
             seeds = [args.seed]
         else:
-            seeds = ([None] if t.handcrafted else []) + ([0, 1, 2] if t.hidden else [])
+            seeds = ([None] if t.handcrafted else []) + (list(t.seeds) if t.hidden else [])
         for seed in seeds:
             rd = build_run(name, seed, Path(args.root), retrain=args.retrain)
             res = json.loads((rd / "results.json").read_text(encoding="utf-8"))
@@ -95,11 +96,12 @@ def cmd_agent_mock(args) -> int:
 
 def cmd_ast(args) -> int:
     from .ast_tool import run_ast
-    from .run import all_runs
+    from .run import all_runs, is_step1
 
     if args.all:
+        # the distill/heldout split is the step-1 protocol (seed 2 held out); dataset runs come with --split all
         runs = [rd for rd in all_runs(Path(args.root))
-                if args.split == "all" or (rd.name == "seed2") == (args.split == "heldout")]
+                if args.split == "all" or (is_step1(rd) and (rd.name == "seed2") == (args.split == "heldout"))]
     else:
         runs = [Path(r) for r in args.runs]
     if not runs:
@@ -176,7 +178,8 @@ def main(argv: list[str] | None = None) -> int:
     at.add_argument("runs", nargs="*")
     at.add_argument("--all", action="store_true")
     at.add_argument("--split", choices=["distill", "heldout", "all"], default="distill",
-                    help="with --all: distill = every run except seed2 (default), heldout = seed2 only")
+                    help="with --all: distill = every step-1 run except seed2 (default), heldout = step-1 seed2 "
+                         "only, all = every run including dataset runs (iris)")
     at.add_argument("--root", default=str(RUNS))
     at.set_defaults(func=cmd_ast)
 
