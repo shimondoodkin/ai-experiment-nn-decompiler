@@ -101,7 +101,85 @@ def build_report(root: Path = RUNS) -> str:
             "(never the target); `task in / out` grades against the true task inside and outside the "
             "training range (accuracy, or max abs error for regression). Input names are shown with "
             "their real names here; the refactorer only saw `x0, x1, …`.\n\n")
-    return head + "\n".join(rows) + "\n\n" + "\n".join(sections)
+    beats = _beats_the_net(root)
+    beats_md = "\n".join(beats) if beats else "(none yet)"
+    return (head + LEGEND + "\n## Where the refactored program beats the network\n\n" + BEATS_INTRO + beats_md
+            + "\n\n## Results\n\n" + "\n".join(rows) + "\n\n" + "\n".join(sections))
+
+
+LEGEND = """## How to read the table
+
+Each model has one row per program version: `dump` is the raw network written as code, `agent_N` is
+a Claude Code refactoring of it.
+
+- **run**: `task/kind`; `hand` = handcrafted net, `seedN` = trained with that seed.
+- **training**: how well the *network* learned the real task (accuracy for classifiers, R² for
+  regression). "NOT learned" marks a training failure (kept, never replaced).
+- **version**: which program the row is about.
+- **check**: the program compared with the *network* (never the target).
+  **PASS exact** = same answers everywhere, up to float rounding; **PASS snap** = differs only where
+  allowed (below); **FAIL** = differs where it must not; **ERROR** = invalid program.
+- **label**: how the check was done. **exhaustive** = every possible input tried (a proof for that
+  domain); **empirical** = about 280k sampled inputs, concentrated near decision boundaries (strong
+  testing, not proof).
+- **max err**: regression only; the largest |program − network|. Snap allows up to 2% of the
+  network's output range.
+- **disagree outside / inside (zone)**: classifiers only. *Outside* = disagreements where the network
+  was confident (must be 0 to pass); *inside* = disagreements in the network's "unsure zone" near its
+  decision line (allowed). The % is the share of the input space inside that zone. The `dump` rows
+  show large *inside* counts that are only float32-vs-float64 rounding ties exactly on the decision
+  line, not real disagreements.
+- **task in / out**: the program graded against the *true* answer, report only. *in* = inside the
+  training range, *out* = up to 50% beyond it (generalization). Accuracy for classifiers (1 = perfect),
+  max abs error for regression (0 = perfect). Blank *out* = discrete inputs, nothing outside.
+- **recovered**: yes = the program is the true algorithm (perfect inside and outside the range).
+- **nodes (% of dump)**: program size in syntax-tree nodes, and as a share of the dump.
+- **audit**: Claude runs only. **ok** = the transcript shows no file access outside the blind folder;
+  **OUTSIDE PATHS** = it touched outside files (such runs are excluded from headline numbers);
+  **no transcript** = could not be audited.
+- **Claude**: time taken and input+output tokens (input includes cached context).
+
+"""
+
+BEATS_INTRO = ("Runs where a refactored program is closer to the *true task* than the network it was "
+               "decompiled from (better inside or outside the training range, and not worse on either). "
+               "The refactorer never saw the target; this is the \"snapping recovers the intended "
+               "algorithm\" effect.\n\n")
+
+
+def _better(metric: str, new, old) -> int:
+    """1 if new is better than old, -1 if worse, 0 if equal or unknown."""
+    if new is None or old is None or isinstance(new, str) or isinstance(old, str):
+        return 0
+    eps = 1e-9 + 1e-6 * abs(old)
+    if metric == "accuracy":
+        return 1 if new > old + eps else -1 if new < old - eps else 0
+    return 1 if new < old - eps else -1 if new > old + eps else 0
+
+
+def _beats_the_net(root: Path) -> list[str]:
+    out = []
+    for rd in all_runs(root):
+        res_path = rd / "results.json"
+        if not res_path.exists():
+            continue
+        res = json.loads(res_path.read_text(encoding="utf-8"))
+        dump_t = res["versions"]["dump"]["task"]
+        metric = dump_t.get("metric")
+        for name, v in res["versions"].items():
+            if name == "dump" or not v["check"].get("snap_pass"):
+                continue
+            t = v["task"]
+            cmp = [_better(metric, t.get(k), dump_t.get(k)) for k in ("in_range", "out_of_range")]
+            if max(cmp) == 1 and min(cmp) >= 0:
+                what = "accuracy" if metric == "accuracy" else "max error"
+                parts = [f"{label} {_num(dump_t.get(k), '.4g')} → {_num(t.get(k), '.4g')}"
+                         for label, k in (("inside", "in_range"), ("outside", "out_of_range"))
+                         if t.get(k) is not None]
+                flag = " (audit-flagged run)" if (v.get("meta") or {}).get("outside_paths") else ""
+                out.append(f"- **{res['run']}** {name}: {what} {', '.join(parts)}"
+                           f"{'; recovered the true algorithm' if t.get('recovered') else ''}{flag}")
+    return out
 
 
 def spike_gate(root: Path = RUNS) -> tuple[bool, list[str]]:

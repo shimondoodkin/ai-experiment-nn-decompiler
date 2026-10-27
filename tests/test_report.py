@@ -52,3 +52,13 @@ def test_agent_notes_headings_are_nested_under_the_run_section(tmp_path):
     evaluate_run(rd)
     md = build_report(tmp_path)
     assert "\n#### Heuristics" in md and "\n## Heuristics" not in md and "\n### Notes" in md
+
+
+def test_report_explains_columns_and_lists_programs_that_beat_the_net(tmp_path):
+    rd = build_run("absdiff_perturbed", None, root=tmp_path)    # the perturbed net is slightly off abs(a-b)
+    (rd / "agent_1.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")
+    evaluate_run(rd)
+    md = build_report(tmp_path)
+    assert "## How to read the table" in md and "**disagree outside / inside (zone)**" in md
+    beats = md.split("## Where the refactored program beats the network")[1].split("\n## ")[0]
+    assert "absdiff_perturbed/hand" in beats and "agent_1" in beats
