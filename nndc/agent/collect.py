@@ -35,8 +35,9 @@ HOMES = ("${HOME}", "$HOME", "~")
 def _looks_like_path(tok: str) -> bool:
     if tok in HARMLESS:
         return False
-    # "/name..." is a POSIX path; "/50" is division
-    return bool(re.match(r"^[A-Za-z]:[\\/]", tok) or re.match(r"^/[A-Za-z_.]", tok) or tok.startswith(HOMES)
+    # "/tmp", "/etc/x", "/c/..." are POSIX paths; "/50" and "/d" are division in prose or code
+    return bool(re.match(r"^[A-Za-z]:[\\/]", tok) or re.match(r"^/([A-Za-z_.][^/]{2,}|[A-Za-z_.][^/]*/)", tok)
+                or tok.startswith(HOMES)
                 or ".." in tok)
 
 
