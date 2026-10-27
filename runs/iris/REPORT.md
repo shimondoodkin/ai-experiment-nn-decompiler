@@ -16,7 +16,7 @@ This is a side run on a real dataset instead of a known formula. Small ReLU nets
 ## Setup
 
 - **Data:** the 150-row Iris table, exported from scikit-learn to `experiments/data/iris.csv`. Classes: 0 setosa, 1 versicolor, 2 virginica.
-- **Tasks** (`experiments/datasets.py`). Both are kept out of `TASKS`, so `nndc run all`, `REPORT.md` and the step-1 tests do not see them.
+- **Tasks** (`experiments/datasets.py`). Both are kept out of `TASKS`, so the step-1 tests and the step-3 reproduction numbers do not see them. Their runs are `runs/iris/seed0..5` and `runs/iris_petal/seed0..5`, and this report covers both.
   - `iris`: 4 inputs (sepal length, sepal width, petal length, petal width) → 8 hidden → 3 outputs.
   - `iris_petal`: 2 inputs (petal length, petal width) → 8 hidden → 3 outputs.
 - **Input ranges** are the table's min and max per column. The checker samples the whole box, not only the flowers.
@@ -118,7 +118,7 @@ Freeze and reproducibility:
 
 - Unit tests on synthetic nets only: `tests/test_heuristics_decision_list.py`.
 - Rerunning the tool on all 21 step-1 runs left every `ast.py` and trace byte-identical. The step-1 tasks have no argmax output, so the route never runs there.
-- The tool was frozen at `e62d74b` (`runs_datasets/ast_freeze.txt`) before seeds 1–2 were run.
+- The tool was frozen at `e62d74b` (freeze commit `84aa4ab`) before seeds 1–2 were run. The v1 `ast.py` files were later overwritten by v2, so the runs' `run_git.txt` now show v2; v1's outputs are in commit `a0d15d3`.
 
 ## P10 v2 and a second held-out set (seeds 3–5)
 
@@ -132,7 +132,7 @@ v2 adds three things the v1 held-out run showed were missing. The agents' seed 1
    - This is what the iris/seed1 agent did: 0.7 inside 0.64–0.75, and 10.25 inside 10.09–10.41.
 3. **Leading coefficient exactly 1**, instead of `0.9999999999999999`.
 
-Within a step, candidates are ranked by agreement on the confident sample points (thresholds centred), then by node count. v1 used character count, which penalised long decimals and lost petal seed 0's exact program in a first try. The checker still decides among the finished programs with the unchanged rule. v2 was frozen at `363b8c9` (`runs_datasets/ast_freeze_v2.txt`), and the step-1 runs were again byte-identical.
+Within a step, candidates are ranked by agreement on the confident sample points (thresholds centred), then by node count. v1 used character count, which penalised long decimals and lost petal seed 0's exact program in a first try. The checker still decides among the finished programs with the unchanged rule. v2 was frozen at `363b8c9` (freeze commit `b400702`; the held-out runs' `run_git.txt` record `ast: b400702`, which has the same tool code), and the step-1 runs were again byte-identical.
 
 **In-sample (seeds 0–2), v2:** 6/6 pass.
 
@@ -242,8 +242,8 @@ On the data, the nets and the textbook rule are nearly the same classifier. Acro
 ## Reproduce
 
 ```bash
-uv run nndc run iris --seed 0 --root runs_datasets          # also iris_petal, seeds 0-5
-uv run nndc ast --all --split all --root runs_datasets
-uv run nndc agent prepare runs_datasets/iris_petal/seed0    # then a blind Claude Code run in the printed folder
+uv run nndc run iris --seed 0                    # also iris_petal, seeds 0-5 (or `nndc run all`)
+uv run nndc ast runs/iris/seed0                  # or `nndc ast --all --split all` for every run
+uv run nndc agent prepare runs/iris_petal/seed0  # then a blind Claude Code run in the printed folder
 uv run nndc agent collect <blind folder> --transcript <subagent jsonl>
 ```

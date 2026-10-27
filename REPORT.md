@@ -73,7 +73,7 @@ Runs where a refactored program is closer to the *true task* than the network it
 
 ## Reproduction (step 3)
 
-Tool frozen at 1076f21 before the held-out run.
+Tool version on the held-out runs (from each run's `run_git.txt`): 1076f21.
 
 Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactoring? Reproduces = passes the check, same recovered status as Claude, and at most max(1.5x, +5) of Claude's nodes. Held-out runs (seed 2) were never studied while building the tool; in-sample runs were.
 
@@ -114,6 +114,10 @@ Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactori
 | xor/seed1 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
 | xor/seed2 | heldout | PASS exact | no | 5 | PASS exact | no | 9 | yes | truth-table |
 
+## Real datasets
+
+Dataset runs (Iris) have no known formula: their task columns below compare with the label of the nearest table row, and `recovered` is n/a. They are left out of the step-3 reproduction and the beats-the-network list above. Their results and held-out runs are in [runs/iris/REPORT.md](runs/iris/REPORT.md).
+
 ## Results
 
 | run | training | version | check | label | max err | disagree outside / inside (zone) | task in / out | recovered | nodes (% of dump) | audit | Claude |
@@ -136,6 +140,42 @@ Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactori
 | deadredundant/hand | hand | dump | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 0.995 | no | 104 (100%) |  |  |
 | deadredundant/hand | hand | agent_1 | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 12 (12%) | ok | 60s 318134+1234 tok |
 | deadredundant/hand | hand | ast | PASS exact | empirical | 1.79e-07 |  | 2.22e-16 / 4.44e-16 | yes | 15 (14%) |  |  |
+| iris/seed0 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1065 (6.46%) | 0.799 / 0.772 | n/a | 484 (100%) |  |  |
+| iris/seed0 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 7123 (6.46%) | 0.793 / 0.772 | n/a | 76 (16%) | OUTSIDE PATHS (2) | 364s 1491056+13670 tok |
+| iris/seed0 | acc 0.9805 | ast | PASS snap | empirical |  | 0 / 7123 (6.46%) | 0.793 / 0.772 | n/a | 62 (13%) |  |  |
+| iris/seed1 | acc 0.9796 | dump | PASS exact | empirical |  | 0 / 991 (5.72%) | 0.787 / 0.76 | n/a | 482 (100%) |  |  |
+| iris/seed1 | acc 0.9796 | agent_1 | PASS snap | empirical |  | 0 / 4753 (5.72%) | 0.789 / 0.761 | n/a | 70 (15%) | OUTSIDE PATHS (2) | 302s 1133574+12036 tok |
+| iris/seed1 | acc 0.9796 | ast | PASS snap | empirical |  | 0 / 5482 (5.72%) | 0.787 / 0.759 | n/a | 64 (13%) |  |  |
+| iris/seed2 | acc 0.9798 | dump | PASS exact | empirical |  | 0 / 796 (6.45%) | 0.775 / 0.737 | n/a | 480 (100%) |  |  |
+| iris/seed2 | acc 0.9798 | agent_1 | PASS snap | empirical |  | 0 / 5661 (6.45%) | 0.773 / 0.734 | n/a | 67 (14%) | OUTSIDE PATHS (1) | 217s 1253258+12979 tok |
+| iris/seed2 | acc 0.9798 | ast | PASS snap | empirical |  | 0 / 6650 (6.45%) | 0.772 / 0.733 | n/a | 62 (13%) |  |  |
+| iris/seed3 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1263 (6.14%) | 0.807 / 0.781 | n/a | 484 (100%) |  |  |
+| iris/seed3 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 5015 (6.14%) | 0.807 / 0.778 | n/a | 72 (15%) | OUTSIDE PATHS (2) | 197s 1051160+10377 tok |
+| iris/seed3 | acc 0.9805 | ast | PASS exact | empirical |  | 0 / 1263 (6.14%) | 0.807 / 0.779 | n/a | 62 (13%) |  |  |
+| iris/seed4 | acc 0.9856 | dump | PASS exact | empirical |  | 0 / 873 (5.84%) | 0.768 / 0.732 | n/a | 476 (100%) |  |  |
+| iris/seed4 | acc 0.9856 | agent_1 | PASS snap | empirical |  | 0 / 5387 (5.84%) | 0.771 / 0.737 | n/a | 72 (15%) | OUTSIDE PATHS (3) | 592s 2108501+17830 tok |
+| iris/seed4 | acc 0.9856 | ast | PASS snap | empirical |  | 0 / 4217 (5.84%) | 0.763 / 0.725 | n/a | 64 (13%) |  |  |
+| iris/seed5 | acc 0.9804 | dump | PASS exact | empirical |  | 0 / 731 (5.27%) | 0.798 / 0.764 | n/a | 478 (100%) |  |  |
+| iris/seed5 | acc 0.9804 | agent_1 | PASS snap | empirical |  | 0 / 5038 (5.27%) | 0.798 / 0.763 | n/a | 115 (24%) | OUTSIDE PATHS (3) | 529s 2645293+23006 tok |
+| iris/seed5 | acc 0.9804 | ast | PASS snap | empirical |  | 0 / 5076 (5.27%) | 0.797 / 0.765 | n/a | 62 (13%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | dump | PASS exact | empirical |  | 0 / 643 (4.75%) | 0.785 / 0.798 | n/a | 374 (100%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | agent_1 | PASS exact | empirical |  | 0 / 632 (4.75%) | 0.785 / 0.777 | n/a | 32 (9%) | OUTSIDE PATHS (3) | 136s 879385+8172 tok |
+| iris_petal/seed0 | acc 0.9660 | ast | PASS exact | empirical |  | 0 / 2089 (4.75%) | 0.785 / 0.777 | n/a | 32 (9%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | dump | PASS exact | empirical |  | 0 / 652 (5.42%) | 0.824 / 0.893 | n/a | 366 (100%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | agent_1 | PASS snap | empirical |  | 0 / 5134 (5.42%) | 0.824 / 0.876 | n/a | 43 (12%) | ok | 112s 689390+5312 tok |
+| iris_petal/seed1 | acc 0.9664 | ast | PASS snap | empirical |  | 0 / 5418 (5.42%) | 0.825 / 0.861 | n/a | 32 (9%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | dump | PASS exact | empirical |  | 0 / 685 (5.32%) | 0.783 / 0.767 | n/a | 364 (100%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 5178 (5.32%) | 0.786 / 0.795 | n/a | 49 (13%) | ok | 147s 949561+7177 tok |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | ast | PASS snap | empirical |  | 0 / 4673 (5.32%) | 0.785 / 0.788 | n/a | 46 (13%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | dump | PASS exact | empirical |  | 0 / 609 (4.63%) | 0.757 / 0.738 | n/a | 372 (100%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | agent_1 | PASS snap | empirical |  | 0 / 4171 (4.63%) | 0.756 / 0.733 | n/a | 56 (15%) | ok | 154s 941575+7220 tok |
+| iris_petal/seed3 | acc 0.9661 | ast | PASS snap | empirical |  | 0 / 6783 (4.63%) | 0.762 / 0.726 | n/a | 32 (9%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | dump | PASS exact | empirical |  | 0 / 599 (5.45%) | 0.846 / 0.895 | n/a | 370 (100%) |  |  |
+| iris_petal/seed4 | acc 0.9655 | agent_1 | PASS snap | empirical |  | 0 / 4986 (5.45%) | 0.848 / 0.893 | n/a | 29 (8%) | ok | 103s 604414+4489 tok |
+| iris_petal/seed4 | acc 0.9655 | ast | PASS snap | empirical |  | 0 / 6052 (5.45%) | 0.844 / 0.891 | n/a | 29 (8%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | dump | PASS exact | empirical |  | 0 / 638 (5.50%) | 0.802 / 0.794 | n/a | 368 (100%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | agent_1 | PASS snap | empirical |  | 0 / 5805 (5.50%) | 0.801 / 0.809 | n/a | 29 (8%) | ok | 139s 831271+7290 tok |
+| iris_petal/seed5 | acc 0.9656 | ast | PASS snap | empirical |  | 0 / 6417 (5.50%) | 0.796 / 0.802 | n/a | 32 (9%) |  |  |
 | max/hand | hand | dump | PASS exact | empirical | 3.58e-07 |  | 4.44e-16 / 8.88e-16 | yes | 62 (100%) |  |  |
 | max/hand | hand | agent_1 | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) | ok | 62s 317573+955 tok |
 | max/hand | hand | ast | PASS exact | empirical | 3.58e-07 |  | 0 / 0 | yes | 8 (13%) |  |  |
@@ -535,6 +575,1152 @@ check.py: PASS (exact), max error 1.8e-7.
 - Look for duplicate neurons (identical weights and bias). Merge them by adding their output weights. Two halves that sum to 1 are a common sign of this.
 - Rewrite `a + relu(b - a)` as `max(a, b)`, and `a - relu(a - b)` as `min(a, b)`. Pairs of relus often reduce to min, max or abs: `relu(t) + relu(-t) = abs(t)`.
 - Check the simplified closed form exactly with the checker, not just on a few samples.
+
+</details>
+
+## iris/seed0: dump vs agent_1
+
+```python
+# dumped from a neural network: 4 inputs -> 8 -> 3 outputs
+# inputs: sepal_length: float [4.3, 7.9], sepal_width: float [2, 4.4], petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    h1_0 = relu(0.5524179 * sepal_length + 1.5914359 * sepal_width - 1.6233404 * petal_length - 1.7671456 * petal_width + 0.82595146)  # layer 1 neuron 0
+    h1_1 = relu(-0.19257718 * sepal_length + 0.13407868 * sepal_width - 0.00990659 * petal_length + 0.39644474 * petal_width - 0.23016644)  # layer 1 neuron 1
+    h1_2 = relu(-0.044372022 * sepal_length + 0.13230628 * sepal_width - 0.15110654 * petal_length - 0.098282695 * petal_width - 0.34932023)  # layer 1 neuron 2
+    h1_3 = relu(-0.47767425 * sepal_length - 0.33114105 * sepal_width - 0.20611155 * petal_length + 0.018521786 * petal_width - 0.4682805)  # layer 1 neuron 3
+    h1_4 = relu(-0.0015125516 * sepal_length + 0.10123546 * sepal_width - 0.53843665 * petal_length - 0.41354376 * petal_width - 0.490281)  # layer 1 neuron 4
+    h1_5 = relu(0.09394744 * sepal_length - 0.38782692 * sepal_width + 1.487668 * petal_length + 1.7934482 * petal_width - 2.426032)  # layer 1 neuron 5
+    h1_6 = relu(0.5249301 * sepal_length + 0.8355313 * sepal_width - 0.82075673 * petal_length - 1.8497082 * petal_width + 3.4449267)  # layer 1 neuron 6
+    h1_7 = relu(-0.31476897 * sepal_length - 0.12658262 * sepal_width - 0.19489998 * petal_length + 0.4320004 * petal_width + 0.24233627)  # layer 1 neuron 7
+    o0 = 1.3098745 * h1_0 - 0.18126099 * h1_1 + 0.059815824 * h1_2 - 0.33011094 * h1_3 - 0.086558856 * h1_4 - 1.5220829 * h1_5 + 1.7211678 * h1_6 + 0.20729586 * h1_7 + 0.49366805  # output 0
+    o1 = -2.4022052 * h1_0 - 0.012757063 * h1_1 + 0.22611883 * h1_2 + 0.35147914 * h1_3 - 0.025674812 * h1_4 - 0.52139115 * h1_5 + 3.0450876 * h1_6 - 0.20817307 * h1_7 + 1.8384829  # output 1
+    o2 = -0.59705997 * h1_0 - 0.2741119 * h1_1 - 0.24504295 * h1_2 - 0.18263987 * h1_3 - 0.011003976 * h1_4 + 1.6541451 * h1_5 - 3.0641308 * h1_6 + 0.10681099 * h1_7 - 1.9534305  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    # Iris-like classifier: two linear tests (the 8-neuron hidden layer collapses to these).
+    small_petal = sepal_length + 4 * sepal_width - 5 * petal_length - 4.5 * petal_width        # > 0 -> class 0
+    if small_petal > 0:
+        return 0
+    narrow_petal = 4 * sepal_length + 8 * sepal_width - 11 * petal_length - 20 * petal_width + 40   # >= 0 -> class 1, else class 2
+    if narrow_petal >= 0:
+        return 1
+    return 2
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    if sepal_length + 4 * sepal_width - 5 * petal_length - 4.5 * petal_width > 0:
+        return 0
+    if sepal_length + 2 * sepal_width - 2.75 * petal_length - 5 * petal_width > -10:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I changed and why
+
+1. **Dead neurons removed.** Layer-1 pre-activations are linear, so their range over the input box is
+   attained at the 16 box corners. Neurons 2, 3, 4, 7 are negative on every corner (always 0) and were
+   dropped. Neuron 1 is active on ~9% of the box but removing it changed the decision on 0.008% of
+   random points (all in the unsure zone), so it was dropped too.
+2. **Always-on ReLUs linearised.** Neurons 5 and 6 are active on ~97% of the box; replacing
+   `relu(z)` with `z` changed no confident decision. Their contributions fold into the output biases
+   and input weights, so each output becomes `linear(x) + c * relu(u(x))` with one remaining ReLU `u`
+   (neuron 0).
+3. **Argmax turned into a decision list.** Empirically: class 2 only occurs where `u = 0`, class 0
+   only where `u > 0`. The rule "class 0 if o0 > o1, else class 1 if o1 >= o2, else class 2"
+   reproduced the net. With `u = 0`, `o0 - o1` is negative on the whole box, so `o0 > o1` already
+   implies `u > 0`, and on that side `relu(u) = u` — the class-0 test becomes a single linear
+   inequality. Class 2 never occurs with `u > 0`, so `o1 >= o2` can use the `u = 0` linear form.
+   Result: two linear half-space tests.
+4. **Snapping.** Normalised each inequality by one coefficient and grid-searched nearby simple values
+   (halves / quarters / 0.05 steps), keeping those with zero confident disagreements:
+   - class 0: `x0 + 4.11 x1 - 5.10 x2 - 4.68 x3 - 0.33 > 0`  ->  `x0 + 4 x1 - 5 x2 - 4.5 x3 > 0`
+   - class 1 vs 2: `x0 + 1.98 x1 - 2.75 x2 - 5.06 x3 + 10.03 >= 0`  ->  `4 x0 + 8 x1 - 11 x2 - 20 x3 + 40 >= 0`
+     (i.e. `x0 + 2 x1 - 2.75 x2 - 5 x3 + 10`; the same snap was found under every normalisation).
+   The second boundary (class 1 vs 2) was the sensitive one: plain half-steps failed, quarter-steps worked.
+5. Verified: `PASS (snap)`, 0 confident disagreements; also 0 with checker seeds 1–3.
+   Inputs look like Iris (sepal length/width, petal length/width): class 0 = small petals.
+
+#### Heuristics
+
+- Compute each first-layer neuron's pre-activation range on the box corners (exact for linear
+  pre-activations): always-negative neurons are dead, always-positive ones are linear.
+- Also test "mostly on" neurons by linearising them and counting confident disagreements; ReLUs that
+  only clip in a far corner usually don't matter.
+- Ablate neurons one by one and measure decision changes; drop the ones that only affect the unsure zone.
+- For argmax outputs only differences of outputs matter: subtract one output and think in terms of
+  pairwise margins. Try to rewrite argmax as an ordered decision list (`class A if oA > oB else ...`)
+  and check it empirically.
+- When a single ReLU remains, check which side of it each class lives on; often the class boundary
+  only exists on one side, which turns `relu` into either `0` or the identity there and makes the
+  boundary a plain linear inequality.
+- Snap whole inequalities (not individual weights): normalise by one coefficient, try several
+  normalisations, grid-search simple values, and keep the candidate with zero confident
+  disagreements; if half-steps fail, go to quarter-steps. A snap that appears under multiple
+  normalisations is more likely the "true" simple boundary.
+- Re-check with different sampling seeds to make sure a snap isn't passing by luck.
+
+</details>
+
+## iris/seed1: dump vs agent_1
+
+```python
+# dumped from a neural network: 4 inputs -> 8 -> 3 outputs
+# inputs: sepal_length: float [4.3, 7.9], sepal_width: float [2, 4.4], petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    h1_0 = relu(1.1556473 * sepal_length + 0.78359294 * sepal_width - 0.90204805 * petal_length - 1.2302465 * petal_width + 2.8803344)  # layer 1 neuron 0
+    h1_1 = relu(-0.47071844 * sepal_length + 0.29985863 * sepal_width - 0.102862656 * petal_length + 0.25437194 * petal_width - 0.45556885)  # layer 1 neuron 1
+    h1_2 = relu(-0.13377194 * sepal_length - 0.4673545 * sepal_width + 0.6614463 * petal_length + 1.3842705 * petal_width - 2.6835618)  # layer 1 neuron 2
+    h1_3 = relu(0.11713472 * sepal_length - 0.53522867 * sepal_width + 0.7070551 * petal_length + 1.4079868 * petal_width - 2.2629797)  # layer 1 neuron 3
+    h1_4 = relu(-0.06543223 * sepal_length - 0.77049065 * sepal_width + 1.1341797 * petal_length + 0.81582683 * petal_width + 0.8651484)  # layer 1 neuron 4
+    h1_5 = relu(-0.18620312 * sepal_length - 0.30198067 * sepal_width - 0.083807826 * petal_length - 0.21567035 * petal_width - 0.0832845)  # layer 1 neuron 5
+    h1_6 = relu(0.057900727 * sepal_length - 0.4453241 * sepal_width + 1.2434105 * petal_length + 1.5066497 * petal_width - 1.3163106)  # layer 1 neuron 6
+    h1_7 = relu(-0.48877543 * sepal_length + 0.30996025 * sepal_width + 0.13968194 * petal_length + 0.47427773 * petal_width - 0.23235571)  # layer 1 neuron 7
+    o0 = 1.9894025 * h1_0 - 0.14958788 * h1_1 - 0.11312374 * h1_2 - 1.9421794 * h1_3 - 1.6218721 * h1_4 + 0.18173167 * h1_5 - 1.5722209 * h1_6 + 0.1039817 * h1_7 + 0.31482407  # output 0
+    o1 = 0.8608477 * h1_0 - 0.038761616 * h1_1 - 2.8879845 * h1_2 - 0.9671358 * h1_3 + 0.4072832 * h1_4 - 0.08594081 * h1_5 + 0.3186824 * h1_6 + 0.28340432 * h1_7 + 1.1982296  # output 1
+    o2 = -1.4610416 * h1_0 - 0.23599091 * h1_1 + 2.7111058 * h1_2 + 1.7256087 * h1_3 + 0.14756234 * h1_4 + 0.22964868 * h1_5 + 1.1086854 * h1_6 + 0.3135647 * h1_7 - 1.3750944  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    # iris-like inputs: sepal_length sepal length, sepal_width sepal width, petal_length petal length, petal_width petal width
+    petal_size_0 = petal_length + 1.1 * petal_width - 0.2 * sepal_length - 0.6 * sepal_width
+    if petal_size_0 < 0.7:
+        return 0
+    petal_size_2 = 2.75 * petal_length + 5 * petal_width - sepal_length - 2 * sepal_width
+    if petal_size_2 > 10.25:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    if sepal_length + 3.2 * sepal_width - 5.25 * petal_length - 6 * petal_width > -4:
+        return 0
+    if sepal_length + 2 * sepal_width - 2.75 * petal_length - 5 * petal_width > -10.25:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Agent notes
+
+#### What the network does
+4 inputs (ranges match the iris dataset: x0 sepal length, x1 sepal width, x2 petal length,
+x3 petal width) -> 8 ReLU units -> 3 class scores, argmax. It is an iris-style classifier:
+class 0 = small petals, class 2 = large petals, class 1 = in between.
+
+#### What I changed and why
+- Dead units: interval arithmetic over the input box showed h1_1 (max pre-activation -0.63)
+  and h1_5 (all weights and bias negative, inputs positive) are never active. Removed.
+- h1_0 is always active (min 0.12), so it is just a linear term. h1_7 is active on ~6% of the
+  box and has tiny, nearly equal output weights - irrelevant to the decision.
+- Instead of keeping the 8x3 layer, I sampled 3M uniform points over the box, labelled them
+  with the net, kept only the points where the net is confident (top-2 score gap above the
+  checker's unsure-zone margin), and found that the classes are separable by a two-step
+  decision list with linear cuts:
+  1. class 0 vs rest, 2. class 2 vs 1 among the rest.
+- Max-margin LP (with the x2 coefficient fixed to 1) gave the feasible coefficient region;
+  I then tried simple fractions / small integer ratios and measured the gap between the two
+  confident populations on 3M points, picking the simplest coefficients with a positive gap
+  and a threshold in the middle of the gap:
+  - class 0 if  x2 + 1.1*x3 - 0.2*x0 - 0.6*x1 < 0.7   (feasible threshold range 0.64..0.75)
+  - else class 2 if  2.75*x2 + 5*x3 - x0 - 2*x1 > 10.25 (feasible range 10.09..10.41;
+    equivalently 11*x2 + 20*x3 - 4*x0 - 8*x1 > 41)
+  - else class 1.
+  Rounder candidates (e.g. x2 + x3, or 3*x2 + 5*x3) had negative gap, i.e. misclassified
+  confident points, so they were rejected.
+- Result: `PASS (snap)` with 0 confident disagreements; also re-checked with sampling seeds
+  1-5 (all pass with 0 confident disagreements). `PASS (exact)` would need the full hidden
+  layer (only removing the dead units h1_1, h1_5 keeps it exact), which I traded for the
+  readable two-rule form.
+
+#### Heuristics
+- Bound each hidden unit's pre-activation over the input box with interval arithmetic
+  (positive weight -> hi, negative -> lo). Units with max <= 0 are dead; units with min >= 0
+  are linear and can be folded.
+- For argmax outputs, look at score differences between classes rather than raw scores; units
+  with nearly equal output weights across classes do not affect the decision.
+- For small classifiers, label a dense uniform sample with the net, drop the points inside the
+  checker's unsure zone (top-2 gap < margin), and test whether a one-vs-rest decision list of
+  linear cuts separates the remaining points (LinearSVC / LP). Order the list by the most
+  isolated class first.
+- Snap coefficients by fixing the largest coefficient to 1 (or to a nice integer scale), solve
+  a max-margin LP for the feasible region, then enumerate simple fractions and keep the
+  simplest set whose confident-point gap stays positive; put the threshold in the middle of
+  the gap (rounded to a half-step or quarter-step).
+- If simple fractions fail at one scale, rescale the whole inequality (e.g. divide by the
+  smallest coefficient) - ratios like 1:2:2.75:5 can be much cleaner than the x2=1 form.
+- Verify on a larger sample than the checker uses and with other random seeds, since the
+  confident gap for a linear cut can be narrow.
+
+</details>
+
+## iris/seed2: dump vs agent_1
+
+```python
+# dumped from a neural network: 4 inputs -> 8 -> 3 outputs
+# inputs: sepal_length: float [4.3, 7.9], sepal_width: float [2, 4.4], petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    h1_0 = relu(0.45417628 * sepal_length - 0.7886006 * sepal_width + 1.2352434 * petal_length + 1.2727408 * petal_width - 2.0686095)  # layer 1 neuron 0
+    h1_1 = relu(-0.14939956 * sepal_length - 0.31557214 * sepal_width + 0.34077218 * petal_length - 0.12639451 * petal_width + 1.0998219)  # layer 1 neuron 1
+    h1_2 = relu(0.039689146 * sepal_length - 0.5157727 * sepal_width - 0.008567857 * petal_length - 0.04098972 * petal_width - 0.050042782)  # layer 1 neuron 2
+    h1_3 = relu(-0.40630758 * sepal_length - 0.32909414 * sepal_width + 0.9677472 * petal_length + 1.7073174 * petal_width - 3.080161)  # layer 1 neuron 3
+    h1_4 = relu(0.63436586 * sepal_length - 0.90205127 * sepal_width + 0.8082763 * petal_length + 1.6806339 * petal_width - 2.113861)  # layer 1 neuron 4
+    h1_5 = relu(-0.4897387 * sepal_length - 0.03395915 * sepal_width - 0.03962487 * petal_length + 0.35465473 * petal_width - 0.19193631)  # layer 1 neuron 5
+    h1_6 = relu(0.8080918 * sepal_length + 1.2227867 * sepal_width - 0.75051606 * petal_length - 1.5779586 * petal_width + 2.844486)  # layer 1 neuron 6
+    h1_7 = relu(-0.2833951 * sepal_length - 0.24291688 * sepal_width - 0.45420223 * petal_length - 0.32449114 * petal_width - 0.27410364)  # layer 1 neuron 7
+    o0 = -1.6217759 * h1_0 - 0.39130688 * h1_1 + 0.083911456 * h1_2 - 0.22104163 * h1_3 - 1.4559848 * h1_4 + 0.17358807 * h1_5 + 1.8627111 * h1_6 + 0.015642285 * h1_7 + 0.9040662  # output 0
+    o1 = 0.23988207 * h1_0 + 0.4584183 * h1_1 + 0.114655636 * h1_2 - 2.6587002 * h1_3 + 0.29452753 * h1_4 + 0.20492151 * h1_5 + 0.7287219 * h1_6 - 0.015739352 * h1_7 + 1.8692594  # output 1
+    o2 = 0.96007776 * h1_0 - 0.0071083396 * h1_1 + 0.10936597 * h1_2 + 2.7040155 * h1_3 + 1.2951164 * h1_4 - 0.3021676 * h1_5 - 1.5978081 * h1_6 + 0.33972034 * h1_7 - 1.575973  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    # iris-like: sepal_length sepal length, sepal_width sepal width, petal_length petal length, petal_width petal width
+    petal_score = petal_width + 0.65 * (petal_length - sepal_width) + 0.15 * sepal_length          # small vs larger flowers
+    if petal_score < 1.3:
+        return 0
+    large_score = petal_width + 0.55 * petal_length - 0.4 * sepal_width - 0.2 * sepal_length       # medium vs large flowers
+    if large_score > 1.9:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    if sepal_length - 4.25 * sepal_width + 4.5 * petal_length + 7 * petal_width < 9.5:
+        return 0
+    if sepal_length + 2 * sepal_width - 2.75 * petal_length - 5 * petal_width > -9.5:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network is
+4 inputs (ranges match the iris dataset: sepal length/width, petal length/width) -> 8 ReLU -> 3 classes (argmax).
+Final program (`agent.py`) is a two-step decision list:
+
+    if x3 + 0.65*(x2 - x1) + 0.15*x0 < 1.3:   class 0  (setosa-like: small petals)
+    elif x3 + 0.55*x2 - 0.4*x1 - 0.2*x0 > 1.9: class 2  (virginica-like: large petals)
+    else:                                      class 1
+
+`python check.py agent.py` -> PASS (snap), 0 disagreements where the net is confident (also 0 for checker seeds 1-5).
+
+#### What I changed and why
+1. Dead neurons: h1_2, h1_5, h1_7 are never positive anywhere in the input box (all-negative weights on
+   positive inputs plus negative bias, or bias far below the reachable max). Removed.
+2. Always-on neurons: h1_6 is active on ~100% of the box, h1_0 and h1_4 on ~98.5%; only h1_1 (68%) and h1_3 (40%)
+   really switch. So the net is nearly linear per region; I computed the effective linear form
+   W2 * diag(active) * W1 for each activation pattern.
+3. Region structure: class 2 only occurs where h1_3 is on, class 0 only where h1_3 is off. Hence the argmax
+   reduces to two pairwise boundaries: o1 - o0 (in the h1_3-off region) and o2 - o1 (in the h1_3-on region).
+   Toggling h1_1 changes these boundaries only slightly.
+4. Normalised each boundary so the x3 coefficient is 1 and grid-searched coefficients/thresholds on a 0.05
+   lattice around the exact values, counting mismatches only on points where the net is confident
+   (score >= checker margin). Both boundaries snapped to 0.05 multiples with 0 confident mismatches;
+   x1 and x2 coefficients in the first boundary are equal and opposite, giving the `x2 - x1` term.
+5. Threshold 1.35 for the first boundary left one confident mismatch in the corner (small x0, large x1/x2,
+   tiny x3) where h1_1 tilts the boundary; 1.3 fixed it (both were valid on my own sample).
+
+#### Heuristics
+- First find dead neurons (max of pre-activation over the input box < 0, via interval arithmetic) and
+  always-on neurons (min > 0); the latter make the layer linear and can be folded into the next layer.
+- Enumerate activation patterns on a big random sample, tabulate class counts per pattern; often one switching
+  neuron separates which classes can co-occur, turning argmax into a decision list of pairwise boundaries.
+- For argmax nets, compute pairwise differences o_i - o_j per pattern; those are the real decision surfaces.
+- Normalise a boundary by its largest coefficient (or a natural one) before snapping; look for equal-magnitude
+  pairs (x2 - x1) that suggest a combined feature.
+- Snap with a small grid search scored only on confident points (the checker ignores the unsure zone), then
+  prefer the coarsest lattice that still gives 0 errors. Coarse 0.1 lattices failed here; 0.05 worked.
+- Steep boundaries (large scale of o_i - o_j) need more precise coefficients than shallow ones.
+- When a single error remains, inspect where it is: usually a corner where a secondary neuron (here h1_1)
+  tilts the boundary; shift the threshold toward the safe side rather than adding a branch.
+- Validate with several checker seeds, not only the default one.
+
+</details>
+
+## iris/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 4 inputs -> 8 -> 3 outputs
+# inputs: sepal_length: float [4.3, 7.9], sepal_width: float [2, 4.4], petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    h1_0 = relu(-0.49573648 * sepal_length - 0.39443064 * sepal_width - 0.21415752 * petal_length - 0.47304517 * petal_width - 0.3606379)  # layer 1 neuron 0
+    h1_1 = relu(0.30501 * sepal_length - 0.5975308 * sepal_width + 1.1195889 * petal_length + 1.593259 * petal_width - 2.259534)  # layer 1 neuron 1
+    h1_2 = relu(0.7527012 * sepal_length + 1.4098656 * sepal_width - 0.062665895 * petal_length - 0.8618012 * petal_width + 2.3716855)  # layer 1 neuron 2
+    h1_3 = relu(-0.3501591 * sepal_length - 0.09853119 * sepal_width - 0.44582307 * petal_length - 0.040594757 * petal_width - 0.24604261)  # layer 1 neuron 3
+    h1_4 = relu(-0.44683638 * sepal_length - 0.41381106 * sepal_width + 1.0267735 * petal_length + 1.8312025 * petal_width - 3.0428293)  # layer 1 neuron 4
+    h1_5 = relu(0.31785375 * sepal_length - 0.82813025 * sepal_width + 1.4736444 * petal_length + 0.913126 * petal_width - 1.4716494)  # layer 1 neuron 5
+    h1_6 = relu(-0.3191228 * sepal_length - 0.31228483 * sepal_width - 0.2072553 * petal_length + 0.09969866 * petal_width - 0.23409379)  # layer 1 neuron 6
+    h1_7 = relu(-0.37874472 * sepal_length - 0.3852042 * sepal_width - 0.23912036 * petal_length + 0.3051719 * petal_width + 0.009618819)  # layer 1 neuron 7
+    o0 = 0.058281213 * h1_0 - 1.9123536 * h1_1 + 1.4246285 * h1_2 - 0.23001274 * h1_3 - 0.2191231 * h1_4 - 1.795525 * h1_5 - 0.24173038 * h1_6 - 0.08514425 * h1_7 + 0.3424278  # output 0
+    o1 = -0.049393356 * h1_0 - 0.03628365 * h1_1 + 0.40538746 * h1_2 - 0.14276047 * h1_3 - 2.9673107 * h1_4 + 0.640746 * h1_5 + 0.22713569 * h1_6 + 0.088153034 * h1_7 + 1.3799744  # output 1
+    o2 = -0.12682539 * h1_0 + 1.5433004 * h1_1 - 1.1618899 * h1_2 - 0.15746383 * h1_3 + 2.939776 * h1_4 + 0.8831882 * h1_5 - 0.26147273 * h1_6 - 0.15670805 * h1_7 - 1.5690985  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    # iris-like inputs: sepal_length sepal length, sepal_width sepal width, petal_length petal length, petal_width petal width
+    small_petal = 0.1 * sepal_length - 0.8 * sepal_width + petal_length + 1.05 * petal_width < 1.6
+    large_petal = -0.4 * sepal_length - 0.7 * sepal_width + petal_length + 1.8 * petal_width > 3.45
+    if small_petal:
+        return 0
+    if large_petal:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list)
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    if sepal_length - 7.896861403024592 * sepal_width + 9.93157864929741 * petal_length + 10.514193167783807 * petal_width < 15.885278837548032:
+        return 0
+    if sepal_length + 1.7785529406934246 * sepal_width - 2.5424361985682564 * petal_length - 4.571856894820486 * petal_width > -8.761757535454132:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I changed and why
+
+- **Dead neurons removed.** Over the input box, hidden neurons 0, 3, 6 and 7 never become positive
+  (their preactivation max is -3.7, -2.4, -2.3, -2.0), so they always output 0 and were dropped.
+- **Always-on neuron folded in.** Neuron 2 is always positive (min 5.99), so its ReLU does nothing and
+  it is just a linear function of the inputs; it was folded into the output scores.
+- **Activation patterns per class.** With the 3 remaining ReLUs (1, 4, 5): every confident class-2
+  point has all of them active, class 1 has 1 and 5 active (4 on or off), class 0 mostly has 1 and 5
+  active with 4 off. Within each pattern the network is linear, so the pairwise score differences
+  became plain linear forms:
+  - class 0 vs 1 (neuron 4 off): o0 - o1 is proportional to `1.6 - (0.1 x0 - 0.8 x1 + x2 + 1.06 x3)`
+  - class 1 vs 2 (all on): o2 - o1 is proportional to `(-0.39 x0 - 0.70 x1 + x2 + 1.80 x3) - 3.45`
+- **Decision list.** "class 0 if the first form is below its threshold, else class 2 if the second
+  is above its threshold, else class 1" reproduces the net everywhere it is confident.
+- **Snapping.** Each test was normalised so the x2 (petal length) coefficient is 1, then the others
+  were rounded: 0.1 / -0.8 / 1 / 1.05 with threshold 1.6, and -0.4 / -0.7 / 1 / 1.8 with threshold 3.45.
+  Coarser snaps fail: dropping the 0.1 x0 term or using 1.0 for x3 in the first test, or 3.5 / 0.75
+  in the second, misclassify confident points. The inputs look like iris measurements
+  (sepal length/width, petal length/width) and the classes like setosa / versicolor / virginica.
+- Result: `python check.py agent.py` -> PASS (snap), 0 disagreements where the net is confident.
+  PASS (exact) is not reachable with two lines, since the net's real boundaries bend at ReLU kinks
+  inside the unsure zone.
+
+#### Heuristics
+
+- Compute each hidden unit's preactivation range over the input box (random samples or interval
+  arithmetic). Units that are never positive are dead and can be deleted; units that are never negative
+  are linear and can be folded into the next layer.
+- For argmax outputs only differences between scores matter; work with pairwise differences
+  o_a - o_b rather than with the raw scores.
+- Tabulate ReLU on/off patterns among confidently classified points of each class. If each pairwise
+  boundary lives mostly inside one pattern, the net is linear there and the boundary is one linear
+  inequality; a decision list of those inequalities often reproduces the whole classifier.
+- Normalise each linear test so its dominant coefficient is 1 before snapping; then snap the rest one
+  at a time and re-check, because a small coefficient times a wide input range (0.1 * 3.6) can still
+  shift the boundary more than the tolerance.
+- Measure correctness only on confident points (margin above the checker's unsure-zone threshold),
+  and keep the threshold close to the fitted value; adjust it only together with the coefficients.
+- Recognise known datasets from the input bounds (here iris) to name variables and classes.
+
+</details>
+
+## iris/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 4 inputs -> 8 -> 3 outputs
+# inputs: sepal_length: float [4.3, 7.9], sepal_width: float [2, 4.4], petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    h1_0 = relu(0.05963862 * sepal_length + 0.059092402 * sepal_width - 0.40854317 * petal_length - 0.2899968 * petal_width - 0.19955981)  # layer 1 neuron 0
+    h1_1 = relu(-0.49280542 * sepal_length - 0.4610381 * sepal_width + 0.4928946 * petal_length + 0.41311312 * petal_width + 0.30648786)  # layer 1 neuron 1
+    h1_2 = relu(0.65619284 * sepal_length + 1.0076414 * sepal_width - 0.96385247 * petal_length - 1.9998373 * petal_width + 3.4316247)  # layer 1 neuron 2
+    h1_3 = relu(0.32241893 * sepal_length - 0.42064604 * sepal_width + 1.1909865 * petal_length + 1.858412 * petal_width - 2.6869648)  # layer 1 neuron 3
+    h1_4 = relu(0.26348442 * sepal_length - 0.28629726 * sepal_width - 0.19336843 * petal_length - 0.46144652 * petal_width - 0.19502628)  # layer 1 neuron 4
+    h1_5 = relu(-0.057491858 * sepal_length - 0.26126978 * sepal_width + 0.040325575 * petal_length - 0.029127609 * petal_width + 0.25591195)  # layer 1 neuron 5
+    h1_6 = relu(0.9265842 * sepal_length + 0.5856262 * sepal_width - 0.60983986 * petal_length - 1.3120439 * petal_width + 3.1935499)  # layer 1 neuron 6
+    h1_7 = relu(0.19169088 * sepal_length - 0.5589482 * sepal_width + 1.542698 * petal_length + 1.9537646 * petal_width - 2.3724227)  # layer 1 neuron 7
+    o0 = 0.108570606 * h1_0 + 0.26186547 * h1_1 + 1.7589787 * h1_2 - 2.0956273 * h1_3 - 0.14542925 * h1_4 + 0.20481102 * h1_5 + 1.452269 * h1_6 - 1.5705702 * h1_7 + 0.44060257  # output 0
+    o1 = -0.11996232 * h1_0 + 0.34310558 * h1_1 + 1.5318737 * h1_2 - 0.1706752 * h1_3 + 0.20515862 * h1_4 - 0.2617136 * h1_5 + 0.34485617 * h1_6 - 0.13578719 * h1_7 + 1.9156368  # output 1
+    o2 = 0.1734691 * h1_0 + 0.31338856 * h1_1 - 1.9476718 * h1_2 + 1.3584272 * h1_3 - 0.25126404 * h1_4 + 0.32479185 * h1_5 - 1.503851 * h1_6 + 1.2161974 * h1_7 - 1.7539225  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+# Iris-like 3-class classifier (sepal_length sepal length, sepal_width sepal width, petal_length petal length, petal_width petal width).
+# Of the 8 hidden ReLUs only 4 matter and they are active almost everywhere, so the net is
+# effectively linear: two independent half-space tests decide the class.
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    small_petals = sepal_width + 4.5 - 2 * petal_length - 3 * petal_width          # class 0 ("setosa") score
+    if small_petals > 0:
+        return 0
+    large_petals = 8 * petal_length + 14 * petal_width - 3 * sepal_length - 6 * sepal_width - 27   # class 2 ("virginica") score
+    if large_petals > 0:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    if sepal_length + 9 * sepal_width - 19 * petal_length - 30 * petal_width > -40:
+        return 0
+    if sepal_length + 1.8 * sepal_width - 2.5 * petal_length - 4.5 * petal_width > -8.5:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes on m579e70 (4 -> 8 -> 3, argmax)
+
+The inputs and their ranges match the Iris dataset: x0 is sepal length, x1 sepal width, x2 petal
+length and x3 petal width. The classes are 0 = setosa, 1 = versicolor and 2 = virginica.
+
+#### What I changed and why
+
+1. **Removed dead and rarely active units.** I sampled the input box uniformly. Hidden units 0 and 5
+   are never active. Units 1 and 4 are active on only about 6% of the box, and only where the
+   decision is already settled. Units 2, 3, 6 and 7 are active on 97-100% of the box, so I treated
+   them as linear (I dropped their ReLU). With those changes the whole net collapses to three
+   linear scores.
+2. **Reduced the three scores to two tests.** Only differences between scores matter for argmax,
+   so I used the versicolor score o1 as the reference. `a = o0 - o1` and `b = o2 - o1` are linear,
+   and the region where both are positive is empty. So the argmax becomes `if a>0: 0 elif b>0: 2
+   else 1`, and each test can be rescaled on its own. This linear version already passed.
+3. **Snapped each hyperplane.** For each test I used an LP to find the range of each coefficient
+   (after normalising one coefficient to 1) that still separates the points where the net is
+   confident. Then I listed small-integer weight vectors inside those ranges and picked the
+   simplest one that is feasible, with a round bias inside the bias interval that is still allowed:
+   - setosa: `x1 + 4.5 - 2*x2 - 3*x3 > 0`. Sepal length has no effect. Twice the petal length plus
+     three times the petal width must stay below the sepal width plus 4.5.
+   - virginica: `8*x2 + 14*x3 - 3*x0 - 6*x1 > 27`.
+4. Result: `PASS (snap)` with 0 confident disagreements on the checker's input set. A `PASS (exact)`
+   result is out of reach once the ReLUs are linearised and the weights rounded.
+   Caveat: the allowed bias intervals are narrow (setosa about 4.47-4.51, virginica about 26.7-27.1
+   on seed 0). With other sampling seeds, a single far-corner point can fail. Those points are off
+   the data, at small x0 with large x1, where a rarely active unit bends the boundary slightly. A
+   bias of 26.9 instead of 27 would make the virginica test robust across seeds.
+
+#### Heuristics
+
+- Measure how often each hidden unit is active over the whole input box. Units that are never
+  active can be deleted. Units that are always active can be treated as linear, and nets with few
+  hidden units then often collapse to a linear map.
+- For argmax outputs, subtract one reference class score so that k scores become k-1 differences.
+  If the regions where several differences are positive are empty, write the argmax as a chain of
+  independent `if score > 0` tests, each of which can be rescaled freely.
+- Snap in the right space. Normalise a hyperplane by its largest coefficient, use an LP (with the
+  margin to the confident points as the objective) to get the feasible range of every coefficient,
+  then enumerate small-integer or simple-fraction vectors inside that box. That is much more
+  reliable than rounding the fitted coefficients one at a time.
+- Restrict the search to points near the fitted boundary and process candidates in chunks. A brute
+  force over every point times every candidate is too slow and too memory-hungry.
+- Coefficients with a feasible range that straddles 0 (here sepal length for setosa) should be
+  dropped.
+- The checker samples the whole box uniformly, including corners far from the training data, where
+  the "linear" picture can bend. Check a snapped rule against several sampling seeds to see how
+  much slack it really has.
+
+</details>
+
+## iris/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 4 inputs -> 8 -> 3 outputs
+# inputs: sepal_length: float [4.3, 7.9], sepal_width: float [2, 4.4], petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    h1_0 = relu(0.7210276 * sepal_length - 1.0942345 * sepal_width + 1.5905795 * petal_length + 2.2442079 * petal_width - 2.577641)  # layer 1 neuron 0
+    h1_1 = relu(0.6548312 * sepal_length + 0.7448475 * sepal_width - 1.0219374 * petal_length - 1.947287 * petal_width + 3.1406522)  # layer 1 neuron 1
+    h1_2 = relu(-0.5267901 * sepal_length + 0.4341299 * sepal_width + 0.046373725 * petal_length + 0.0045173685 * petal_width + 0.2364081)  # layer 1 neuron 2
+    h1_3 = relu(-0.4275878 * sepal_length + 0.15933895 * sepal_width + 0.21500576 * petal_length + 0.07932758 * petal_width + 0.24318653)  # layer 1 neuron 3
+    h1_4 = relu(0.39497715 * sepal_length + 1.0378147 * sepal_width - 1.1455054 * petal_length - 1.0846708 * petal_width + 2.8253548)  # layer 1 neuron 4
+    h1_5 = relu(0.16976482 * sepal_length - 0.23852688 * sepal_width - 0.45928478 * petal_length + 0.2850358 * petal_width - 0.43912637)  # layer 1 neuron 5
+    h1_6 = relu(0.25481498 * sepal_length - 0.34325826 * sepal_width + 0.025643073 * petal_length - 0.7208481 * petal_width + 2.1051514)  # layer 1 neuron 6
+    h1_7 = relu(-0.23611933 * sepal_length - 0.10940373 * sepal_width - 0.33386493 * petal_length - 0.23638403 * petal_width + 0.48681504)  # layer 1 neuron 7
+    o0 = -1.3644149 * h1_0 + 2.8309875 * h1_1 - 0.25836182 * h1_2 + 0.16452405 * h1_3 + 1.3902239 * h1_4 + 0.28350523 * h1_5 + 0.05347781 * h1_6 + 0.06921768 * h1_7 - 0.15957244  # output 0
+    o1 = 0.12679267 * h1_0 + 1.8077532 * h1_1 + 0.22707675 * h1_2 - 0.030249387 * h1_3 + 0.15399517 * h1_4 - 0.17574726 * h1_5 + 1.1191628 * h1_6 + 0.14304957 * h1_7 + 1.9825677  # output 1
+    o2 = 1.3204515 * h1_0 - 3.026626 * h1_1 - 0.24802877 * h1_2 + 0.3345761 * h1_3 - 1.3609582 * h1_4 - 0.2016378 * h1_5 - 0.3843056 * h1_6 - 0.11427182 * h1_7 - 1.2435256  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    # inputs match the iris ranges: sepal_length sepal length, sepal_width sepal width, petal_length petal length, petal_width petal width
+    # class 0 (setosa-like): petals small relative to sepal width
+    small_petals = 0.8 * sepal_width + 1.4 - petal_length - 1.2 * petal_width - 0.05 * sepal_length
+    if small_petals > 0:
+        return 0
+    # class 2 (virginica-like): petals large; two linear pieces from the net's ReLU kink
+    big_petals = petal_length + 1.75 * petal_width - 0.4 * sepal_length - 0.7 * sepal_width - 10 / 3
+    big_petals_kink = petal_length + 2 * petal_width - 0.4 * sepal_length - 0.65 * sepal_width - 3.6
+    if big_petals > 0 and big_petals_kink > 0:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(sepal_length, sepal_width, petal_length, petal_width):
+    if sepal_length - 21 * sepal_width + 26 * petal_length + 31 * petal_width < 34:
+        return 0
+    if sepal_length + 1.75 * sepal_width - 2.5 * petal_length - 4.5 * petal_width > -8.51:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes: 4 -> 8 -> 3 argmax network (iris-like)
+
+#### What the network is
+The input ranges (4.3-7.9, 2.0-4.4, 1.0-6.9, 0.1-2.5) are exactly the iris feature ranges, so I read
+x0 = sepal length, x1 = sepal width, x2 = petal length, x3 = petal width, and the classes as
+0 = setosa-like (small petals), 1 = versicolor-like, 2 = virginica-like (large petals).
+This is only naming; the program was derived from the weights.
+
+#### What I changed and why
+1. **Dead / negligible neurons removed.** On the checker's input set, neurons 2, 3, 5 and 7 are
+   almost never active (0.3%, 7%, 1.3%, 0%) and tiny; zeroing each changes no confident decision.
+2. **Always-on neurons linearized.** Neuron 6 is active on 100% of the box and neuron 0 on 99.6%;
+   dropping their ReLU changes no confident decision, so they fold into linear terms.
+3. **Only two real ReLUs remain** (neurons 1 and 4). With everything else linear, I wrote the three
+   pairwise logit differences (o0-o1, o2-o1, o0-o2) as linear forms in x for each on/off pattern
+   of those two ReLUs.
+4. **Decision list from the main region.** In the region where both ReLUs are on (84% of the box)
+   the rule `if d01 > 0: 0 elif d21 > 0: 2 else 1` already matched everything except 8 points.
+   The `o0 > o2` test was never needed: class 0 never borders class 2 directly.
+5. **Kink in the class-2 boundary.** o2-o1 has a *negative* weight on relu(neuron 4). So, where
+   neuron 1 is on, `d21 = min(form with neuron 4 on, form with neuron 4 off)`. That turns
+   "class 2" into an AND of two linear tests. Dropping the second test leaves 21-49 confident
+   errors, so it stays.
+6. **Snapping.** I divided each test by its x2 coefficient so the petal-length weight is exactly 1.
+   Then I searched simple fractions (denominators 1-20) near each coefficient and kept the
+   simplest set with zero confident errors. I counted errors on 10 pooled checker input sets
+   (seeds 0-9, about 2.2M points), not just the one the checker uses. Then I chose biases near
+   the middle of the bias range that still passed:
+   - class 0: `0.8*x1 + 1.4 > x2 + 1.2*x3 + 0.05*x0`. Setting the x0 coefficient to 0 was simpler,
+     but it left a bias window only 0.035 wide and failed on checker seed 3. With -0.05 the window
+     is 1.375-1.48.
+   - class 2: `x2 + 1.75*x3 - 0.4*x0 - 0.7*x1 > 10/3`. The bias window is 3.29-3.35.
+   - class 2 kink: `x2 + 2*x3 - 0.4*x0 - 0.65*x1 > 3.6`. The bias window is 3.54-3.67.
+
+Result: `check.py agent.py` -> PASS (snap), with 0 confident disagreements. Checker seeds 1-5 and
+the pooled 10-seed set also give 0. The remaining differences are all inside the net's
+unsure zone.
+
+#### Heuristics
+- First measure how often each hidden unit is active over the real input box. A unit that is
+  never on is dead and can be deleted. A unit that is (almost) always on is linear, so drop its
+  ReLU and fold it into the next layer.
+- Do ablations against the checker's own metric: set a unit to zero or to its mean and count
+  *confident* disagreements. Raw weight size is misleading, so use |w_out| x std(activation).
+- For argmax outputs, work with pairwise logit differences, not the raw logits. Biases and shared
+  terms cancel there, and each difference is a single linear form inside every ReLU pattern.
+- Find the dominant activation pattern and fit a decision list from its linear forms. Then add
+  extra tests only where the residual errors sit.
+- The sign of a difference's weight on a ReLU tells you the shape. A negative weight on relu(z)
+  gives `min(form_on, form_off)`, which is an AND of two linear tests. A positive weight gives
+  `max`, which is an OR. This turns a kink into a clean boolean condition.
+- Check which pairwise tests are actually needed (here o0 vs o2 never mattered), because some
+  classes never touch each other.
+- Normalize each linear test so one dominant input has coefficient 1 before snapping. Then
+  coefficients and bias are comparable, and simple fractions show up.
+- Snap with a search ordered by simplicity and require zero confident errors. Then scan the bias
+  window and pick a value near its middle, not at its edge.
+- Validate on several resamples of the checker's input set. A snap that passes one seed with a
+  very narrow bias window is fragile. A slightly less pretty coefficient that widens the window
+  is worth keeping.
+- Use input ranges to recognise well-known datasets (here iris) and name variables, but derive
+  the rules from the weights, not from domain folklore. The checker samples the whole box,
+  including off-distribution combinations.
+
+</details>
+
+## iris_petal/seed0: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 3 outputs
+# inputs: petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(petal_length, petal_width):
+    h1_0 = relu(0.8607754 * petal_length + 1.1407514 * petal_width - 2.0353978)  # layer 1 neuron 0
+    h1_1 = relu(-0.58198076 * petal_length - 0.5203875 * petal_width + 0.42428023)  # layer 1 neuron 1
+    h1_2 = relu(-0.27234524 * petal_length + 0.1896159 * petal_width - 0.47937673)  # layer 1 neuron 2
+    h1_3 = relu(1.0631901 * petal_length + 1.3749849 * petal_width - 2.271057)  # layer 1 neuron 3
+    h1_4 = relu(-0.34840026 * petal_length - 0.39894545 * petal_width + 3.1445613)  # layer 1 neuron 4
+    h1_5 = relu(-0.37194827 * petal_length - 0.29692936 * petal_width + 3.4329712)  # layer 1 neuron 5
+    h1_6 = relu(-0.6755334 * petal_length - 0.46830416 * petal_width - 0.14552271)  # layer 1 neuron 6
+    h1_7 = relu(-0.4247032 * petal_length - 1.4281975 * petal_width + 2.839476)  # layer 1 neuron 7
+    o0 = -2.1490388 * h1_0 + 0.037410945 * h1_1 + 0.3201342 * h1_2 - 1.7968367 * h1_3 + 2.0134795 * h1_4 + 2.6851084 * h1_5 - 0.13781509 * h1_6 + 2.075081 * h1_7 + 0.9144035  # output 0
+    o1 = -0.25156546 * h1_0 - 0.16275224 * h1_1 - 0.2470067 * h1_2 - 0.16973095 * h1_3 + 2.1197493 * h1_4 + 2.0576866 * h1_5 + 0.15776202 * h1_6 - 2.8763273 * h1_7 + 1.157279  # output 1
+    o2 = 1.473031 * h1_0 - 0.18126099 * h1_1 + 0.059815824 * h1_2 + 0.91425705 * h1_3 - 3.4432998 * h1_4 - 3.6667235 * h1_5 + 0.22307023 * h1_6 - 0.6566231 * h1_7 - 1.3413241  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(petal_length, petal_width):
+    # Iris-like classifier on (petal length petal_length, petal width petal_width); two straight boundaries.
+    # Snapped form (PASS snap): petal_length + 2*petal_width < 4.1 -> 0 ; petal_length + 1.1*petal_width > 6.8 -> 2
+    if petal_length + 2.0516378 * petal_width <= 4.0960478:
+        return 0
+    if petal_length + 1.1003194 * petal_width > 6.8039224:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(petal_length, petal_width):
+    if petal_length + 2.05163779247935 * petal_width < 4.096006622982397:
+        return 0
+    if petal_length + 1.1003193515404486 * petal_width < 6.803920116626745:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+
+Inputs x0 in [1, 6.9] and x1 in [0.1, 2.5] with 3 classes match Iris petal length / petal width
+(setosa / versicolor / virginica). Over the whole input box the decision is two straight lines:
+
+- class 0 when `x0 + 2.0516*x1 <= 4.096` (snapped: `x0 + 2*x1 < 4.1`)
+- class 2 when `x0 + 1.1003*x1 > 6.804` (snapped: `x0 + 1.1*x1 > 6.8`)
+- class 1 otherwise (the band between them).
+
+#### What I changed and why
+
+1. **Dead neurons.** Sampling 200k points showed hidden neurons 1, 2 and 6 are never active in the
+   domain, so they were dropped. Only 5 activation patterns occur in the box.
+2. **Region map.** An ASCII argmax map over a 60x25 grid showed three bands separated by two
+   roughly straight boundaries. Classes 0 and 2 never touch, so only o0-o1 and o1-o2 matter.
+3. **Boundary fitting.** Bisecting the class change along x0 for 49 values of x1 and fitting a line
+   gave zero residual. So each boundary lies inside a single activation pattern, where the net is linear.
+4. **Exact collapse.** For the one activation pattern on each boundary I folded the weights:
+   `o0-o1 = -5.662444*x0 - 11.61728*x1 + 23.19364` and `o1-o2 = -6.704328*x0 - 7.376902*x1 + 45.61573`.
+   Then I divided by the x0 coefficient so x0 has coefficient 1. The result passes as `PASS (exact)`.
+   The only remaining disagreements are float32 ties on the lines themselves.
+5. **Snapped version.** `x0 + 2*x1 < 4.1` / `x0 + 1.1*x1 > 6.8` gives `PASS (snap)`, with
+   0 confident disagreements. `x0 + x1 > 6.7` for the second line fails with 374 confident errors
+   near x1=2.5, so the 1.1 slope is real and cannot be rounded to 1. `agent.py` keeps the exact
+   constants and has the snapped form in a comment.
+
+#### Heuristics
+
+- For 2-input argmax nets, first print an ASCII class map. It shows the number of regions, which
+  classes are adjacent, and whether boundaries look straight.
+- Find dead hidden units by sampling the input box and checking which preactivations are ever > 0.
+  Drop the units that never fire.
+- Bisect the class boundary along one axis for many values of the other axis and fit a line. Zero
+  residual means the boundary sits in one ReLU activation pattern, so an exact linear inequality exists.
+- Get the exact inequality by folding `(W2[i]-W2[j]) * mask` through layer 1 for that pattern, not
+  from the fitted line. Then divide by one coefficient so it becomes 1, to make it readable.
+- Only the score differences of adjacent classes matter. Classes that never share a boundary need no
+  comparison, so argmax becomes an if-chain of half-plane tests.
+- Snap per coefficient and check each snap against check.py. Test the extreme corners: a slope
+  error grows along the far edge of the box (here at x1=2.5).
+- Domain ranges are a strong hint to a known dataset (here Iris petal features), which suggests
+  names and the expected structure.
+
+</details>
+
+## iris_petal/seed1: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 3 outputs
+# inputs: petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(petal_length, petal_width):
+    h1_0 = relu(0.76319623 * petal_length + 0.02230715 * petal_width - 1.4533925)  # layer 1 neuron 0
+    h1_1 = relu(0.35454166 * petal_length + 0.6738901 * petal_width - 2.3330963)  # layer 1 neuron 1
+    h1_2 = relu(-0.537703 * petal_length - 0.50448 * petal_width + 2.2754707)  # layer 1 neuron 2
+    h1_3 = relu(-0.24638142 * petal_length - 1.083064 * petal_width + 1.9294685)  # layer 1 neuron 3
+    h1_4 = relu(0.84257704 * petal_length + 0.74030316 * petal_width - 1.6003189)  # layer 1 neuron 4
+    h1_5 = relu(0.59383327 * petal_length + 0.36253548 * petal_width - 2.919046)  # layer 1 neuron 5
+    h1_6 = relu(0.21071747 * petal_length - 0.083245255 * petal_width + 2.421535)  # layer 1 neuron 6
+    h1_7 = relu(-0.051554263 * petal_length - 0.06365895 * petal_width - 0.3050039)  # layer 1 neuron 7
+    o0 = -1.4123707 * h1_0 - 0.89878976 * h1_1 + 1.8445787 * h1_2 + 1.9113343 * h1_3 - 2.2650938 * h1_4 - 0.21689174 * h1_5 + 1.038127 * h1_6 + 0.33536497 * h1_7 + 0.69238985  # output 0
+    o1 = 0.036722735 * h1_0 - 3.3788147 * h1_1 - 2.8144932 * h1_2 - 2.7029831 * h1_3 + 0.30032003 * h1_4 - 3.6743388 * h1_5 + 1.4605062 * h1_6 - 0.1643003 * h1_7 + 0.9004077  # output 1
+    o2 = 1.1213069 * h1_0 + 2.6350458 * h1_1 - 0.65934145 * h1_2 - 0.8041703 * h1_3 + 0.9294786 * h1_4 + 3.0456939 * h1_5 - 1.5007261 * h1_6 + 0.1039817 * h1_7 - 1.7452983  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(petal_length, petal_width):
+    # two straight-ish class boundaries in the (petal_length, petal_width) plane; no hidden layer needed
+    # class 0: low corner, bounded by a kinked line (union of two half-planes)
+    if petal_length + 4 * petal_width / 3 < 3.5 or petal_length + petal_width < 3:
+        return 0
+    # class 2: beyond the diagonal petal_length + petal_width = 6.65
+    if petal_length + petal_width > 6.65:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(petal_length, petal_width):
+    if petal_length + 1.3 * petal_width < 3.52:
+        return 0
+    if petal_length + 1.05 * petal_width < 6.7:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+Network: 2 inputs (x0 in [1, 6.9], x1 in [0.1, 2.5]) -> 8 ReLU -> 3 logits, argmax.
+(Looks like iris petal length / petal width.)
+
+#### What I did
+- Did not try to simplify the 8 hidden neurons algebraically. Instead I rendered the argmax class map
+  on a grid: three bands ordered along the x0 + x1 diagonal (0 low, 1 middle, 2 high).
+- Bisected the class boundaries at many x1 values to get the boundary x0 as a function of x1.
+  - 1/2 boundary: x0 + x1 stayed in 6.58..6.69 over the whole range -> `x0 + x1 > 6.65`.
+    (6.6 and 6.7 both fail the check; 6.65 = midpoint passes.)
+  - 0/1 boundary: kinked. For x1 <~ 1.4 slope dx0/dx1 ~ -1.32 (x0 + 4/3 x1 ~ 3.5); above it slope ~ -0.9
+    (x0 + x1 ~ 3). The actual boundary is the max of the two lines, i.e. class 0 is the union of
+    the two half-planes: `x0 + 4*x1/3 < 3.5 or x0 + x1 < 3`. A single line (slopes 1.2, 1.25, 4/3)
+    always left confident disagreements near the kink.
+- Wrote it as a 3-way decision list: class 0 test first, then class 2, else class 1. The class-0 and
+  class-2 regions do not touch, so the order is safe.
+- Result: `PASS (snap)`, 0 confident disagreements.
+
+#### Heuristics
+- For argmax nets with few inputs, skip the weights: plot the class map on a grid, then bisect the
+  boundaries along one axis and fit lines to the boundary points. A low-input classifier is usually
+  just a few half-planes.
+- Check whether `boundary + k*other_input` is constant for a simple k (1, 4/3, 1/2...). If it drifts,
+  look for a kink (two slopes) rather than forcing one line.
+- A kink of a ReLU boundary is a max/min of two lines -> write it as `or`/`and` of two half-planes
+  (union when the region is convex-outward toward the corner, intersection otherwise; test via which
+  line gives the larger/smaller boundary value on each side of the kink).
+- Emit a decision list ordered by the regions that are cleanly separable; the middle class is the
+  fallback `return`.
+- When snapping a threshold, try the round value and the half-step neighbours; the midpoint of the
+  observed range of the boundary constant is often the only one that passes.
+- Unsure-zone disagreements are fine for PASS (snap); concentrate on removing "net confident" ones,
+  which point exactly to the badly fitted segment.
+
+</details>
+
+## iris_petal/seed2: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 3 outputs
+# inputs: petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(petal_length, petal_width):
+    h1_0 = relu(0.2502506 * petal_length - 0.34255642 * petal_width + 3.5057828)  # layer 1 neuron 0
+    h1_1 = relu(0.36867115 * petal_length + 0.11717962 * petal_width - 0.48438656)  # layer 1 neuron 1
+    h1_2 = relu(1.1566613 * petal_length + 0.8737631 * petal_width - 2.7809892)  # layer 1 neuron 2
+    h1_3 = relu(-0.35344553 * petal_length - 2.049653 * petal_width + 3.2871108)  # layer 1 neuron 3
+    h1_4 = relu(0.16144264 * petal_length - 0.6260332 * petal_width - 0.6925951)  # layer 1 neuron 4
+    h1_5 = relu(0.9890558 * petal_length + 0.7097113 * petal_width - 2.548571)  # layer 1 neuron 5
+    h1_6 = relu(0.6609814 * petal_length + 1.1043046 * petal_width - 2.459265)  # layer 1 neuron 6
+    h1_7 = relu(-0.03285496 * petal_length + 0.47497982 * petal_width + 3.4027765)  # layer 1 neuron 7
+    o0 = 1.2929442 * h1_0 - 1.3238708 * h1_1 - 1.6559074 * h1_2 + 1.8362244 * h1_3 - 0.2003906 * h1_4 - 2.4472694 * h1_5 - 2.1793191 * h1_6 + 1.1772618 * h1_7 + 0.8616735  # output 0
+    o1 = 1.4079461 * h1_0 + 0.39886108 * h1_1 - 0.46726474 * h1_2 - 3.112696 * h1_3 + 0.15538087 * h1_4 - 0.81401306 * h1_5 - 1.0478 * h1_6 + 0.9975615 * h1_7 + 1.4494027  # output 1
+    o2 = -2.110341 * h1_0 + 0.4476788 * h1_1 + 1.7867525 * h1_2 - 0.54837555 * h1_3 + 0.07022756 * h1_4 + 2.1005197 * h1_5 + 1.9792448 * h1_6 - 1.6424754 * h1_7 - 1.4702215  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(petal_length, petal_width):
+    # petal_length ~ length-like feature in [1, 6.9], petal_width ~ width-like feature in [0.1, 2.5]
+    # class 0: small (below the line petal_length + 9/4 * petal_width = 4.4)
+    small = petal_length + 2.25 * petal_width < 4.4
+    if small:
+        return 0
+    # class 2: large, either by the combined size or by petal_length alone
+    large = petal_length + 1.1 * petal_width > 6.75 or petal_length > 6.3
+    if large:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(petal_length, petal_width):
+    if petal_length + 2.25 * petal_width < 4.4:
+        return 0
+    if petal_length + 1.125 * petal_width > 6.8 or petal_length + 0.375 * petal_width > 6.375:
+        return 2
+    return 1
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I changed and why
+
+The dump is a 2 -> 8 -> 3 ReLU MLP with argmax output. Inputs are x0 in [1, 6.9] and x1 in [0.1, 2.5].
+The ranges look like iris petal length and width, and the three classes look like the three species.
+I did not try to simplify the 8 hidden neurons one at a time. For an argmax net only the decision
+regions matter, so I read the regions straight off the input plane:
+
+1. Printed a coarse grid of the predicted class over (x0, x1). It shows three bands ordered by
+   size: class 0 at small x0/x1, class 1 in the middle and class 2 at large values. They are split
+   by two oblique boundaries.
+2. Bisected each class transition along x0 at x1 = 0.1, 0.2, ..., 2.5, then looked at how the
+   boundary x0 changes with x1:
+   - 0|1 boundary: the slope is a steady -2.22, so x0 + 2.22 * x1 is about 4.40 everywhere.
+     Snapped to `x0 + 2.25 * x1 < 4.4` (9/4). The simpler `x0 + 2 * x1` and `x0 + 2.2 * x1` both
+     failed where the net is confident.
+   - 1|2 boundary: this is piecewise linear with a kink near x1 = 0.55. Above the kink the slope is
+     -1.09, so x0 + 1.1 * x1 is about 6.77. Below it the slope is shallow (-0.37) and the boundary
+     sits at x0 of about 6.2 to 6.33. I wrote this as an OR of two half-planes:
+     `x0 + 1.1 * x1 > 6.75 or x0 > 6.3`. `x0 + x1 > 6.6` alone failed at both ends: too lenient
+     at small x1 and too eager just above the kink.
+3. Wrote the result as a decision list: small -> 0, then large -> 2, otherwise 1.
+
+Result: `check.py` gives PASS (snap) with 0 disagreements where the net is confident. The
+remaining disagreements are all inside the net's unsure zone, mostly near the 0|1 line at the
+x0 = 1 edge, where the net's boundary bends slightly.
+
+Final program:
+
+```python
+def net(x0, x1):
+    small = x0 + 2.25 * x1 < 4.4
+    if small:
+        return 0
+    large = x0 + 1.1 * x1 > 6.75 or x0 > 6.3
+    if large:
+        return 2
+    return 1
+```
+
+#### Heuristics
+
+- For argmax or classification nets with few inputs, skip the weights. Map the decision regions
+  on a grid first. The region layout (bands, wedges, nesting) tells you the shape of the program.
+- If the classes form ordered bands, write a decision list: peel off one extreme class, then
+  the other, and make the middle class the default.
+- Find boundaries by bisecting along one axis at many fixed values of the other. Constant
+  differences give the slope. A sudden change in slope means a ReLU kink, and that usually
+  becomes an `or`/`and` of two half-planes (convex or concave corner) rather than a single line.
+- Normalise each boundary line to `x0 + k * x1 <op> c`, then snap k to a simple fraction (1, 1.1,
+  9/4 and so on) and c to one decimal. Try the simplest candidate first, but expect to keep a
+  second significant digit when the slope is far from an integer. The checker's confident zone
+  is narrow enough that 2.2 vs 2.25 can matter.
+- The worst counterexamples sit at the domain edges (x1 = lo/hi). That is where a wrong slope
+  produces the largest offset, so check the line's fit at both ends of the range.
+- Small regions near domain corners, where the net bends at the very edge, can usually be ignored
+  because they fall inside the unsure zone.
+
+</details>
+
+## iris_petal/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 3 outputs
+# inputs: petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(petal_length, petal_width):
+    h1_0 = relu(-0.7010772 * petal_length - 0.5578091 * petal_width - 0.45876348)  # layer 1 neuron 0
+    h1_1 = relu(-0.46724468 * petal_length - 1.3990734 * petal_width + 3.0217829)  # layer 1 neuron 1
+    h1_2 = relu(-0.3082324 * petal_length - 1.7265954 * petal_width + 2.8115056)  # layer 1 neuron 2
+    h1_3 = relu(0.045609716 * petal_length - 0.13425289 * petal_width + 3.2131424)  # layer 1 neuron 3
+    h1_4 = relu(0.9118094 * petal_length + 1.1548017 * petal_width - 1.6668737)  # layer 1 neuron 4
+    h1_5 = relu(0.77851516 * petal_length + 1.1747738 * petal_width - 2.958041)  # layer 1 neuron 5
+    h1_6 = relu(-0.4757515 * petal_length - 0.25013137 * petal_width + 3.3463519)  # layer 1 neuron 6
+    h1_7 = relu(-0.63048905 * petal_length - 0.057409644 * petal_width - 0.68998253)  # layer 1 neuron 7
+    o0 = -0.22565389 * h1_0 + 1.8355529 * h1_1 + 1.2137058 * h1_2 + 0.5901933 * h1_3 - 1.6087248 * h1_4 - 1.9898849 * h1_5 + 1.7472789 * h1_6 + 0.21578911 * h1_7 + 0.6955259  # output 0
+    o1 = -0.2550095 * h1_0 - 3.2385607 * h1_1 - 2.369765 * h1_2 + 1.0098251 * h1_3 + 0.059342504 * h1_4 - 1.5378585 * h1_5 + 2.6131897 * h1_6 + 0.0068015456 * h1_7 + 1.7394265  # output 1
+    o2 = 0.058281213 * h1_0 - 0.8559165 * h1_1 - 0.6298636 * h1_2 - 1.5733829 * h1_3 + 1.1055508 * h1_4 + 1.9889429 * h1_5 - 4.0371027 * h1_6 - 0.08514425 * h1_7 - 1.2687413  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(petal_length, petal_width):
+    # petal_length ~ petal length [1, 6.9], petal_width ~ petal width [0.1, 2.5] (iris-like); classes 0, 1, 2
+    length = petal_length
+    width = petal_width
+    # class 0: small petals, below one straight line
+    if length + 3.2 * width < 4.9:
+        return 0
+    # class 2: large petals, beyond a convex two-piece line (kink near width 0.55)
+    if length + 1.1 * width > 6.8 or length + 0.7 * width > 6.6:
+        return 2
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(petal_length, petal_width):
+    if petal_length + 3.2452498038778512 * petal_width < 4.9370188732903095:
+        return 0
+    if petal_length + 1.091307169228756 * petal_width < 6.706235694992074:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I changed and why
+
+- The dump is a 2 -> 8 -> 3 ReLU MLP with an argmax output. With only 2 inputs I skipped
+  algebra on the 8 hidden units and worked from the decision map instead. I printed the class
+  on a 0.1 grid, then bisected along x0 for each x1 row to find where the class changes.
+- The map has three bands ordered along x0 + k*x1 (0 at small values, 1 in the middle, 2 at
+  large values). Given the ranges (x0 in [1, 6.9], x1 in [0.1, 2.5]), this looks like iris
+  petal length and width, so I named them `length` and `width`.
+- Boundary 0/1: x0 + 3.12*x1 = 4.89 for x1 < 0.65 and x0 + 3.25*x1 = 4.97 above that. The kink
+  is small, so one line, `length + 3.2*width < 4.9`, covers it.
+- Boundary 1/2 has a real kink near x1 = 0.55: x0 + 1.09*x1 = 6.78 above it and
+  x0 + 0.70*x1 = 6.58 below it. One line with x0 + x1 or 1.1 failed where the net is confident,
+  so I kept two pieces. The class-2 region is convex here, meaning it is the union of the two
+  half-planes, so they join with `or`. I first tried `and`, which produced thousands of errors.
+- Snapped values: 3.2 / 4.9, 1.1 / 6.8 and 0.7 / 6.6. I also tried simpler snaps.
+  `3*x1 < 4.8` failed (12 confident errors) and `x1 > 6.7` for the upper piece failed. For the
+  lower piece, 0.5 / 6.55 and 0.75 / 6.6 also passed, so its exact slope barely matters.
+- Result: `PASS (snap)`, with 0 confident disagreements and about 4k disagreements inside the
+  unsure zone. An exact pass would mean rebuilding the ReLU logits, which defeats the
+  simplification.
+
+#### Heuristics
+
+- For low-dimensional argmax nets, read the decision boundaries rather than the weights.
+  Scan a grid, bisect each row, and fit `x0 + k*x1 = c` per segment (look at how x0 + k*x1
+  drifts to find k).
+- Watch for slope changes along a boundary. A small change can be merged into one line. A
+  large one (here 0.7 vs 1.1) needs two pieces, joined with `or` when the region is convex
+  toward it (a union) and with `and` when it is concave (an intersection). Check which by
+  comparing each piece's prediction against the measured boundary at both ends.
+- Order the tests by class band: return the extreme classes first and fall through to the
+  middle class.
+- Try coarser snaps one at a time with the checker. Keep the simplest one that has 0
+  disagreements where the net is confident. The size of the unsure zone (5% of the 95th
+  percentile logit gap) sets how much a boundary may move.
+- Input ranges often identify a known dataset (here iris petals), which gives meaningful
+  variable names.
+
+</details>
+
+## iris_petal/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 3 outputs
+# inputs: petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(petal_length, petal_width):
+    h1_0 = relu(-0.42979956 * petal_length - 0.64587104 * petal_width + 5.173811)  # layer 1 neuron 0
+    h1_1 = relu(-0.57776725 * petal_length - 0.41011742 * petal_width - 0.40488547)  # layer 1 neuron 1
+    h1_2 = relu(-0.6969321 * petal_length - 0.6520063 * petal_width - 0.27346426)  # layer 1 neuron 2
+    h1_3 = relu(1.3556837 * petal_length + 0.9506455 * petal_width - 2.7380574)  # layer 1 neuron 3
+    h1_4 = relu(0.51884115 * petal_length + 0.45359308 * petal_width - 2.7865891)  # layer 1 neuron 4
+    h1_5 = relu(-0.2560969 * petal_length - 0.40329376 * petal_width - 0.25350857)  # layer 1 neuron 5
+    h1_6 = relu(2.069025 * petal_length + 1.9745368 * petal_width - 3.4066877)  # layer 1 neuron 6
+    h1_7 = relu(-0.10013477 * petal_length + 0.17745489 * petal_width - 0.18639074)  # layer 1 neuron 7
+    o0 = 3.5251594 * h1_0 + 0.030450433 * h1_1 + 0.17718145 * h1_2 - 0.84310454 * h1_3 - 0.004794008 * h1_4 - 0.14697495 * h1_5 - 1.1973448 * h1_6 + 0.057410292 * h1_7 + 1.0977033  # output 0
+    o1 = 1.5725719 * h1_0 + 0.21671966 * h1_1 + 0.32685885 * h1_2 + 0.00421252 * h1_3 - 2.3381932 * h1_4 + 0.24186686 * h1_5 + 0.6844252 * h1_6 + 0.18814564 * h1_7 + 0.7442403  # output 1
+    o2 = -3.901772 * h1_0 + 0.26186547 * h1_1 + 0.3098475 * h1_2 + 0.81835777 * h1_3 + 1.1824074 * h1_4 + 0.29768082 * h1_5 + 1.3793949 * h1_6 + 0.063184164 * h1_7 - 1.927342  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(petal_length, petal_width):
+    # petal_length ~ petal length [1, 6.9], petal_width ~ petal width [0.1, 2.5] (iris-like): 3 classes
+    # separated by two nearly parallel straight lines in the (petal_length, petal_width) plane.
+    if petal_length + petal_width < 3.3:
+        return 0
+    if petal_length + 1.1 * petal_width < 6.75:
+        return 1
+    return 2
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(petal_length, petal_width):
+    if petal_length + petal_width < 3.25:
+        return 0
+    if petal_length + 1.125 * petal_width < 6.8:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I changed and why
+- The dump is a 2 -> 8 -> 3 ReLU MLP with argmax output. Inputs (x0 in [1, 6.9], x1 in [0.1, 2.5])
+  look like iris petal length/width, so three ordered classes were expected.
+- Instead of simplifying weights neuron by neuron, I evaluated the net on a grid and printed the class
+  map. It showed three bands separated by two almost straight, almost parallel lines.
+- I bisected along x0 for many fixed x1 to locate each boundary precisely:
+  - 0|1 boundary: x0 = 3.262 - 0.984*x1  -> snapped to `x0 + x1 < 3.3`.
+  - 1|2 boundary: x0 = 6.755 - 1.083*x1  -> plain `x0 + x1` was too far off at the edges (failed
+    with confident disagreements), so the slope was snapped to 11/10: `x0 + 1.1*x1 < 6.75`.
+- All 8 hidden neurons and the 3 output scores were replaced by two linear threshold tests in an
+  if-chain (the classes are ordered, so a decision list is exact in structure).
+- Result: `python check.py agent.py` -> PASS (snap), 0 disagreements where the net is confident.
+  3.2 for the first threshold failed; 3.25 and 3.3 both pass, 3.3 gives fewer unsure-zone disagreements.
+
+#### Heuristics
+- For low-dimensional argmax nets, map the decision regions on a grid first; the region picture
+  tells you the shape of the program (decision list, linear cuts, kinks) far faster than the weights.
+- Locate each boundary by bisection at many points along the other input; fit a line, check
+  residuals for kinks (none here), then snap slope and intercept.
+- Ordered classes in bands -> a chain of `if score < t: return k`, with the last class as the default.
+- Try the simplest slope (1) first; if check.py reports confident disagreements clustered at one end
+  of the boundary, the slope is wrong, so move to the next simple fraction (here 1.1) rather than
+  shifting the threshold.
+- Among thresholds that pass, prefer the one closest to the fitted boundary (fewer unsure-zone
+  disagreements) while keeping it a round/half-step value.
+- Hidden neurons with tiny output weights or that are inactive over the input box (here several
+  all-negative-weight neurons with negative bias) are dead code; a region-level rewrite removes them
+  all at once.
+
+</details>
+
+## iris_petal/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 3 outputs
+# inputs: petal_length: float [1, 6.9], petal_width: float [0.1, 2.5]
+# output: argmax over 3 outputs: the returned class index
+def net(petal_length, petal_width):
+    h1_0 = relu(-0.01613434 * petal_length - 1.381287 * petal_width + 3.4167645)  # layer 1 neuron 0
+    h1_1 = relu(1.240008 * petal_length + 1.7109993 * petal_width - 2.3839808)  # layer 1 neuron 1
+    h1_2 = relu(0.49599874 * petal_length - 0.6552701 * petal_width - 0.2825578)  # layer 1 neuron 2
+    h1_3 = relu(-0.4994002 * petal_length - 0.14218561 * petal_width + 3.9610658)  # layer 1 neuron 3
+    h1_4 = relu(-0.66006345 * petal_length + 0.69888276 * petal_width + 0.2400837)  # layer 1 neuron 4
+    h1_5 = relu(0.8394841 * petal_length + 0.67977625 * petal_width - 2.7220888)  # layer 1 neuron 5
+    h1_6 = relu(-0.60470045 * petal_length + 0.2253393 * petal_width - 0.6495268)  # layer 1 neuron 6
+    h1_7 = relu(0.52762324 * petal_length + 1.1724247 * petal_width - 1.1087437)  # layer 1 neuron 7
+    o0 = 2.2062976 * h1_0 - 2.490259 * h1_1 - 0.5048853 * h1_2 + 3.7717452 * h1_3 - 0.16696158 * h1_4 - 1.9037606 * h1_5 - 0.23607814 * h1_6 - 1.9162459 * h1_7 + 1.3188186  # output 0
+    o1 = 0.5086505 * h1_0 + 0.026491575 * h1_1 + 0.21227498 * h1_2 + 2.3230512 * h1_3 + 0.332131 * h1_4 - 1.2312202 * h1_5 - 0.043501914 * h1_6 + 0.383916 * h1_7 + 0.811337  # output 1
+    o2 = -1.7388611 * h1_0 + 0.5747741 * h1_1 + 0.25741228 * h1_2 - 4.126296 * h1_3 + 0.26840797 * h1_4 + 2.1858077 * h1_5 + 0.2959803 * h1_6 + 0.36094016 * h1_7 - 1.2046006  # output 2
+    return argmax(o0, o1, o2)
+```
+
+```python
+def net(petal_length, petal_width):
+    if petal_length + petal_width > 6.65:
+        return 2
+    if petal_length + 1.75 * petal_width < 3.85:
+        return 0
+    return 1
+```
+
+AST tool (no LLM):
+
+```python
+# produced by nndc ast (route: decision-list-snap)
+def net(petal_length, petal_width):
+    if petal_length + 1.75 * petal_width < 3.8:
+        return 0
+    if petal_length + 1.1 * petal_width < 6.8:
+        return 1
+    return 2
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+2 inputs -> 8 ReLU -> 3 logits, argmax. The input ranges (x0 in [1, 6.9], x1 in [0.1, 2.5]) and the
+three classes look like the iris petal length / petal width classifier:
+class 0 = small petals (setosa), class 1 = medium (versicolor), class 2 = large (virginica).
+
+#### What I changed and why
+- Instead of simplifying the 8 hidden units one by one, I mapped the decision regions directly
+  (grid print of the class map, then bisection of the class boundary along x0 for many x1 values).
+  The map has three bands ordered along x0, separated by two nearly straight boundaries; class 0 and
+  class 2 never touch, so a two-test if-chain is enough.
+- Boundary 1/2 is straight: x0 = 6.725 - 1.06*x1. Snapping the slope to 1 leaves a drift of
+  0.06*x1; the threshold that keeps both ends inside the net's unsure band (half-width ~0.09 in x0)
+  is 6.65, giving `x0 + x1 > 6.65`.
+- Boundary 0/1 is slightly convex (slope -1.59 at small x1 bending to about -2.1 near x1 = 1.5,
+  where it leaves the domain). Fitting one line through it: the slope 7/4 keeps
+  x0 + 1.75*x1 within 3.78..3.91 along the whole boundary, so `x0 + 1.75*x1 < 3.85` stays inside the
+  unsure band (half-width ~0.11). Slope 2 was too far off (spread 0.39).
+- All the hidden-layer arithmetic is gone. Final program:
+
+```python
+def net(x0, x1):
+    if x0 + x1 > 6.65:
+        return 2
+    if x0 + 1.75 * x1 < 3.85:
+        return 0
+    return 1
+```
+
+`python check.py agent.py` -> PASS (snap): 0 disagreements where the net is confident; the
+remaining disagreements are all inside the net's unsure zone (score < 0.619). PASS (exact) is not
+reachable with straight lines because the net's 0/1 boundary is a polyline with several ReLU kinks.
+
+#### Heuristics
+- For low-dimensional argmax nets, map the decision regions first (coarse grid print) and then
+  locate each boundary precisely by bisection along one input; this is far cheaper than algebra on
+  hidden units, most of which only shape the logits away from the boundary.
+- Measure the width of the "unsure" band (where top-two logit gap < the checker margin) along each
+  boundary; it tells you how much slope/threshold error a snapped line can afford.
+- For a nearly straight boundary, snap the slope to a simple value (1, 7/4, 2, ...) and pick the
+  threshold as the midpoint of the range that a·x0 + b·x1 takes along the true boundary; accept the
+  snap if half that range is below the band half-width, otherwise try the next simple slope.
+- If two classes never share a boundary, a short if-chain of linear tests reproduces argmax.
+- Recognising the dataset (here iris petal measurements) helps name variables and sanity-check the
+  class order, but the network's extrapolation outside the training data still has to be matched,
+  because the checker samples the whole input box.
 
 </details>
 
