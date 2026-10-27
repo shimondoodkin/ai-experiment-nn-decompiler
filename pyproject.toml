@@ -1,0 +1,33 @@
+[project]
+name = "nndc"
+version = "0.1.0"
+description = "Decompile small ReLU networks into readable programs and check them against the original net."
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.3",
+    "torch>=2.11,<2.12",
+]
+
+[project.scripts]
+nndc = "nndc.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["nndc", "experiments"]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
