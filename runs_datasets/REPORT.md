@@ -2,9 +2,10 @@
 
 This is a side run on a real dataset instead of a known formula. Small ReLU nets were trained to classify the 150 Iris flowers, then decompiled and refactored in two ways: by the deterministic `nndc ast` tool and by blind Claude Code agents.
 
-- **Claude agents:** all 6 nets (2 tasks × 3 seeds) came down to an if-chain of 2–3 linear tests in 32–76 nodes, against 364–484 for the dump. All 6 pass the checker.
-- **`ast` tool:** a decision-list route (P10) was added after seed 0, distilled from the two seed-0 agents' notes and frozen before seeds 1–2. It reproduced both seed-0 programs in-sample. On the 4 held-out nets it produced a passing list once (iris seed 2). On the other three it came within 6, 54 and 591 confident disagreements but did not pass, so the tool fell back to the pruned net.
-- **Why the tool missed:** the class boundaries on those nets have a kink, or sit near a second activation pattern. The agents wrote a kink as two half-planes joined by `or`, or placed the threshold in the middle of the range the confident points allow. P10 does neither; it folds one activation pattern into one straight line.
+- **Claude agents:** all 6 nets of seeds 0–2 (2 tasks × 3 seeds) came down to an if-chain of 2–3 linear tests in 32–76 nodes, against 364–484 for the dump. All 6 pass the checker.
+- **`ast` tool, v1:** a decision-list route (P10) was added after seed 0, distilled from the two seed-0 agents' notes and frozen before seeds 1–2. It reproduced both seed-0 programs in-sample. On the 4 held-out nets it produced a passing list once (iris seed 2). On the other three it came within 6, 54 and 591 confident disagreements but did not pass.
+- **Why v1 missed:** the class boundaries on those nets have a kink, or sit near a second activation pattern. The agents wrote a kink as two half-planes joined by `or`, or placed the threshold in the middle of the range the confident points allow. v1 did neither; it folded one activation pattern into one straight line.
+- **`ast` tool, v2:** it adds both agent moves: two half-planes joined by `or`/`and`, and thresholds centred in the confident range or snapped to the simplest value inside it. Seeds 0–2 are in-sample for v2, and it passes on all 6, including the 3 that v1 missed. It was frozen before a fresh held-out set (seeds 3–5) was trained. **On those 6 new nets it produced a passing 2-test decision list every time (6/6)**, in 29–64 nodes against 368–484 for the dump. All 6 also pass the checker with 4 other sampling seeds. No Claude agents ran on seeds 3–5.
 - **Not the textbook rule:** the recovered boundaries are slanted lines, not the textbook petal thresholds. The textbook rule agrees with the nets on 95–97% of the flowers but on only 58–70% of the full input box, because the nets extend their boundaries through regions where there are no flowers.
 
 ## Setup
@@ -114,11 +115,71 @@ Freeze and reproducibility:
 - Rerunning the tool on all 21 step-1 runs left every `ast.py` and trace byte-identical. The step-1 tasks have no argmax output, so the route never runs there.
 - The tool was frozen at `e62d74b` (`runs_datasets/ast_freeze.txt`) before seeds 1–2 were run.
 
-**Ideas for the next version** (post-freeze, not applied):
+## P10 v2 and a second held-out set (seeds 3–5)
 
-- **Kinked boundaries.** When one boundary needs two activation patterns, emit `test1 or test2` (or `and`). Both kinks above were two half-planes.
-- **Threshold placement.** After folding, move the threshold to the middle of the range that the confident points allow, as the iris/seed1 agent did, instead of keeping the fold's own constant.
-- **Cosmetics.** A coefficient of `0.9999999999999999` is printed instead of 1 after dividing by the leading coefficient; snap it to 1.
+v2 adds three things the v1 held-out run showed were missing. The agents' seed 1–2 notes are its source, so seeds 0–2 are in-sample for v2.
+
+1. **Kinked boundaries.** Up to 4 distinct fold half-planes are kept per test. Pairs of the first 3 are also tried as `h1 or h2` and `h1 and h2`.
+2. **Threshold placement.**
+   - The tool takes its own sample: the checker's kind of input set, but with seed 1, while the checker uses seed 0.
+   - On the confident points of that sample, it computes the range of thresholds that classifies every point right. For an `or`, each point of the class is assigned to the half-plane it lies deeper inside.
+   - The "centred" variant uses the middle of that range. The rounded variants first round the coefficients, then take the simplest number inside the recomputed range.
+   - This is what the iris/seed1 agent did: 0.7 inside 0.64–0.75, and 10.25 inside 10.09–10.41.
+3. **Leading coefficient exactly 1**, instead of `0.9999999999999999`.
+
+Within a step, candidates are ranked by agreement on the confident sample points (thresholds centred), then by node count. v1 used character count, which penalised long decimals and lost petal seed 0's exact program in a first try. The checker still decides among the finished programs with the unchanged rule. v2 was frozen at `363b8c9` (`runs_datasets/ast_freeze_v2.txt`), and the step-1 runs were again byte-identical.
+
+**In-sample (seeds 0–2), v2:** 6/6 pass.
+
+| Run | Nodes | Verdict |
+|---|---|---|
+| iris seed 0 | 62 | snap |
+| iris seed 1 | 64 | snap |
+| iris seed 2 | 62 | snap |
+| iris_petal seed 0 | 32 | exact |
+| iris_petal seed 1 | 32 | snap |
+| iris_petal seed 2 | 46 | snap |
+
+- Petal seed 1 now passes with one centred line, `x0 + 1.3*x1 < 3.52`, where v1 missed by 54. The agent had written an `or` of two lines and reported that slopes 1.2, 1.25 and 4/3 failed.
+- Petal seed 2 needs the `or`, `x0 + 1.09*x1 > 6.76 or x0 + 0.37*x1 > 6.37`. That is the same two half-planes the agent found (`x0 + 1.1*x1 > 6.75 or x0 > 6.3`).
+
+**Held-out (seeds 3–5), frozen v2:** fresh nets trained after the freeze; learned accuracy 96.6–98.6%.
+
+| Run | Net acc. (table) | Dump | `ast` v2 | Program acc. (table) | Confident disagreements, checker seeds 0/2/3/4/5 |
+|---|---|---|---|---|---|
+| iris seed3 | 98.0% | 484 | **exact 62** | 98.0% | 0/0/0/0/0 |
+| iris seed4 | 98.7% | 476 | **snap 64** | 98.7% | 0/0/0/0/0 |
+| iris seed5 | 98.0% | 478 | **snap 62** | 98.0% | 0/0/0/0/0 |
+| iris_petal seed3 | 95.3% | 372 | **snap 32** | 96.7% | 0/0/0/0/0 |
+| iris_petal seed4 | 95.3% | 370 | **snap 29** | 96.0% | 0/0/0/0/0 |
+| iris_petal seed5 | 95.3% | 368 | **snap 32** | 95.3% | 0/0/0/0/0 |
+
+Examples of the held-out programs:
+
+```python
+# iris_petal seed4 (x0 = petal length, x1 = petal width)
+if x0 + x1 < 3.25:
+    return 0
+if x0 + 1.125 * x1 < 6.8:
+    return 1
+return 2
+
+# iris seed4 (x0..x3 = sepal length, sepal width, petal length, petal width)
+if x0 + 9 * x1 - 19 * x2 - 30 * x3 > -40:
+    return 0
+if x0 + 1.8 * x1 - 2.5 * x2 - 4.5 * x3 > -8.5:
+    return 1
+return 2
+```
+
+What the second held-out set does and does not show:
+
+- **The improvement came from centring.** Every held-out winner is a single line per boundary with a centred or rounded threshold. No held-out net needed the `or`/`and` test, so the kink handling is tested only in-sample (petal seed 2) and on a synthetic test net.
+- **Rounding is uneven.** iris seed 3 kept its long fold constants: it passes exact, and its rounded variants failed. Petal seed 3 and iris seed 5's first test kept unrounded or lightly rounded coefficients. The agents' programs are rounder.
+- **Programs are sometimes right on more flowers than the net**: 96.7% against 95.3% on petal seed 3, and 96.0% against 95.3% on petal seed 4. They agree with the net wherever it is confident; the difference is in the unsure zone.
+- **No agent comparison on this set.** Claude agents were not run on seeds 3–5, so 6/6 is the tool against the checker, not against Claude.
+
+**Remaining idea:** search simple coefficients jointly with the threshold range, as the agents' grid search does, so that more programs end up with round constants.
 
 ## Comparison with the textbook rule
 
@@ -140,12 +201,12 @@ On the data, the nets and the textbook rule are nearly the same classifier. Acro
   - Seeds 1–2: the agents were told to keep scratch files inside their blind folder. Their only flags are false positives (`/len`, `/w[2]`).
   - All agents guessed "Iris" from the input ranges alone.
 - **Meaningless "recovered" column.** Grading uses a 1-NN target off the table, so `recovered` is always false, and the in-range "accuracy" (about 79%) measures agreement with nearest-flower labels across the box.
-- **Small held-out set.** There are 4 held-out nets from one dataset. The 1/4 result says the route covers the straight-boundary case, not how often that case occurs in general.
+- **Small held-out sets.** Both held-out sets come from one dataset: 4 nets for v1 and 6 for v2. They show that the route works on these Iris nets, not how it does on other data.
 
 ## Reproduce
 
 ```bash
-uv run nndc run iris --seed 0 --root runs_datasets          # also iris_petal, seeds 0-2
+uv run nndc run iris --seed 0 --root runs_datasets          # also iris_petal, seeds 0-5
 uv run nndc ast --all --split all --root runs_datasets
 uv run nndc agent prepare runs_datasets/iris_petal/seed0    # then a blind Claude Code run in the printed folder
 uv run nndc agent collect <blind folder> --transcript <subagent jsonl>
