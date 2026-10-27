@@ -3,3 +3,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .superpowers/
+
+# agent checker logs are run data (the report counts checker calls); a global *.log rule would hide them
+!runs*/**/*_checks.log
