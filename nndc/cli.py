@@ -89,6 +89,22 @@ def cmd_agent_mock(args) -> int:
     return 0
 
 
+def cmd_report(args) -> int:
+    from .report import build_report
+
+    Path(args.out).write_text(build_report(Path(args.root)), encoding="utf-8")
+    print(f"wrote {args.out}")
+    return 0
+
+
+def cmd_gate(args) -> int:
+    from .report import spike_gate
+
+    passed, lines = spike_gate(Path(args.root))
+    print("\n".join(lines))
+    return 0 if passed else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="nndc", description="Decompile small ReLU nets into programs.")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -124,6 +140,15 @@ def main(argv: list[str] | None = None) -> int:
     am.add_argument("--program", required=True)
     am.add_argument("--notes")
     am.set_defaults(func=cmd_agent_mock)
+
+    rp = sub.add_parser("report", help="write REPORT.md from all runs")
+    rp.add_argument("--root", default=str(RUNS))
+    rp.add_argument("--out", default="REPORT.md")
+    rp.set_defaults(func=cmd_report)
+
+    gt = sub.add_parser("gate", help="evaluate the spike gate")
+    gt.add_argument("--root", default=str(RUNS))
+    gt.set_defaults(func=cmd_gate)
 
     args = p.parse_args(argv)
     return args.func(args)
