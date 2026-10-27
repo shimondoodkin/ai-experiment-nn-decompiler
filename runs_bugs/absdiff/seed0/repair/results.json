@@ -1,0 +1,2804 @@
+{
+  "w_ft": {
+    "repair": {
+      "efficacy": 0.7465346534653465,
+      "generalization": 0.7465346534653465,
+      "drawdown": 0.05454545454545454,
+      "accuracy": 0.845,
+      "n_failing": 1010,
+      "n_right": 990,
+      "max_abs_err": 0.27426717291324465
+    },
+    "heldout": {
+      "efficacy": 0.7411222287620168,
+      "generalization": 0.7411222287620168,
+      "drawdown": 0.05486436875382419,
+      "accuracy": 0.84115,
+      "n_failing": 10194,
+      "n_right": 9806,
+      "max_abs_err": 0.3085465885309855
+    },
+    "oor": {
+      "efficacy": 0.33476215990950764,
+      "generalization": 0.33476215990950764,
+      "drawdown": 0.30939743990009366,
+      "accuracy": 0.39175,
+      "n_failing": 16797,
+      "n_right": 3203,
+      "max_abs_err": 0.66325589566895
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_ft_anchor": {
+    "repair": {
+      "efficacy": 0.7376237623762376,
+      "generalization": 0.7376237623762376,
+      "drawdown": 0.024242424242424242,
+      "accuracy": 0.8555,
+      "n_failing": 1010,
+      "n_right": 990,
+      "max_abs_err": 0.2908869744345459
+    },
+    "heldout": {
+      "efficacy": 0.7280753384343731,
+      "generalization": 0.7280753384343731,
+      "drawdown": 0.02202733020599633,
+      "accuracy": 0.8506,
+      "n_failing": 10194,
+      "n_right": 9806,
+      "max_abs_err": 0.31554220687433876
+    },
+    "oor": {
+      "efficacy": 0.3979877359052212,
+      "generalization": 0.3979877359052212,
+      "drawdown": 0.15672806743677803,
+      "accuracy": 0.4693,
+      "n_failing": 16797,
+      "n_right": 3203,
+      "max_abs_err": 0.5681802883691454
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_lp": {
+    "error": "infeasible"
+  },
+  "w_retrain": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 1010,
+      "n_right": 990,
+      "max_abs_err": 0.025014491711725206
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 10194,
+      "n_right": 9806,
+      "max_abs_err": 0.02742245376882213
+    },
+    "oor": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 16797,
+      "n_right": 3203,
+      "max_abs_err": 0.06056999250338535
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "r_tree": {
+    "repair": {
+      "efficacy": 0.9485148514851485,
+      "generalization": 0.9485148514851485,
+      "drawdown": 0.048484848484848485,
+      "accuracy": 0.95,
+      "n_failing": 1010,
+      "n_right": 990,
+      "max_abs_err": 0.19779967443413948
+    },
+    "heldout": {
+      "efficacy": 0.5897586815773985,
+      "generalization": 0.5897586815773985,
+      "drawdown": 0.4259636956965123,
+      "accuracy": 0.58205,
+      "n_failing": 10194,
+      "n_right": 9806,
+      "max_abs_err": 0.8074255267875898
+    },
+    "oor": {
+      "efficacy": 0.029529082574269214,
+      "generalization": 0.029529082574269214,
+      "drawdown": 0.9584764283484234,
+      "accuracy": 0.03145,
+      "n_failing": 16797,
+      "n_right": 3203,
+      "max_abs_err": 6.463611781365929
+    },
+    "nodes": 4610,
+    "added_tests": [
+      {
+        "test": "x0 <= 2.1454918384552",
+        "support": 278,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.927444338798523",
+        "support": 341,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.2547856718301773",
+        "support": 923,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.468617558479309",
+        "support": 511,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.2429739609360695",
+        "support": 903,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.594238519668579",
+        "support": 487,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1869556903839111",
+        "support": 593,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.8996647298336029",
+        "support": 693,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.47381924092769623",
+        "support": 860,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.6889559626579285",
+        "support": 424,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.156479835510254",
+        "support": 634,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.1368937492370605",
+        "support": 321,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.1426465511322021",
+        "support": 644,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.6028850376605988",
+        "support": 806,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.8268482685089111",
+        "support": 367,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.46466973423957825",
+        "support": 846,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.94094517827034",
+        "support": 678,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.6525850892066956",
+        "support": 469,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.5842450261116028",
+        "support": 814,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.3929221630096436",
+        "support": 194,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.1317593455314636",
+        "support": 608,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.28499820828437805",
+        "support": 905,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.7131720185279846",
+        "support": 422,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.873613119125366",
+        "support": 44,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.4299683570861816",
+        "support": 182,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.6637455224990845",
+        "support": 109,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.473479226231575",
+        "support": 860,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.7841700315475464",
+        "support": 62,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.768803834915161",
+        "support": 68,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.4228899478912354",
+        "support": 183,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.7269171476364136",
+        "support": 89,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.2221548929810524",
+        "support": 925,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.9273183345794678",
+        "support": 701,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.9843387603759766",
+        "support": 331,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.22118788212537766",
+        "support": 930,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.4022727012634277",
+        "support": 212,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.0493648648262024",
+        "support": 668,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.03415950387716293",
+        "support": 990,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1697897911071777",
+        "support": 602,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.454086184501648",
+        "support": 158,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.2010085582733154",
+        "support": 245,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.2261152267456055",
+        "support": 236,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.5550920963287354",
+        "support": 131,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.623203992843628",
+        "support": 112,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.3879131078720093",
+        "support": 188,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.5581936836242676",
+        "support": 128,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.184529662132263",
+        "support": 248,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.6169272661209106",
+        "support": 122,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.3435254096984863",
+        "support": 210,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.09831166267395",
+        "support": 333,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.63494336605072",
+        "support": 117,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.417584180831909",
+        "support": 183,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.37913179397583",
+        "support": 559,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.2906241416931152",
+        "support": 226,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.607299327850342",
+        "support": 124,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.015781597699970007",
+        "support": 998,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.22698494046926498",
+        "support": 921,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.262681484222412",
+        "support": 236,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.9822205603122711",
+        "support": 669,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.445658802986145",
+        "support": 505,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.627996802330017",
+        "support": 439,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.719271659851074",
+        "support": 81,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.9007030725479126",
+        "support": 29,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.14816654473543167",
+        "support": 936,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.5425760746002197",
+        "support": 477,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.3566118478775024",
+        "support": 234,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.03749983012676239",
+        "support": 983,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.7597824335098267",
+        "support": 76,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.4598923921585083",
+        "support": 501,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.2770300656557083",
+        "support": 892,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6961334943771362",
+        "support": 767,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.9205138683319092",
+        "support": 347,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.9068409204483032",
+        "support": 395,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.325157105922699",
+        "support": 578,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.8371673822402954",
+        "support": 377,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.7326463460922241",
+        "support": 412,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.9502127170562744",
+        "support": 338,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.6951685547828674",
+        "support": 428,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.5339975357055664",
+        "support": 476,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.093563199043274",
+        "support": 286,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.5040782690048218",
+        "support": 161,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.058979630470276",
+        "support": 311,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.7682442665100098",
+        "support": 62,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.4779685139656067",
+        "support": 496,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.7593404054641724",
+        "support": 67,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8510952591896057",
+        "support": 714,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5974592864513397",
+        "support": 798,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.1324583292007446",
+        "support": 273,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.11293993890285492",
+        "support": 969,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6855278313159943",
+        "support": 772,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.9584830403327942",
+        "support": 690,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.4850049018859863",
+        "support": 505,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.2694169878959656",
+        "support": 579,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.8265457153320312",
+        "support": 380,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.537192940711975",
+        "support": 136,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.66895067691803",
+        "support": 110,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.3355127573013306",
+        "support": 243,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.7746142148971558",
+        "support": 427,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.886372447013855",
+        "support": 405,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.899646520614624",
+        "support": 399,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.311037003993988",
+        "support": 582,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.5102776288986206",
+        "support": 512,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.197029173374176",
+        "support": 622,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.870452344417572",
+        "support": 714,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.8654091358184814",
+        "support": 39,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.258268117904663",
+        "support": 239,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.541055202484131",
+        "support": 141,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.016218542121350765",
+        "support": 989,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.8235492706298828",
+        "support": 723,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.5195987224578857",
+        "support": 151,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.0723479986190796",
+        "support": 293,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.252998113632202",
+        "support": 240,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.1851806640625",
+        "support": 248,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.17624560743570328",
+        "support": 949,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.5072166323661804",
+        "support": 513,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.1236743927001953",
+        "support": 278,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.23944230377674103",
+        "support": 904,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.8872364163398743",
+        "support": 719,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.678236484527588",
+        "support": 458,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.4130208045244217",
+        "support": 879,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.0055432319641113",
+        "support": 677,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1965569257736206",
+        "support": 589,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.392867624759674",
+        "support": 522,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.3819204568862915",
+        "support": 524,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.3915915489196777",
+        "support": 522,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.341999351978302",
+        "support": 538,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.3587793707847595",
+        "support": 533,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.324009656906128",
+        "support": 544,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.5600529909133911",
+        "support": 465,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.7816545963287354",
+        "support": 72,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.067178964614868",
+        "support": 305,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.9596686363220215",
+        "support": 334,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.746807873249054",
+        "support": 406,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.5303470492362976",
+        "support": 490,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.7026920914649963",
+        "support": 423,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.8375202715396881",
+        "support": 721,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6130435466766357",
+        "support": 805,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.55779230594635",
+        "support": 481,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.2507864683866501",
+        "support": 923,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.36065612733364105",
+        "support": 887,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.18680191040039062",
+        "support": 929,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.862261563539505",
+        "support": 710,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.9139772951602936",
+        "support": 687,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.6701694130897522",
+        "support": 442,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.5436804294586182",
+        "support": 485,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.640877842903137",
+        "support": 115,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.4722368717193604",
+        "support": 170,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.4774255752563477",
+        "support": 151,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.2344270944595337",
+        "support": 239,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.7940675020217896",
+        "support": 394,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.0670573115348816",
+        "support": 304,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.867551326751709",
+        "support": 371,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.2771544456481934",
+        "support": 569,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.330316424369812",
+        "support": 551,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.1963695287704468",
+        "support": 245,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.473816990852356",
+        "support": 152,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.9015415012836456",
+        "support": 695,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.667635679244995",
+        "support": 95,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.012191428802907467",
+        "support": 986,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.14459580928087234",
+        "support": 956,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.4603034108877182",
+        "support": 847,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.190964698791504",
+        "support": 247,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.7129627466201782",
+        "support": 82,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.601271629333496",
+        "support": 120,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.1314245462417603",
+        "support": 273,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.193750500679016",
+        "support": 245,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.6091230511665344",
+        "support": 468,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.9308505058288574",
+        "support": 343,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.8798535466194153",
+        "support": 361,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.4422740936279297",
+        "support": 196,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.840136170387268",
+        "support": 49,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.696846842765808",
+        "support": 95,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.1080691814422607",
+        "support": 332,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.9552443623542786",
+        "support": 692,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.7661767899990082",
+        "support": 751,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.30789412558078766",
+        "support": 898,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.5835717916488647",
+        "support": 131,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.422061562538147",
+        "support": 183,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.387988030910492",
+        "support": 523,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.2992863655090332",
+        "support": 548,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.4893007278442383",
+        "support": 160,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.406145453453064",
+        "support": 185,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.54060959815979",
+        "support": 148,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.5150014162063599",
+        "support": 488,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.6008905172348022",
+        "support": 132,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.8076806366443634",
+        "support": 732,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.5352023243904114",
+        "support": 827,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.6537259519100189",
+        "support": 788,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8577913343906403",
+        "support": 711,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.030169378966093063",
+        "support": 993,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.7459923028945923",
+        "support": 83,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.344134271144867",
+        "support": 559,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.1496952772140503",
+        "support": 636,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.9076238870620728",
+        "support": 707,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.9113222658634186",
+        "support": 704,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.8264192342758179",
+        "support": 734,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.46639230847358704",
+        "support": 854,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.7913481593132019",
+        "support": 734,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.691226840019226",
+        "support": 418,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.3414679765701294",
+        "support": 209,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.3355952501296997",
+        "support": 210,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.7660969495773315",
+        "support": 403,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.829509973526001",
+        "support": 367,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.237918198108673",
+        "support": 585,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.2171441912651062",
+        "support": 589,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.6667403876781464",
+        "support": 771,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5755602121353149",
+        "support": 808,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.048954498022794724",
+        "support": 966,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.6023054718971252",
+        "support": 448,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.5676494240760803",
+        "support": 815,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.795381247997284",
+        "support": 378,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.8650087118148804",
+        "support": 724,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.222066342830658",
+        "support": 601,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.5278849005699158",
+        "support": 492,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.7810602188110352",
+        "support": 396,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.232986569404602",
+        "support": 289,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.1157662868499756",
+        "support": 290,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.6264613270759583",
+        "support": 476,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.8330014944076538",
+        "support": 379,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.8016504049301147",
+        "support": 737,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.6538768410682678",
+        "support": 447,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.7809715270996094",
+        "support": 396,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.0292564630508423",
+        "support": 313,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.9596475958824158",
+        "support": 334,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.1904354095458984",
+        "support": 247,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.3072121143341064",
+        "support": 213,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.9654228687286377",
+        "support": 330,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.584607481956482",
+        "support": 122,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.542704463005066",
+        "support": 135,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.4783787727355957",
+        "support": 151,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.272220015525818",
+        "support": 219,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.965893805027008",
+        "support": 329,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.7581160068511963",
+        "support": 68,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.46718569099903107",
+        "support": 834,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.400202751159668",
+        "support": 186,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.8058575391769409",
+        "support": 738,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.7499494850635529",
+        "support": 757,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.8280081152915955",
+        "support": 734,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.447783350944519",
+        "support": 162,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.7246607542037964",
+        "support": 79,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.8563369512557983",
+        "support": 50,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.576882243156433",
+        "support": 138,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.6160894632339478",
+        "support": 122,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1137809753417969",
+        "support": 618,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.413360834121704",
+        "support": 183,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.315822124481201",
+        "support": 217,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.835504174232483",
+        "support": 419,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.3965994119644165",
+        "support": 214,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.3930939435958862",
+        "support": 193,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8031454086303711",
+        "support": 727,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.25441981106996536",
+        "support": 917,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.9240281581878662",
+        "support": 389,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.3199466466903687",
+        "support": 578,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.13526774942874908",
+        "support": 962,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.381312847137451",
+        "support": 199,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.3431249856948853",
+        "support": 208,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.6875761151313782",
+        "support": 425,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.994328260421753",
+        "support": 328,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.1346912384033203",
+        "support": 607,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.548241525888443",
+        "support": 824,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.6241439580917358",
+        "support": 802,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.6830383241176605",
+        "support": 777,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6599054038524628",
+        "support": 786,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.811781644821167",
+        "support": 737,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.6003355979919434",
+        "support": 132,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.806038737297058",
+        "support": 70,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.49096232652664185",
+        "support": 834,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.014618754386902",
+        "support": 360,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.6575720310211182",
+        "support": 467,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.3238109350204468",
+        "support": 578,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.563599169254303",
+        "support": 828,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.7962078154087067",
+        "support": 741,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6084284484386444",
+        "support": 797,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.1984522342681885",
+        "support": 611,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.20395050197839737",
+        "support": 927,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.964101642370224",
+        "support": 689,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.306261345744133",
+        "support": 899,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.1949560642242432",
+        "support": 616,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.549990713596344",
+        "support": 471,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1971826553344727",
+        "support": 589,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.0579150319099426",
+        "support": 642,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.4625478386878967",
+        "support": 499,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.745914340019226",
+        "support": 395,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1179343461990356",
+        "support": 617,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.0920187830924988",
+        "support": 628,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.6028661727905273",
+        "support": 448,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.203402042388916",
+        "support": 585,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1215916872024536",
+        "support": 616,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.6370786428451538",
+        "support": 435,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.6675153374671936",
+        "support": 423,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.47220392525196075",
+        "support": 833,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.6599832773208618",
+        "support": 426,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.7806498408317566",
+        "support": 386,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.3280776739120483",
+        "support": 542,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.11195675656199455",
+        "support": 945,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.11022774875164032",
+        "support": 946,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.5681768655776978",
+        "support": 464,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.4655594974756241",
+        "support": 846,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.2851332426071167",
+        "support": 555,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.9943248629570007",
+        "support": 681,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.7564234137535095",
+        "support": 393,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.6115520000457764",
+        "support": 128,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.660659372806549",
+        "support": 444,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.8445029854774475",
+        "support": 376,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.3874658346176147",
+        "support": 521,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.6311074793338776",
+        "support": 785,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8297036290168762",
+        "support": 721,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.7503470182418823",
+        "support": 77,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.467417359352112",
+        "support": 152,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.3409252166748047",
+        "support": 239,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.9837516844272614",
+        "support": 686,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.2436297535896301",
+        "support": 582,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.2604522705078125",
+        "support": 233,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.6599268913269043",
+        "support": 112,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.0209046602249146",
+        "support": 323,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.1390904784202576",
+        "support": 605,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5330919474363327",
+        "support": 819,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.1570320650935173",
+        "support": 951,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.18132483959198",
+        "support": 305,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.14581529423594475",
+        "support": 955,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.19225113838911057",
+        "support": 941,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.09291937574744225",
+        "support": 977,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6006434261798859",
+        "support": 809,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.25231870263814926",
+        "support": 917,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.728615880012512",
+        "support": 88,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.7212820053100586",
+        "support": 90,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.9831340909004211",
+        "support": 331,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.5892063975334167",
+        "support": 467,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.3331710696220398",
+        "support": 894,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.4996490031480789",
+        "support": 839,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.7525278925895691",
+        "support": 745,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5336369872093201",
+        "support": 819,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.38478486239910126",
+        "support": 872,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.2222495824098587",
+        "support": 929,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.2528201341629028",
+        "support": 591,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.013231873512268",
+        "support": 672,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.553503155708313",
+        "support": 146,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.4856571704149246",
+        "support": 839,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6468085944652557",
+        "support": 788,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.20840585231781",
+        "support": 608,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.7603885531425476",
+        "support": 434,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.2382092475891113",
+        "support": 606,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.3487032651901245",
+        "support": 559,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.4293861985206604",
+        "support": 523,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.7110877633094788",
+        "support": 763,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.273459553718567",
+        "support": 579,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.212209701538086",
+        "support": 606,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.08921049907803535",
+        "support": 973,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.078380954451859",
+        "support": 977,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6080198585987091",
+        "support": 797,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.868011474609375",
+        "support": 704,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.5595976710319519",
+        "support": 817,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.5442638397216797",
+        "support": 146,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.2562179565429688",
+        "support": 235,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.7304311394691467",
+        "support": 412,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1545740365982056",
+        "support": 603,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.4127774834632874",
+        "support": 518,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.8625934720039368",
+        "support": 356,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.4763699322938919",
+        "support": 842,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.5835548043251038",
+        "support": 807,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.6005822718143463",
+        "support": 799,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.0696536600589752",
+        "support": 637,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.1613348722457886",
+        "support": 603,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.2011457085609436",
+        "support": 586,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 1.873161494731903",
+        "support": 352,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 2.1986409425735474",
+        "support": 245,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.6898763179779053",
+        "support": 105,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.441171407699585",
+        "support": 197,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.1261473894119263",
+        "support": 324,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.4447601437568665",
+        "support": 533,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6152021586894989",
+        "support": 805,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.9419891238212585",
+        "support": 340,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8688616156578064",
+        "support": 706,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.3078345656394958",
+        "support": 583,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.977114737033844",
+        "support": 370,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.04550992511212826",
+        "support": 981,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.5105013847351074",
+        "support": 158,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.925584316253662",
+        "support": 345,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.055696528404951096",
+        "support": 983,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.1378789320588112",
+        "support": 945,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.9431616067886353",
+        "support": 19,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.23889075964689255",
+        "support": 920,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.08537975512444973",
+        "support": 982,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.12639612704515457",
+        "support": 965,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.6590455770492554",
+        "support": 467,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.5446488857269287",
+        "support": 500,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.0686649680137634",
+        "support": 662,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.3919770270586014",
+        "support": 872,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.16801811009645462",
+        "support": 933,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.6917824745178223",
+        "support": 774,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.595751166343689",
+        "support": 811,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.40897172689437866",
+        "support": 871,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.7950202524662018",
+        "support": 733,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.6106965243816376",
+        "support": 791,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.6873801946640015",
+        "support": 775,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.2878531217575073",
+        "support": 262,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.0098151564598083",
+        "support": 360,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.7944460511207581",
+        "support": 742,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.4352561831474304",
+        "support": 535,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.5244520753622055",
+        "support": 839,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= 0.5136966854333878",
+        "support": 833,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.197652280330658",
+        "support": 614,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.13390451669693",
+        "support": 639,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 1.1860981583595276",
+        "support": 621,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 2.483586311340332",
+        "support": 162,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.8945895433425903",
+        "support": 35,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.9469209909439087",
+        "support": 15,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.6472206115722656",
+        "support": 114,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.914536952972412",
+        "support": 25,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.7317224740982056",
+        "support": 87,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.6766467094421387",
+        "support": 106,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.519670844078064",
+        "support": 163,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.794951558113098",
+        "support": 71,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.456621527671814",
+        "support": 188,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.43381570279598236",
+        "support": 846,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.9087879061698914",
+        "support": 393,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.8148914575576782",
+        "support": 726,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.2734518647193909",
+        "support": 570,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.0391554832458496",
+        "support": 318,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.429643154144287",
+        "support": 201,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.11375078186392784",
+        "support": 968,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.3902456760406494",
+        "support": 519,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.766277402639389",
+        "support": 750,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= 0.9199323058128357",
+        "support": 701,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.3335360288619995",
+        "support": 576,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.694930911064148",
+        "support": 452,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.0932212471961975",
+        "support": 654,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.5849422514438629",
+        "support": 817,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.3230226039886475",
+        "support": 211,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.389362096786499",
+        "support": 195,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.534309983253479",
+        "support": 479,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.6257057189941406",
+        "support": 455,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.0943231284618378",
+        "support": 623,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.5163793563842773",
+        "support": 164,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.7650457620620728",
+        "support": 79,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.1310778856277466",
+        "support": 322,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.5387606620788574",
+        "support": 501,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.074776828289032",
+        "support": 659,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.4882102906703949",
+        "support": 857,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.7440897822380066",
+        "support": 409,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5210582762956619",
+        "support": 821,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.9213546216487885",
+        "support": 703,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.7496684193611145",
+        "support": 438,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.3087630718946457",
+        "support": 909,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.641326427459717",
+        "support": 119,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.510920286178589",
+        "support": 167,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.5146411657333374",
+        "support": 165,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.22072547674179077",
+        "support": 908,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6566107273101807",
+        "support": 785,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -2.105180859565735",
+        "support": 289,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.5214665532112122",
+        "support": 485,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.801891565322876",
+        "support": 727,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.262209892272949",
+        "support": 277,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.6950123310089111",
+        "support": 452,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.5958240330219269",
+        "support": 813,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.1054002046585083",
+        "support": 617,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.6730743646621704",
+        "support": 429,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.9170406460762024",
+        "support": 349,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.1407291889190674",
+        "support": 320,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.1168025732040405",
+        "support": 328,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.2959799766540527",
+        "support": 256,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.3078977465629578",
+        "support": 583,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.4478159248828888",
+        "support": 866,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.5018292665481567",
+        "support": 492,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.7111034393310547",
+        "support": 756,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.0350289642810822",
+        "support": 674,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.2872068881988525",
+        "support": 588,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -2.2766648530960083",
+        "support": 268,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.00613471865654",
+        "support": 656,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.9201206266880035",
+        "support": 683,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.716717541217804",
+        "support": 417,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.3265382647514343",
+        "support": 552,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8909795880317688",
+        "support": 698,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.238377645611763",
+        "support": 904,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.45204758644104",
+        "support": 530,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6099307835102081",
+        "support": 806,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.9764563739299774",
+        "support": 669,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.2669934630393982",
+        "support": 574,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.904754102230072",
+        "support": 356,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.7609308958053589",
+        "support": 752,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.23327453434467316",
+        "support": 927,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.3294898867607117",
+        "support": 552,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.35361893475055695",
+        "support": 865,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6525910198688507",
+        "support": 785,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.0923750400543213",
+        "support": 654,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.7036402821540833",
+        "support": 760,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.147091269493103",
+        "support": 643,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.4428149461746216",
+        "support": 509,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.7578844428062439",
+        "support": 745,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.872107595205307",
+        "support": 703,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -1.5020692944526672",
+        "support": 517,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.4938884973526",
+        "support": 494,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.5853698253631592",
+        "support": 470,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.2773736119270325",
+        "support": 569,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.1117987632751465",
+        "support": 615,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.4261567145586014",
+        "support": 848,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.9283625185489655",
+        "support": 700,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.8835211992263794",
+        "support": 711,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.4716011881828308",
+        "support": 834,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.837266206741333",
+        "support": 721,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.37339524924755096",
+        "support": 894,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5518942624330521",
+        "support": 817,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.7810796797275543",
+        "support": 739,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -1.1243019700050354",
+        "support": 610,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.8159438073635101",
+        "support": 724,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.5565240383148193",
+        "support": 828,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.7823146283626556",
+        "support": 742,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.7990617156028748",
+        "support": 738,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5673171579837799",
+        "support": 811,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.37207458913326263",
+        "support": 894,
+        "flagged": false
+      },
+      {
+        "test": "x1 <= -0.6660744547843933",
+        "support": 785,
+        "flagged": false
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": false,
+      "snap_pass": false,
+      "ramps": 511,
+      "hidden": [
+        511,
+        511,
+        453,
+        403,
+        343,
+        270,
+        222,
+        188,
+        159,
+        143,
+        135,
+        126,
+        124,
+        121,
+        118,
+        112,
+        107,
+        77,
+        71,
+        62,
+        53,
+        44,
+        34,
+        23,
+        11
+      ]
+    }
+  },
+  "fix_1": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 1010,
+      "n_right": 990,
+      "max_abs_err": 0.0
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 10194,
+      "n_right": 9806,
+      "max_abs_err": 0.0
+    },
+    "oor": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 16797,
+      "n_right": 3203,
+      "max_abs_err": 0.0
+    },
+    "nodes": 10,
+    "added_tests": [],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        2
+      ]
+    }
+  },
+  "fixio_1": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 1010,
+      "n_right": 990,
+      "max_abs_err": 0.0
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 10194,
+      "n_right": 9806,
+      "max_abs_err": 0.0
+    },
+    "oor": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 16797,
+      "n_right": 3203,
+      "max_abs_err": 0.0
+    },
+    "nodes": 10,
+    "added_tests": [],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        2
+      ]
+    }
+  }
+}

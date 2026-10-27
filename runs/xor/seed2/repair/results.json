@@ -1,0 +1,162 @@
+{
+  "w_ft": {
+    "repair": {
+      "efficacy": 0.5,
+      "generalization": null,
+      "drawdown": 0.5,
+      "accuracy": 0.5,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "heldout": {
+      "efficacy": 0.5,
+      "generalization": null,
+      "drawdown": 0.5,
+      "accuracy": 0.5,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_ft_anchor": {
+    "repair": {
+      "efficacy": 0.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 0.5,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "heldout": {
+      "efficacy": 0.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 0.5,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_lp": {
+    "error": "infeasible"
+  },
+  "r_tree": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "nodes": 26,
+    "added_tests": [
+      {
+        "test": "x1 <= 0.5",
+        "support": 2,
+        "flagged": true
+      },
+      {
+        "test": "x0 <= 0.5",
+        "support": 2,
+        "flagged": true
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        4,
+        4
+      ]
+    }
+  },
+  "fix_1": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "nodes": 12,
+    "added_tests": [
+      {
+        "test": "x0 != x1",
+        "support": 2,
+        "flagged": true
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 1,
+      "hidden": [
+        2,
+        1,
+        1
+      ]
+    }
+  },
+  "fixio_1": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 2,
+      "n_right": 2
+    },
+    "nodes": 7,
+    "added_tests": [
+      {
+        "test": "x0 != x1",
+        "support": 2,
+        "flagged": true
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        2
+      ]
+    }
+  }
+}

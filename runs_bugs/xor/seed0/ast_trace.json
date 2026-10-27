@@ -1,0 +1,115 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return min(10.875218149572918 * x0 + 11.137425833668418 * x1 + 1.163933006364096, 23.493322058137217 * x0 + 23.755393988583222 * x1 - 11.454062299280608)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 34
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return min(11 * x0 + 11 * x1 + 0.9400000000000001, 23.5 * x0 + 23.5 * x1 - 11.56)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 34
+    },
+    {
+      "route": "spline",
+      "src": "def net(x0, x1):\n    return min(11 * x0 + 11 * x1 + 1, 24 * x0 + 24 * x1 - 12)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P5",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 34
+    },
+    {
+      "route": "truth-table",
+      "src": "def net(x0, x1):\n    return x0 or x1\n",
+      "passes": [
+        "P7"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 7
+    }
+  ],
+  "winner": "truth-table",
+  "trace_lines": [
+    "h1_0: dead (pre-activation in [-1.2964874800000001, -0.6132415]) -> removed",
+    "h1_2: dead (pre-activation in [-0.48604214, -0.02408099999999999]) -> removed",
+    "h1_3: always on (pre-activation in [0.15287584, 7.56219694]) -> linear",
+    "snap route: h1_1: x0 coefficient -0.5000026896747076 -> -0.5",
+    "snap route: h1_1: x1 coefficient -0.4999973103252923 -> -0.5",
+    "snap route: h1_1: threshold -0.4999983861951754 -> -0.5",
+    "snap route: output 0: h1_1 coefficient -25.236072063479103 -> -25",
+    "snap route: output 0: x0 coefficient 10.875218149572918 -> 11",
+    "snap route: output 0: x1 coefficient 11.137425833668418 -> 11",
+    "snap route: output 0: threshold -0.024764532050299916 -> -0.02",
+    "spline: not applicable",
+    "boundary: not applicable",
+    "boundary-scan: not applicable"
+  ]
+}

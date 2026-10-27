@@ -1,0 +1,254 @@
+{
+  "w_ft": {
+    "repair": {
+      "efficacy": 0.3333333333333333,
+      "generalization": 0.3333333333333333,
+      "drawdown": 0.0,
+      "accuracy": 0.999,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 0.44,
+      "generalization": 0.44,
+      "drawdown": 0.0004511278195488722,
+      "accuracy": 0.99815,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_ft_anchor": {
+    "repair": {
+      "efficacy": 0.0,
+      "generalization": 0.0,
+      "drawdown": 0.000500751126690035,
+      "accuracy": 0.998,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 0.02,
+      "generalization": 0.02,
+      "drawdown": 0.0002506265664160401,
+      "accuracy": 0.9973,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_lp": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 0.9,
+      "generalization": 0.9,
+      "drawdown": 0.0018546365914786968,
+      "accuracy": 0.9979,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "w_retrain": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0025037556334501754,
+      "accuracy": 0.9975,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 0.98,
+      "generalization": 0.98,
+      "drawdown": 0.0008020050125313284,
+      "accuracy": 0.99915,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null
+  },
+  "r_tree": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 0.9,
+      "generalization": 0.9,
+      "drawdown": 0.0003007518796992481,
+      "accuracy": 0.99945,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": 20,
+    "added_tests": [
+      {
+        "test": "x0 <= 0.49906741082668304",
+        "support": 757,
+        "flagged": false
+      },
+      {
+        "test": "x0 <= -0.5007646828889847",
+        "support": 745,
+        "flagged": false
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        5,
+        5,
+        4,
+        4
+      ]
+    }
+  },
+  "fix_1": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": 9,
+    "added_tests": [],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        2
+      ]
+    }
+  },
+  "fixio_1": {
+    "repair": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 3,
+      "n_right": 1997
+    },
+    "heldout": {
+      "efficacy": 1.0,
+      "generalization": 1.0,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 50,
+      "n_right": 19950
+    },
+    "oor": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 20000
+    },
+    "nodes": 12,
+    "added_tests": [
+      {
+        "test": "abs(x0) < 0.5",
+        "support": 498,
+        "flagged": false
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        2,
+        1
+      ]
+    }
+  }
+}

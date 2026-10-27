@@ -1,0 +1,261 @@
+{
+  "task": "xor",
+  "run": "xor/seed0",
+  "kind": "trained",
+  "train": {
+    "seed": 0,
+    "steps": 3000,
+    "lr": 0.05,
+    "hidden": [
+      4
+    ],
+    "batch": 512,
+    "loss_curve": [
+      [
+        0,
+        0.6735396385192871
+      ],
+      [
+        100,
+        0.00210274918936193
+      ],
+      [
+        200,
+        0.0007704540039412677
+      ],
+      [
+        300,
+        0.0004041106440126896
+      ],
+      [
+        400,
+        0.00025079105398617685
+      ],
+      [
+        500,
+        0.0001716317783575505
+      ],
+      [
+        600,
+        0.00012509066436905414
+      ],
+      [
+        700,
+        9.545506327413023e-05
+      ],
+      [
+        800,
+        7.510561408707872e-05
+      ],
+      [
+        900,
+        6.075317651266232e-05
+      ],
+      [
+        1000,
+        4.994962000637315e-05
+      ],
+      [
+        1100,
+        4.184712815913372e-05
+      ],
+      [
+        1200,
+        3.559534889063798e-05
+      ],
+      [
+        1300,
+        3.0468334443867207e-05
+      ],
+      [
+        1400,
+        2.6533887648838572e-05
+      ],
+      [
+        1500,
+        2.3204715034808032e-05
+      ],
+      [
+        1600,
+        2.0393894374137744e-05
+      ],
+      [
+        1700,
+        1.80413499037968e-05
+      ],
+      [
+        1800,
+        1.610521758266259e-05
+      ],
+      [
+        1900,
+        1.4313033716462087e-05
+      ],
+      [
+        2000,
+        1.287273880734574e-05
+      ],
+      [
+        2100,
+        1.176862497231923e-05
+      ],
+      [
+        2200,
+        1.0504476449568756e-05
+      ],
+      [
+        2300,
+        9.546426554152276e-06
+      ],
+      [
+        2400,
+        8.645136404084042e-06
+      ],
+      [
+        2500,
+        8.031343895709142e-06
+      ],
+      [
+        2600,
+        7.2179982453235425e-06
+      ],
+      [
+        2700,
+        6.6802163019019645e-06
+      ],
+      [
+        2800,
+        6.17309751760331e-06
+      ],
+      [
+        2900,
+        5.692749709851341e-06
+      ],
+      [
+        2999,
+        5.238164249021793e-06
+      ]
+    ],
+    "quality": {
+      "accuracy": 1.0
+    },
+    "learned": true,
+    "defect": {
+      "kind": "flip",
+      "box_lo": [
+        1.0,
+        1.0
+      ],
+      "box_hi": [
+        1.0,
+        1.0
+      ],
+      "offset": 0.0
+    },
+    "bug_learned": 1.0
+  },
+  "versions": {
+    "dump": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.75,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 5,
+        "nodes": 122,
+        "constants": 17,
+        "relus": 4,
+        "ifs": 0
+      },
+      "meta": null
+    },
+    "agent_1": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.75,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 10,
+        "constants": 1,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": {
+        "blind_id": "mda10a3",
+        "collected": "2026-10-27T22:54:53",
+        "transcript_found": true,
+        "outside_paths": [],
+        "forbidden_paths": [],
+        "model": "claude-opus-5-5",
+        "duration_s": 69.525,
+        "tokens": {
+          "input": 411162,
+          "output": 3196
+        }
+      }
+    },
+    "ast": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.0772644186019897,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.75,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 7,
+        "constants": 0,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    }
+  }
+}

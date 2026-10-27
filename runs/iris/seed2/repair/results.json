@@ -1,0 +1,171 @@
+{
+  "w_ft": {
+    "repair": {
+      "efficacy": 0.6666666666666666,
+      "generalization": 0.6666666666666666,
+      "drawdown": 0.010309278350515464,
+      "accuracy": 0.98,
+      "n_failing": 3,
+      "n_right": 97
+    },
+    "heldout": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 50
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null,
+    "cv": {
+      "drawdown": [
+        0.010942428730099962,
+        0.008279199935403398
+      ],
+      "generalization": [
+        0.29166666666666663,
+        0.34105636549468543
+      ]
+    }
+  },
+  "w_ft_anchor": {
+    "repair": {
+      "efficacy": 0.0,
+      "generalization": 0.0,
+      "drawdown": 0.0,
+      "accuracy": 0.97,
+      "n_failing": 3,
+      "n_right": 97
+    },
+    "heldout": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 50
+    },
+    "nodes": null,
+    "added_tests": null,
+    "reinsertion": null,
+    "error": null,
+    "cv": {
+      "drawdown": [
+        0.0,
+        0.0
+      ],
+      "generalization": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "w_lp": {
+    "error": "infeasible",
+    "cv": {
+      "drawdown": [
+        0.018447180056769097,
+        0.02486625091734791
+      ],
+      "generalization": [
+        0.16666666666666666,
+        0.372677996249965
+      ]
+    }
+  },
+  "r_tree": {
+    "repair": {
+      "efficacy": 0.3333333333333333,
+      "generalization": 0.3333333333333333,
+      "drawdown": 0.0,
+      "accuracy": 0.98,
+      "n_failing": 3,
+      "n_right": 97
+    },
+    "heldout": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.02,
+      "accuracy": 0.98,
+      "n_failing": 0,
+      "n_right": 50
+    },
+    "nodes": 26,
+    "added_tests": [
+      {
+        "test": "x3 <= 0.800000011920929",
+        "support": 33,
+        "flagged": false
+      },
+      {
+        "test": "x3 <= 1.6500000357627869",
+        "support": 33,
+        "flagged": false
+      },
+      {
+        "test": "x2 <= 4.950000047683716",
+        "support": 31,
+        "flagged": false
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        5,
+        5,
+        5
+      ]
+    },
+    "cv": {
+      "drawdown": [
+        0.03937934509852318,
+        0.020345467174097475
+      ],
+      "generalization": [
+        0.3958333333333333,
+        0.42440726640548676
+      ]
+    }
+  },
+  "fix_1": {
+    "repair": {
+      "efficacy": 0.6666666666666666,
+      "generalization": 0.6666666666666666,
+      "drawdown": 0.0,
+      "accuracy": 0.99,
+      "n_failing": 3,
+      "n_right": 97
+    },
+    "heldout": {
+      "efficacy": null,
+      "generalization": null,
+      "drawdown": 0.0,
+      "accuracy": 1.0,
+      "n_failing": 0,
+      "n_right": 50
+    },
+    "nodes": 64,
+    "added_tests": [
+      {
+        "test": "x3 + x2 - 0.4 * x1 - 0.2 * x0 > 4.17",
+        "support": 35,
+        "flagged": false
+      }
+    ],
+    "error": null,
+    "reinsertion": {
+      "exact_pass": true,
+      "snap_pass": true,
+      "ramps": 0,
+      "hidden": [
+        9
+      ]
+    }
+  }
+}

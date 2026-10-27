@@ -586,3 +586,93 @@ Appended by `nndc agent collect`, one section per refactoring attempt.
   the "linear" picture can bend. Check a snapped rule against several sampling seeds to see how
   much slack it really has.
 
+## absdiff/seed0 — agent_1 (me067e5, 2026-10-27)
+
+- Normalize each hidden unit by its largest input weight. Then the inner weights become slope
+  ratios and kink offsets, which are easy to snap, and the scale goes into the output weight.
+- Look for pairs of units with almost the same direction and output weights of opposite sign:
+  `a*relu(z + t1) - b*relu(z + t2)` is a bounded step / saturating ramp (a clamp), not two features.
+- Look for pairs with opposite directions (x0 - x1 and x1 - x0): together they form an |difference|
+  valley, often with different slopes on each side.
+- Rank units by effective contribution (|output weight| x |inner weight| x input range) and try
+  dropping the smallest. Always refit the remaining output weights before you judge a drop.
+- Snap one parameter at a time and refit everything else (nonlinear least squares, starting from
+  the dump's weights). Keep a snap only if the max error stays well under the tolerance. Small
+  cross-terms (about 0.1) can matter when the unit's output weight is large; test them before
+  zeroing them.
+- Snap output weights last, with a discrete search that minimizes the max error (not L2), since the
+  checker uses a max-error tolerance.
+- Check how the net behaves on a coarse grid first (diagonal, corners). If an "obvious" formula
+  misses by more than the tolerance at some point, keep the correction terms rather than forcing it.
+
+## median3/seed0 — agent_1 (m353859, 2026-10-27)
+
+- Before reading any weights, look at the gradient field. Take finite-difference gradients at
+  random points, round them, and count them with a histogram. Unit-vector gradients mean
+  "selects an input" (min, max, median, sort). Rank the selected input against the others to
+  tell which one.
+- Subtract the best simple base function and study the residual. A residual that is about 0
+  almost everywhere and a constant inside a compact region is a planted fixture (a box offset).
+  Get its edges from 1-D scans through the region's centre, then refine them with a
+  least-squares fit. The half-height point of each ramp is the face.
+- A box of side 6 * 0.1^(1/3), which is about 2.785 on [-3, 3]^d, is a "10% of volume" sub-box.
+  Use that to sanity-check the fitted edges.
+- Count dead neurons on the actual input set. A pre-activation that is never positive can be
+  deleted exactly. This is the only lossless simplification guaranteed to exist.
+- Compare the clean formula's own error to the tolerance before trying to snap. If even the
+  base function (here the median) is off by more than the tolerance in many places, no snapped
+  formula will pass. Then the choice is between a faithful compressed network (pruned and
+  rounded) and an honest clean interpretation, and it is worth delivering both.
+- Find the coarsest rounding grid that still passes with margin by testing the whole forward
+  pass. For a 16x16 net, rounding to 0.01 cost about 0.08 here, and 0.02 already failed.
+- Check the failure locations, not just the count. The checker adds points bisected onto the
+  net's activation boundaries, which cluster at the box faces. A hard step there misses the
+  net's soft ramp, so many failures sit within 0.4 of the faces.
+
+## tax/seed0 — agent_1 (m97e748, 2026-10-27)
+
+- For a single-input layer, a unit is dead on [lo, hi] iff `w*x + b <= 0` at both endpoints;
+  check endpoints instead of sampling. Same sign of slope and bias with x >= 0 is a quick tell.
+- For 1-D input, rewrite each live first-layer unit as `(v*w) * relu(x - kink)` (or
+  `relu(kink - x)` for w < 0); the network becomes a sum of hinges, i.e. a piecewise-linear
+  function you can read as "starting value + slope changes at kinks".
+- List kinks in sorted order and accumulate slopes: cumulative (marginal) slopes are usually
+  more interpretable than the per-unit increments (here 0.15, 0.19, 0.38).
+- Compute the snap budget first (here 2% of output range) and spend it where errors accumulate:
+  slope errors grow linearly with distance from the kink, so the far end of the domain
+  (x0 = 200) dominates; kink shifts cost `slope * shift`. Evaluate candidates on a dense grid
+  before running the checker.
+- A small output offset (here -0.155 vs. range 63) next to a flat region is usually bias
+  leakage for "0"; drop it if the budget allows.
+- Keep an exact (unsnapped but simplified) version as a reference: it confirms the structural
+  rewrite is right before any snapping, separating "wrong structure" from "too much snapping".
+
+## window/seed0 — agent_1 (m02aafb, 2026-10-27)
+
+- **Remove dead and always-on units first.** Check each ReLU's pre-activation at the corners of the input box. If it is always ≤ 0, drop the unit. If it is always ≥ 0, fold it into the linear part.
+- **For low-dimensional inputs, list the breakpoints.** With 1 or 2 inputs, sort the ReLU kinks. The function is linear between them, so solve for the zero crossings of the output on each piece. Cheaply confirm the crossings with a dense numeric scan.
+- **Kinks at nearly the same point with same-sign output weights are one feature.** Merge them, for example a steep ramp built from 2 neurons.
+- **For binary outputs, only the decision boundary matters.** Ignore slopes and magnitudes and work out where the sign changes. Then write the simplest expression with the same sign pattern.
+- **An interval `a < x < b` is `min(x - a, b - x)`.** When the interval is symmetric around 0, it is `c - abs(x)`. Typical shapes are a band (two crossings, positive inside), a threshold (one crossing) or an outside-band (negative inside).
+- **Snap boundaries to half-steps or simple fractions, and prefer symmetric forms** when the two edges are close to ± the same value. A short formula usually reflects the intended function better than the net's slightly off training-noise edges.
+- **Check after each simplification.** A first attempt that misses a region shows up straight away as confident disagreements. In this case a first guess `0.5 - x0` missed the lower edge.
+
+## xor/seed0 — agent_1 (mda10a3, 2026-10-27)
+
+- With small discrete (boolean or integer) domains, enumerate the full truth table first; the
+  decision function is usually a recognizable logic or counting rule, and that beats snapping
+  coefficients one by one.
+- A ReLU unit whose pre-activation is negative at every point of the (bounded) domain is dead;
+  remove it. Check the maximum over the box corners for linear pre-activations.
+- A ReLU unit whose pre-activation is positive on the whole domain is linear; drop the relu and fold
+  it into the affine output.
+- Near-equal weights on several inputs (3.66 and 3.75, or 3.2532 / 3.2532 / 3.2532 bias) mean the unit
+  depends only on the sum of those inputs; a bias equal to minus the weight means "fires only when all
+  are 0" (NOR-like), and a bias near 0 with positive weights means "count".
+- Rounding residues (such as 7e-6 from 3.253171 - 3.253164) are noise; treat them as exact zeros.
+- For binary or argmax outputs only the sign or ranking matters: rescale freely, and put a
+  threshold on integer-valued sums at a half step (k - 0.5) to get the most robust margin.
+- Redundant units (one unit's job already done by another) can be dropped when the truth table is
+  unchanged; for example the NOR gate here only widens the margin of a decision the count unit already
+  makes.
+
