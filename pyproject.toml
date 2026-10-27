@@ -36,3 +36,5 @@ torch = { index = "pytorch-cpu" }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["slow: runs a real PySR fit (needs `uv run --group pysr`)"]
+addopts = "-m 'not slow'"

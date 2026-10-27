@@ -123,10 +123,11 @@ def cmd_ast(args) -> int:
 
 
 def _baseline_fns() -> dict:
+    from .baselines.pysr_run import run_pysr
     from .baselines.regions import run_regions
     from .baselines.tree import run_tree
 
-    return {"tree": run_tree, "regions": run_regions}
+    return {"tree": run_tree, "regions": run_regions, "pysr": run_pysr}
 
 
 def cmd_baseline(args) -> int:
@@ -144,7 +145,7 @@ def cmd_baseline(args) -> int:
             try:
                 info = fns[name](rd)
                 v = evaluate_run(rd)["versions"].get(name)
-            except (ValueError, KeyError, OSError, ProgramError) as e:   # one bad run never stops the batch
+            except (ValueError, KeyError, OSError, ImportError, ProgramError) as e:   # one bad run never stops the batch
                 print(f"{rd.as_posix()}: {name} ERROR {type(e).__name__}: {e}", flush=True)
                 continue
             if v is None:
