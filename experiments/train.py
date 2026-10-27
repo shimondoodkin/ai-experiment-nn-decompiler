@@ -22,6 +22,9 @@ def _sample(task: Task, rng: np.random.Generator, n: int) -> np.ndarray:
 def quality(mlp: MLP, task: Task, seed: int) -> dict:
     X = _sample(task, np.random.default_rng(1000 + seed), N_QUALITY)
     y = task.target(X).astype(np.float64)
+    if task.spec.output == "argmax":
+        acc = float((np.argmax(mlp.forward(X.astype(np.float32)), axis=1) == y).mean())
+        return {"accuracy": acc, "learned": acc >= 0.95}
     out = mlp.forward(X.astype(np.float32))[:, 0].astype(np.float64)
     if task.spec.output == "binary":
         acc = float(((out > task.spec.threshold).astype(int) == y).mean())
@@ -47,13 +50,17 @@ def train(task: Task, seed: int) -> tuple[MLP, dict]:
     net = nn.Sequential(*mods)
     opt = torch.optim.Adam(net.parameters(), lr=task.lr)
     binary = task.spec.output == "binary"
-    loss_fn = nn.BCEWithLogitsLoss() if binary else nn.MSELoss()
+    argmax = task.spec.output == "argmax"
+    loss_fn = nn.CrossEntropyLoss() if argmax else nn.BCEWithLogitsLoss() if binary else nn.MSELoss()
     curve = []
     for step in range(task.steps):
         X = _sample(task, rng, BATCH)
-        y = torch.from_numpy(task.target(X).astype(np.float32))
-        out = net(torch.from_numpy(X.astype(np.float32)))[:, 0]
-        loss = loss_fn(out - task.spec.threshold if binary else out, y)
+        if argmax:
+            loss = loss_fn(net(torch.from_numpy(X.astype(np.float32))), torch.from_numpy(task.target(X)).long())
+        else:
+            y = torch.from_numpy(task.target(X).astype(np.float32))
+            out = net(torch.from_numpy(X.astype(np.float32)))[:, 0]
+            loss = loss_fn(out - task.spec.threshold if binary else out, y)
         opt.zero_grad()
         loss.backward()
         opt.step()

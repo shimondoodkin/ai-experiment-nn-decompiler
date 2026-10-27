@@ -100,10 +100,12 @@ TASKS: dict[str, Task] = {t.name: t for t in _ALL}
 
 
 def get_task(name: str) -> Task:
+    from .datasets import DATASET_TASKS
+
     try:
-        return TASKS[name]
+        return TASKS[name] if name in TASKS else DATASET_TASKS[name]
     except KeyError:
-        raise KeyError(f"unknown task {name!r}; known: {', '.join(TASKS)}") from None
+        raise KeyError(f"unknown task {name!r}; known: {', '.join([*TASKS, *DATASET_TASKS])}") from None
 
 
 def expected_program(task: Task) -> str:
