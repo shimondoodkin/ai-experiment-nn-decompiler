@@ -73,6 +73,7 @@ def _strings(obj, key: str | None = None):
 
 
 FORBIDDEN = {"io": ("oracle.bin", "_checker")}   # files an agent of that kind must not touch
+MESSAGE_TOOLS = {"SubagentHandback", "SendMessage"}   # prose to the caller ("I did not open oracle.bin"), not actions
 
 
 def audit_transcripts(paths: list[Path], blind: Path, forbidden: tuple[str, ...] = ()) -> dict:
@@ -124,7 +125,7 @@ def audit_transcripts(paths: list[Path], blind: Path, forbidden: tuple[str, ...]
             if not (isinstance(block, dict) and block.get("type") == "tool_use"):
                 continue
             for key, s in _strings(block.get("input", {})):
-                if any(f in s for f in forbidden) and s not in hits:
+                if block.get("name") not in MESSAGE_TOOLS and any(f in s for f in forbidden) and s not in hits:
                     hits.append(s)
                 toks = [s] if key in PATH_KEYS else re.split(r"[\s\"'`;|&<>()=,]+", s)
                 for tok in toks:

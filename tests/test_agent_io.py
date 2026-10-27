@@ -77,3 +77,20 @@ def test_cli_collect_reports_the_io_attempt(tmp_path, monkeypatch, capsys):
     assert main(["agent", "collect", str(b), "--transcript", str(tr)]) == 0
     out = capsys.readouterr().out
     assert "io_agent_1 PASS" in out and "agent_1 FAIL" not in out
+
+
+def test_forbidden_audit_ignores_the_final_report(tmp_path):
+    from nndc.agent.collect import audit_transcripts
+
+    b = tmp_path / "blind"
+    b.mkdir()
+    tr = tmp_path / "t.jsonl"
+    lines = [{"message": {"content": [{"type": "tool_use", "name": "SubagentHandback",
+                                       "input": {"message": "I did not open `oracle.bin` or `_checker/`."}}]}},
+             {"message": {"content": [{"type": "tool_use", "name": "Bash",
+                                       "input": {"command": "python check.py agent.py"}}]}}]
+    tr.write_text("\n".join(json.dumps(x) for x in lines) + "\n")
+    assert audit_transcripts([tr], b, ("oracle.bin", "_checker"))["forbidden_paths"] == []
+    lines.append({"message": {"content": [{"type": "tool_use", "name": "Bash", "input": {"command": "ls _checker"}}]}})
+    tr.write_text("\n".join(json.dumps(x) for x in lines) + "\n")
+    assert audit_transcripts([tr], b, ("oracle.bin", "_checker"))["forbidden_paths"] == ["ls _checker"]
