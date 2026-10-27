@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 import numpy as np
 
@@ -55,3 +56,13 @@ def test_cli_repair_baselines(tmp_path, capsys):
     rd = build_run("window", 0, tmp_path, bug=True)
     assert main(["repair", "baselines", str(rd)]) == 0
     assert "w_ft" in capsys.readouterr().out and (rd / "repair" / "w_retrain.npz").exists()
+
+
+def test_lp_repair_never_returns_a_net_that_misses_its_points():
+    # xor/seed2's net outputs ~1e-7: LP margins on that scale vanish in float32, so the result must be checked
+    from nndc.run import load_run
+    spec, mlp = load_run(Path("runs/xor/seed2"))
+    X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]], float)
+    y = np.array([0, 1, 1, 0.])
+    fixed = lp_repair(mlp, spec, X, y, 0.0)
+    assert fixed is None or (decide(spec, fixed.forward(X.astype(np.float32))) == y).all()

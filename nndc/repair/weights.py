@@ -120,4 +120,10 @@ def lp_repair(mlp: MLP, spec: Spec, X: np.ndarray, y: np.ndarray, tol: float) ->
     delta = r.x[:-1].reshape(k, m1)
     W = (mlp.weights[-1].astype(np.float64) + delta[:, :-1]).astype(np.float32)
     b = (mlp.biases[-1].astype(np.float64) + delta[:, -1]).astype(np.float32)
-    return MLP(mlp.weights[:-1] + [W], mlp.biases[:-1] + [b])
+    fixed = MLP(mlp.weights[:-1] + [W], mlp.biases[:-1] + [b])
+    # the LP is solved in float64; on a net whose scores are tiny the margins can vanish in float32
+    out = fixed.forward(np.asarray(X, dtype=np.float32)).astype(np.float64)
+    pred = out[:, 0] if spec.output == "regression" else decide(spec, out)
+    if not right(spec, pred, np.asarray(y, dtype=np.float64), tol * (1 + 1e-6) + 1e-9).all():
+        return None
+    return fixed
