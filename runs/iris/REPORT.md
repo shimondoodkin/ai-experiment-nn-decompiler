@@ -265,7 +265,9 @@ The full tables are in the "Comparison (step 4)" section of the top-level `REPOR
   - The petal-only agents instead named the duplicated flower with conflicting labels as noise and stopped at 97–98%.
   - The special-case flag misses these zone rules, because it scores each comparison alone, and each one has 8 or more supporting flowers.
 - **Prior knowledge:** one agent (iris/seed3) said it checked its rule against Iris flowers it recalled from the real dataset.
-- **Reading:** on Iris the remaining errors are class overlap, not a bug in the net. The fix experiment's clean results are on the planted-bug formula nets, where the agent recovered the true formula every time.
+- **Reading:** on Iris the remaining errors are class overlap, not a bug in the net. The fix experiment's clean results are on the planted-bug formula nets:
+  - every fix, with or without the program, was right on all held-out cases;
+  - out of range, 7 of the 8 that have an out-of-range set match the true formula (xor has none). The exception is the tax fix made from the program: it wrote the first bracket as `relu(x0)`, which is 0 below zero, where the true formula keeps `0.1 * x0`.
 
 ## Reproduce
 

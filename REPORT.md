@@ -160,7 +160,7 @@ Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactori
 
 ## Comparison (step 4)
 
-Each method's program for each formula net, checked against the net and graded against the true task. Claude (dump) is the best valid step-2 attempt; Claude (input/output only) saw 2,000 samples and a checker without the net's boundary points; PySR, tree and regions are the baselines in `docs/design/2026-10-27-step4-comparison-design.md`. Audit-flagged agent runs are excluded.
+Each method's program for each formula net, checked against the net and graded against the true task. Claude (dump) is the best step-2 attempt; Claude (input/output only) saw 2,000 samples and a checker without the net's boundary points; PySR, tree and regions are the baselines in `docs/design/2026-10-27-step4-comparison-design.md`. An agent run is excluded only for touching a forbidden file (`oracle.bin`, `_checker/`); outside-path flags are kept and counted under each table.
 
 ### Held-out nets (seed 2)
 
@@ -320,51 +320,59 @@ Each method's program for each formula net, checked against the net and graded a
 
 ### The checker loop
 
-Calls to `check.py` per agent run (`*_checks.log`).
+Calls to `check.py` per agent run (`*_checks.log`), on the 29 formula and 12 Iris nets.
 
-| method | nets | runs | median checks | max checks | runs with a FAIL | started with FAIL | max FAILs before the first PASS |
+| method | nets | runs | median checks | max checks | runs with a FAIL | first check not a PASS | max FAIL/ERROR before the first PASS |
 |---|---|---|---|---|---|---|---|
-| Claude (dump) | formula | 34 | 1 | 4 | 2 | 2 | 2 |
+| Claude (dump) | formula | 29 | 1 | 3 | 0 | 0 | 0 |
 | Claude (dump) | Iris | 12 | 4 | 16 | 7 | 5 | 7 |
 | Claude (input/output only) | formula | 29 | 1 | 5 | 0 | 0 | 0 |
-| Claude (input/output only) | Iris | 12 | 14 | 23 | 10 | 3 | 1 |
+| Claude (input/output only) | Iris | 12 | 14 | 23 | 10 | 4 | 1 |
 
 ### Fix and reinsert (experiment R)
 
-The net is wrong on the task; each arm fixes it from the repair set and is judged on held-out cases. Program arms are compiled back into a net (reinsertion) and that net is checked against the program.
+The net is wrong on the task; each arm fixes it from the repair set and is judged on held-out cases. Program arms are compiled back into a net (reinsertion); the last column counts nets whose rebuilt net decides like the program on every repair and held-out case. Box mismatch is the share of uniform inputs where they differ: only inside the narrow ramps that stand in for jumps.
 
 **planted bug (P1)**, medians over nets
 
-| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion PASS |
+| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion matches the program on task data |
 |---|---|---|---|---|---|---|---|---|---|
 | Claude fix (with program) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 1.00 | 13 | 0 | 5/5 |
-| Claude fix (cases only) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 1.00 | 12 | 1 | 5/5 |
-| tree on cases | 5 | 1.00 | 0.92 | 0.00 | 1.00 | 0.31 | 4090 | 3 | 3/5 |
+| Claude fix (cases only) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 1.00 | 12 | 0 | 5/5 |
+| tree on cases | 5 | 1.00 | 0.92 | 0.00 | 1.00 | 0.31 | 4090 | 1 | 3/5 (box mismatch ≤ 0.005%) |
 | fine-tune | 5 | 0.75 | 0.77 | 0.00 | 0.94 | 0.47 | – | 0 | – |
 | fine-tune + anchors | 5 | 0.74 | 0.74 | 0.00 | 0.94 | 0.54 | – | 0 | – |
-| last-layer LP | 5 | 1.00 | 0.90 | 0.00 | 1.00 | 1.00 | – | 0 | – | (3 infeasible/error)
+| last-layer LP | 5 (3 infeasible) | 1.00 | 0.90 | 0.00 | 1.00 | 1.00 | – | 0 | – |
 | retrain (clean labels) | 5 | 1.00 | 1.00 | 0.00 | 1.00 | 0.99 | – | 0 | – |
+
+- absdiff/seed0: bug learned on 67% of the defect region, 1010 failing repair cases
+- median3/seed0: bug learned on 97% of the defect region, 402 failing repair cases
+- tax/seed0: bug learned on 0% of the defect region, 989 failing repair cases (the net did not learn the planted bug; its failures are ordinary training error)
+- window/seed0: bug learned on 2% of the defect region, 3 failing repair cases (the net did not learn the planted bug; its failures are ordinary training error)
+- xor/seed0: bug learned on 100% of the defect region, 1 failing repair cases
 
 **natural bug (P2)**, medians over nets
 
-| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion PASS |
+| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion matches the program on task data |
 |---|---|---|---|---|---|---|---|---|---|
 | Claude fix (with program) | 1 | 1.00 | n/a | 0.00 | 1.00 | n/a | 12 | 0 | 1/1 |
 | Claude fix (cases only) | 1 | 1.00 | n/a | 0.00 | 1.00 | n/a | 7 | 0 | 1/1 |
-| tree on cases | 3 | 1.00 | n/a | 0.00 | 1.00 | 0.07 | 4090 | 2 | 3/3 |
-| fine-tune | 3 | 0.50 | n/a | 0.00 | 1.00 | 0.33 | – | 0 | – |
-| fine-tune + anchors | 3 | 0.00 | n/a | 0.00 | 1.00 | 0.33 | – | 0 | – |
-| last-layer LP | 3 | n/a | n/a | 0.00 | 1.00 | 0.32 | – | 0 | – | (1 infeasible/error)
+| tree on cases | 1 | 1.00 | n/a | 0.00 | 1.00 | n/a | 26 | 0 | 1/1 |
+| fine-tune | 1 | 0.50 | n/a | 0.50 | 0.50 | n/a | – | 0 | – |
+| fine-tune + anchors | 1 | 0.00 | n/a | 0.00 | 0.50 | n/a | – | 0 | – |
+| last-layer LP | 1 (1 infeasible) | n/a | n/a | n/a | n/a | n/a | – | 0 | – |
 
 **Iris (P3)**, medians over nets
 
-| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion PASS |
+| arm | nets | efficacy (repair set) | generalization (held-out failures fixed) | drawdown (held-out rights broken) | held-out accuracy | out-of-range accuracy | median nodes | flagged added tests | reinsertion matches the program on task data |
 |---|---|---|---|---|---|---|---|---|---|
 | Claude fix (with program) | 12 | 0.83 | 0.00 | 0.00 | 0.98 | n/a | 60 | 0 | 12/12 |
 | tree on cases | 12 | 0.63 | 0.00 | 0.01 | 0.98 | n/a | 26 | 0 | 12/12 |
 | fine-tune | 12 | 0.42 | 0.00 | 0.00 | 0.99 | n/a | – | 0 | – |
 | fine-tune + anchors | 12 | 0.00 | 0.00 | 0.00 | 0.99 | n/a | – | 0 | – |
-| last-layer LP | 12 | n/a | n/a | n/a | n/a | n/a | – | 0 | – | (12 infeasible/error)
+| last-layer LP | 12 (12 infeasible) | n/a | n/a | n/a | n/a | n/a | – | 0 | – |
+
+Left out, because the net had no failing repair cases at the pre-set tolerance (nothing to fix; no agent was run): tax/seed0, tax/seed1.
 
 **Iris, repeated 2-fold splits of all 150 flowers** (non-agent arms; one flower is 2 points of held-out accuracy on a single split)
 

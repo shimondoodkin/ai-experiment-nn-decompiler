@@ -109,12 +109,12 @@
       {
         "test": "x1 <= 0.5",
         "support": 2,
-        "flagged": true
+        "flagged": false
       },
       {
         "test": "x0 <= 0.5",
         "support": 2,
-        "flagged": true
+        "flagged": false
       }
     ],
     "error": null,
@@ -125,7 +125,9 @@
       "hidden": [
         4,
         4
-      ]
+      ],
+      "task_match": 1.0,
+      "box_mismatch": 0.0
     }
   },
   "fix_1": {
@@ -154,7 +156,9 @@
       "ramps": 0,
       "hidden": [
         2
-      ]
+      ],
+      "task_match": 1.0,
+      "box_mismatch": 0.0
     }
   },
   "fixio_1": {
@@ -179,7 +183,7 @@
       {
         "test": "x0 != x1",
         "support": 2,
-        "flagged": true
+        "flagged": false
       }
     ],
     "error": null,
@@ -189,7 +193,9 @@
       "ramps": 0,
       "hidden": [
         2
-      ]
+      ],
+      "task_match": 1.0,
+      "box_mismatch": 0.0
     }
   }
 }
