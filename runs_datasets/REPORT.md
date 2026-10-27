@@ -5,7 +5,12 @@ This is a side run on a real dataset instead of a known formula. Small ReLU nets
 - **Claude agents:** all 6 nets of seeds 0–2 (2 tasks × 3 seeds) came down to an if-chain of 2–3 linear tests in 32–76 nodes, against 364–484 for the dump. All 6 pass the checker.
 - **`ast` tool, v1:** a decision-list route (P10) was added after seed 0, distilled from the two seed-0 agents' notes and frozen before seeds 1–2. It reproduced both seed-0 programs in-sample. On the 4 held-out nets it produced a passing list once (iris seed 2). On the other three it came within 6, 54 and 591 confident disagreements but did not pass.
 - **Why v1 missed:** the class boundaries on those nets have a kink, or sit near a second activation pattern. The agents wrote a kink as two half-planes joined by `or`, or placed the threshold in the middle of the range the confident points allow. v1 did neither; it folded one activation pattern into one straight line.
-- **`ast` tool, v2:** it adds both agent moves: two half-planes joined by `or`/`and`, and thresholds centred in the confident range or snapped to the simplest value inside it. Seeds 0–2 are in-sample for v2, and it passes on all 6, including the 3 that v1 missed. It was frozen before a fresh held-out set (seeds 3–5) was trained. **On those 6 new nets it produced a passing 2-test decision list every time (6/6)**, in 29–64 nodes against 368–484 for the dump. All 6 also pass the checker with 4 other sampling seeds. No Claude agents ran on seeds 3–5.
+- **`ast` tool, v2:** it adds both agent moves: two half-planes joined by `or`/`and`, and thresholds centred in the confident range or snapped to the simplest value inside it. Seeds 0–2 are in-sample for v2, and it passes on all 6, including the 3 that v1 missed. It was frozen before a fresh held-out set (seeds 3–5) was trained. **On those 6 new nets it produced a passing 2-test decision list every time (6/6)**, in 29–64 nodes against 368–484 for the dump. All 6 also pass the checker with 4 other sampling seeds.
+- **Tool v2 against Claude on seeds 3–5:** blind Claude agents also passed all 6 nets.
+  - **Size:** the tool's programs are the same size or smaller on 5 of 6 (29–64 nodes, against 29–115 for Claude).
+  - **Robustness:** the tool passes the extra checker seeds on all 6. One Claude program fails one point at one extra seed, as its agent noted.
+  - **Readability:** Claude's constants are rounder. The tool kept long decimals on 2 of 6 nets.
+  - **Time:** about 7–12 seconds per net for the tool, against 2–10 minutes for an agent.
 - **Not the textbook rule:** the recovered boundaries are slanted lines, not the textbook petal thresholds. The textbook rule agrees with the nets on 95–97% of the flowers but on only 58–70% of the full input box, because the nets extend their boundaries through regions where there are no flowers.
 
 ## Setup
@@ -177,9 +182,40 @@ What the second held-out set does and does not show:
 - **The improvement came from centring.** Every held-out winner is a single line per boundary with a centred or rounded threshold. No held-out net needed the `or`/`and` test, so the kink handling is tested only in-sample (petal seed 2) and on a synthetic test net.
 - **Rounding is uneven.** iris seed 3 kept its long fold constants: it passes exact, and its rounded variants failed. Petal seed 3 and iris seed 5's first test kept unrounded or lightly rounded coefficients. The agents' programs are rounder.
 - **Programs are sometimes right on more flowers than the net**: 96.7% against 95.3% on petal seed 3, and 96.0% against 95.3% on petal seed 4. They agree with the net wherever it is confident; the difference is in the unsure zone.
-- **No agent comparison on this set.** Claude agents were not run on seeds 3–5, so 6/6 is the tool against the checker, not against Claude.
+### Tool v2 against blind Claude agents on seeds 3–5
 
-**Remaining idea:** search simple coefficients jointly with the threshold range, as the agents' grid search does, so that more programs end up with round constants.
+After the tool run, one fresh blind subagent per net refactored the same 6 nets, one attempt each. The agents never saw the tool's output.
+
+Column notes:
+- **Verdict:** "ex" is PASS exact, "sn" is PASS snap.
+- **Long consts:** constants with more than 4 significant digits.
+- **Extra seeds:** confident disagreements when the checker is rerun with sampling seeds 2/3/4/5. Seed 0 is the checker's default and seed 1 is the tool's own sample, so neither is independent.
+
+| Run | Tool: verdict, nodes | Tool: long consts | Tool: extra seeds | Claude: verdict, nodes | Claude: long consts | Claude: extra seeds | Flower acc. (tool / Claude) | Claude time |
+|---|---|---|---|---|---|---|---|---|
+| iris seed3 | ex, **62** | 8 | 0/0/0/0 | sn, 72 | 0 | 0/0/0/0 | 98.0% / 98.7% | 3.3 min |
+| iris seed4 | sn, **64** | 0 | 0/0/0/0 | sn, 72 | 0 | **1**/0/0/0 | 98.7% / 98.7% | 9.9 min |
+| iris seed5 | sn, **62** | 0 | 0/0/0/0 | sn, 115 | 0 | 0/0/0/0 | 98.0% / 98.0% | 8.8 min |
+| iris_petal seed3 | sn, **32** | 4 | 0/0/0/0 | sn, 56 | 0 | 0/0/0/0 | 96.7% / 95.3% | 2.6 min |
+| iris_petal seed4 | sn, 29 | 0 | 0/0/0/0 | sn, 29 | 0 | 0/0/0/0 | 96.0% / 96.7% | 1.7 min |
+| iris_petal seed5 | sn, 32 | 0 | 0/0/0/0 | sn, **29** | 0 | 0/0/0/0 | 95.3% / 95.3% | 2.3 min |
+
+The tool took 7–12 seconds per net on this laptop.
+
+**Reading:**
+- **Both pass everything.** Both solved 6/6 against the checker's default seed. This is the first held-out set where the tool matches Claude's success rate; on seeds 1–2, v1 managed 1/4.
+- **The tool is smaller or equal on 5 of 6.**
+  - It sticks to one straight line per boundary when a centred threshold is enough.
+  - The agents sometimes model a small bend that the unsure zone already absorbs:
+    - petal seed3: `x0 + 1.1*x1 > 6.8 or x0 + 0.7*x1 > 6.6`;
+    - iris seed5: an `and` of two lines for class 2, plus an extra `0.05*x0` term.
+  - These additions are not wrong. The iris seed5 agent kept its extra term because the simpler test failed one of its own pooled seeds. But they cost nodes.
+- **Claude's constants are always round.** The tool kept long fold constants on iris seed3 (8 of them, but PASS exact) and partly on petal seed3. The agents searched coefficients and threshold together, for example the iris seed4 agent used a linear program to find each coefficient's allowed range. That gives programs like `8*x2 + 14*x3 - 3*x0 - 6*x1 > 27`. v2 rounds coefficients on a fixed ladder first and only then fits the threshold, so when rounding fails it falls back to raw constants.
+- **Robustness.** The iris seed4 Claude program fails one far-corner point at checker seed 2. Its agent reported this itself: its threshold window was only 26.7–27.1, and it kept 27. None of the tool's held-out programs fail an extra seed. Centring the threshold on its own independent sample seems to buy some margin.
+- **Same structure in both.** Every pair has the same class order and the same two boundaries, and their slopes are close. On petal seed4, for example, the tool has `x0 + x1 < 3.25; x0 + 1.125*x1 < 6.8` and Claude has `x0 + x1 < 3.3; x0 + 1.1*x1 < 6.75`.
+- **Audit.** No agent read outside its blind folder. The flags are false positives (`/len`, `/x2coef`, `/np.linalg.norm`, `/nrm`) and one agent's `../spec.json`-style paths from a `work/` subfolder inside its own blind folder.
+
+**Remaining idea:** search simple coefficients jointly with the threshold range, as the agents' grid searches and linear program do, so that more programs end up with round constants. That is the one area where Claude still clearly leads.
 
 ## Comparison with the textbook rule
 

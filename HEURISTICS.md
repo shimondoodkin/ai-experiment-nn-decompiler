@@ -474,3 +474,115 @@ Appended by `nndc agent collect`, one section per refactoring attempt.
 - Verify on a larger sample than the checker uses and with other random seeds, since the
   confident gap for a linear cut can be narrow.
 
+## iris_petal/seed4 — agent_1 (m586bdd, 2026-10-27)
+
+- For low-dimensional argmax nets, map the decision regions on a grid first; the region picture
+  tells you the shape of the program (decision list, linear cuts, kinks) far faster than the weights.
+- Locate each boundary by bisection at many points along the other input; fit a line, check
+  residuals for kinks (none here), then snap slope and intercept.
+- Ordered classes in bands -> a chain of `if score < t: return k`, with the last class as the default.
+- Try the simplest slope (1) first; if check.py reports confident disagreements clustered at one end
+  of the boundary, the slope is wrong, so move to the next simple fraction (here 1.1) rather than
+  shifting the threshold.
+- Among thresholds that pass, prefer the one closest to the fitted boundary (fewer unsure-zone
+  disagreements) while keeping it a round/half-step value.
+- Hidden neurons with tiny output weights or that are inactive over the input box (here several
+  all-negative-weight neurons with negative bias) are dead code; a region-level rewrite removes them
+  all at once.
+
+## iris_petal/seed5 — agent_1 (m68f02a, 2026-10-27)
+
+- For low-dimensional argmax nets, map the decision regions first (coarse grid print) and then
+  locate each boundary precisely by bisection along one input; this is far cheaper than algebra on
+  hidden units, most of which only shape the logits away from the boundary.
+- Measure the width of the "unsure" band (where top-two logit gap < the checker margin) along each
+  boundary; it tells you how much slope/threshold error a snapped line can afford.
+- For a nearly straight boundary, snap the slope to a simple value (1, 7/4, 2, ...) and pick the
+  threshold as the midpoint of the range that a·x0 + b·x1 takes along the true boundary; accept the
+  snap if half that range is below the band half-width, otherwise try the next simple slope.
+- If two classes never share a boundary, a short if-chain of linear tests reproduces argmax.
+- Recognising the dataset (here iris petal measurements) helps name variables and sanity-check the
+  class order, but the network's extrapolation outside the training data still has to be matched,
+  because the checker samples the whole input box.
+
+## iris_petal/seed3 — agent_1 (mf6cdb2, 2026-10-27)
+
+- For low-dimensional argmax nets, read the decision boundaries rather than the weights.
+  Scan a grid, bisect each row, and fit `x0 + k*x1 = c` per segment (look at how x0 + k*x1
+  drifts to find k).
+- Watch for slope changes along a boundary. A small change can be merged into one line. A
+  large one (here 0.7 vs 1.1) needs two pieces, joined with `or` when the region is convex
+  toward it (a union) and with `and` when it is concave (an intersection). Check which by
+  comparing each piece's prediction against the measured boundary at both ends.
+- Order the tests by class band: return the extreme classes first and fall through to the
+  middle class.
+- Try coarser snaps one at a time with the checker. Keep the simplest one that has 0
+  disagreements where the net is confident. The size of the unsure zone (5% of the 95th
+  percentile logit gap) sets how much a boundary may move.
+- Input ranges often identify a known dataset (here iris petals), which gives meaningful
+  variable names.
+
+## iris/seed3 — agent_1 (m10fc6a, 2026-10-27)
+
+- Compute each hidden unit's preactivation range over the input box (random samples or interval
+  arithmetic). Units that are never positive are dead and can be deleted; units that are never negative
+  are linear and can be folded into the next layer.
+- For argmax outputs only differences between scores matter; work with pairwise differences
+  o_a - o_b rather than with the raw scores.
+- Tabulate ReLU on/off patterns among confidently classified points of each class. If each pairwise
+  boundary lives mostly inside one pattern, the net is linear there and the boundary is one linear
+  inequality; a decision list of those inequalities often reproduces the whole classifier.
+- Normalise each linear test so its dominant coefficient is 1 before snapping; then snap the rest one
+  at a time and re-check, because a small coefficient times a wide input range (0.1 * 3.6) can still
+  shift the boundary more than the tolerance.
+- Measure correctness only on confident points (margin above the checker's unsure-zone threshold),
+  and keep the threshold close to the fitted value; adjust it only together with the coefficients.
+- Recognise known datasets from the input bounds (here iris) to name variables and classes.
+
+## iris/seed5 — agent_1 (m6ca160, 2026-10-27)
+
+- First measure how often each hidden unit is active over the real input box. A unit that is
+  never on is dead and can be deleted. A unit that is (almost) always on is linear, so drop its
+  ReLU and fold it into the next layer.
+- Do ablations against the checker's own metric: set a unit to zero or to its mean and count
+  *confident* disagreements. Raw weight size is misleading, so use |w_out| x std(activation).
+- For argmax outputs, work with pairwise logit differences, not the raw logits. Biases and shared
+  terms cancel there, and each difference is a single linear form inside every ReLU pattern.
+- Find the dominant activation pattern and fit a decision list from its linear forms. Then add
+  extra tests only where the residual errors sit.
+- The sign of a difference's weight on a ReLU tells you the shape. A negative weight on relu(z)
+  gives `min(form_on, form_off)`, which is an AND of two linear tests. A positive weight gives
+  `max`, which is an OR. This turns a kink into a clean boolean condition.
+- Check which pairwise tests are actually needed (here o0 vs o2 never mattered), because some
+  classes never touch each other.
+- Normalize each linear test so one dominant input has coefficient 1 before snapping. Then
+  coefficients and bias are comparable, and simple fractions show up.
+- Snap with a search ordered by simplicity and require zero confident errors. Then scan the bias
+  window and pick a value near its middle, not at its edge.
+- Validate on several resamples of the checker's input set. A snap that passes one seed with a
+  very narrow bias window is fragile. A slightly less pretty coefficient that widens the window
+  is worth keeping.
+- Use input ranges to recognise well-known datasets (here iris) and name variables, but derive
+  the rules from the weights, not from domain folklore. The checker samples the whole box,
+  including off-distribution combinations.
+
+## iris/seed4 — agent_1 (m579e70, 2026-10-27)
+
+- Measure how often each hidden unit is active over the whole input box. Units that are never
+  active can be deleted. Units that are always active can be treated as linear, and nets with few
+  hidden units then often collapse to a linear map.
+- For argmax outputs, subtract one reference class score so that k scores become k-1 differences.
+  If the regions where several differences are positive are empty, write the argmax as a chain of
+  independent `if score > 0` tests, each of which can be rescaled freely.
+- Snap in the right space. Normalise a hyperplane by its largest coefficient, use an LP (with the
+  margin to the confident points as the objective) to get the feasible range of every coefficient,
+  then enumerate small-integer or simple-fraction vectors inside that box. That is much more
+  reliable than rounding the fitted coefficients one at a time.
+- Restrict the search to points near the fitted boundary and process candidates in chunks. A brute
+  force over every point times every candidate is too slow and too memory-hungry.
+- Coefficients with a feasible range that straddles 0 (here sepal length for setosa) should be
+  dropped.
+- The checker samples the whole box uniformly, including corners far from the training data, where
+  the "linear" picture can bend. Check a snapped rule against several sampling seeds to see how
+  much slack it really has.
+
