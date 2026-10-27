@@ -160,6 +160,31 @@ def cmd_baseline(args) -> int:
     return 0
 
 
+def cmd_repair(args) -> int:
+    from .repair.run import evaluate_repair, run_repair_baselines
+    from .run import all_runs
+
+    runs = all_runs(Path(args.root)) if args.all else [Path(r) for r in args.runs]
+    if not runs:
+        print("nothing to do: give run folders or --all")
+        return 2
+    fn = run_repair_baselines if args.action == "baselines" else evaluate_repair
+    for rd in runs:
+        try:
+            res = fn(rd)
+        except (ValueError, KeyError, OSError) as e:   # one bad run never stops the batch
+            print(f"{rd.as_posix()}: ERROR {type(e).__name__}: {e}", flush=True)
+            continue
+        parts = []
+        for arm, r in res.items():
+            h = r.get("heldout") or {}
+            g = h.get("generalization")
+            parts.append(f"{arm} " + (r["error"] if r.get("error") else
+                                      f"gen={'n/a' if g is None else f'{g:.2f}'} draw={h.get('drawdown')}"))
+        print(f"{rd.as_posix()}: " + "; ".join(parts), flush=True)
+    return 0
+
+
 def cmd_report(args) -> int:
     from .report import build_report
 
@@ -229,6 +254,13 @@ def main(argv: list[str] | None = None) -> int:
     bl.add_argument("--all", action="store_true")
     bl.add_argument("--root", default=str(RUNS))
     bl.set_defaults(func=cmd_baseline)
+
+    rr = sub.add_parser("repair", help="fix experiment: weight-space arms and tree (baselines), or re-evaluate all arms")
+    rr.add_argument("action", choices=["baselines", "evaluate"])
+    rr.add_argument("runs", nargs="*")
+    rr.add_argument("--all", action="store_true")
+    rr.add_argument("--root", default=str(RUNS))
+    rr.set_defaults(func=cmd_repair)
 
     rp = sub.add_parser("report", help="write REPORT.md from all runs")
     rp.add_argument("--root", default=str(RUNS))
