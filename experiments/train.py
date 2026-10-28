@@ -1,4 +1,4 @@
-"""Train a small ReLU MLP on a task, deterministically on CPU."""
+"""Train a small MLP (ReLU by default) on a task, deterministically on CPU."""
 from __future__ import annotations
 
 from typing import Callable
@@ -13,6 +13,7 @@ from .tasks import Task, uniform_sample
 
 BATCH = 512
 N_QUALITY = 20_000
+_ACT_MODULES = {"relu": nn.ReLU, "sigmoid": nn.Sigmoid, "tanh": nn.Tanh}
 
 
 def _sample(task: Task, rng: np.random.Generator, n: int) -> np.ndarray:
@@ -37,10 +38,12 @@ def quality(mlp: MLP, task: Task, seed: int, target: Callable | None = None) -> 
     return {"rmse": mse ** 0.5, "r2": r2, "learned": r2 >= 0.99}
 
 
-def train(task: Task, seed: int, target: Callable | None = None) -> tuple[MLP, dict]:
+def train(task: Task, seed: int, target: Callable | None = None, act: str = "relu") -> tuple[MLP, dict]:
     """Train on task.target, or on `target` (a planted-bug version of it, see experiments/defects.py)."""
     if task.hidden is None:
         raise ValueError(f"task {task.name} is hand-only")
+    if act not in _ACT_MODULES:
+        raise ValueError(f"unknown activation {act!r} (expected one of {tuple(_ACT_MODULES)})")
     torch.manual_seed(seed)
     torch.set_num_threads(1)
     rng = np.random.default_rng(seed)
@@ -49,7 +52,7 @@ def train(task: Task, seed: int, target: Callable | None = None) -> tuple[MLP, d
     for i, (a, b) in enumerate(zip(sizes, sizes[1:])):
         mods.append(nn.Linear(a, b))
         if i < len(sizes) - 2:
-            mods.append(nn.ReLU())
+            mods.append(_ACT_MODULES[act]())
     net = nn.Sequential(*mods)
     opt = torch.optim.Adam(net.parameters(), lr=task.lr)
     binary = task.spec.output == "binary"
@@ -75,4 +78,6 @@ def train(task: Task, seed: int, target: Callable | None = None) -> tuple[MLP, d
     log = {"seed": seed, "steps": task.steps, "lr": task.lr, "hidden": task.hidden, "batch": BATCH,
            "loss_curve": curve, "quality": {k: v for k, v in q.items() if k != "learned"},
            "learned": q["learned"]}
+    if act != "relu":
+        log["act"] = act
     return mlp, log

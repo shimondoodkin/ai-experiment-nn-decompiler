@@ -41,3 +41,11 @@ def test_training_smoke():
     assert mlp.n_inputs == 2 and "quality" in log and "learned" in log
     mlp2, _ = train(t, seed=0)
     assert np.array_equal(mlp.weights[0], mlp2.weights[0])   # deterministic
+
+
+def test_train_sigmoid_window():
+    t = get_task("window")
+    mlp, log = train(t, seed=0, act="sigmoid")
+    assert mlp.acts == ["sigmoid"]
+    assert log["act"] == "sigmoid"
+    assert log["quality"]["accuracy"] >= 0.98
