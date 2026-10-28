@@ -1,15 +1,16 @@
 """Sigmoid/tanh units: the ReLU-only heuristics leave them alone, and the tool still finds a passing program."""
 import numpy as np
+import pytest
 
 from nndc.ast_tool import refactor
 from nndc.check import check_program
 from nndc.dump import dump_program
 from nndc.heuristics.bounds import prune_dead_and_linear
-from nndc.heuristics.decision_list import decision_list
+from nndc.heuristics.decision_list import _patterns, decision_list, fold
 from nndc.heuristics.motifs import as_relu_sum
 from nndc.model import MLP
 from nndc.spec import InputSpec, Spec
-from nndc.symnet import evaluate, from_dump
+from nndc.symnet import Affine, SymNet, Unit, evaluate, from_dump
 
 
 def _net(sizes, acts, seed=3):
@@ -32,13 +33,31 @@ def test_prune_keeps_sigmoid_units():
     np.testing.assert_array_equal(evaluate(pruned, X), evaluate(net, X))
 
 
-def test_relu_only_routes_skip_sigmoid():
-    mlp = _net([2, 4, 1], ["sigmoid"])
+@pytest.mark.parametrize("act", ["sigmoid", "tanh"])
+def test_relu_only_routes_skip_sigmoid(act):
+    mlp = _net([2, 4, 1], [act])
     spec = _spec(2, "regression")
     assert as_relu_sum(from_dump(dump_program(mlp, spec), spec)) is None
-    mlp = _net([2, 4, 3], ["sigmoid"])
+    mlp = _net([2, 4, 3], [act])
     spec = _spec(2, "argmax", 3)
     assert decision_list(from_dump(dump_program(mlp, spec), spec), spec, mlp) is None
+
+
+def test_relu_only_routes_fail_closed_on_unknown_act():
+    """An act that is neither relu nor linear (a future "step") is refused, not read as relu or linear."""
+    step = SymNet(["x0", "x1"], [Unit("h1_0", 1, Affine({"x0": 1.0, "x1": -1.0}, 0.5), "step")],
+                  [Affine({"h1_0": 2.0}, 0.0)], "regression")
+    assert as_relu_sum(step) is None
+    mlp = _net([2, 4, 3], ["relu"])
+    spec = _spec(2, "argmax", 3)
+    argmax_step = SymNet(["x0", "x1"], [Unit("h1_0", 1, Affine({"x0": 1.0}, 0.0), "step")],
+                         [Affine({"h1_0": 1.0}, 0.0), Affine({"x1": 1.0}, 0.0), Affine({}, 0.0)], "argmax")
+    assert decision_list(argmax_step, spec, mlp) is None
+    X = np.zeros((1, 2))
+    with pytest.raises(ValueError, match="step"):
+        _patterns(argmax_step, X)
+    with pytest.raises(ValueError, match="step"):
+        fold(argmax_step, {"h1_0": True}, Affine({"h1_0": 1.0}, 0.0))
 
 
 def test_refactor_sigmoid_net_passes():

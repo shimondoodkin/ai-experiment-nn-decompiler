@@ -43,6 +43,11 @@ SAMPLE_SEED = 1            # the tool's own sample; the checker uses seed 0
 SNAP_LADDER = [(0.05, 0.01), (0.02, 0.005), (0.01, 0.0025)]   # (coefficient, threshold) relative tolerances
 
 
+def _require_relu_or_linear(u) -> None:
+    if u.act not in ("relu", "linear"):
+        raise ValueError(f"decision list: unit {u.name} has activation {u.act!r}; only relu and linear are supported")
+
+
 def fold(net: SymNet, on: dict[str, bool], a: Affine) -> Affine:
     """Affine form of `a` over the inputs inside one activation pattern (relu = identity or 0)."""
     for u in reversed(net.units):
@@ -50,6 +55,7 @@ def fold(net: SymNet, on: dict[str, bool], a: Affine) -> Affine:
         if c is None:
             continue
         rest = Affine({v: k for v, k in a.coef.items() if v != u.name}, a.const)
+        _require_relu_or_linear(u)
         a = rest.plus(u.pre.scaled(c)) if (u.act == "linear" or on[u.name]) else rest
     return a
 
@@ -58,6 +64,7 @@ def _patterns(net: SymNet, X: np.ndarray) -> tuple[list[str], np.ndarray]:
     env = {n: X[:, i] for i, n in enumerate(net.inputs)}
     names, cols = [], []
     for u in net.units:
+        _require_relu_or_linear(u)
         z = u.pre.eval(env)
         env[u.name] = np.maximum(z, 0.0) if u.act == "relu" else z
         if u.act == "relu":
@@ -232,7 +239,7 @@ def decision_list(net: SymNet, spec: Spec, mlp: MLP) -> tuple[list[tuple[str, st
     """
     if spec.output != "argmax":
         return None
-    if any(u.act in ("sigmoid", "tanh") for u in net.units):   # folds and patterns are ReLU-only
+    if any(u.act not in ("relu", "linear") for u in net.units):   # folds and patterns are ReLU-only; fail closed
         return None
     X, _ = build_input_set(mlp, spec, seed=SAMPLE_SEED)
     y, score = net_output(mlp, spec, X)

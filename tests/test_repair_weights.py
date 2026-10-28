@@ -2,8 +2,10 @@ import json
 from pathlib import Path
 
 import numpy as np
+import pytest
 
 from nndc.cli import main
+from nndc.model import MLP
 from nndc.repair.metrics import decide
 from nndc.repair.run import ARMS_W, evaluate_repair, faithful_program, run_repair_baselines
 from nndc.repair.weights import _hidden, finetune, lp_repair
@@ -99,3 +101,28 @@ def test_hidden_matches_old_relu():
         _hidden(mlp, X), np.maximum(mlp.preactivations(X)[-2].astype(np.float64), 0.0))
     np.testing.assert_array_equal(
         mlp.hidden(X), np.maximum(mlp.preactivations(X)[-2].astype(np.float64), 0.0))
+
+
+def _mlp_with_acts(acts):
+    rng = np.random.default_rng(0)
+    sizes = [2] + [3] * len(acts) + [1]
+    return MLP([rng.normal(size=(o, i)).astype(np.float32) for i, o in zip(sizes, sizes[1:])],
+               [rng.normal(size=o).astype(np.float32) for o in sizes[1:]], acts)
+
+
+def test_retrain_arm_keeps_the_nets_activation(tmp_path, monkeypatch):
+    import experiments.train as train_mod
+    from nndc.repair.run import _retrain_clean
+
+    seen = []
+    monkeypatch.setattr(train_mod, "train", lambda task, seed, target=None, act="relu": seen.append((task.name, seed, act)) or ("net", {}))
+    rd = tmp_path / "xor" / "seed3"
+    rd.mkdir(parents=True)
+    from experiments.tasks import get_task
+    get_task("xor").spec.save(rd / "spec.json")
+    assert _retrain_clean(rd, _mlp_with_acts(["sigmoid"])) == "net"
+    assert _retrain_clean(rd, _mlp_with_acts(["tanh", "tanh"])) == "net"
+    assert _retrain_clean(rd, _mlp_with_acts([])) == "net"
+    assert [a for _, _, a in seen] == ["sigmoid", "tanh", "relu"] and {s for _, s, _ in seen} == {3}
+    with pytest.raises(ValueError, match="one activation"):
+        _retrain_clean(rd, _mlp_with_acts(["relu", "sigmoid"]))

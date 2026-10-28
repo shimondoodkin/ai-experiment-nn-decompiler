@@ -109,6 +109,19 @@ def _cv(rd: Path, spec: Spec, mlp: MLP, data: RepairData) -> dict:
     return {name: {k: [float(np.mean(v)), float(np.std(v))] for k, v in d.items()} for name, d in out.items()}
 
 
+def _retrain_clean(rd: Path, mlp: MLP) -> MLP:
+    """Retrain from scratch on clean labels, with the activation of the net being repaired."""
+    from experiments.tasks import get_task
+    from experiments.train import train
+
+    acts = set(mlp.acts)
+    if len(acts) > 1:
+        raise ValueError(f"retrain needs one activation for all hidden layers, but the net has {mlp.acts}")
+    net, _ = train(get_task(Spec.load(rd / "spec.json").task), int(rd.name.removeprefix("seed")),
+                   act=acts.pop() if acts else "relu")
+    return net
+
+
 def run_repair_baselines(rd: Path) -> dict:
     rd = Path(rd)
     spec, mlp = _blind(rd)
@@ -118,10 +131,7 @@ def run_repair_baselines(rd: Path) -> dict:
     t0 = time.perf_counter()
     arms = _train_arms(rd, spec, mlp, data, data.X_repair, data.y_repair)
     if (rd / "defect.json").exists():
-        from experiments.tasks import get_task
-        from experiments.train import train
-
-        arms["w_retrain"], _ = train(get_task(Spec.load(rd / "spec.json").task), int(rd.name.removeprefix("seed")))
+        arms["w_retrain"] = _retrain_clean(rd, mlp)
     info = {"seconds": round(time.perf_counter() - t0, 2), "infeasible": []}
     for name, arm in arms.items():
         if arm is None:

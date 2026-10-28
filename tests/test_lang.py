@@ -105,3 +105,11 @@ def test_sigmoid_no_overflow():
     with np.errstate(over="raise", invalid="raise", divide="raise"):   # under is allowed: exp(-1e4) underflows
         got = _sigmoid(x)
     np.testing.assert_allclose(got, [0.0, 1 / (1 + np.e), 0.5, 1 / (1 + np.exp(-1.0)), 1.0], atol=1e-15)
+
+
+def test_evaluator_sigmoid_goes_through_the_stable_function(monkeypatch):
+    # evaluate() runs under np.errstate(all="ignore"), so an overflow in a naive formula would be silent:
+    # check instead that the evaluator calls the stable _sigmoid (test_sigmoid_no_overflow covers that one)
+    import nndc.lang as lang
+    monkeypatch.setattr(lang, "_sigmoid", lambda z: np.full_like(z, 0.25))
+    np.testing.assert_array_equal(ev("def net(x0):\n    return sigmoid(x0)", np.array([[-1e4], [0.0], [1e4]])), 0.25)

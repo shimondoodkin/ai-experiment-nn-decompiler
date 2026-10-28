@@ -56,8 +56,9 @@ Every program (dump, agent, tool, baseline) must parse under it. Output conventi
 
 **Activations:** a hidden layer is `relu`, `sigmoid` or `tanh`. `MLP.acts` holds one name per hidden layer
 (default all `relu`), and `weights.npz` stores an `acts` key only when a net is not all-ReLU. The symbolic net's
-`Unit.act` carries the same name, and dumps call `sigmoid(...)` / `tanh(...)`. `compile_back`, the
-`regions` baseline and the ReLU motif and decision-list routes are ReLU-only: they skip or refuse such nets.
+`Unit.act` is one of these or `linear` (no activation: inlined units and argmax scores), and dumps call
+`sigmoid(...)` / `tanh(...)`. `compile_back`, the `regions` baseline and the ReLU motif and decision-list routes
+are ReLU-only: they skip or refuse such nets.
 Train one with `train(task, seed, act="sigmoid")`. The all-ReLU path must stay byte-identical;
 `experiments/equivalence.py` checks that.
 

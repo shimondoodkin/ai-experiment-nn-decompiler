@@ -29,7 +29,9 @@ BATCH_ERRORS = (ValueError, KeyError, OSError)   # one bad run never stops the b
 
 
 def _copy_runs(args) -> int:
-    dst = Path(args.copy)
+    dst = Path(args.copy).resolve()
+    if dst == REPO or REPO in dst.parents or dst in REPO.parents:
+        sys.exit(f"equivalence copy: refusing to delete {dst}: it is, lies inside, or contains the repo ({REPO})")
     if dst.exists():
         shutil.rmtree(dst)
     for root in ROOTS:
