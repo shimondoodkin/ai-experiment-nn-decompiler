@@ -302,3 +302,30 @@ Appended by `nndc agent collect`, one section per refactoring attempt.
 
 
 
+## median3/seed0 — agent_2 (mf8d15a, 2026-10-28)
+
+- **Probe first.** Before refactoring, regress the net against a library of candidates (median, mean,
+  min, max, range, products, norms). For 3 inputs, check the median explicitly: it is easy to miss,
+  because it is nearly linear on average.
+- **Test symmetries numerically.** Check every input permutation and f(-x) = -f(x). An asymmetry larger
+  than the snap tolerance rules out every symmetric closed form, and tells you which inputs to treat
+  as a group.
+- **Sigmoid nets learn soft versions of exact rules.** If the exact rule fails only near corners or
+  domain edges, the net's smoothing must be reproduced, not snapped away.
+- **Spot fake-linear units.** A layer-2 sigmoid unit with a huge output weight (|w| > 10) and a small
+  input range is acting as a linear or quadratic term. Replace it with explicit linear and product
+  terms, which are more readable and much less sensitive to rounding.
+- **Treat layer 2 as products.** In a 2-hidden-layer sigmoid net, layer 2 mostly builds ANDs of
+  layer-1 comparisons. Use the model `c + a·x + Σ v h + Σ q h_i h_j`. Once the h directions are fixed it
+  is linear, so fitting, pruning and rounding are cheap and stable.
+- **Fit for the worst case.** Use minimax, via Lawson reweighting of least squares, rather than plain
+  least squares, because the checker judges max error. An rms fit can have twice the max error.
+- **Snap in the right order.**
+  - Snap first-layer directions to a grid with linear refits, then coordinate-descend on the grid.
+  - Round output coefficients one at a time with refits in between, starting with the coefficients
+    of raw inputs (they are multiplied by values up to 3), then the large ones.
+  - Rounding everything at once to 2 decimals can add 0.02 to 0.03 of error when terms cancel.
+- **Distill from the net's own neurons.** Initialise the small net from the large net's "sharp" layer-1
+  neurons (large weights, bias ≈ 0) and drop the small, nearly linear ones. Run several random
+  restarts: the result varies a lot (max error 0.065 to 0.7).
+
