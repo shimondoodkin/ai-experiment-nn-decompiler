@@ -1,0 +1,13 @@
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: x0: float [-2, 2], x1: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(x0, x1):
+    h1_0 = sigmoid(8.62893 * x0 - 8.64645 * x1 + 2.1212034)  # layer 1 neuron 0
+    h1_1 = sigmoid(-0.10276424 * x0 + 0.8575647 * x1 - 3.132426)  # layer 1 neuron 1
+    h1_2 = sigmoid(8.448815 * x0 - 8.466817 * x1 + 2.100508)  # layer 1 neuron 2
+    h1_3 = sigmoid(0.26171666 * x0 - 0.7962463 * x1 + 2.712764)  # layer 1 neuron 3
+    h1_4 = sigmoid(11.275248 * x0 - 11.271425 * x1 - 2.1415203)  # layer 1 neuron 4
+    h1_5 = sigmoid(-3.2834263 * x0 + 3.329193 * x1 + 0.9651806)  # layer 1 neuron 5
+    h1_6 = sigmoid(-10.030071 * x0 + 10.042951 * x1 - 2.2975478)  # layer 1 neuron 6
+    h1_7 = sigmoid(1.0536516 * x0 - 0.4829216 * x1 + 2.2156684)  # layer 1 neuron 7
+    return 5.3289013 * h1_0 + 1.0067987 * h1_1 + 5.553677 * h1_2 - 0.87394315 * h1_3 - 18.034018 * h1_4 + 1.847609 * h1_5 - 13.395647 * h1_6 - 1.366761 * h1_7 + 0.06849926

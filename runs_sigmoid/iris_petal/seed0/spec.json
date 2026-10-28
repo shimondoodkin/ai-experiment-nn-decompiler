@@ -1,0 +1,27 @@
+{
+  "task": "iris_petal",
+  "output": "argmax",
+  "inputs": [
+    {
+      "name": "x0",
+      "real_name": "petal_length",
+      "type": "float",
+      "lo": 1.0,
+      "hi": 6.9
+    },
+    {
+      "name": "x1",
+      "real_name": "petal_width",
+      "type": "float",
+      "lo": 0.1,
+      "hi": 2.5
+    }
+  ],
+  "n_outputs": 3,
+  "threshold": 0.0,
+  "atol": 1e-05,
+  "rtol": 0.0001,
+  "margin_frac": 0.05,
+  "snap_tol_frac": 0.02,
+  "override_reason": null
+}
