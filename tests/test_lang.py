@@ -79,3 +79,22 @@ def test_read_program_handles_bom_utf16_and_rejects_bad_bytes(tmp_path):
     assert read_program(tmp_path / "b.py") == src
     with pytest.raises(ProgramError, match="UTF-8"):
         read_program(tmp_path / "c.py")
+
+
+def test_sigmoid_tanh_eval():
+    x = np.array([-1e4, -1.0, 0.0, 1.0, 1e4])
+    with np.errstate(all="raise"):
+        got = ev("def net(x0):\n    return sigmoid(x0) + tanh(x0)", x[:, None])
+        want = 1 / (1 + np.exp(-np.clip(x, -700, 700))) + np.tanh(x)
+    np.testing.assert_allclose(got, want, rtol=1e-12, atol=1e-12)
+    assert program_size(parse_program("def net(x0):\n    return sigmoid(x0)"))["relus"] == 0
+    from nndc.model import activate
+    np.testing.assert_array_equal(ev("def net(x0):\n    return sigmoid(x0)", x[:, None]), activate("sigmoid", x))
+    np.testing.assert_array_equal(ev("def net(x0):\n    return tanh(x0)", x[:, None]), activate("tanh", x))
+
+
+def test_sigmoid_one_arg():
+    with pytest.raises(ProgramError, match="exactly one argument"):
+        parse_program("def net(x0, x1):\n    return sigmoid(x0, x1)")
+    with pytest.raises(ProgramError, match="exactly one argument"):
+        parse_program("def net(x0, x1):\n    return tanh(x0, x1)")
