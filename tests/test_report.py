@@ -124,3 +124,25 @@ def test_default_report_unchanged():
     from pathlib import Path
 
     assert build_report(Path("runs")) == Path("REPORT.md").read_text(encoding="utf-8").replace("\r\n", "\n")
+
+
+def test_beats_skips_formula(tmp_path):
+    from nndc.report import _beats_the_net
+
+    dump = _v(nodes=200)
+    dump["task"].update({"metric": "max_abs_err", "in_range": 0.5, "out_of_range": 0.5})
+    formula = _v(nodes=5)
+    formula["task"].update({"metric": "max_abs_err", "in_range": 0.0, "out_of_range": 0.0, "recovered": True})
+    _fake_run(tmp_path, "absdiff", 0, {"dump": dump, "formula": formula})
+    assert not [line for line in _beats_the_net(tmp_path) if "formula" in line]
+
+
+def test_flagged_reproduction_note(tmp_path):
+    from nndc.report import flagged_reproduction_md
+
+    flagged = _v(recovered=True, nodes=9)
+    flagged["meta"] = {"outside_paths": ["C:/scratch/an.py"], "transcript_found": True}
+    rd = _fake_run(tmp_path, "absdiff", 0, {"dump": _v(nodes=200), "agent_1": flagged, "ast": _v(recovered=True, nodes=10)})
+    (rd / "ast_trace.json").write_text(json.dumps({"winner": "structural-snap"}))
+    md = flagged_reproduction_md(tmp_path)
+    assert "outside" in md and "1 of 1" in md      # the flagged attempt is counted in the secondary count

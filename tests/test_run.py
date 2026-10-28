@@ -97,3 +97,10 @@ def test_sigmoid_skips_hand(tmp_path):
         build_run("xor", None, root=tmp_path, act="sigmoid")
     with pytest.raises(ValueError):
         build_run("xor", 0, root=tmp_path, bug=True, act="sigmoid")
+
+
+def test_act_mismatch_refused(tmp_path):
+    rd = build_run("window", 0, root=tmp_path)            # a ReLU net
+    with pytest.raises(ValueError, match="relu"):
+        build_run("window", 0, root=tmp_path, act="sigmoid")
+    assert not (rd / "formula.py").exists()

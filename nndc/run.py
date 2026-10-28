@@ -148,8 +148,10 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
         _write_json(rd / "train_log.json", log)
         record_git(rd, "build")
     spec, mlp = load_run(rd)
+    if any(a != act for a in mlp.acts):
+        raise ValueError(f"{rd} holds a net with activations {mlp.acts}, not act={act}; use another --root")
     (rd / "dump.py").write_text(dump_program(mlp, spec), encoding="utf-8")
-    if act != "relu" and task in TASKS:
+    if any(a != "relu" for a in mlp.acts) and task in TASKS:
         (rd / "formula.py").write_text(expected_program(t), encoding="utf-8")
     res = evaluate_run(rd)
     if not res["versions"]["dump"]["check"]["exact_pass"]:

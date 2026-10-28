@@ -118,7 +118,8 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
     return (head + LEGEND + "\n## Where the refactored program beats the network\n\n" + BEATS_INTRO + beats_md
             + "\n\n" + reproduction_md(Path(root))
             + (comparison_md(Path(root), Path(root), BUG_ROOT) if compare_to is None
-               else formula_md(Path(root)) + activation_compare_md(Path(compare_to), Path(root)))
+               else flagged_reproduction_md(Path(root)) + formula_md(Path(root))
+               + activation_compare_md(Path(compare_to), Path(root)))
             + _datasets_md(Path(root)) + "## Results\n\n" + "\n".join(rows) + "\n\n" + "\n".join(sections))
 
 
@@ -207,8 +208,9 @@ def _datasets_md(root: Path) -> str:
             f"reproduction and the beats-the-network list above. Their results and held-out runs are in {links}.\n\n")
 
 
-def reproduction(root: Path = RUNS) -> list[dict]:
-    """Per run with an ast version: does the deterministic tool reproduce Claude's best valid attempt?"""
+def reproduction(root: Path = RUNS, valid_only: bool = True) -> list[dict]:
+    """Per run with an ast version: does the deterministic tool reproduce Claude's best valid attempt?
+    valid_only=False also counts attempts with outside-path audit flags."""
     rows = []
     for rd in all_runs(root):
         res_path = rd / "results.json"
@@ -225,7 +227,7 @@ def reproduction(root: Path = RUNS) -> list[dict]:
                "ast_git": read_git(rd).get("ast"),
                "ast_check": _verdict(a["check"]), "ast_recovered": bool(a["task"]["recovered"]),
                "ast_nodes": (a["size"] or {}).get("nodes")}
-        best = _best_attempt(vs, valid_only=True)
+        best = _best_attempt(vs, valid_only=valid_only)
         if best is None:
             row.update({"agent_check": None, "agent_recovered": None, "agent_nodes": None, "reproduces": None})
         else:
@@ -327,6 +329,25 @@ def _better(metric: str, new, old) -> int:
     return 1 if new < old - eps else -1 if new > old + eps else 0
 
 
+def flagged_reproduction_md(root: Path) -> str:
+    """A secondary reproduction count that also uses audit-flagged agent attempts, with the reason they are flagged."""
+    strict = [r for r in reproduction(root) if r["reproduces"] is not None]
+    rows = [r for r in reproduction(root, valid_only=False) if r["reproduces"] is not None]
+    if len(rows) == len(strict):
+        return ""
+    out = ["The counts above leave out agent attempts with outside-path audit flags. In these runs the flags come from "
+           "the agents' own scratch scripts, written to the session scratchpad that parallel agents shared; the "
+           "transcripts were reviewed by hand and no task information was read. Counting those attempts too "
+           "(secondary, not the headline):\n"]
+    for split, label in (("heldout", "held-out"), ("distill", "in-sample")):
+        rs = [r for r in rows if r["split"] == split]
+        if rs:
+            out.append(f"- **{label}**: {sum(r['reproduces'] for r in rs)} of {len(rs)} reproduced; tool recovered "
+                       f"the true formula in {sum(r['ast_recovered'] for r in rs)}, Claude in "
+                       f"{sum(bool(r['agent_recovered']) for r in rs)}")
+    return "\n".join(out) + "\n\n"
+
+
 def _beats_the_net(root: Path) -> list[str]:
     out = []
     for rd in all_runs(root):
@@ -337,7 +358,7 @@ def _beats_the_net(root: Path) -> list[str]:
         dump_t = res["versions"]["dump"]["task"]
         metric = dump_t.get("metric")
         for name, v in res["versions"].items():
-            if name == "dump" or not v["check"].get("snap_pass"):
+            if name in ("dump", "formula") or not v["check"].get("snap_pass"):   # formula.py is the target itself
                 continue
             t = v["task"]
             cmp = [_better(metric, t.get(k), dump_t.get(k)) for k in ("in_range", "out_of_range")]
