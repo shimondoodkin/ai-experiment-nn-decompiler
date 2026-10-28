@@ -280,3 +280,50 @@ uv run python -m experiments.equivalence redump
   - run the whole-branch review (one fresh reviewer, the most capable model, read-only);
   - send the report to the user;
   - the `CONCLUSIONS.md` section is written with the user after they have read it, outside this plan.
+
+## Task 4 move list (fixed before tool code, from `runs_sigmoid/HEURISTICS.md`, development set only)
+
+Each move ships with the tests named here. A move counts only when the program it produces passes `check_program`.
+Moves 1–3 come from the plan. Moves 4–7 are each named by at least two development-set agents (listed in brackets).
+
+1. **step**, 2. **line**, 3. **clamped line**: per-unit replacements in `replace_units`, as specified in Task 4.
+4. **const** [neareq/seed0, neareq/seed1, absdiff/seed0, median3/seed1]: a sigmoid unit whose output range over the input
+   set is under 0.02 becomes a constant. Its value is the mean output, written as a `linear` unit with an empty
+   coefficient map, and pruning inlines it.
+   - `replace_units` tries the options in the order const, step, line, clamp.
+   - Test: `test_const_unit_inlined`.
+5. **step duplicates** [window/seed0, window/seed1, xor/seed0, xor/seed1]: `step(z)` does not change when `z` is scaled
+   by a positive number. So after replacement, each step unit's pre-activation is scaled so that its largest |coef|
+   is 1, and steps with identical pre-activations (to 1e-9) are merged by adding up their consumers' coefficients.
+   - This lives in `nndc/heuristics/sigmoid.py` (`merge_steps(net) -> tuple[SymNet, list[str]]`); the ReLU merge is
+     untouched.
+   - Test: `test_merge_steps_on_window`: the window net goes from 4 steps to at most 3, and the program still passes.
+6. **linear cascade** for argmax nets [iris_petal/seed0–2, iris/seed0–2]:
+   `linear_cascade(spec, mlp) -> str | None` in `sigmoid.py`.
+   - On `build_input_set(mlp, spec, seed=1)`, keep the confident points (outside the unsure zone), and count which
+     class pairs are the top two.
+   - If the classes form a chain a | b | c (only the pairs a-b and b-c are adjacent), fit `LogisticRegression(C=1e4)`
+     for "a vs rest" and "c vs rest" on the confident points.
+   - Normalise each cut by its largest |coef|, then snap the coefficients and the intercept with the same `nice`
+     ladder as `linear_scores`.
+   - Emit `if s_a > 0: return a`, then `if s_c > 0: return c`, then `return b`, using the first snapping level that
+     passes, else the unsnapped version if it passes, else `None`.
+   - Route name `linear-cascade`; it runs under the same condition as `linear-scores`.
+   - Test: `test_linear_cascade_iris_petal`.
+7. **knot fit for 1-input regression** [tax/seed0, tax/seed1, absdiff/seed0]: `knot_fit(spec, mlp) -> str | None` in
+   `sigmoid.py`, for regression nets with one input only.
+   - For k = 1, 2, 3 knots placed on the grid `lo + (hi - lo) * j / 20`, choose knots greedily: each new knot is the
+     grid point that most reduces the max error.
+   - The fit itself is a minimax LP (`scipy.optimize.linprog`) of `c0 + c1*x + Σ ck*relu(x - knot_k)` against the net,
+     on 2,001 grid points.
+   - Snap the slopes with `nice(v, 0.05 * max|slope|)`, refit the constant, and emit the result. The first k that
+     passes the checker wins.
+   - Route name `knot-fit`; it runs only for nets with a unit that is not relu/linear.
+   - Test: `test_knot_fit_tax_seed0`: the sigmoid tax net from `runs_sigmoid/tax/seed0` (a development net) gives a
+     program that passes.
+
+Not included, because only one agent named them or they are already covered by an existing route:
+- boundary scanning for binary nets (the existing `boundary-scan` route already reads the net as a black box);
+- rotating to difference/sum coordinates (absdiff only);
+- grouping units by direction for multi-input regression (median3);
+- exact bisected thresholds (window/seed1 only).
