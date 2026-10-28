@@ -32,9 +32,10 @@ def cmd_run(args) -> int:
         elif args.seed is not None:
             seeds = [args.seed]
         else:
-            seeds = ([None] if t.handcrafted else []) + (list(t.seeds) if t.hidden else [])
+            hand = [None] if t.handcrafted and args.act == "relu" else []   # hand nets are ReLU
+            seeds = hand + (list(t.seeds) if t.hidden else [])
         for seed in seeds:
-            rd = build_run(name, seed, Path(args.root), retrain=args.retrain, bug=args.bug)
+            rd = build_run(name, seed, Path(args.root), retrain=args.retrain, bug=args.bug, act=args.act)
             res = json.loads((rd / "results.json").read_text(encoding="utf-8"))
             dump = res["versions"]["dump"]["check"]
             print(f"{rd.as_posix()}: {_train_summary(res)}; dump "
@@ -223,6 +224,8 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--retrain", action="store_true")
     r.add_argument("--bug", action="store_true", help="train on a planted-bug target (fix experiment; use --root runs_bugs)")
     r.add_argument("--root", default=str(RUNS))
+    r.add_argument("--act", default="relu", choices=["relu", "sigmoid", "tanh"],
+                   help="hidden activation of trained nets (non-ReLU runs skip hand nets and get formula.py)")
     r.set_defaults(func=cmd_run)
 
     c = sub.add_parser("check", help="check a program against a run's net")

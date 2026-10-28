@@ -63,3 +63,37 @@ def test_non_utf8_attempt_is_reported_not_fatal(tmp_path):
     res = evaluate_run(rd)
     assert "UTF-8" in res["versions"]["agent_1"]["check"]["error"]
     build_run("absdiff", None, root=tmp_path)    # the run folder keeps working
+
+
+def test_formula_only_for_sigmoid(tmp_path):
+    from experiments.tasks import expected_program, get_task
+    from nndc.run import load_run
+
+    rd = build_run("window", 0, root=tmp_path / "s", act="sigmoid")
+    assert (rd / "formula.py").read_text(encoding="utf-8") == expected_program(get_task("window"))
+    res = json.loads((rd / "results.json").read_text())
+    assert "formula" in res["versions"]
+    assert load_run(rd)[1].acts == ["sigmoid"]
+    relu = build_run("window", 0, root=tmp_path / "r")
+    assert not (relu / "formula.py").exists()
+
+
+def test_formula_cex_not_shared(tmp_path):
+    rd = build_run("absdiff", 0, root=tmp_path, act="sigmoid")
+    (rd / "counterexamples.json").unlink(missing_ok=True)
+    res = evaluate_run(rd)
+    key = lambda c: (c["inputs"]["x0"], c["inputs"]["x1"])   # noqa: E731
+    formula = {key(c) for c in res["versions"]["formula"]["check"]["counterexamples"]}
+    others = {key(c) for name, v in res["versions"].items() if name != "formula"
+              for c in v["check"]["counterexamples"]}
+    assert formula   # the sharp formula misses the rounded kink of the sigmoid net
+    shared = rd / "counterexamples.json"
+    stored = {(c["x0"], c["x1"]) for c in json.loads(shared.read_text())} if shared.exists() else set()
+    assert not (formula - others) & stored
+
+
+def test_sigmoid_skips_hand(tmp_path):
+    with pytest.raises(ValueError):
+        build_run("xor", None, root=tmp_path, act="sigmoid")
+    with pytest.raises(ValueError):
+        build_run("xor", 0, root=tmp_path, bug=True, act="sigmoid")

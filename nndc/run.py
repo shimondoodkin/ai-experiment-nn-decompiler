@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 from experiments.grade import grade_task
-from experiments.tasks import TASKS, get_task
+from experiments.tasks import TASKS, expected_program, get_task
 
 from .baselines.common import BASELINE_VERSIONS
 from .check import CheckResult, check_program
@@ -103,10 +103,14 @@ def _bug_learned(mlp: MLP, t, defect, target, seed: int) -> float:
     return float((np.abs(out - bad) < np.abs(out - true)).mean())
 
 
-def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = False, bug: bool = False) -> Path:
+def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = False, bug: bool = False,
+              act: str = "relu") -> Path:
     """bug=True trains on a planted-bug target (experiments/defects.py, defect seed = seed); the spec keeps
-    the true task, so grading measures the truth."""
+    the true task, so grading measures the truth. act sets the hidden activation of a trained net; a non-ReLU
+    run of a formula task also gets formula.py, the intended formula as a reference version."""
     t = get_task(task)
+    if act != "relu" and (seed is None or bug):
+        raise ValueError(f"act={act} needs a trained seed without a planted bug (hand nets are ReLU)")
     if bug and seed is None:
         raise ValueError("a planted bug needs a trained seed")
     if seed is None and t.handcrafted is None:
@@ -134,8 +138,10 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
                 log["defect"] = defect.to_json()
                 log["bug_learned"] = _bug_learned(mlp, t, defect, target, seed)
                 _write_json(rd / "defect.json", defect.to_json())
-            else:
+            elif act == "relu":
                 mlp, log = train(t, seed)
+            else:
+                mlp, log = train(t, seed, act=act)
             torch.save(to_torch(mlp).state_dict(), rd / "net.pt")
         t.spec.save(rd / "spec.json")
         save_npz(mlp, rd / "weights.npz")
@@ -143,6 +149,8 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
         record_git(rd, "build")
     spec, mlp = load_run(rd)
     (rd / "dump.py").write_text(dump_program(mlp, spec), encoding="utf-8")
+    if act != "relu" and task in TASKS:
+        (rd / "formula.py").write_text(expected_program(t), encoding="utf-8")
     res = evaluate_run(rd)
     if not res["versions"]["dump"]["check"]["exact_pass"]:
         raise RuntimeError(f"decompiler bug: {rd / 'dump.py'} does not match the net exactly")
@@ -165,6 +173,8 @@ def evaluate_run(rd: Path) -> dict:
         versions["ast"] = rd / "ast.py"
     versions |= {f"io_agent_{n}": p for n, p in agent_attempts(rd, "io_agent")}
     versions |= {name: rd / f"{name}.py" for name in BASELINE_VERSIONS if (rd / f"{name}.py").exists()}
+    if (rd / "formula.py").exists():   # reference only: its counterexamples are not shared with other versions
+        versions["formula"] = rd / "formula.py"
     out = {}
     for name, path in versions.items():
         meta_path = rd / f"{name}_meta.json"
@@ -184,7 +194,7 @@ def evaluate_run(rd: Path) -> dict:
         except ProgramError:
             size = None
         out[name] = {"check": r.to_json(), "task": grade_task(src, task), "size": size, "meta": meta}
-        for c in r.counterexamples:
+        for c in ([] if name == "formula" else r.counterexamples):
             key = tuple(c["inputs"][n] for n in spec.arg_names)
             if key not in seen:
                 seen.add(key)
