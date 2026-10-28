@@ -110,3 +110,13 @@ def test_hidden_relu_and_no_hidden():
     lin = MLP([W[0]], [b[0]])
     np.testing.assert_array_equal(lin.hidden(X), X.astype(np.float64))
     assert lin.hidden(X).dtype == np.float64
+
+
+def test_hidden_sigmoid_matches_forward_pass():
+    rng = np.random.default_rng(2)
+    W = [rng.normal(size=(5, 3)).astype(np.float32), rng.normal(size=(1, 5)).astype(np.float32)]
+    b = [rng.normal(size=5).astype(np.float32), rng.normal(size=1).astype(np.float32)]
+    m = MLP(W, b, ["sigmoid"])
+    X = rng.uniform(-3, 3, (100, 3)).astype(np.float32)
+    own = activate("sigmoid", m.preactivations(X)[0])     # the input to the last layer in the forward pass
+    np.testing.assert_array_equal(m.hidden(X), own.astype(np.float64))

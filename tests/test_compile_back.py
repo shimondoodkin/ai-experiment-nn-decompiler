@@ -76,3 +76,11 @@ def test_non_strict_comparisons_on_integer_inputs(body):
     prog = evaluate(parse_program(src, spec.arg_names), X)
     net = (mlp.forward(X.astype(np.float32))[:, 0] > spec.threshold).astype(float)
     assert (net == (prog > spec.threshold)).all()
+
+
+@pytest.mark.parametrize("fn", ["sigmoid", "tanh"])
+def test_compile_back_refuses_sigmoid(fn):
+    spec = Spec.from_json(get_task("absdiff").spec.blind())
+    src = f"def net(x0, x1):\n    return {fn}(x0 - x1)\n"
+    with pytest.raises(ValueError, match="compile_back: sigmoid/tanh cannot be compiled into a ReLU net"):
+        compile_program(src, spec)

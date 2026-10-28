@@ -1,3 +1,5 @@
+import pytest
+
 from nndc.baselines.regions import regions_program, run_regions
 from nndc.check import check_program
 from nndc.run import build_run, evaluate_run
@@ -39,3 +41,12 @@ def test_run_regions_writes_version(tmp_path):
     rd = build_run("window", None, tmp_path)
     info = run_regions(rd)
     assert not info["budget_exceeded"] and evaluate_run(rd)["versions"]["regions"]["check"]["exact_pass"]
+
+
+def test_regions_refuses_sigmoid():
+    mlp = random_mlp([2, 4, 1], seed=1)
+    mlp.acts = ["sigmoid"]
+    spec = Spec(task="", output="regression",
+                inputs=[InputSpec(f"x{i}", f"x{i}", "float", -3, 3) for i in range(2)])
+    with pytest.raises(ValueError, match="sigmoid"):
+        regions_program(mlp, spec)

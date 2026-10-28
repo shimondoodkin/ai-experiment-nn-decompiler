@@ -6,9 +6,10 @@ import numpy as np
 from nndc.cli import main
 from nndc.repair.metrics import decide
 from nndc.repair.run import ARMS_W, evaluate_repair, faithful_program, run_repair_baselines
-from nndc.repair.weights import finetune, lp_repair
+from nndc.repair.weights import _hidden, finetune, lp_repair
 from nndc.run import build_run
-from tests.helpers import hand
+from nndc.spec import Spec
+from tests.helpers import hand, random_mlp
 
 
 def test_lp_repair_fixes_points_and_reports_infeasible():
@@ -75,3 +76,26 @@ def test_reinsertion_reports_task_match_and_box_mismatch(tmp_path):
     res = evaluate_repair(rd)
     rein = res["fix_1"]["reinsertion"]
     assert rein["ramps"] == 1 and rein["task_match"] == 1.0 and 0 <= rein["box_mismatch"] < 0.001
+
+
+def test_lp_repair_keeps_acts():
+    from nndc.model import MLP
+    from nndc.spec import InputSpec
+
+    rng = np.random.default_rng(3)
+    mlp = MLP([rng.normal(size=(6, 2)).astype(np.float32), rng.normal(size=(1, 6)).astype(np.float32)],
+              [rng.normal(size=6).astype(np.float32), rng.normal(size=1).astype(np.float32)], ["sigmoid"])
+    spec = Spec(task="", output="regression", inputs=[InputSpec(f"x{i}", f"x{i}", "float", -2, 2) for i in range(2)])
+    X = rng.uniform(-2, 2, (20, 2))
+    y = mlp.forward(X.astype(np.float32))[:, 0].astype(np.float64)
+    fixed = lp_repair(mlp, spec, X, y, 0.05)
+    assert fixed is not None and fixed.acts == mlp.acts == ["sigmoid"]
+
+
+def test_hidden_matches_old_relu():
+    mlp = random_mlp([3, 7, 5, 2], seed=5)
+    X = np.random.default_rng(6).uniform(-3, 3, (200, 3))
+    np.testing.assert_array_equal(
+        _hidden(mlp, X), np.maximum(mlp.preactivations(X)[-2].astype(np.float64), 0.0))
+    np.testing.assert_array_equal(
+        mlp.hidden(X), np.maximum(mlp.preactivations(X)[-2].astype(np.float64), 0.0))

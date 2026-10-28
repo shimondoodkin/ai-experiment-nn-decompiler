@@ -42,6 +42,8 @@ def regions_program(mlp: MLP, spec: Spec, max_regions: int = MAX_REGIONS,
                     max_seconds: float = MAX_SECONDS) -> tuple[str | None, dict]:
     from scipy.optimize import linprog
 
+    if any(a != "relu" for a in mlp.acts):
+        raise ValueError(f"regions_program: only ReLU nets are supported (acts={mlp.acts})")
     t0 = time.perf_counter()
     lo = np.array([i.lo for i in spec.inputs], dtype=np.float64)
     hi = np.array([i.hi for i in spec.inputs], dtype=np.float64)

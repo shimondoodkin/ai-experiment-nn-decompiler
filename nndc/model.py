@@ -76,7 +76,7 @@ class MLP:
         pre = self.preactivations(X)
         if len(pre) == 1:
             return np.asarray(X, dtype=np.float64)
-        return activate(self.acts[-1], pre[-2].astype(np.float64))
+        return activate(self.acts[-1], pre[-2]).astype(np.float64)   # activate in the net's float32, then cast
 
 
 def from_torch(module) -> MLP:

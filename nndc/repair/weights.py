@@ -64,9 +64,7 @@ def anchors(rd: Path, mlp: MLP, spec: Spec, data: RepairData, tol: float) -> tup
 
 
 def _hidden(mlp: MLP, X: np.ndarray) -> np.ndarray:
-    if len(mlp.weights) == 1:
-        return np.asarray(X, dtype=np.float64)
-    return np.maximum(mlp.preactivations(X)[-2].astype(np.float64), 0.0)
+    return mlp.hidden(X)
 
 
 def lp_repair(mlp: MLP, spec: Spec, X: np.ndarray, y: np.ndarray, tol: float) -> MLP | None:
@@ -122,7 +120,7 @@ def lp_repair(mlp: MLP, spec: Spec, X: np.ndarray, y: np.ndarray, tol: float) ->
     delta = r.x[:-1].reshape(k, m1)
     W = (mlp.weights[-1].astype(np.float64) + delta[:, :-1]).astype(np.float32)
     b = (mlp.biases[-1].astype(np.float64) + delta[:, -1]).astype(np.float32)
-    fixed = MLP(mlp.weights[:-1] + [W], mlp.biases[:-1] + [b])
+    fixed = MLP(mlp.weights[:-1] + [W], mlp.biases[:-1] + [b], acts=mlp.acts)
     # the LP is solved in float64; on a net whose scores are tiny the margins can vanish in float32
     out = fixed.forward(np.asarray(X, dtype=np.float32)).astype(np.float64)
     pred = out[:, 0] if spec.output == "regression" else decide(spec, out)
