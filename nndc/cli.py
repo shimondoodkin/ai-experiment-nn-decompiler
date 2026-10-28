@@ -201,7 +201,8 @@ def cmd_repair(args) -> int:
 def cmd_report(args) -> int:
     from .report import build_report
 
-    Path(args.out).write_text(build_report(Path(args.root)), encoding="utf-8")
+    cmp = Path(args.compare_to) if args.compare_to else None
+    Path(args.out).write_text(build_report(Path(args.root), compare_to=cmp), encoding="utf-8")
     print(f"wrote {args.out}")
     return 0
 
@@ -286,6 +287,7 @@ def main(argv: list[str] | None = None) -> int:
     rp = sub.add_parser("report", help="write REPORT.md from all runs")
     rp.add_argument("--root", default=str(RUNS))
     rp.add_argument("--out", default="REPORT.md")
+    rp.add_argument("--compare-to", help="a root of ReLU runs: adds the formula-vs-net and activation comparison sections")
     rp.set_defaults(func=cmd_report)
 
     gt = sub.add_parser("gate", help="evaluate the spike gate")

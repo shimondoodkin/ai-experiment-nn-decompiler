@@ -5,6 +5,8 @@ import json
 import re
 from pathlib import Path
 
+import numpy as np
+
 from .compare import comparison_md
 from .run import RUNS, all_runs, is_step1, read_git
 from .spec import Spec
@@ -64,7 +66,9 @@ def _best_attempt(versions: dict, valid_only: bool = False) -> str | None:
                                       (versions[k]["size"] or {}).get("nodes", 10**9)))
 
 
-def build_report(root: Path = RUNS) -> str:
+def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
+    """With compare_to (a root of ReLU runs), the step-4 comparison is replaced by the formula-vs-net and the
+    activation comparison sections, for a root of non-ReLU runs."""
     rows = ["| run | training | version | check | label | max err | disagree outside / inside (zone) | "
             "task in / out | recovered | nodes (% of dump) | audit | Claude |",
             "|---|---|---|---|---|---|---|---|---|---|---|---|"]
@@ -112,8 +116,84 @@ def build_report(root: Path = RUNS) -> str:
     beats = _beats_the_net(root)
     beats_md = "\n".join(beats) if beats else "(none yet)"
     return (head + LEGEND + "\n## Where the refactored program beats the network\n\n" + BEATS_INTRO + beats_md
-            + "\n\n" + reproduction_md(Path(root)) + comparison_md(Path(root), Path(root), BUG_ROOT)
+            + "\n\n" + reproduction_md(Path(root))
+            + (comparison_md(Path(root), Path(root), BUG_ROOT) if compare_to is None
+               else formula_md(Path(root)) + activation_compare_md(Path(compare_to), Path(root)))
             + _datasets_md(Path(root)) + "## Results\n\n" + "\n".join(rows) + "\n\n" + "\n".join(sections))
+
+
+def _results(rd: Path) -> dict | None:
+    p = rd / "results.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+def _cell(rd: Path, v: dict | None) -> str:
+    """Verdict, recovered (formula tasks only) and nodes of one version."""
+    if v is None:
+        return "–"
+    rec = ("rec" if v["task"].get("recovered") else "not rec") if is_step1(rd) else "n/a"
+    return f"{_verdict(v['check'])}, {rec}, {_num((v['size'] or {}).get('nodes'), 'd')} nodes"
+
+
+def formula_md(root: Path) -> str:
+    """The intended formula (formula.py) judged against each net, next to the agent's and the tool's programs."""
+    from experiments.tasks import get_task
+
+    rows = ["| run | formula vs net | max err (% of output range) / disagreements outside, inside | "
+            "formula task in / out | best agent | AST tool |", "|---|---|---|---|---|---|"]
+    cases = []
+    for rd in all_runs(root):
+        res = _results(rd)
+        if res is None or "formula" not in res["versions"]:
+            continue
+        spec = Spec.load(rd / "spec.json")
+        vs = res["versions"]
+        f, c = vs["formula"], vs["formula"]["check"]
+        if spec.output == "regression" and c.get("margin"):
+            size = f"{_num(c.get('max_abs_err'))} ({100 * spec.snap_tol_frac * c['max_abs_err'] / c['margin']:.1f}%)"
+        else:
+            size = f"{c.get('disagreements_outside')}, {c.get('disagreements_inside')}"
+        best = _best_attempt(vs)
+        rows.append(f"| {res['run']} | {_verdict(c)} | {size} | {_num(f['task'].get('in_range'))} / "
+                    f"{_num(f['task'].get('out_of_range'))} | {_cell(rd, vs.get(best) if best else None)} | "
+                    f"{_cell(rd, vs.get('ast'))} |")
+        cex = c.get("counterexamples") or []
+        if cex:
+            target = get_task(spec.task).target
+            lines = ["| inputs | net | formula | true |", "|---|---|---|---|"]
+            for e in cex[:5]:
+                x = np.array([[e["inputs"][n] for n in spec.arg_names]], dtype=np.float64)
+                truth = float(np.asarray(target(x), dtype=np.float64)[0])
+                ins = ", ".join(f"{i.real_name}={e['inputs'][i.name]:.4g}" for i in spec.inputs)
+                lines.append(f"| {ins} | {_num(e['net'])} | {_num(e['program'])} | {_num(truth)} |")
+            cases.append(f"**{res['run']}**: where the formula and the net disagree most\n\n" + "\n".join(lines) + "\n")
+    if len(rows) == 2:
+        return ""
+    head = ("## Formula vs net\n\nThe intended formula of each task (`formula.py`), checked against the net like any "
+            "other version but never used to harden the other checks. A FAIL means the net rounds or shifts the "
+            "formula beyond the checker's tolerance; the cases below show where.\n\n")
+    return head + "\n".join(rows) + "\n\n" + "\n".join(cases) + "\n"
+
+
+def activation_compare_md(relu_root: Path, root: Path) -> str:
+    """One row per task and seed present in both roots: the net, the best agent program and the AST program."""
+    rows = ["| run | learned (ReLU / this) | best agent, ReLU | best agent, this | AST, ReLU | AST, this |",
+            "|---|---|---|---|---|---|"]
+    for rd in all_runs(root):
+        other = Path(relu_root) / rd.parent.name / rd.name
+        a, b = _results(other), _results(rd)
+        if a is None or b is None:
+            continue
+        cells = []
+        for res, d in ((a, other), (b, rd)):
+            best = _best_attempt(res["versions"])
+            cells.append((_cell(d, res["versions"].get(best) if best else None), _cell(d, res["versions"].get("ast"))))
+        learned = " / ".join("yes" if (r.get("train") or {}).get("learned") else "no" for r in (a, b))
+        rows.append(f"| {b['run']} | {learned} | {cells[0][0]} | {cells[1][0]} | {cells[0][1]} | {cells[1][1]} |")
+    if len(rows) == 2:
+        return ""
+    return (f"## Compared with the ReLU runs\n\nThe same task, seed and training settings, with ReLU "
+            f"(`{Path(relu_root).as_posix()}`) and with this root's activation.\n\n" + "\n".join(rows) + "\n\n")
 
 
 def _datasets_md(root: Path) -> str:
