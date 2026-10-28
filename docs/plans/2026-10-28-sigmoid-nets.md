@@ -327,3 +327,18 @@ Not included, because only one agent named them or they are already covered by a
 - rotating to difference/sum coordinates (absdiff only);
 - grouping units by direction for multi-input regression (median3);
 - exact bisected thresholds (window/seed1 only).
+
+### Amendments during execution (2026-10-29)
+
+- **Move 5 (step duplicates).** Steps whose normalised coefficients and offset differ by at most 0.05 are merged, and
+  each merge is kept only if the checker still passes. The signature is `merge_steps(net, spec, mlp)`.
+  - Why: steps that are identical to 1e-9 never occur in trained nets. The duplicates the agents named sit at
+    slightly different centres, for example 0.49 and 0.5 on window.
+  - The change was made before the development AST run.
+- **Freeze.** The tool code freeze is `15b943b`. Held-out runs record `797e0ae` in `run_git.txt`. That is the data
+  commit of the development run, on top of the freeze, and `git diff 15b943b 797e0ae -- nndc experiments` is empty.
+- **Iris development seeds 0–1.** Both linear routes miss by 16 and 1 confident points. The logistic fit was not
+  changed after seeing this; that would be tuning on development results.
+- **Shared scratchpad.** Blind agents wrote scratch scripts to the session scratchpad, which all parallel agents
+  shared, and the outside-path audit flags them. A review of all 30 transcripts found no task name or formula in
+  any of them. For future passes, give each agent a scratch directory inside its blind folder.

@@ -117,6 +117,23 @@ reconstructed from git history.
 - **Comparison section:** `nndc/compare.py` builds the "Comparison (step 4)" section of `REPORT.md`.
 - **Hand-written conclusions** per step are in `CONCLUSIONS.md`. Add to it when a step ends.
 
+**Sigmoid runs** (project B, `runs_sigmoid/`):
+- **Build:** `nndc run all --act sigmoid --root runs_sigmoid` builds them; `build_run` refuses a folder whose net
+  has other activations. Runs of non-ReLU formula tasks get `formula.py`, the intended formula as a reference
+  version. Its counterexamples are not added to `counterexamples.json`.
+- **Agents:** `nndc agent prepare/collect --index runs_sigmoid/blind_index.json --heuristics runs_sigmoid/HEURISTICS.md`.
+  Held-out runs' heuristics go to `runs_sigmoid/HEURISTICS_heldout.md`, which tool development must not read.
+- **AST tool:** the sigmoid moves are in `nndc/heuristics/sigmoid.py`:
+  - per-unit const / step / line / clamp, and near-duplicate step merging;
+  - `linear-scores` and `linear-cascade` for argmax nets;
+  - `knot-fit` for 1-input regression.
+
+  They run only for nets with non-ReLU units.
+- **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the
+  "Formula vs net" and "Compared with the ReLU runs" sections.
+- **Agent scratch files:** blind agents tend to write scratch scripts to the session scratchpad, which all
+  parallel agents share, and the audit flags it. Give each agent a scratch directory inside its blind folder.
+
 ## Practical notes
 
 - **Running agent passes:**
@@ -145,7 +162,8 @@ reconstructed from git history.
   - formula runs: seed 2 is held out from AST-tool development (`--split distill` excludes it);
   - Iris: seeds 3–5 were held out from tool v2.
 - **Freezes:** the tool version used on each held-out run is the `ast:` line of its `run_git.txt`
-  (step 3: `1076f21`; Iris v1: `e62d74b`, later overwritten by v2; Iris v2: `363b8c9`). Commit the tool
+  (step 3: `1076f21`; Iris v1: `e62d74b`, later overwritten by v2; Iris v2: `363b8c9`; sigmoid: `15b943b`, whose
+  held-out runs record `797e0ae`, a data-only commit on top of it). Commit the tool
   before running held-out models. Changing the AST tool or heuristics means a new freeze and a fresh
   held-out set, not re-running old held-out models.
 - **Blindness:** no task name, real input names, `expected` formula or target may enter a blind
