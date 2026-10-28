@@ -18,6 +18,7 @@ from .heuristics.boundary_scan import scan_boundary_expr
 from .heuristics.bounds import prune_dead_and_linear
 from .heuristics.cleanup import program_from_expr
 from .heuristics.decision_list import decision_list
+from .heuristics.sigmoid import knot_fit, linear_cascade, linear_scores, merge_steps, replace_units
 from .heuristics.fit import fit_expr
 from .heuristics.merge import merge_units, normalize
 from .heuristics.motifs import as_relu_sum, motif_expr
@@ -30,7 +31,8 @@ from .spec import Spec
 from .symnet import SymNet, from_dump, input_bounds, to_program
 
 ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit",
-          "decision-list-snap", "decision-list"]   # snapped first: when neither is exact, prefer round constants
+          "decision-list-snap", "decision-list",   # snapped first: when neither is exact, prefer round constants
+          "sigmoid-replace-snap", "sigmoid-replace", "linear-cascade", "linear-scores", "knot-fit"]   # non-ReLU nets
 
 
 @dataclass
@@ -141,6 +143,29 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
             for route, src in dl[0]:
                 passes = ["P1", "P2", "P10", "P9"] if route == "decision-list" else ["P1", "P2", "P10", "P3", "P9"]
                 add(route, lambda src=src: src, passes)
+
+    if any(u.act not in ("relu", "linear") for u in net0.units):   # sigmoid moves; ReLU nets never reach them
+        r1, tr = replace_units(n1, spec, mlp)
+        m1, tm = merge_steps(r1, spec, mlp)
+        p1, tp = prune_dead_and_linear(m1, spec)
+        lines += [f"sigmoid: {x}" for x in tr + tm + tp]
+        add("sigmoid-replace", lambda: _emit(p1, spec)[0], ["S1", "S2"])
+        s1, ts = snap_net(p1, spec)
+        s2, _ = prune_dead_and_linear(s1, spec)
+        lines += [f"sigmoid snap: {x}" for x in ts]
+        add("sigmoid-replace-snap", lambda: _emit(s2, spec)[0], ["S1", "S2", "P3"])
+        if spec.output == "argmax":
+            dl = decision_list(p1, spec, mlp)
+            if dl is None:
+                lines.append("sigmoid decision-list: not applicable")
+            else:
+                lines += [f"sigmoid {x}" for x in dl[1]]
+                for route, src in dl[0]:
+                    add(route, lambda src=src: src, ["S1", "S2", "P10", "P9"])
+            add("linear-scores", lambda: linear_scores(spec, mlp), ["S3"])
+            add("linear-cascade", lambda: linear_cascade(spec, mlp), ["S4"])
+        if spec.output == "regression":
+            add("knot-fit", lambda: knot_fit(spec, mlp), ["S5"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:

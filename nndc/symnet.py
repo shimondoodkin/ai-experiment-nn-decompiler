@@ -95,7 +95,23 @@ def post_interval(act: str, lo: float, hi: float) -> tuple[float, float]:
         return (_sigmoid(lo), _sigmoid(hi))
     if act == "tanh":
         return (math.tanh(lo), math.tanh(hi))
+    if act == "step":
+        return (float(lo > 0), float(hi > 0))
+    if act == "clamp":
+        return (min(max(0.5 + 0.25 * lo, 0.0), 1.0), min(max(0.5 + 0.25 * hi, 0.0), 1.0))
     raise ValueError(f"unknown activation {act!r}")
+
+
+def unit_value(act: str, z: np.ndarray) -> np.ndarray:
+    """A unit's output: the dump's activations, plus `step` (z > 0) and `clamp` (the line 0.5 + z/4 clipped to
+    [0, 1]), which only the sigmoid replacements in heuristics/sigmoid.py create."""
+    if act == "linear":
+        return z
+    if act == "step":
+        return (z > 0).astype(np.float64)
+    if act == "clamp":
+        return np.clip(0.5 + 0.25 * z, 0.0, 1.0)
+    return activate(act, z)
 
 
 @dataclass
@@ -182,7 +198,7 @@ def evaluate(net: SymNet, X: np.ndarray) -> np.ndarray:
     env = {n: X[:, i] for i, n in enumerate(net.inputs)}
     for u in net.units:
         z = u.pre.eval(env)
-        env[u.name] = z if u.act == "linear" else activate(u.act, z)
+        env[u.name] = unit_value(u.act, z)
     return np.stack([o.eval(env) for o in net.outputs], axis=1)
 
 
@@ -220,7 +236,14 @@ def substitute(net: SymNet, name: str, value: Affine) -> SymNet:
 def to_program(net: SymNet) -> str:
     lines = [f"def net({', '.join(net.inputs)}):"]
     for u in net.units:
-        body = u.pre.to_src() if u.act == "linear" else f"{u.act}({u.pre.to_src()})"
+        if u.act == "linear":
+            body = u.pre.to_src()
+        elif u.act == "step":
+            body = f"({u.pre.to_src()} > 0)"
+        elif u.act == "clamp":
+            body = f"min(max({u.pre.scaled(0.25).plus(Affine({}, 0.5)).to_src()}, 0), 1)"
+        else:
+            body = f"{u.act}({u.pre.to_src()})"
         lines.append(f"    {u.name} = {body}")
     if net.kind == "argmax":
         names = []
