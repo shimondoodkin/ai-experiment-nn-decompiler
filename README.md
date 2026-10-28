@@ -42,6 +42,10 @@ the net. Every net reduces to an if-chain of two linear tests. The AST tool got 
 argmax nets; its second version produced passing lists on all 6 fresh held-out nets, as did blind Claude
 agents. Details are in [runs/iris/REPORT.md](runs/iris/REPORT.md).
 
+## Sigmoid nets
+
+The same pipeline on 30 nets with sigmoid hidden units, the same tasks, seeds and training settings: blind Claude agents, and the AST tool with sigmoid moves (step, line, clamped line, constant; linear scores and a linear cascade for argmax; a knot fit for 1-input regression), frozen before the held-out run. Each formula task also carries its intended formula as a reference program. Results, the formula-vs-net comparison and the comparison with the ReLU runs are in [runs_sigmoid/REPORT.md](runs_sigmoid/REPORT.md).
+
 Each run folder records the git commit each step ran with in `run_git.txt`.
 
 ## Usage
