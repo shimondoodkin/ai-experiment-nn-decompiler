@@ -173,6 +173,48 @@
       },
       "meta": null
     },
+    "agent_1": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.5634233856201172,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.0,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": true,
+        "error": null
+      },
+      "size": {
+        "lines": 2,
+        "nodes": 17,
+        "constants": 2,
+        "relus": 0,
+        "ifs": 1
+      },
+      "meta": {
+        "blind_id": "m13abfd",
+        "collected": "2026-10-28T23:04:05",
+        "transcript_found": true,
+        "outside_paths": [],
+        "forbidden_paths": [],
+        "model": "claude-opus-5-5",
+        "duration_s": 240.829,
+        "tokens": {
+          "input": 420143,
+          "output": 2447
+        }
+      }
+    },
     "formula": {
       "check": {
         "exact_pass": true,

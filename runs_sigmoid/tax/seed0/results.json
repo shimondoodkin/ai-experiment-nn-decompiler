@@ -269,7 +269,7 @@
         "exact_pass": true,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 227068,
+        "n_inputs": 227087,
         "max_abs_err": 1.1372805040821277e-05,
         "disagreements_outside": 0,
         "disagreements_inside": 0,
@@ -294,18 +294,234 @@
       },
       "meta": null
     },
+    "agent_1": {
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 227087,
+        "max_abs_err": 0.9143493652343722,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.215567855834961,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 200.0
+            },
+            "net": 60.635650634765625,
+            "program": 61.55,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 200.0
+            },
+            "net": 60.635650634765625,
+            "program": 61.55,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 200.0
+            },
+            "net": 60.635650634765625,
+            "program": 61.55,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99935334424978
+            },
+            "net": 60.63554000854492,
+            "program": 61.54974780425742,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99935334424978
+            },
+            "net": 60.63554000854492,
+            "program": 61.54974780425742,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.9973529963405
+            },
+            "net": 60.635196685791016,
+            "program": 61.5489676685728,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.9973529963405
+            },
+            "net": 60.635196685791016,
+            "program": 61.5489676685728,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99725727976008
+            },
+            "net": 60.63517761230469,
+            "program": 61.548930339106434,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99725727976008
+            },
+            "net": 60.63517761230469,
+            "program": 61.548930339106434,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99653566774674
+            },
+            "net": 60.63505554199219,
+            "program": 61.548648910421235,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99653566774674
+            },
+            "net": 60.63505554199219,
+            "program": 61.548648910421235,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.9963137478925
+            },
+            "net": 60.635013580322266,
+            "program": 61.548562361678066,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.9963137478925
+            },
+            "net": 60.635013580322266,
+            "program": 61.548562361678066,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99562214240635
+            },
+            "net": 60.63489532470703,
+            "program": 61.54829263553847,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99562214240635
+            },
+            "net": 60.63489532470703,
+            "program": 61.54829263553847,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.9951952238302
+            },
+            "net": 60.63481903076172,
+            "program": 61.54812613729378,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.9951952238302
+            },
+            "net": 60.63481903076172,
+            "program": 61.54812613729378,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99511964913515
+            },
+            "net": 60.63481140136719,
+            "program": 61.54809666316271,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99511964913515
+            },
+            "net": 60.63481140136719,
+            "program": 61.54809666316271,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 199.99404287230817
+            },
+            "net": 60.634620666503906,
+            "program": 61.54767672020019,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.8999805795717841,
+        "out_of_range": 8.69997351859284,
+        "metric": "max_abs_err",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 3,
+        "nodes": 30,
+        "constants": 4,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": {
+        "blind_id": "m47484f",
+        "collected": "2026-10-28T23:02:53",
+        "transcript_found": true,
+        "outside_paths": [
+          "/tmp/f.py",
+          "/tmp/g.py",
+          "C:\\Users\\user\\AppData\\Local\\Temp\\f.py",
+          "/tmp"
+        ],
+        "forbidden_paths": [],
+        "model": "claude-opus-5-5",
+        "duration_s": 604.194,
+        "tokens": {
+          "input": 1049675,
+          "output": 9651
+        }
+      }
+    },
     "formula": {
       "check": {
         "exact_pass": false,
         "snap_pass": false,
         "label": "empirical",
-        "n_inputs": 227068,
+        "n_inputs": 227087,
         "max_abs_err": 1.364349365234375,
-        "disagreements_outside": 670,
+        "disagreements_outside": 689,
         "disagreements_inside": 0,
         "zone_fraction": 0.0,
         "margin": 1.215567855834961,
         "counterexamples": [
+          {
+            "inputs": {
+              "x0": 200.0
+            },
+            "net": 60.635650634765625,
+            "program": 62.0,
+            "in_zone": false
+          },
           {
             "inputs": {
               "x0": 200.0
@@ -332,10 +548,34 @@
           },
           {
             "inputs": {
+              "x0": 199.99935334424978
+            },
+            "net": 60.63554000854492,
+            "program": 61.999741337699916,
+            "in_zone": false
+          },
+          {
+            "inputs": {
               "x0": 199.9973529963405
             },
             "net": 60.635196685791016,
             "program": 61.99894119853621,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": 199.9973529963405
+            },
+            "net": 60.635196685791016,
+            "program": 61.99894119853621,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": 199.99725727976008
+            },
+            "net": 60.63517761230469,
+            "program": 61.99890291190403,
             "in_zone": false
           },
           {
@@ -356,10 +596,34 @@
           },
           {
             "inputs": {
+              "x0": 199.99653566774674
+            },
+            "net": 60.63505554199219,
+            "program": 61.9986142670987,
+            "in_zone": false
+          },
+          {
+            "inputs": {
               "x0": 199.9963137478925
             },
             "net": 60.635013580322266,
             "program": 61.998525499157,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": 199.9963137478925
+            },
+            "net": 60.635013580322266,
+            "program": 61.998525499157,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": 199.99562214240635
+            },
+            "net": 60.63489532470703,
+            "program": 61.99824885696254,
             "in_zone": false
           },
           {
@@ -380,6 +644,22 @@
           },
           {
             "inputs": {
+              "x0": 199.9951952238302
+            },
+            "net": 60.63481903076172,
+            "program": 61.99807808953208,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": 199.99511964913515
+            },
+            "net": 60.63481140136719,
+            "program": 61.998047859654065,
+            "in_zone": false
+          },
+          {
+            "inputs": {
               "x0": 199.99511964913515
             },
             "net": 60.63481140136719,
@@ -392,78 +672,6 @@
             },
             "net": 60.634620666503906,
             "program": 61.99761714892327,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99383738948177
-            },
-            "net": 60.63458251953125,
-            "program": 61.99753495579271,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99376004652888
-            },
-            "net": 60.63457489013672,
-            "program": 61.99750401861155,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99297364044452
-            },
-            "net": 60.634437561035156,
-            "program": 61.99718945617781,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99276743052133
-            },
-            "net": 60.6343994140625,
-            "program": 61.997106972208535,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99244433890553
-            },
-            "net": 60.63434600830078,
-            "program": 61.99697773556221,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99195941191422
-            },
-            "net": 60.63426208496094,
-            "program": 61.996783764765695,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99122776003082
-            },
-            "net": 60.634132385253906,
-            "program": 61.996491104012335,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.99046976348592
-            },
-            "net": 60.634002685546875,
-            "program": 61.99618790539437,
-            "in_zone": false
-          },
-          {
-            "inputs": {
-              "x0": 199.98914401546108
-            },
-            "net": 60.63377380371094,
-            "program": 61.99565760618444,
             "in_zone": false
           }
         ],

@@ -269,7 +269,7 @@
         "exact_pass": true,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 227243,
+        "n_inputs": 227263,
         "max_abs_err": 1.118231596564101e-05,
         "disagreements_outside": 0,
         "disagreements_inside": 0,
@@ -294,12 +294,217 @@
       },
       "meta": null
     },
+    "agent_1": {
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 227263,
+        "max_abs_err": 1.1884851506978862,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.2149924278259279,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 180.69482372909025
+            },
+            "net": 55.266414642333984,
+            "program": 54.0779294916361,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69482372909025
+            },
+            "net": 55.266414642333984,
+            "program": 54.0779294916361,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.70052757227364
+            },
+            "net": 55.26869583129883,
+            "program": 54.08021102890946,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.70052757227364
+            },
+            "net": 55.26869583129883,
+            "program": 54.08021102890946,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69305118165283
+            },
+            "net": 55.26570510864258,
+            "program": 54.07722047266114,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69305118165283
+            },
+            "net": 55.26570510864258,
+            "program": 54.07722047266114,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69010600923372
+            },
+            "net": 55.2645263671875,
+            "program": 54.07604240369349,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69010600923372
+            },
+            "net": 55.2645263671875,
+            "program": 54.07604240369349,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.71518968319077
+            },
+            "net": 55.274559020996094,
+            "program": 54.086075873276314,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.71518968319077
+            },
+            "net": 55.274559020996094,
+            "program": 54.086075873276314,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.70128683325743
+            },
+            "net": 55.26899719238281,
+            "program": 54.08051473330298,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.70128683325743
+            },
+            "net": 55.26899719238281,
+            "program": 54.08051473330298,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.6870300074397
+            },
+            "net": 55.2632942199707,
+            "program": 54.074812002975875,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.6870300074397
+            },
+            "net": 55.2632942199707,
+            "program": 54.074812002975875,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.67861928586166
+            },
+            "net": 55.25992965698242,
+            "program": 54.07144771434466,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.67861928586166
+            },
+            "net": 55.25992965698242,
+            "program": 54.07144771434466,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69893304185544
+            },
+            "net": 55.2680549621582,
+            "program": 54.079573216742176,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69893304185544
+            },
+            "net": 55.2680549621582,
+            "program": 54.079573216742176,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69747498572042
+            },
+            "net": 55.26747131347656,
+            "program": 54.078989994288165,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 180.69747498572042
+            },
+            "net": 55.26747131347656,
+            "program": 54.078989994288165,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.20000000000000995,
+        "out_of_range": 0.20000000000000284,
+        "metric": "max_abs_err",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 4,
+        "nodes": 50,
+        "constants": 6,
+        "relus": 2,
+        "ifs": 0
+      },
+      "meta": {
+        "blind_id": "ma96720",
+        "collected": "2026-10-28T23:04:52",
+        "transcript_found": true,
+        "outside_paths": [
+          "C:\\Users\\user\\AppData\\Local\\Temp\\claude\\C--Users-user-Documents-projects-ai-experiment-model-block-to-cpu\\10638c83-27e8-4db7-8b51-5e7da87cd27e\\tasks\\bdvfux79q.output"
+        ],
+        "forbidden_paths": [],
+        "model": "claude-opus-5-5",
+        "duration_s": 671.245,
+        "tokens": {
+          "input": 904028,
+          "output": 9262
+        }
+      }
+    },
     "formula": {
       "check": {
         "exact_pass": false,
         "snap_pass": false,
         "label": "empirical",
-        "n_inputs": 227243,
+        "n_inputs": 227263,
         "max_abs_err": 1.3421745300292969,
         "disagreements_outside": 522,
         "disagreements_inside": 0,
