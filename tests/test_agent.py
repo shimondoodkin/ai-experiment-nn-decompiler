@@ -124,3 +124,23 @@ def test_audit_strips_trailing_punctuation_and_ignores_division(tmp_path):
     tr.write_text("\n".join(json.dumps({"message": {"content": [{"type": "tool_use", "name": "Bash",
                                                                    "input": {"command": c}}]}}) for c in cmds))
     assert audit_transcripts([tr], b)["outside_paths"] == ["/tmp/t.py"]
+
+
+def test_collect_heuristics_path(tmp_path, capsys):
+    from pathlib import Path
+
+    from nndc.cli import main
+
+    repo_index = Path("runs") / "blind_index.json"
+    before = repo_index.read_bytes() if repo_index.exists() else None
+    rd, _, _ = setup_run(tmp_path)
+    idx, heur = tmp_path / "idx.json", tmp_path / "H.md"
+    assert main(["agent", "prepare", str(rd), "--index", str(idx)]) == 0
+    blind = Path(capsys.readouterr().out.split(" -> ")[1].split()[0])
+    mock_agent(blind, "def net(x0, x1):\n    return abs(x0 - x1) < 0.2\n", "## Heuristics\n- pair -> abs\n")
+    tr = tmp_path / "t.jsonl"
+    tr.write_text("")
+    assert main(["agent", "collect", str(blind), "--index", str(idx), "--heuristics", str(heur),
+                 "--transcript", str(tr)]) == 0
+    assert "pair -> abs" in heur.read_text()
+    assert (repo_index.read_bytes() if repo_index.exists() else None) == before
