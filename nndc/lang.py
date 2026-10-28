@@ -26,6 +26,13 @@ class ProgramError(ValueError):
     pass
 
 
+def _sigmoid(z: np.ndarray) -> np.ndarray:
+    # same formula as model.activate (not imported: fix folders copy lang.py without model.py)
+    with np.errstate(under="ignore"):   # exp(-|z|) underflowing to 0 is exact enough
+        e = np.exp(-np.abs(z))
+        return np.where(z >= 0, 1 / (1 + e), e / (1 + e))
+
+
 def allowlist_summary() -> str:
     return (
         "exactly one function `def net(x0, x1, ...)` with the same arguments as dump.py; "
@@ -279,10 +286,7 @@ class _Interp:
             if name == "relu":
                 return np.maximum(args[0], 0.0)
             if name == "sigmoid":
-                # same formula as model.activate (not imported: fix folders copy lang.py without model.py)
-                z = args[0]
-                e = np.exp(-np.abs(z))
-                return np.where(z >= 0, 1 / (1 + e), e / (1 + e))
+                return _sigmoid(args[0])
             if name == "tanh":
                 return np.tanh(args[0])
             if name == "abs":
