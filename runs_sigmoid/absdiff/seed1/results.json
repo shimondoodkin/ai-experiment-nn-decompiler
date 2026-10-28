@@ -402,6 +402,36 @@
         }
       }
     },
+    "ast": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 269455,
+        "max_abs_err": 1.351829604701038e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.10427312076091766,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.540535266247888,
+        "out_of_range": 6.367741952113503,
+        "metric": "max_abs_err",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 9,
+        "nodes": 232,
+        "constants": 33,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    },
     "formula": {
       "check": {
         "exact_pass": false,
