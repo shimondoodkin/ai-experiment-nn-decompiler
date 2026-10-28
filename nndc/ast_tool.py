@@ -56,7 +56,7 @@ def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, flo
     post = input_bounds(spec)
     scored = []
     for u in net.units:
-        if u.relu and u.pre.coef and set(u.pre.coef) <= inputs:
+        if u.act == "relu" and u.pre.coef and set(u.pre.coef) <= inputs:
             lo, hi = u.pre.interval(post)
             weight = sum(abs(c.get(u.name, 0.0)) for c in [x.pre.coef for x in net.units] + [o.coef for o in net.outputs])
             scored.append((weight * max(hi, 0.0), dict(u.pre.coef)))

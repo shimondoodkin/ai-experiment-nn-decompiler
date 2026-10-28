@@ -6,7 +6,7 @@ Approximate: candidates using it must pass the checker.
 from __future__ import annotations
 
 from ..spec import Spec
-from ..symnet import Affine, SymNet, fmt, input_bounds
+from ..symnet import Affine, SymNet, fmt, input_bounds, post_interval
 
 NICE_DENOMS = (1, 2, 4, 5, 8, 10, 20, 50, 100)
 COEF_REL = 0.05
@@ -74,6 +74,6 @@ def snap_net(net: SymNet, spec: Spec) -> tuple[SymNet, list[str]]:
     for u in out.units:
         u.pre = _snap_affine(u.pre, post, u.name, trace)
         lo, hi = u.pre.interval(post)
-        post[u.name] = (max(lo, 0.0), max(hi, 0.0)) if u.relu else (lo, hi)
+        post[u.name] = post_interval(u.act, lo, hi)
     out.outputs = [_snap_affine(o, post, f"output {k}", trace) for k, o in enumerate(out.outputs)]
     return out, trace

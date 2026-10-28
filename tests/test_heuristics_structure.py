@@ -13,7 +13,7 @@ from tests.helpers import hand
 def test_dead_and_linear_units_removed():
     mlp, spec = hand("deadredundant")
     net, trace = prune_dead_and_linear(from_dump(dump_program(mlp, spec), spec), spec)
-    names = [u.name for u in net.units if u.relu]
+    names = [u.name for u in net.units if u.act == "relu"]
     assert "h1_1" not in [u.name for u in net.units] and "h1_0" not in names   # dead removed, always-on linearized
     assert check_program(to_program(net), mlp, spec).exact_pass and trace
 
@@ -29,7 +29,7 @@ def test_all_dead_gives_constant():
 def test_duplicates_merge_exactly():
     mlp, spec = hand("deadredundant")
     net, _ = merge_units(normalize(from_dump(dump_program(mlp, spec), spec)), spec, near=False)
-    assert sum(u.relu for u in net.units) == 3          # h1_2 and h1_3 became one
+    assert sum(u.act == "relu" for u in net.units) == 3          # h1_2 and h1_3 became one
     assert check_program(to_program(net), mlp, spec).exact_pass
 
 

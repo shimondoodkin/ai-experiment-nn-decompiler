@@ -7,7 +7,7 @@ from __future__ import annotations
 import math
 
 from ..spec import Spec
-from ..symnet import Affine, SymNet, fmt, input_bounds, unit_bounds
+from ..symnet import Affine, SymNet, fmt, input_bounds, post_interval, unit_bounds
 
 NEAR_COS = 0.98
 NEAR_DT = 0.02
@@ -27,7 +27,7 @@ def normalize(net: SymNet) -> SymNet:
     out = net.copy()
     for u in out.units:
         s = sum(abs(c) for c in u.pre.coef.values())
-        if u.relu and s > 0 and s != 1:
+        if u.act == "relu" and s > 0 and s != 1:
             u.pre = u.pre.scaled(1 / s)
             _rescale_consumers(out, u.name, s)
     return out
@@ -56,11 +56,11 @@ def merge_units(net: SymNet, spec: Spec, near: bool) -> tuple[SymNet, list[str]]
     pre_b = unit_bounds(out, spec)
     for u in out.units:
         lo, hi = pre_b[u.name]
-        post[u.name] = (max(lo, 0.0), max(hi, 0.0)) if u.relu else (lo, hi)
+        post[u.name] = post_interval(u.act, lo, hi)
     merged = True
     while merged:
         merged = False
-        units = [u for u in out.units if u.relu and u.pre.coef]
+        units = [u for u in out.units if u.act == "relu" and u.pre.coef]
         for i, a in enumerate(units):
             for b in units[i + 1:]:
                 if a.layer != b.layer:

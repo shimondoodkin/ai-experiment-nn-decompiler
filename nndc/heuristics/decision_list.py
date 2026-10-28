@@ -50,7 +50,7 @@ def fold(net: SymNet, on: dict[str, bool], a: Affine) -> Affine:
         if c is None:
             continue
         rest = Affine({v: k for v, k in a.coef.items() if v != u.name}, a.const)
-        a = rest.plus(u.pre.scaled(c)) if (not u.relu or on[u.name]) else rest
+        a = rest.plus(u.pre.scaled(c)) if (u.act == "linear" or on[u.name]) else rest
     return a
 
 
@@ -59,8 +59,8 @@ def _patterns(net: SymNet, X: np.ndarray) -> tuple[list[str], np.ndarray]:
     names, cols = [], []
     for u in net.units:
         z = u.pre.eval(env)
-        env[u.name] = np.maximum(z, 0.0) if u.relu else z
-        if u.relu:
+        env[u.name] = np.maximum(z, 0.0) if u.act == "relu" else z
+        if u.act == "relu":
             names.append(u.name)
             cols.append(z > 0)
     return names, (np.stack(cols, axis=1) if cols else np.zeros((len(X), 0), bool))
@@ -231,6 +231,8 @@ def decision_list(net: SymNet, spec: Spec, mlp: MLP) -> tuple[list[tuple[str, st
     seed) and its decisions.
     """
     if spec.output != "argmax":
+        return None
+    if any(u.act in ("sigmoid", "tanh") for u in net.units):   # folds and patterns are ReLU-only
         return None
     X, _ = build_input_set(mlp, spec, seed=SAMPLE_SEED)
     y, score = net_output(mlp, spec, X)

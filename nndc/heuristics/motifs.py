@@ -20,6 +20,8 @@ class ReluSum:
 
 
 def as_relu_sum(net: SymNet, out: int = 0) -> ReluSum | None:
+    if any(u.act in ("sigmoid", "tanh") for u in net.units):
+        return None
     inputs = set(net.inputs)
     if any(not set(u.pre.coef) <= inputs for u in net.units):
         return None
@@ -30,7 +32,7 @@ def as_relu_sum(net: SymNet, out: int = 0) -> ReluSum | None:
         if v in inputs:
             continue
         u = net.unit(v)
-        if not u.relu:
+        if u.act == "linear":
             lin = lin.plus(u.pre.scaled(c))
         elif not u.pre.coef:
             lin = lin.plus(Affine({}, c * max(u.pre.const, 0.0)))

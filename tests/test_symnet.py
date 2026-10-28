@@ -47,3 +47,29 @@ def test_from_dump_rejects_malformed_outputs_with_value_error(src, kind):
                 inputs=[InputSpec("x0", "x0", "float", 0, 1), InputSpec("x1", "x1", "float", 0, 1)])
     with pytest.raises(ValueError, match="line"):
         from_dump(src, spec)
+
+
+def test_roundtrip_sigmoid_tanh():
+    from nndc.lang import evaluate as lang_eval, parse_program
+    from nndc.model import MLP
+    rng = np.random.default_rng(4)
+    sizes = [2, 4, 4, 1]
+    mlp = MLP([rng.normal(size=(o, i)).astype(np.float32) for i, o in zip(sizes, sizes[1:])],
+              [rng.normal(size=o).astype(np.float32) for o in sizes[1:]], ["sigmoid", "tanh"])
+    spec = Spec(task="", output="regression", inputs=[InputSpec(f"x{i}", f"x{i}", "float", -3, 3) for i in range(2)])
+    net = from_dump(dump_program(mlp, spec), spec)
+    assert [u.act for u in net.units] == ["sigmoid"] * 4 + ["tanh"] * 4
+    X = np.random.default_rng(5).uniform(-3, 3, (2000, 2))
+    ref = mlp.forward(X.astype(np.float32))[:, 0]
+    np.testing.assert_allclose(evaluate(net, X)[:, 0], ref, rtol=1e-5)
+    np.testing.assert_allclose(lang_eval(parse_program(to_program(net), spec.arg_names), X), ref, rtol=1e-5)
+
+
+def test_post_interval():
+    import math
+    from nndc.symnet import post_interval
+    assert post_interval("relu", -2.0, 3.0) == (0.0, 3.0)
+    assert post_interval("linear", -2.0, 3.0) == (-2.0, 3.0)
+    assert post_interval("sigmoid", -2.0, 3.0) == pytest.approx((1 / (1 + math.exp(2)), 1 / (1 + math.exp(-3))))
+    assert post_interval("tanh", -2.0, 3.0) == pytest.approx((math.tanh(-2.0), math.tanh(3.0)))
+    assert post_interval("sigmoid", -1e4, 1e4) == (0.0, 1.0)
