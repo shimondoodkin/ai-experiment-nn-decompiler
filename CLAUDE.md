@@ -155,3 +155,9 @@ reconstructed from git history.
 - **Baselines:** hyperparameters are fixed in the design doc before any run, never tuned per task.
 - **Commits:** data commits (new run results) are separate from code commits and use the `data:`
   prefix. Existing `agent_n` / `ast` results are reused, not regenerated.
+- **Older runs stay:** never delete or overwrite older runs (`runs/`, `runs_bugs/`, their
+  `agent_*`, `ast`, baseline and `repair/` files, and checks logs). They are the record
+  of the work and what the reports cite. New work goes in new files or a new root. To try a command
+  that rewrites or deletes run files, work on a copy in a scratch folder outside the repo, and never
+  point `rm -rf`, `shutil.rmtree`, `git clean` or `experiments/equivalence.py copy` at the repo, its
+  parent or `runs*/`. Tests that exercise a delete must patch it out or use `tmp_path`.
