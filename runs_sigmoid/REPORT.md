@@ -44,11 +44,8 @@ Runs where a refactored program is closer to the *true task* than the network it
 - **median3/seed0** ast: max error inside 0.5695 → 0.5267, outside 2.686 → 2.646
 - **median3/seed2** ast: max error inside 0.6501 → 0.645, outside 2.907 → 2.892
 - **neareq/seed0** agent_1: accuracy inside 0.9987 → 1, outside 0.9985 → 1; recovered the true algorithm (audit-flagged run)
-- **neareq/seed0** formula: accuracy inside 0.9987 → 1, outside 0.9985 → 1; recovered the true algorithm
 - **neareq/seed1** agent_1: accuracy inside 0.9993 → 1, outside 0.9991 → 1; recovered the true algorithm (audit-flagged run)
-- **neareq/seed1** formula: accuracy inside 0.9993 → 1, outside 0.9991 → 1; recovered the true algorithm
 - **neareq/seed2** agent_1: accuracy inside 0.9985 → 1, outside 0.9988 → 1; recovered the true algorithm
-- **neareq/seed2** formula: accuracy inside 0.9985 → 1, outside 0.9988 → 1; recovered the true algorithm
 - **tax/seed0** agent_1: max error inside 1.364 → 0.9, outside 39.11 → 8.7 (audit-flagged run)
 - **tax/seed0** ast: max error inside 1.364 → 1.081, outside 39.11 → 8.505
 - **tax/seed1** agent_1: max error inside 1.342 → 0.2, outside 39.36 → 0.2 (audit-flagged run)
@@ -57,12 +54,9 @@ Runs where a refactored program is closer to the *true task* than the network it
 - **tax/seed2** ast: max error inside 1.506 → 0.9564, outside 38.47 → 9.74
 - **window/seed0** agent_1: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed0** ast: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed0** formula: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed1** ast: accuracy inside 0.9977 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed1** formula: accuracy inside 0.9977 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** agent_1: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm (audit-flagged run)
 - **window/seed2** ast: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed2** formula: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
 
 ## Reproduction (step 3)
 
@@ -95,6 +89,11 @@ Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactori
 | xor/seed0 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
 | xor/seed1 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
 | xor/seed2 | heldout | PASS exact | yes | 7 | PASS exact | yes | 17 | yes | truth-table |
+
+The counts above leave out agent attempts with outside-path audit flags. In these runs the flags come from the agents' own scratch scripts, written to the session scratchpad that parallel agents shared; the transcripts were reviewed by hand and no task information was read. Counting those attempts too (secondary, not the headline):
+
+- **held-out**: 3 of 6 reproduced; tool recovered the true formula in 2, Claude in 3
+- **in-sample**: 5 of 12 reproduced; tool recovered the true formula in 4, Claude in 5
 
 ## Formula vs net
 
@@ -307,6 +306,10 @@ The same task, seed and training settings, with ReLU (`runs`) and with this root
 | xor/seed0 | yes / yes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed1 | yes / yes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed2 | no / yes | PASS exact, not rec, 9 nodes | PASS exact, rec, 17 nodes | PASS exact, not rec, 5 nodes | PASS exact, rec, 7 nodes |
+
+## Real datasets
+
+Dataset runs (Iris) have no known formula: their task columns below compare with the label of the nearest table row, and `recovered` is n/a. They are left out of the step-3 reproduction and the beats-the-network list above. Their results and held-out runs are in [runs_sigmoid/iris/REPORT.md](runs_sigmoid/iris/REPORT.md).
 
 ## Results
 
