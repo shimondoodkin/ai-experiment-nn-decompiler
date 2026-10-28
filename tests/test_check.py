@@ -1,6 +1,7 @@
 import numpy as np
 
-from nndc.check import build_input_set, check_program, format_result
+from nndc.check import _rounding_bound, build_input_set, check_program, format_result
+from nndc.dump import dump_program
 from nndc.model import MLP
 from nndc.spec import InputSpec, Spec
 from tests.helpers import hand
@@ -153,3 +154,40 @@ def test_no_boundary_points_option():
     assert plain.shape[0] < full.shape[0]
     r = check_program("def net(x0):\n    return abs(x0) < 0.5\n", mlp, spec, boundary=False)
     assert r.snap_pass and r.n_inputs == plain.shape[0]
+
+
+def _random_net(sizes, seed, acts=None):
+    rng = np.random.default_rng(seed)
+    return MLP([rng.normal(size=(o, i)).astype(np.float32) for i, o in zip(sizes, sizes[1:])],
+               [rng.normal(size=o).astype(np.float32) for o in sizes[1:]], acts)
+
+
+def _spec(n_in, output, n_out=1):
+    return Spec(task="t", output=output, n_outputs=n_out,
+                inputs=[InputSpec(f"x{i}", f"r{i}", "float", -3, 3) for i in range(n_in)])
+
+
+def test_sigmoid_dump_passes_exact():
+    for sizes, acts, kind in [([2, 4, 1], ["sigmoid"], "regression"), ([2, 4, 3], ["tanh"], "argmax")]:
+        mlp = _random_net(sizes, 3, acts)
+        spec = _spec(sizes[0], kind, sizes[-1])
+        r = check_program(dump_program(mlp, spec), mlp, spec)
+        assert r.error is None and r.exact_pass, (acts, r)
+
+
+def _old_bound(mlp, X):
+    eps = float(np.finfo(np.float32).eps)
+    h = X.astype(np.float32).astype(np.float64)
+    e = eps * np.abs(X)
+    for i, (W, b) in enumerate(zip(mlp.weights, mlp.biases)):
+        Wa = np.abs(W.astype(np.float64))
+        e = e @ Wa.T + eps * (W.shape[1] + 1) * (np.abs(h) @ Wa.T + np.abs(b.astype(np.float64)))
+        z = h @ W.T.astype(np.float64) + b
+        h = np.maximum(z, 0) if i < len(mlp.weights) - 1 else z
+    return e.max(axis=1)
+
+
+def test_rounding_bound_relu_unchanged():
+    mlp = _random_net([3, 8, 8, 2], 5)
+    X = np.random.default_rng(6).uniform(-3, 3, (500, 3))
+    assert np.array_equal(_rounding_bound(mlp, X), _old_bound(mlp, X))

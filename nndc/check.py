@@ -12,7 +12,7 @@ from typing import Literal
 import numpy as np
 
 from .lang import ProgramError, evaluate, parse_program
-from .model import MLP
+from .model import LIPSCHITZ, MLP, activate
 from .spec import DISCRETE_TYPES, Spec
 
 EXHAUSTIVE_CAP = 10_000_000
@@ -157,7 +157,8 @@ def _rounding_bound(mlp: MLP, X: np.ndarray) -> np.ndarray:
     """Per-row bound on the float32 forward pass's rounding error, largest over the outputs.
 
     Propagates e_l = |W_l| e_{l-1} + eps*(fan_in+1) * (|W_l| |h_{l-1}| + |b_l|), starting from the
-    rounding of the inputs to float32; ReLU does not increase the error.
+    rounding of the inputs to float32; ReLU does not increase the error. After a sigmoid or tanh layer
+    the error is scaled by the activation's Lipschitz constant and 4 eps is added for evaluating it.
     """
     eps = float(np.finfo(np.float32).eps)
     h = X.astype(np.float32).astype(np.float64)
@@ -166,7 +167,13 @@ def _rounding_bound(mlp: MLP, X: np.ndarray) -> np.ndarray:
         Wa = np.abs(W.astype(np.float64))
         e = e @ Wa.T + eps * (W.shape[1] + 1) * (np.abs(h) @ Wa.T + np.abs(b.astype(np.float64)))
         z = h @ W.T.astype(np.float64) + b
-        h = np.maximum(z, 0) if i < len(mlp.weights) - 1 else z
+        if i == len(mlp.weights) - 1:
+            h = z
+        elif mlp.acts[i] == "relu":
+            h = np.maximum(z, 0)
+        else:
+            e = LIPSCHITZ[mlp.acts[i]] * e + 4 * eps
+            h = activate(mlp.acts[i], z)
     return e.max(axis=1)
 
 

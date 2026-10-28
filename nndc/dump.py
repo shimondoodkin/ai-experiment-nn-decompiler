@@ -47,9 +47,10 @@ def dump_program(mlp: MLP, spec: Spec) -> str:
     n_layers = len(mlp.weights)
     for layer in range(n_layers - 1):
         W, b = mlp.weights[layer], mlp.biases[layer]
+        act = mlp.acts[layer]
         new = [f"h{layer + 1}_{j}" for j in range(W.shape[0])]
         for j, name in enumerate(new):
-            lines.append(f"    {name} = relu({_affine(W[j], b[j], names)})  # layer {layer + 1} neuron {j}")
+            lines.append(f"    {name} = {act}({_affine(W[j], b[j], names)})  # layer {layer + 1} neuron {j}")
         names = new
     W, b = mlp.weights[-1], mlp.biases[-1]
     if spec.output == "argmax":
