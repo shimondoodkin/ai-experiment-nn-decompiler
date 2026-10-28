@@ -8,9 +8,14 @@ functionality**: it decompiles the net into a readable program, lets Claude Code
 (snap constants, detect fixtures, form formulas, name variables, remove what doesn't help), and
 checks every version against the original network.
 
-Status: steps 1–2 (decompiler, checker, Claude Code refactoring). See
-[the design](docs/design/2026-10-27-nn-decompiler-design.md) for the full plan, and
-[REPORT.md](REPORT.md) for results.
+Status: steps 1–4 done:
+1. the decompiler and checker;
+2. Claude Code refactoring;
+3. a deterministic tool distilled from the agents' notes;
+4. a comparison with existing methods, and decompile → fix → reinsert.
+
+See [the design](docs/design/2026-10-27-nn-decompiler-design.md) for the full plan, [REPORT.md](REPORT.md)
+for results, and [CONCLUSIONS.md](CONCLUSIONS.md) for what each step taught us.
 
 ## Step 3: how much of this is mechanical?
 

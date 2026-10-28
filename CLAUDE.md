@@ -90,6 +90,47 @@ reconstructed from git history.
   and `ast_trace.json`.
 - It sees only the dump, the blind spec and the weights; it never sees the task.
 
+**Step 4 pieces:**
+- **Baselines** (`nndc/baselines/`: tree, regions, PySR) write extra program versions (`tree.py`,
+  `regions.py`, `pysr.py`, `pysr_snap.py`) that `evaluate_run` picks up. Run them with `nndc baseline`.
+  PySR needs `uv run --group pysr`; the real fit test is marked `slow` and deselected by default.
+- **Agent folder kinds** (`prepare(kind=...)`, `nndc agent prepare --io|--fix|--fixio`):
+  - `io`: samples plus a scrambled `oracle.bin`, checked without boundary points;
+  - `fix` / `fixio`: labelled repair cases, with or without the decompiled program, scored by
+    `score.py`.
+
+  `collect` reads the kind from `runs/blind_index.json` and writes `io_agent_<n>` / `fix_<n>` /
+  `fixio_<n>`.
+- **Fix experiment** (`nndc/repair/`):
+  - planted-bug nets live in `runs_bugs/` (`nndc run TASK --seed S --bug --root runs_bugs`);
+  - `nndc repair baselines|evaluate` writes `repair/results.json` (efficacy, generalization,
+    drawdown, reinsertion);
+  - `nndc/compile_back.py` turns a program back into an exact ReLU net.
+- **Comparison section:** `nndc/compare.py` builds the "Comparison (step 4)" section of `REPORT.md`.
+- **Hand-written conclusions** per step are in `CONCLUSIONS.md`. Add to it when a step ends.
+
+## Practical notes
+
+- **Running agent passes:**
+  - One fresh general-purpose subagent per blind folder; the prompt is only "Work only inside
+    `<folder>`. Read INSTRUCTIONS.md there and follow it."
+  - At most 20 subagents run at once.
+  - Transcripts are at `~/.claude/projects/<project>/<session>/subagents/agent-<id>.jsonl`. Keep a
+    folder→agent-id map, and collect only agents that have finished.
+  - Agents sometimes keep a background job running after their final report. Before relying on a
+    collected attempt, check that its `agent.py` did not change.
+- **Concurrent writes:** runs that are evaluated while another job writes the same `results.json` can
+  race. Re-run `evaluate_run` over all runs before a data commit.
+- **Shell:**
+  - The rtk shell hook filters `git diff` output (it can come back empty). Use PowerShell or `rtk proxy`
+    for raw diffs.
+  - A global `*.log` gitignore exists, so `.gitignore` re-includes `runs*/**/*_checks.log`.
+- **Long jobs:** PySR's first import downloads Julia (about 8 min). A PySR pass over 41 nets takes
+  about 1.5 h, and `nndc report` re-runs the checker for the Iris table; run both in the background.
+- **Audits:** outside-path flags are mostly false positives (`/len`, `/print`, `/50`). Review them
+  rather than auto-excluding runs. Forbidden-file access (`oracle.bin`, `_checker/`) by `io` agents
+  is the one hard exclusion.
+
 ## Experimental discipline (do not break)
 
 - **Held-out data:**
