@@ -54,6 +54,7 @@ def cmd_check(args) -> int:
 
 
 def cmd_agent_prepare(args) -> int:
+    from .agent import prepare as prep
     from .agent.prepare import prepare, suggested_commands
     from .run import all_runs
 
@@ -63,7 +64,7 @@ def cmd_agent_prepare(args) -> int:
         return 2
     kind = "io" if args.io else "fix" if args.fix else "fixio" if args.fixio else "agent"
     for rd in runs:
-        b = prepare(rd, index=Path(args.index), kind=kind)
+        b = prepare(rd, index=Path(args.index) if args.index else prep.INDEX, kind=kind)
         print(f"{rd.as_posix()} -> {b}")
         for c in suggested_commands(b):
             print(f"    {c}")
@@ -76,7 +77,7 @@ def cmd_agent_collect(args) -> int:
 
     trs = [Path(t) for t in args.transcript] if args.transcript else None
     blind = Path(args.blind)
-    index = Path(args.index)
+    index = Path(args.index) if args.index else prep.INDEX
     kind = prep.load_index(index).get(blind.name, {}).get("kind", "agent")
     rd, n = collect(blind, index=index, heuristics=Path(args.heuristics), transcripts=trs)
     if n is None:
@@ -240,7 +241,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("runs", nargs="*")
     ap.add_argument("--all", action="store_true")
     ap.add_argument("--root", default=str(RUNS))
-    ap.add_argument("--index", default=str(RUNS / "blind_index.json"), help="blind folder -> run map to write to")
+    ap.add_argument("--index", help="blind folder -> run map to write to (default: runs/blind_index.json)")
     kinds = ap.add_mutually_exclusive_group()
     kinds.add_argument("--io", action="store_true", help="input/output-only folder (samples, no dump or weights)")
     kinds.add_argument("--fix", action="store_true", help="fix experiment: decompiled program + labelled cases")
@@ -250,7 +251,7 @@ def main(argv: list[str] | None = None) -> int:
     ac.add_argument("blind")
     ac.add_argument("--transcript", action="append",
                     help="transcript JSONL to audit (e.g. a subagent's); default: look it up by folder")
-    ac.add_argument("--index", default=str(RUNS / "blind_index.json"), help="blind folder -> run map to read")
+    ac.add_argument("--index", help="blind folder -> run map to read (default: runs/blind_index.json)")
     ac.add_argument("--heuristics", default="HEURISTICS.md", help="file the agent's ## Heuristics section is appended to")
     ac.set_defaults(func=cmd_agent_collect)
     am = asub.add_parser("mock", help="write a given program as a fake attempt (testing)")
