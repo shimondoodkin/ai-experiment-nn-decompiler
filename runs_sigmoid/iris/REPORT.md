@@ -39,3 +39,7 @@ in, as the ReLU nets that did not learn did.
   - The tool was not tuned after seeing this, as the freeze rule requires.
 - **What the agents wrote:** two-cut decision lists (`if s_a > 0: a; if s_c > 0: c; else b`), the same shape as for
   the ReLU nets. The classes form ordered bands, and classes 0 and 2 never border each other.
+
+**Later (2026-10-29):** `ast2` (the kink-merge tool) replaced `ast` in every sigmoid run. Kink merge does not apply to
+argmax nets, so on Iris `ast2` is the same program as the AST tool column above; the old `ast.py` files are in git
+history.

@@ -170,6 +170,81 @@ notes and final reports. Those are first-hand but not systematically measured.
   - **PySR on argmax nets** fits the logits and takes the argmax; the design predated Iris.
   - **LP repair:** it is verified after float32 rounding, and solved at 0.999 of the tolerance.
 
+## Sigmoid nets and kink merge (side track, 2026-10-28 to 29)
+
+Three projects, merged together:
+- **A:** activation types in the code;
+- **B:** 30 sigmoid nets with agents and sigmoid moves for the AST tool (`runs_sigmoid/`);
+- **C:** kink merge, a new AST tool version `ast2`, with 15 fresh held-out nets.
+
+Results are in `runs_sigmoid/REPORT.md` and `runs_sigmoid/iris/REPORT.md`.
+
+**What we learned**
+- **The code handles both activations in one path.** ReLU, sigmoid and tanh are a per-layer setting.
+  - ReLU-only routes refuse other nets, and sigmoid moves run only on nets that have sigmoid units.
+  - ReLU results stayed byte-identical through all three projects (equivalence script: 0 of 248 files differ).
+- **Sharp sigmoid nets are as easy as ReLU nets.** On xor and window the units are steep steps, and both the agents
+  and the tool recover the formula. Neareq too, for the agents.
+- **Smooth nets bend the formula in three ways.** Measured against the true formula, as a share of the output
+  range:
+  - a ripple everywhere, about 1% mean (ReLU nets: 0.02%), because straight lines are built from S-curves;
+  - rounded kinks, 2–3 times the mean error near the bend of `|x0−x1|`;
+  - the largest: flattening at the edge of the input box, where the output is extreme. Absdiff at (3, −3) gives
+    5.4 instead of 6 (9–14%), and tax flattens above income ~185.
+
+  A sum of sigmoids cannot keep climbing to the edge; a ReLU can. So on absdiff, median3 and tax the formula
+  fails against the net, and every faithful program is long.
+- **The edge error is one term (the user's idea, project C):**
+  - each sigmoid becomes 17 straight pieces, so an 8-unit net is 128 ReLU kinks;
+  - kinks on the same line add up, and about half of the lines nearly cancel;
+  - what is left is the formula's kinks, each split into a pair around the true place, plus one negative kink near
+    the edge;
+  - on absdiff: kinks at `x0−x1 ≈ ±0.25` and at `±5`. On tax: a bracket near 75 and an edge kink near 185–196.
+
+  The same structure showed up on the 15 held-out nets. Blind agents found it on their own: tax agents added "a cap
+  at 60" or "a knot at 190" to the bracket formula.
+- **Faithful vs snapped (the open policy question):** the net is the formula plus one edge correction. Dropping
+  that term gives the formula, which fails the checker against the net. Keeping it gives a short faithful
+  program.
+  - Proposal (to confirm with the user): acceptance stays faithful, as now.
+  - The report shows the faithful program next to `formula.py`, so the difference is one named term rather than
+    a long dump.
+- **Where kink merge wins** (route won, development seeds 0–2 / held-out seeds 3–5):
+  - neareq 3/3 and 3/3;
+  - absdiff 2/3 and 1/3;
+  - tax 1/3 and 0/3. Knot-fit is smaller there, but kink merge's own program passed on all 3 held-out tax nets.
+
+  Before kink merge, neareq and absdiff fell back to the dump (230–240 nodes). Now they are 66–116 nodes.
+- **Reproducing the agents.**
+  - The project B tool, frozen at `15b943b`, on its held-out seed 2 reproduced Claude's best valid attempt on 2 of
+    3 runs. Counting audit-flagged attempts too: 3 of 6 held-out and 5 of 12 in-sample. Its `ast.py` files were
+    removed later, see below; this count is from the project B report in git history.
+  - `ast2` reproduces Claude's best valid attempt on 8 of 12 held-out nets and 5 of 7 development nets
+    (`runs_sigmoid/REPORT.md`).
+- **Agents still beat the tool on readability.** They write `0.2 - abs(x1 - x0)` for neareq, while kink merge writes
+  three weighted kinks with unrounded coefficients that pass the same check.
+
+**What did not work, or surprised us**
+- **The spike's fixed line positions were not enough.** Refitting the strongest lines needed 6 lines to pass. The
+  route also had to move line positions (an offset search), and that was slow until the search used 2,000 points.
+- **Committed `results.json` files can be stale.** Re-evaluating changed `n_inputs` (+8 to +20) in several runs
+  without changing any verdict. Re-run `evaluate_run` before every data commit, as the practical notes say.
+- **Parallel agents shared one scratchpad** in project B, and the audit flagged it. A `scratch/` folder in each
+  blind folder fixed this: 12 of 15 held-out audits were clean, and the other 3 were false positives.
+- **`--name` could overwrite run files** until the final review. Now kink merge runs only for `ast2`, and only
+  `ast`/`ast2` are accepted.
+- **Superseded results:** the user decided that runs are results of code and git keeps them. So `ast2` replaced
+  `ast` in every sigmoid run, and the project B `ast.py` files live in git history.
+
+**Not done yet**
+- Two-layer sigmoid nets (median3): after expansion, their kinks bend, so they do not lie on lines.
+- Tool changes the final review found. They need a new freeze and a fresh held-out set:
+  - near-axis lines can split in two;
+  - the unrounded candidate keeps lines that left the box;
+  - the position tolerance should scale with the line, not the largest input range;
+  - constants are written at full precision.
+- Tanh, which is a scaled sigmoid and should reuse everything here.
+
 ## Open questions and next steps
 
 - **Step 5: compile to C and measure CPU speed against the net.** Also pruning. The programs already
@@ -180,6 +255,8 @@ notes and final reports. Those are first-hand but not systematically measured.
   - small RL policies;
   - one MLP block inside a small transformer, for decompile-fix-reinsert where relearning from cases
     is not enough.
+- **Smooth functions (the user's next idea):** can the decompiler and tools recognise functions that are not
+  piecewise linear, such as `exp`, `sqrt`, or a circle `x² + y² < r²`? Next to research.
 - **A harder fix population:** more planted-bug nets that learn their bug, and natural bugs with real
   failures, so that "with program" vs "cases only" can separate.
 - **Deferred minors** (none affects current results):
