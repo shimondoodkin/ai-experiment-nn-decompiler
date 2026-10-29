@@ -1,0 +1,217 @@
+{
+  "task": "xor",
+  "run": "xor/seed3",
+  "kind": "trained",
+  "train": {
+    "seed": 3,
+    "steps": 3000,
+    "lr": 0.05,
+    "hidden": [
+      4
+    ],
+    "batch": 512,
+    "loss_curve": [
+      [
+        0,
+        0.7557474374771118
+      ],
+      [
+        100,
+        0.393449068069458
+      ],
+      [
+        200,
+        0.3542631268501282
+      ],
+      [
+        300,
+        0.3503444194793701
+      ],
+      [
+        400,
+        0.3489059805870056
+      ],
+      [
+        500,
+        0.34818732738494873
+      ],
+      [
+        600,
+        0.34776782989501953
+      ],
+      [
+        700,
+        0.3474982976913452
+      ],
+      [
+        800,
+        0.3473132848739624
+      ],
+      [
+        900,
+        0.34717994928359985
+      ],
+      [
+        1000,
+        0.3470802903175354
+      ],
+      [
+        1100,
+        0.347003698348999
+      ],
+      [
+        1200,
+        0.34694331884384155
+      ],
+      [
+        1300,
+        0.34689468145370483
+      ],
+      [
+        1400,
+        0.3468550145626068
+      ],
+      [
+        1500,
+        0.346822053194046
+      ],
+      [
+        1600,
+        0.34679460525512695
+      ],
+      [
+        1700,
+        0.3467710018157959
+      ],
+      [
+        1800,
+        0.3467511236667633
+      ],
+      [
+        1900,
+        0.3467339277267456
+      ],
+      [
+        2000,
+        0.3467188775539398
+      ],
+      [
+        2100,
+        0.3467057943344116
+      ],
+      [
+        2200,
+        0.3466942012310028
+      ],
+      [
+        2300,
+        0.34668397903442383
+      ],
+      [
+        2400,
+        0.3466748595237732
+      ],
+      [
+        2500,
+        0.3466668128967285
+      ],
+      [
+        2600,
+        0.34665945172309875
+      ],
+      [
+        2700,
+        0.34665292501449585
+      ],
+      [
+        2800,
+        0.34664690494537354
+      ],
+      [
+        2900,
+        0.34664157032966614
+      ],
+      [
+        2999,
+        0.34663692116737366
+      ]
+    ],
+    "quality": {
+      "accuracy": 0.75
+    },
+    "learned": false,
+    "act": "sigmoid"
+  },
+  "versions": {
+    "dump": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.5,
+        "margin": 0.49326408147811884,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.75,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 5,
+        "nodes": 120,
+        "constants": 17,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    },
+    "formula": {
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 1,
+        "zone_fraction": 0.5,
+        "margin": 0.49326408147811884,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 1,
+              "x1": 1
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.0,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": true,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 7,
+        "constants": 0,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    }
+  }
+}
