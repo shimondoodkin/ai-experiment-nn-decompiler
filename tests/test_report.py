@@ -146,3 +146,37 @@ def test_flagged_reproduction_note(tmp_path):
     (rd / "ast_trace.json").write_text(json.dumps({"winner": "structural-snap"}))
     md = flagged_reproduction_md(tmp_path)
     assert "outside" in md and "1 of 1" in md      # the flagged attempt is counted in the secondary count
+
+
+def _kink_files(rd, m=4):
+    tr = {"winner": "kink-merge", "kink_merge": {
+        "applies": None,
+        "per_offset": [{"off": 0.02, "kinks": 128, "lines": 32, "cancelled": 14},
+                       {"off": 0.1, "kinks": 128, "lines": 16, "cancelled": 11}],
+        "winner": {"off": 0.02, "m": m, "tol": 0.02,
+                   "lines": [{"normal": {"x0": 1.0, "x1": -1.0}, "t": -0.25, "strength": 1.0}] * m}}}
+    (rd / "ast2_trace.json").write_text(json.dumps(tr))
+    (rd / "ast2.py").write_text("def net(x0, x1):\n    return relu(x0 - x1 + 0.25)\n")
+    (rd / "formula.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")
+
+
+def test_kink_md_rows(tmp_path):
+    from nndc.report import kink_md
+
+    for seed in (0, 3):
+        rd = _fake_run(tmp_path, "absdiff", seed, {"dump": _v(nodes=200), "agent_1": _v(nodes=28),
+                                                   "ast2": _v(nodes=30), "formula": _v(snap=False, recovered=True)})
+        _kink_files(rd)
+    md = kink_md(tmp_path)
+    assert md.count("| absdiff/seed0 |") == 1 and md.count("| absdiff/seed3 |") == 1
+    assert "| development |" in md and "| held-out |" in md
+    assert "128 → 32 → 14 → 4" in md
+    assert "max(a - b + 0.25, 0)" in md                     # kept lines in real input names
+    assert "relu(a - b + 0.25)" in md and "abs(a - b)" in md  # ast2 next to formula.py
+
+
+def test_kink_md_empty(tmp_path):
+    from nndc.report import kink_md
+
+    _fake_run(tmp_path, "absdiff", 0, {"dump": _v(), "ast": _v()})
+    assert kink_md(tmp_path) == ""

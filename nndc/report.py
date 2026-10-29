@@ -119,7 +119,7 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
             + "\n\n" + reproduction_md(Path(root))
             + (comparison_md(Path(root), Path(root), BUG_ROOT) if compare_to is None
                else flagged_reproduction_md(Path(root)) + formula_md(Path(root))
-               + activation_compare_md(Path(compare_to), Path(root)))
+               + activation_compare_md(Path(compare_to), Path(root)) + kink_md(Path(root)))
             + _datasets_md(Path(root)) + "## Results\n\n" + "\n".join(rows) + "\n\n" + "\n".join(sections))
 
 
@@ -197,6 +197,68 @@ def activation_compare_md(relu_root: Path, root: Path) -> str:
             f"(`{Path(relu_root).as_posix()}`) and with this root's activation.\n\n" + "\n".join(rows) + "\n\n")
 
 
+def _kink_heldout(rd: Path) -> bool:
+    """The kink-merge held-out set: seeds 3-5, built after its freeze."""
+    return rd.name in ("seed3", "seed4", "seed5")
+
+
+def _kink_line(line: dict, spec: Spec) -> str:
+    from .symnet import Affine
+
+    z = Affine({k: float(f"{c:.3g}") for k, c in line["normal"].items()}, -float(f"{line['t']:.3g}"))
+    return f"{_num(line['strength'])} · max({with_real_names(z.to_src(), spec)}, 0)"
+
+
+def kink_md(root: Path) -> str:
+    """The kink-merge tool (ast2): per run, the kink counts and the kept lines; then ast2 next to formula.py."""
+    rows = ["| run | split | route | ast2 vs net | recovered | nodes | kinks → lines → nearly cancelled → kept "
+            "| kept lines |", "|---|---|---|---|---|---|---|---|"]
+    progs = []
+    for rd in all_runs(root):
+        res = _results(rd)
+        if res is None or "ast2" not in res["versions"]:
+            continue
+        spec = Spec.load(rd / "spec.json")
+        v = res["versions"]["ast2"]
+        tp = rd / "ast2_trace.json"
+        tr = json.loads(tp.read_text(encoding="utf-8")) if tp.exists() else {}
+        km = tr.get("kink_merge") or {}
+        w, per = km.get("winner"), km.get("per_offset") or []
+        if w:
+            po = next((p for p in per if p["off"] == w["off"]), None)
+            counts = f"{po['kinks']} → {po['lines']} → {po['cancelled']} → {w['m']}" if po else ""
+            kept = "; ".join(_kink_line(ln, spec) for ln in w["lines"])
+        else:
+            counts = (f"{per[0]['kinks']} → {per[0]['lines']} → {per[0]['cancelled']} → –" if per
+                      else km.get("applies") or "–")
+            kept = ""
+        rec = _yn(bool(v["task"].get("recovered"))) if is_step1(rd) else "n/a"
+        rows.append(f"| {res['run']} | {'held-out' if _kink_heldout(rd) else 'development'} | {tr.get('winner', '')} | "
+                    f"{_verdict(v['check'])} | {rec} | {_num((v['size'] or {}).get('nodes'), 'd')} | {counts} | {kept} |")
+        if (rd / "formula.py").exists() and (rd / "ast2.py").exists():
+            a2 = with_real_names((rd / "ast2.py").read_text(encoding="utf-8"), spec).strip()
+            fo = with_real_names((rd / "formula.py").read_text(encoding="utf-8"), spec).strip()
+            progs.append(f"**{res['run']}**: `ast2`, then `formula.py`\n\n```python\n{a2}\n```\n\n```python\n{fo}\n```\n")
+    if len(rows) == 2:
+        return ""
+    out = ["## Kink merge (ast2)\n",
+           "The kink-merge tool turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps the "
+           "strongest lines and refits them to the net (`ast2`). Development runs are seeds 0–2; held-out runs "
+           "(seeds 3–5) were built after the tool was frozen. *kinks → lines → nearly cancelled → kept* are the "
+           "counts for the winning merge tolerance.\n"]
+    rep = reproduction(root, name="ast2", heldout=_kink_heldout)
+    for split, label in (("heldout", "held-out"), ("distill", "development")):
+        rs = [r for r in rep if r["split"] == split]
+        if rs:
+            ok = sum(r["ast_check"].startswith("PASS") for r in rs)
+            routes = sum(r["route"] == "kink-merge" for r in rs)
+            vs = [r for r in rs if r["reproduces"] is not None]
+            out.append(f"- **{label}**: {ok} of {len(rs)} pass, kink-merge won {routes}, recovered the formula in "
+                       f"{sum(r['ast_recovered'] for r in rs)}; reproduces Claude's best valid attempt in "
+                       f"{sum(r['reproduces'] for r in vs)} of {len(vs)}")
+    return "\n".join(out) + "\n\n" + "\n".join(rows) + "\n\n" + "\n".join(progs) + "\n"
+
+
 def _datasets_md(root: Path) -> str:
     """Pointer to dataset runs (no known formula), which have their own hand-written report."""
     reports = sorted(Path(root).glob("*/REPORT.md"))
@@ -208,9 +270,10 @@ def _datasets_md(root: Path) -> str:
             f"reproduction and the beats-the-network list above. Their results and held-out runs are in {links}.\n\n")
 
 
-def reproduction(root: Path = RUNS, valid_only: bool = True) -> list[dict]:
-    """Per run with an ast version: does the deterministic tool reproduce Claude's best valid attempt?
-    valid_only=False also counts attempts with outside-path audit flags."""
+def reproduction(root: Path = RUNS, valid_only: bool = True, name: str = "ast", heldout=None) -> list[dict]:
+    """Per run with a tool version (`name`): does the deterministic tool reproduce Claude's best valid attempt?
+    valid_only=False also counts attempts with outside-path audit flags. heldout(rd) marks held-out runs
+    (default: seed 2, the step-3 protocol)."""
     rows = []
     for rd in all_runs(root):
         res_path = rd / "results.json"
@@ -218,13 +281,14 @@ def reproduction(root: Path = RUNS, valid_only: bool = True) -> list[dict]:
             continue
         res = json.loads(res_path.read_text(encoding="utf-8"))
         vs = res["versions"]
-        if "ast" not in vs:
+        if name not in vs:
             continue
-        a = vs["ast"]
-        trace_path = rd / "ast_trace.json"
+        a = vs[name]
+        trace_path = rd / f"{name}_trace.json"
         route = json.loads(trace_path.read_text(encoding="utf-8"))["winner"] if trace_path.exists() else None
-        row = {"run": res["run"], "split": "heldout" if rd.name == "seed2" else "distill", "route": route,
-               "ast_git": read_git(rd).get("ast"),
+        held = rd.name == "seed2" if heldout is None else heldout(rd)
+        row = {"run": res["run"], "split": "heldout" if held else "distill", "route": route,
+               "ast_git": read_git(rd).get(name),
                "ast_check": _verdict(a["check"]), "ast_recovered": bool(a["task"]["recovered"]),
                "ast_nodes": (a["size"] or {}).get("nodes")}
         best = _best_attempt(vs, valid_only=valid_only)
