@@ -174,6 +174,36 @@
       },
       "meta": null
     },
+    "ast3": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 273420,
+        "max_abs_err": 1.4331461715144655e-06,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.09152881264686584,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.0047805554516174,
+        "out_of_range": 6.895795995694286,
+        "metric": "max_abs_err",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 9,
+        "nodes": 236,
+        "constants": 33,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    },
     "formula": {
       "check": {
         "exact_pass": false,
