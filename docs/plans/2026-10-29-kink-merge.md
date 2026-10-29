@@ -522,3 +522,12 @@ Expected: 15 new folders, each with `formula.py`. Commit: `data: sigmoid held-ou
     `counterexamples.json`). Verdicts, nodes and recovered are unchanged for every older version.
 - **Freeze: `93d7199`** (the last code commit; the development `ast2:` lines record it). Held-out nets are built
   after this point.
+- **Task 7, held-out (2026-10-29):** 15 nets built after the freeze (xor seed 3 did not learn; it computes OR).
+  - **Frozen `ast2`** (records `fad7e52`, data and docs on top of `93d7199`): all 15 pass.
+    - Kink-merge won neareq seeds 3–5 (67/66/81 nodes) and absdiff seed 5 (86).
+    - Absdiff seeds 3–4 fell to sigmoid-replace (233/216).
+    - Tax seeds 3–5 keep knot-fit (22). Xor and window keep truth-table and boundary-scan.
+  - **Agents:** all 15 pass. 3 outside-path flags, all false positives or the agent's own task output, reviewed
+    by hand.
+  - The tool run went while the agents worked, since agents do not touch run folders; collection waited for it.
+    One data commit holds both.

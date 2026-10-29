@@ -129,10 +129,15 @@ reconstructed from git history.
   - `knot-fit` for 1-input regression.
 
   They run only for nets with non-ReLU units.
+- **Kink merge (`ast2`):** `nndc/heuristics/kinks.py` expands a one-layer sigmoid net into ReLU kinks, merges
+  kinks on one line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
+  - `nndc ast --name ast2 RUNS…` writes `ast2.py` and `ast2_trace.json` next to the older `ast.py`, which stays.
+  - `ast2` has its own `counterexamples_ast2.json` (`OWN_CEX` in `nndc/run.py`), so older verdicts never change.
+  - Runs: development seeds 0–2; held-out seeds 3–5 of the five one-layer formula tasks.
 - **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the
-  "Formula vs net" and "Compared with the ReLU runs" sections.
-- **Agent scratch files:** blind agents tend to write scratch scripts to the session scratchpad, which all
-  parallel agents share, and the audit flags it. Give each agent a scratch directory inside its blind folder.
+  "Formula vs net", "Compared with the ReLU runs" and "Kink merge (ast2)" sections.
+- **Agent scratch files:** `prepare` gives each blind folder a `scratch/` directory, and `INSTRUCTIONS.md` asks the
+  agent to use it. Before that, agents wrote to the shared session scratchpad and the audit flagged it.
 
 ## Practical notes
 
@@ -161,9 +166,11 @@ reconstructed from git history.
 - **Held-out data:**
   - formula runs: seed 2 is held out from AST-tool development (`--split distill` excludes it);
   - Iris: seeds 3–5 were held out from tool v2.
+  - kink merge (`ast2`): sigmoid seeds 3–5 of xor, window, neareq, absdiff and tax, built after its freeze.
 - **Freezes:** the tool version used on each held-out run is the `ast:` line of its `run_git.txt`
   (step 3: `1076f21`; Iris v1: `e62d74b`, later overwritten by v2; Iris v2: `363b8c9`; sigmoid: `15b943b`, whose
-  held-out runs record `797e0ae`, a data-only commit on top of it). Commit the tool
+  held-out runs record `797e0ae`, a data-only commit on top of it; kink merge (`ast2`): `93d7199`, whose held-out
+  runs record `fad7e52`, data and docs on top of it). Commit the tool
   before running held-out models. Changing the AST tool or heuristics means a new freeze and a fresh
   held-out set, not re-running old held-out models.
 - **Blindness:** no task name, real input names, `expected` formula or target may enter a blind
