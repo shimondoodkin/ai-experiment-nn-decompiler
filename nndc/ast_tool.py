@@ -27,7 +27,8 @@ from .heuristics.snap import snap_net
 from .heuristics.spline import spline_expr
 from .heuristics.truthtable import truth_table_expr
 from .lang import ProgramError, parse_program, program_size
-from .model import MLP
+from .dump import dump_program
+from .model import MLP, as_sigmoid
 from .spec import Spec
 from .symnet import SymNet, from_dump, input_bounds, to_program
 
@@ -37,7 +38,8 @@ ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary
           "kink-merge"]
 
 
-TOOL_VERSIONS = ("ast", "ast2")   # ast: up to the sigmoid moves (project B); ast2: plus kink-merge
+TOOL_VERSIONS = ("ast", "ast3")   # ast: up to the sigmoid moves (project B); ast3: plus kink merge v2 and the
+                                  # tanh rewrite (ast2, kink merge v1, is in git at 93d7199)
 
 
 @dataclass
@@ -71,13 +73,21 @@ def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, flo
     return [d for _, d in scored[:top]] + [{v: 1.0} for v in net.inputs]
 
 
-def refactor(dump_src: str, spec: Spec, mlp: MLP, kinks: bool = False) -> tuple[str, dict]:
-    """kinks=True adds the kink-merge route (the ast2 tool); without it this is the project B tool."""
+def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple[str, dict]:
+    """version "ast3" adds the kink-merge route and rewrites tanh layers as sigmoid layers for the routes; the
+    checker always compares with the original net. "ast" is the project B tool."""
     if spec.task:
         raise ValueError("refactor needs a blind spec (the task name must not be visible)")
     lines: list[str] = []
     cands: list[Candidate] = []
     extra: dict = {}
+    kinks = version == "ast3"
+    check_mlp = mlp                                    # every candidate is checked against the original net
+    orig_dump = dump_src
+    if kinks and "tanh" in mlp.acts:
+        mlp = as_sigmoid(mlp)                          # tanh(z) = 2 sigmoid(2z) - 1: the routes see a sigmoid net
+        dump_src = dump_program(mlp, spec)
+        lines.append("tanh layers rewritten as sigmoid layers")
 
     def add(route: str, build: Callable[[], str | None], passes: list[str]) -> None:
         try:
@@ -93,7 +103,7 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, kinks: bool = False) -> tuple[
         except ProgramError as e:
             lines.append(f"{route}: invalid program ({e})")
             return
-        r = check_program(src, mlp, spec)
+        r = check_program(src, check_mlp, spec)
         cands.append(Candidate(route, src, passes, r.to_json(), nodes))
 
     net0 = from_dump(dump_src, spec)
@@ -187,21 +197,21 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, kinks: bool = False) -> tuple[
     else:
         best = next((c for c in cands if c.route == "structural-exact"), None)
         if best is None:
-            best = Candidate("dump", dump_src, [], check_program(dump_src, mlp, spec).to_json(), None)
+            best = Candidate("dump", orig_dump, [], check_program(orig_dump, check_mlp, spec).to_json(), None)
     trace = {"candidates": [asdict(c) for c in cands], "winner": best.route, "trace_lines": lines} | extra
     return best.src, trace
 
 
 def run_ast(rd: Path, name: str = "ast") -> dict:
     """Refactor a run's dump.py with the tool (blind spec only); write <name>.py + <name>_trace.json; re-evaluate.
-    A new tool version gets a new name (ast2, with the kink-merge route), so the older version's files stay."""
+    A new tool version gets a new name (ast3), so the older version's files stay."""
     from .run import evaluate_run, load_run, record_git
 
     if name not in TOOL_VERSIONS:
         raise ValueError(f"unknown tool version {name!r} (expected one of {', '.join(TOOL_VERSIONS)})")
     spec, mlp = load_run(rd)
     blind = Spec.from_json(spec.blind())
-    src, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=name == "ast2")
+    src, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version=name)
     (rd / f"{name}.py").write_text(f"# produced by nndc ast (route: {trace['winner']})\n{src}", encoding="utf-8")
     (rd / f"{name}_trace.json").write_text(json.dumps(trace, indent=2) + "\n", encoding="utf-8")
     record_git(rd, name)

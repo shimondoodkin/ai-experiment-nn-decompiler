@@ -163,7 +163,7 @@ def test_refactor_trace_has_kink_merge():
     from nndc.ast_tool import refactor
     rd = Path("runs_sigmoid/tax/seed0")
     blind, mlp = _blind(rd)
-    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=True)
+    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version="ast3")
     assert "kink_merge" in trace and any(c["route"] == "kink-merge" for c in trace["candidates"])
 
 
@@ -183,7 +183,7 @@ def test_kink_merge_error_skips_only_the_route(monkeypatch):
     monkeypatch.setattr(ast_tool, "kink_merge", boom)
     rd = Path("runs_sigmoid/tax/seed2")
     blind, mlp = _blind(rd)
-    src, trace = ast_tool.refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=True)
+    src, trace = ast_tool.refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version="ast3")
     assert src and all(c["route"] != "kink-merge" for c in trace["candidates"])
     assert any(ln.startswith("kink-merge: not applicable") and "boom" in ln for ln in trace["trace_lines"])
 
