@@ -32,7 +32,8 @@ OFF_STEPS = 21
 OFF_ROUNDS = 3
 FIT_SAMPLES = 20_000
 FIT_SEED = 0
-SEARCH_SAMPLES = 2000           # the offset search fits on this many of the samples (runtime; set before the freeze)
+SNAP_LEVELS = (*SNAP_TOLS, 0.0)  # coarsest first; 0 = fold and refit, no rounding (ast3; ast2 tried the raw fit last)
+SEARCH_SAMPLES = 2000          # the offset search fits on this many of the samples (runtime; set before the freeze)
 CANCEL_FRAC = 0.25              # a merged line nearly cancels when |strength| < CANCEL_FRAC * sum |strengths|
 
 
@@ -123,13 +124,18 @@ def evaluate_expansion(e: Expansion, U: np.ndarray) -> np.ndarray:
 
 
 def merge_lines(kinks: list[Kink], off: float, cos_min: float = COS_MIN) -> list[Line]:
-    """Kinks on one line (greedy first match) add up; normal and offset are |strength|-weighted means."""
+    """Kinks on one line (greedy first match) add up; normal and offset are |strength|-weighted means.
+    An antiparallel kink on the same line joins as (-n, -d, strength): s max(y, 0) = s max(-y, 0) + s y, and the
+    affine s y is left to refine(), which refits the affine part."""
     groups: list[tuple[np.ndarray, float, list[Kink]]] = []
     for k in kinks:
         for g in groups:
-            if float(g[0] @ k.normal) > cos_min and abs(g[1] - k.offset) < off:
-                g[2].append(k)
-                break
+            c = float(g[0] @ k.normal)
+            if abs(c) > cos_min:
+                kk = k if c > 0 else Kink(-k.normal, -k.offset, k.strength)
+                if abs(g[1] - kk.offset) < off:
+                    g[2].append(kk)
+                    break
         else:
             groups.append((k.normal, k.offset, [k]))
     lines = []
@@ -197,18 +203,19 @@ def _hinges(X: np.ndarray, names: list[str], terms) -> list[np.ndarray]:
 
 
 def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray) -> RealFit:
-    """Design Goal 1.7: direction, position (tol * largest input range), LP refit, coefficients (relative tol),
-    then the constant as the midrange of the error. A line that leaves the box is folded into the affine part."""
+    """Direction, position (tol * the line's own range over the box), LP refit, coefficients (relative tol), then
+    the constant (midrange of the error, rounded within tol * output range). A line that leaves the box is folded
+    into the affine part. tol = 0 folds and refits but rounds nothing."""
     lo, span = unit_box(spec)
     names = spec.arg_names
     X = lo + U * span
     box = lo + _corners(len(names)) * span
-    width = float(span.max())
     geo: dict[tuple, tuple[dict[str, float], float]] = {}
     for n, t, _ in fit.terms:
         big = max(n, key=lambda v: abs(n[v]))
         n2 = {v: (c if v == big else nice(c, tol)) for v, c in n.items()}
         n2 = {v: c for v, c in n2.items() if c != 0}
+        width = sum(abs(n2.get(v, 0.0)) * float(s) for v, s in zip(names, span))
         t2 = nicest_in(t - tol * width, t + tol * width)
         z = box @ np.array([n2.get(v, 0.0) for v in names]) - t2
         if z.min() >= 0 or z.max() <= 0:                 # always on (affine, refitted below) or always off
@@ -221,8 +228,11 @@ def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray)
     linear = {names[i]: _nicest_rel(float(c[1 + i]), tol) for i in range(k)}
     strengths = [_nicest_rel(float(s), tol) for s in c[1 + k:]]
     rest = y - X @ np.array([linear[v] for v in names]) - sum((s * h for s, h in zip(strengths, H)), np.zeros(len(X)))
-    return RealFit(float((rest.max() + rest.min()) / 2), linear,
-                   [(n, t, s) for (n, t), s in zip(lines, strengths)])
+    const = float((rest.max() + rest.min()) / 2)
+    if tol > 0:
+        r = float(y.max() - y.min())
+        const = nicest_in(const - tol * r, const + tol * r)
+    return RealFit(const, linear, [(n, t, s) for (n, t), s in zip(lines, strengths)])
 
 
 def fit_program(fit: RealFit, spec: Spec) -> str:
@@ -234,7 +244,7 @@ def fit_program(fit: RealFit, spec: Spec) -> str:
 
 def kink_merge(spec: Spec, mlp: MLP) -> tuple[str | None, dict]:
     """The route: smallest m first, merge offset 0.02 before 0.1, snap ladder coarsest first, then unsnapped;
-    the first program that passes the checker wins."""
+    the first program that passes the checker wins (snap levels coarsest first, ending at 0)."""
     trace: dict = {"applies": applies(spec, mlp), "per_offset": [], "winner": None}
     if trace["applies"] is not None:
         return None, trace
@@ -256,8 +266,8 @@ def kink_merge(spec: Spec, mlp: MLP) -> tuple[str | None, dict]:
                 continue
             lines, coefs, _ = refine(line_sets[off][:m], U, y)
             fit = to_real(lines, coefs, spec)
-            for tol in (*SNAP_TOLS, None):
-                f = fit if tol is None else snap_fit(fit, spec, tol, U, y)
+            for tol in SNAP_LEVELS:
+                f = snap_fit(fit, spec, tol, U, y)
                 src = fit_program(f, spec)
                 if src in seen:
                     continue

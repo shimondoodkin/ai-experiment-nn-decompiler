@@ -193,3 +193,38 @@ def test_snap_coefficients_relative():
     snapped = snap_fit(fit, spec, 0.05, U, y * 1.012)        # every slope 1.2% off a round value
     assert snapped.linear["x0"] == pytest.approx(0.1)
     assert [s for _, _, s in snapped.terms] == pytest.approx([0.1, 0.2, -0.3])
+
+
+# --- ast3: kink merge v2 ---------------------------------------------------------------------------------------
+
+def test_merge_antiparallel():
+    k = [Kink(np.array([1., 0.]), -0.5, 2.0), Kink(np.array([-1., 0.]), 0.5, 1.0)]   # the same line, flipped
+    (line,) = merge_lines(k, off=0.02)
+    assert line.strength == pytest.approx(3.0) and line.count == 2
+    assert line.normal @ np.array([1., 0.]) == pytest.approx(1.0) and line.offset == pytest.approx(-0.5)
+
+
+def test_position_window_follows_line():
+    spec = Spec(task="", output="regression", inputs=[InputSpec("x0", "x0", "float", 0, 200),
+                                                         InputSpec("x1", "x1", "float", 0, 1)])
+    U = np.random.default_rng(3).uniform(0, 1, (3000, 2))
+    X = U * np.array([200.0, 1.0])
+    y = np.maximum(X[:, 1] - 0.433, 0)
+    fit = RealFit(0.0, {"x0": 0.0, "x1": 0.0}, [({"x1": 1.0, "x0": 0.001}, 0.433, 1.0)])
+    snapped = snap_fit(fit, spec, 0.05, U, y)
+    assert len(snapped.terms) == 1 and 0.373 < snapped.terms[0][1] < 0.493   # not snapped to 0 by the x0 range
+
+
+def test_tol0_folds():
+    from nndc.heuristics.kinks import SNAP_LEVELS
+    assert SNAP_LEVELS == (0.05, 0.02, 0.01, 0.005, 0.0)
+    spec, U, y, fit = _tax_like(edge=205)                    # the third line lies outside the box
+    snapped = snap_fit(fit, spec, 0.0, U, y)
+    assert [t for _, t, _ in snapped.terms] == pytest.approx([20.2, 79.8])
+
+
+def test_constant_rounded():
+    spec, U, y, fit = _tax_like()
+    snapped = snap_fit(fit, spec, 0.05, U, y + 0.0137)
+    assert snapped.const == 0.0                               # nicest value within 0.05 * output range
+    assert snap_fit(fit, spec, 0.0, U, y + 0.0137).const == pytest.approx(0.0137, abs=1e-6)
