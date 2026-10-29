@@ -186,3 +186,10 @@ def test_kink_merge_error_skips_only_the_route(monkeypatch):
     src, trace = ast_tool.refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=True)
     assert src and all(c["route"] != "kink-merge" for c in trace["candidates"])
     assert any(ln.startswith("kink-merge: not applicable") and "boom" in ln for ln in trace["trace_lines"])
+
+
+def test_snap_coefficients_relative():
+    spec, U, y, fit = _tax_like()
+    snapped = snap_fit(fit, spec, 0.05, U, y * 1.012)        # every slope 1.2% off a round value
+    assert snapped.linear["x0"] == pytest.approx(0.1)
+    assert [s for _, _, s in snapped.terms] == pytest.approx([0.1, 0.2, -0.3])

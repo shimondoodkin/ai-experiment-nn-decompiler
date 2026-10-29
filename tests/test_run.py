@@ -115,8 +115,10 @@ def test_ast2_cex_separate(tmp_path):
     assert not res["versions"]["ast2"]["check"]["snap_pass"]
     assert json.loads((rd / "counterexamples_ast2.json").read_text())
     assert (shared.read_bytes() if shared.exists() else b"") == before
-    res2 = evaluate_run(rd)                     # its own counterexamples are reused on the next evaluation
-    assert res2["versions"]["ast2"]["check"]["n_inputs"] >= res["versions"]["ast2"]["check"]["n_inputs"]
+    own = json.loads((rd / "counterexamples_ast2.json").read_text())
+    res2 = evaluate_run(rd)   # ast2 is checked on the shared set plus its own; the other versions on the shared set
+    v = res2["versions"]
+    assert v["ast2"]["check"]["n_inputs"] == v["dump"]["check"]["n_inputs"] + len(own)
 
 
 def test_run_ast_name_keeps_ast(tmp_path):
