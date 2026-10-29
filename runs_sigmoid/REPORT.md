@@ -39,7 +39,6 @@ a Claude Code refactoring of it.
 
 Runs where a refactored program is closer to the *true task* than the network it was decompiled from (better inside or outside the training range, and not worse on either). The refactorer never saw the target; this is the "snapping recovers the intended algorithm" effect.
 
-- **absdiff/seed0** ast: max error inside 0.5886 → 0.5625, outside 6.382 → 6.356
 - **absdiff/seed0** ast2: max error inside 0.5886 → 0.5451, outside 6.382 → 3.841
 - **absdiff/seed1** agent_1: max error inside 0.5405 → 0.5109, outside 6.368 → 6.327 (audit-flagged run)
 - **absdiff/seed1** ast2: max error inside 0.5405 → 0.4522, outside 6.368 → 3.65
@@ -47,8 +46,8 @@ Runs where a refactored program is closer to the *true task* than the network it
 - **absdiff/seed4** ast2: max error inside 0.76 → 0.753, outside 7.264 → 7.264
 - **absdiff/seed5** agent_1: max error inside 0.6195 → 0.5763, outside 6.405 → 6.357
 - **absdiff/seed5** ast2: max error inside 0.6195 → 0.5219, outside 6.405 → 3.257
-- **median3/seed0** ast: max error inside 0.5695 → 0.5267, outside 2.686 → 2.646
-- **median3/seed2** ast: max error inside 0.6501 → 0.645, outside 2.907 → 2.892
+- **median3/seed0** ast2: max error inside 0.5695 → 0.5267, outside 2.686 → 2.646
+- **median3/seed2** ast2: max error inside 0.6501 → 0.645, outside 2.907 → 2.892
 - **neareq/seed0** agent_1: accuracy inside 0.9987 → 1, outside 0.9985 → 1; recovered the true algorithm (audit-flagged run)
 - **neareq/seed1** agent_1: accuracy inside 0.9993 → 1, outside 0.9991 → 1; recovered the true algorithm (audit-flagged run)
 - **neareq/seed2** agent_1: accuracy inside 0.9985 → 1, outside 0.9988 → 1; recovered the true algorithm
@@ -56,25 +55,19 @@ Runs where a refactored program is closer to the *true task* than the network it
 - **neareq/seed4** agent_1: accuracy inside 0.9987 → 1, outside 0.9989 → 1; recovered the true algorithm
 - **neareq/seed5** agent_1: accuracy inside 0.9991 → 1, outside 0.9991 → 1; recovered the true algorithm
 - **tax/seed0** agent_1: max error inside 1.364 → 0.9, outside 39.11 → 8.7 (audit-flagged run)
-- **tax/seed0** ast: max error inside 1.364 → 1.081, outside 39.11 → 8.505
 - **tax/seed0** ast2: max error inside 1.364 → 1.081, outside 39.11 → 8.505
 - **tax/seed1** agent_1: max error inside 1.342 → 0.2, outside 39.36 → 0.2 (audit-flagged run)
-- **tax/seed1** ast: max error inside 1.342 → 1.146, outside 39.36 → 8.855
 - **tax/seed1** ast2: max error inside 1.342 → 1.146, outside 39.36 → 8.855
 - **tax/seed2** agent_1: max error inside 1.506 → 1.25, outside 38.47 → 11.25
-- **tax/seed2** ast: max error inside 1.506 → 0.9564, outside 38.47 → 9.74
 - **tax/seed2** ast2: max error inside 1.506 → 1.011, outside 38.47 → 9.011
 - **tax/seed3** ast2: max error inside 1.339 → 0.9454, outside 39.11 → 8.076
 - **tax/seed4** ast2: max error inside 1.567 → 1.052, outside 40.05 → 8.241
 - **tax/seed5** agent_1: max error inside 1.463 → 0.9999, outside 39.29 → 21 (audit-flagged run)
 - **tax/seed5** ast2: max error inside 1.463 → 0.8905, outside 39.29 → 9.601
 - **window/seed0** agent_1: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed0** ast: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed0** ast2: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed1** ast: accuracy inside 0.9977 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed1** ast2: accuracy inside 0.9977 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** agent_1: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm (audit-flagged run)
-- **window/seed2** ast: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** ast2: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed3** agent_1: accuracy inside 0.9976 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed3** ast2: accuracy inside 0.9976 → 1, outside 1 → 1; recovered the true algorithm
@@ -83,82 +76,45 @@ Runs where a refactored program is closer to the *true task* than the network it
 - **window/seed5** agent_1: accuracy inside 0.9979 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed5** ast2: accuracy inside 0.9979 → 1, outside 1 → 1; recovered the true algorithm
 
-## Reproduction (step 3)
-
-Tool version on the held-out runs (from each run's `run_git.txt`): 797e0ae.
-
-Does the deterministic AST tool (no LLM) reproduce Claude's best valid refactoring? Reproduces = passes the check, same recovered status as Claude, and at most max(1.5x, +5) of Claude's nodes. Held-out runs (seed 2) were never studied while building the tool; in-sample runs were.
-
-- **held-out (headline)**: 2 of 3 reproduced; tool recovered the true formula in 1, Claude in 2
-- **in-sample**: 3 of 4 reproduced; tool recovered the true formula in 4, Claude in 3
-- **winning routes**: boundary-scan 3, knot-fit 3, sigmoid-replace 4, structural-exact 5, truth-table 3
-- **only Claude recovered the formula**: neareq/seed2
-
-| run | split | tool check | tool recovered | tool nodes | Claude check | Claude recovered | Claude nodes | reproduces | route |
-|---|---|---|---|---|---|---|---|---|---|
-| absdiff/seed0 | distill | PASS snap | no | 235 |  |  |  | no valid Claude attempt | sigmoid-replace |
-| absdiff/seed1 | distill | PASS exact | no | 232 |  |  |  | no valid Claude attempt | structural-exact |
-| absdiff/seed2 | heldout | PASS exact | no | 238 |  |  |  | no valid Claude attempt | structural-exact |
-| median3/seed0 | distill | PASS snap | no | 2437 |  |  |  | no valid Claude attempt | sigmoid-replace |
-| median3/seed1 | distill | PASS exact | no | 2498 |  |  |  | no valid Claude attempt | structural-exact |
-| median3/seed2 | heldout | PASS snap | no | 1988 |  |  |  | no valid Claude attempt | sigmoid-replace |
-| neareq/seed0 | distill | PASS snap | no | 229 |  |  |  | no valid Claude attempt | sigmoid-replace |
-| neareq/seed1 | distill | PASS exact | no | 236 |  |  |  | no valid Claude attempt | structural-exact |
-| neareq/seed2 | heldout | PASS exact | no | 232 | PASS snap | yes | 18 | no | structural-exact |
-| tax/seed0 | distill | PASS snap | no | 22 |  |  |  | no valid Claude attempt | knot-fit |
-| tax/seed1 | distill | PASS snap | no | 22 |  |  |  | no valid Claude attempt | knot-fit |
-| tax/seed2 | heldout | PASS snap | no | 22 | PASS snap | no | 32 | yes | knot-fit |
-| window/seed0 | distill | PASS snap | yes | 9 | PASS snap | yes | 9 | yes | boundary-scan |
-| window/seed1 | distill | PASS snap | yes | 9 | PASS exact | no | 15 | no | boundary-scan |
-| window/seed2 | heldout | PASS snap | yes | 9 |  |  |  | no valid Claude attempt | boundary-scan |
-| xor/seed0 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
-| xor/seed1 | distill | PASS exact | yes | 7 | PASS exact | yes | 7 | yes | truth-table |
-| xor/seed2 | heldout | PASS exact | yes | 7 | PASS exact | yes | 17 | yes | truth-table |
-
-The counts above leave out agent attempts with outside-path audit flags. In these runs the flags come from the agents' own scratch scripts, written to the session scratchpad that parallel agents shared; the transcripts were reviewed by hand and no task information was read. Counting those attempts too (secondary, not the headline):
-
-- **held-out**: 3 of 6 reproduced; tool recovered the true formula in 2, Claude in 3
-- **in-sample**: 5 of 12 reproduced; tool recovered the true formula in 4, Claude in 5
-
 ## Formula vs net
 
 The intended formula of each task (`formula.py`), checked against the net like any other version but never used to harden the other checks. A FAIL means the net rounds or shifts the formula beyond the checker's tolerance; the cases below show where.
 
 | run | formula vs net | max err (% of output range) / disagreements outside, inside | formula task in / out | best agent | AST tool |
 |---|---|---|---|---|---|
-| absdiff/seed0 | FAIL | 0.601 (11.6%) | 0 / 0 | PASS snap, not rec, 45 nodes | PASS snap, not rec, 235 nodes |
-| absdiff/seed1 | FAIL | 0.553 (10.6%) | 0 / 0 | PASS snap, not rec, 83 nodes | PASS exact, not rec, 232 nodes |
+| absdiff/seed0 | FAIL | 0.601 (11.6%) | 0 / 0 | PASS snap, not rec, 45 nodes | PASS snap, not rec, 80 nodes |
+| absdiff/seed1 | FAIL | 0.553 (10.6%) | 0 / 0 | PASS snap, not rec, 83 nodes | PASS snap, not rec, 95 nodes |
 | absdiff/seed2 | FAIL | 0.841 (16.3%) | 0 / 0 | PASS snap, not rec, 133 nodes | PASS exact, not rec, 238 nodes |
-| absdiff/seed3 | FAIL | 0.882 (18.0%) | 0 / 0 | PASS snap, not rec, 121 nodes | – |
-| absdiff/seed4 | FAIL | 0.768 (15.2%) | 0 / 0 | PASS snap, not rec, 85 nodes | – |
-| absdiff/seed5 | FAIL | 0.626 (12.0%) | 0 / 0 | PASS snap, not rec, 56 nodes | – |
+| absdiff/seed3 | FAIL | 0.882 (18.0%) | 0 / 0 | PASS snap, not rec, 121 nodes | PASS snap, not rec, 233 nodes |
+| absdiff/seed4 | FAIL | 0.768 (15.2%) | 0 / 0 | PASS snap, not rec, 85 nodes | PASS snap, not rec, 216 nodes |
+| absdiff/seed5 | FAIL | 0.626 (12.0%) | 0 / 0 | PASS snap, not rec, 56 nodes | PASS snap, not rec, 86 nodes |
 | median3/seed0 | FAIL | 0.623 (10.6%) | 0 / 0 | PASS snap, not rec, 250 nodes | PASS snap, not rec, 2437 nodes |
 | median3/seed1 | FAIL | 0.64 (10.9%) | 0 / 0 | PASS snap, not rec, 216 nodes | PASS exact, not rec, 2498 nodes |
 | median3/seed2 | FAIL | 0.707 (12.4%) | 0 / 0 | PASS snap, not rec, 181 nodes | PASS snap, not rec, 1988 nodes |
-| neareq/seed0 | PASS snap | 0, 4946 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 229 nodes |
-| neareq/seed1 | PASS snap | 0, 4103 | 1 / 1 | PASS snap, rec, 18 nodes | PASS exact, not rec, 236 nodes |
-| neareq/seed2 | PASS snap | 0, 5458 | 1 / 1 | PASS snap, rec, 18 nodes | PASS exact, not rec, 232 nodes |
-| neareq/seed3 | PASS snap | 0, 6446 | 1 / 1 | PASS snap, rec, 18 nodes | – |
-| neareq/seed4 | PASS snap | 0, 6139 | 1 / 1 | PASS snap, rec, 18 nodes | – |
-| neareq/seed5 | PASS snap | 0, 5099 | 1 / 1 | PASS snap, rec, 18 nodes | – |
+| neareq/seed0 | PASS snap | 0, 4946 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 78 nodes |
+| neareq/seed1 | PASS snap | 0, 4103 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 116 nodes |
+| neareq/seed2 | PASS snap | 0, 5458 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 78 nodes |
+| neareq/seed3 | PASS snap | 0, 6446 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 67 nodes |
+| neareq/seed4 | PASS snap | 0, 6139 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 66 nodes |
+| neareq/seed5 | PASS snap | 0, 5099 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 81 nodes |
 | tax/seed0 | FAIL | 1.36 (2.2%) | 0 / 0 | PASS snap, not rec, 30 nodes | PASS snap, not rec, 22 nodes |
 | tax/seed1 | FAIL | 1.34 (2.2%) | 0 / 0 | PASS snap, not rec, 50 nodes | PASS snap, not rec, 22 nodes |
-| tax/seed2 | FAIL | 1.51 (2.5%) | 0 / 0 | PASS snap, not rec, 32 nodes | PASS snap, not rec, 22 nodes |
-| tax/seed3 | FAIL | 1.34 (2.2%) | 0 / 0 | PASS snap, not rec, 45 nodes | – |
-| tax/seed4 | FAIL | 1.57 (2.6%) | 0 / 0 | PASS snap, not rec, 44 nodes | – |
-| tax/seed5 | FAIL | 1.46 (2.4%) | 0 / 0 | PASS snap, not rec, 41 nodes | – |
+| tax/seed2 | FAIL | 1.51 (2.5%) | 0 / 0 | PASS snap, not rec, 32 nodes | PASS snap, not rec, 20 nodes |
+| tax/seed3 | FAIL | 1.34 (2.2%) | 0 / 0 | PASS snap, not rec, 45 nodes | PASS snap, not rec, 22 nodes |
+| tax/seed4 | FAIL | 1.57 (2.6%) | 0 / 0 | PASS snap, not rec, 44 nodes | PASS snap, not rec, 22 nodes |
+| tax/seed5 | FAIL | 1.46 (2.4%) | 0 / 0 | PASS snap, not rec, 41 nodes | PASS snap, not rec, 22 nodes |
 | window/seed0 | PASS snap | 0, 8826 | 1 / 1 | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
 | window/seed1 | PASS snap | 0, 14476 | 1 / 1 | PASS exact, not rec, 15 nodes | PASS snap, rec, 9 nodes |
 | window/seed2 | PASS snap | 0, 4960 | 1 / 1 | PASS snap, rec, 19 nodes | PASS snap, rec, 9 nodes |
-| window/seed3 | PASS snap | 0, 10074 | 1 / 1 | PASS snap, rec, 9 nodes | – |
-| window/seed4 | PASS snap | 0, 4975 | 1 / 1 | PASS snap, rec, 9 nodes | – |
-| window/seed5 | PASS snap | 0, 5209 | 1 / 1 | PASS snap, rec, 9 nodes | – |
+| window/seed3 | PASS snap | 0, 10074 | 1 / 1 | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
+| window/seed4 | PASS snap | 0, 4975 | 1 / 1 | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
+| window/seed5 | PASS snap | 0, 5209 | 1 / 1 | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
 | xor/seed0 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed1 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed2 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 17 nodes | PASS exact, rec, 7 nodes |
-| xor/seed3 | PASS snap | 0, 1 | 1 /  | PASS exact, not rec, 7 nodes | – |
-| xor/seed4 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | – |
-| xor/seed5 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | – |
+| xor/seed3 | PASS snap | 0, 1 | 1 /  | PASS exact, not rec, 7 nodes | PASS exact, not rec, 7 nodes |
+| xor/seed4 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
+| xor/seed5 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 
 **absdiff/seed0**: where the formula and the net disagree most
 
@@ -442,8 +398,8 @@ The same task, seed and training settings, with ReLU (`runs`) and with this root
 
 | run | learned (ReLU / this) | best agent, ReLU | best agent, this | AST, ReLU | AST, this |
 |---|---|---|---|---|---|
-| absdiff/seed0 | yes / yes | PASS snap, rec, 10 nodes | PASS snap, not rec, 45 nodes | PASS snap, rec, 10 nodes | PASS snap, not rec, 235 nodes |
-| absdiff/seed1 | yes / yes | PASS snap, rec, 10 nodes | PASS snap, not rec, 83 nodes | PASS snap, rec, 10 nodes | PASS exact, not rec, 232 nodes |
+| absdiff/seed0 | yes / yes | PASS snap, rec, 10 nodes | PASS snap, not rec, 45 nodes | PASS snap, rec, 10 nodes | PASS snap, not rec, 80 nodes |
+| absdiff/seed1 | yes / yes | PASS snap, rec, 10 nodes | PASS snap, not rec, 83 nodes | PASS snap, rec, 10 nodes | PASS snap, not rec, 95 nodes |
 | absdiff/seed2 | yes / yes | PASS snap, rec, 10 nodes | PASS snap, not rec, 133 nodes | PASS snap, rec, 10 nodes | PASS exact, not rec, 238 nodes |
 | iris/seed0 | yes / yes | PASS snap, n/a, 76 nodes | PASS snap, n/a, 81 nodes | PASS snap, n/a, 62 nodes | PASS exact, n/a, 478 nodes |
 | iris/seed1 | yes / yes | PASS snap, n/a, 70 nodes | PASS snap, n/a, 57 nodes | PASS snap, n/a, 64 nodes | PASS exact, n/a, 480 nodes |
@@ -460,12 +416,12 @@ The same task, seed and training settings, with ReLU (`runs`) and with this root
 | median3/seed0 | yes / yes | PASS snap, rec, 33 nodes | PASS snap, not rec, 250 nodes | PASS snap, rec, 23 nodes | PASS snap, not rec, 2437 nodes |
 | median3/seed1 | yes / yes | PASS snap, rec, 23 nodes | PASS snap, not rec, 216 nodes | PASS snap, rec, 23 nodes | PASS exact, not rec, 2498 nodes |
 | median3/seed2 | yes / yes | PASS snap, rec, 23 nodes | PASS snap, not rec, 181 nodes | PASS snap, rec, 23 nodes | PASS snap, not rec, 1988 nodes |
-| neareq/seed0 | yes / yes | PASS snap, rec, 23 nodes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS snap, not rec, 229 nodes |
-| neareq/seed1 | yes / yes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS exact, not rec, 236 nodes |
-| neareq/seed2 | yes / yes | PASS snap, rec, 13 nodes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS exact, not rec, 232 nodes |
+| neareq/seed0 | yes / yes | PASS snap, rec, 23 nodes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS snap, not rec, 78 nodes |
+| neareq/seed1 | yes / yes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS snap, not rec, 116 nodes |
+| neareq/seed2 | yes / yes | PASS snap, rec, 13 nodes | PASS snap, rec, 18 nodes | PASS snap, rec, 18 nodes | PASS snap, not rec, 78 nodes |
 | tax/seed0 | yes / yes | PASS snap, not rec, 38 nodes | PASS snap, not rec, 30 nodes | PASS snap, not rec, 25 nodes | PASS snap, not rec, 22 nodes |
 | tax/seed1 | yes / yes | PASS snap, not rec, 30 nodes | PASS snap, not rec, 50 nodes | PASS snap, not rec, 20 nodes | PASS snap, not rec, 22 nodes |
-| tax/seed2 | yes / yes | PASS snap, rec, 55 nodes | PASS snap, not rec, 32 nodes | PASS snap, not rec, 25 nodes | PASS snap, not rec, 22 nodes |
+| tax/seed2 | yes / yes | PASS snap, rec, 55 nodes | PASS snap, not rec, 32 nodes | PASS snap, not rec, 25 nodes | PASS snap, not rec, 20 nodes |
 | window/seed0 | yes / yes | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
 | window/seed1 | yes / yes | PASS snap, rec, 9 nodes | PASS exact, not rec, 15 nodes | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
 | window/seed2 | yes / yes | PASS snap, rec, 9 nodes | PASS snap, rec, 19 nodes | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
@@ -475,12 +431,12 @@ The same task, seed and training settings, with ReLU (`runs`) and with this root
 
 ## Kink merge (ast2)
 
-The kink-merge tool turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps the strongest lines and refits them to the net (`ast2`). Development runs are seeds 0–2; held-out runs (seeds 3–5) were built after the tool was frozen. *kinks → lines → nearly cancelled → kept* are the counts for the winning merge tolerance.
+The kink-merge tool turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps the strongest lines and refits them to the net (`ast2`). Development runs are seeds 0–2; held-out runs (seeds 3–5) were built after the tool was frozen. Only runs where the route applies (one sigmoid layer, not argmax) are listed. *kinks → lines → nearly cancelled → kept* are the counts for the kink-merge candidate's merge tolerance; where another route won, its lines are marked *candidate only* and are not in `ast2.py`.
 
 - **held-out**: 15 of 15 pass, kink-merge won 4, recovered the formula in 5; reproduces Claude's best valid attempt in 8 of 12
 - **development**: 15 of 15 pass, kink-merge won 6, recovered the formula in 6; reproduces Claude's best valid attempt in 5 of 7
 
-| run | split | route | ast2 vs net | recovered | nodes | kinks → lines → nearly cancelled → kept | kept lines |
+| run | split | route | ast2 vs net | recovered | nodes | kink-merge: kinks → lines → nearly cancelled → kept | kink-merge lines |
 |---|---|---|---|---|---|---|---|
 | absdiff/seed0 | development | kink-merge | PASS snap | no | 80 | 128 → 32 → 14 → 4 | 1 · max(a - b + 0.25, 0); 1 · max(a - b - 0.25, 0); -0.55 · max(a - b - 5, 0); -0.52 · max(a - b + 5, 0) |
 | absdiff/seed1 | development | kink-merge | PASS snap | no | 95 | 128 → 24 → 8 → 4 | 1.16 · max(a - 0.99 * b - 0.25, 0); 0.875 · max(a - b + 0.35, 0); -0.54 · max(a - 0.96 * b - 4.95, 0); -0.563 · max(0.96 * a - b + 5, 0) |
@@ -494,24 +450,24 @@ The kink-merge tool turns each sigmoid into straight pieces, merges the kinks th
 | neareq/seed3 | held-out | kink-merge | PASS snap | no | 67 | 128 → 96 → 0 → 3 | -70 · max(a - b - 0.02, 0); 38.5 · max(a - b - 0.45, 0); 31 · max(a - b + 0.45, 0) |
 | neareq/seed4 | held-out | kink-merge | PASS snap | no | 66 | 128 → 48 → 0 → 3 | -72.5 · max(a - b, 0); 35 · max(a - b - 0.48, 0); 37 · max(a - b + 0.48, 0) |
 | neareq/seed5 | held-out | kink-merge | PASS snap | no | 81 | 128 → 64 → 1 → 4 | -86 · max(a - b, 0); 42.5 · max(a - b + 0.55, 0); 36.2 · max(a - b - 0.45, 0); 5.75 · max(a - b - 0.125, 0) |
-| tax/seed0 | development | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | -0.1 · max(income - 188, 0); 0.22 · max(income - 74, 0) |
-| tax/seed1 | development | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | -0.0652 · max(income - 184, 0); 0.22 · max(income - 74, 0) |
+| tax/seed0 | development | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | candidate only: -0.1 · max(income - 188, 0); 0.22 · max(income - 74, 0) |
+| tax/seed1 | development | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | candidate only: -0.0652 · max(income - 184, 0); 0.22 · max(income - 74, 0) |
 | tax/seed2 | development | kink-merge | PASS snap | no | 20 | 128 → 8 → 4 → 1 | 0.21 · max(income - 75, 0) |
-| tax/seed3 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 8 → 2 | -0.15 · max(income - 184, 0); 0.22 · max(income - 76, 0) |
-| tax/seed4 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 8 → 2 | -0.2 · max(income - 196, 0); 0.22 · max(income - 74, 0) |
-| tax/seed5 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | -0.0327 · max(income - 188, 0); 0.23 · max(income - 74, 0) |
-| window/seed0 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | -47.3 · max(x - 0.353, 0); -43.1 · max(x + 0.313, 0); 48 · max(x - 0.668, 0); 40.5 · max(x + 0.668, 0) |
-| window/seed1 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 3 | 14.8 · max(x + 0.75, 0); -38 · max(x, 0); 19 · max(x - 0.95, 0) |
-| window/seed2 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | -34 · max(x - 0.25, 0); -43 · max(x + 0.4, 0); 45 · max(x + 0.6, 0); 28 · max(x - 0.75, 0) |
-| window/seed3 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 1 | -17 · max(x, 0) |
-| window/seed4 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | -42 · max(x - 0.35, 0); -37 · max(x + 0.35, 0); 41.2 · max(x - 0.625, 0); 36.2 · max(x + 0.7, 0) |
-| window/seed5 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 8 → 0 → 3 | -45 · max(x, 0); 20 · max(x + 0.875, 0); 22 · max(x - 1, 0) |
-| xor/seed0 | development | truth-table | PASS exact | yes | 7 | 64 → 16 → 0 → 1 | -45 · max(p + q - 0.8, 0) |
-| xor/seed1 | development | truth-table | PASS exact | yes | 7 | 64 → 16 → 0 → 1 | 46 · max(p - q - 0.25, 0) |
-| xor/seed2 | development | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | 47 · max(p - 0.75 * q, 0) |
-| xor/seed3 | held-out | truth-table | PASS exact | no | 7 | 64 → 32 → 0 → 1 | 40 · max(0.5 * p - q - 0.125, 0) |
-| xor/seed4 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | -47 · max(0.8 * p + q - 0.75, 0) |
-| xor/seed5 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | -46 · max(0.8 * p + q - 0.75, 0) |
+| tax/seed3 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 8 → 2 | candidate only: -0.15 · max(income - 184, 0); 0.22 · max(income - 76, 0) |
+| tax/seed4 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 8 → 2 | candidate only: -0.2 · max(income - 196, 0); 0.22 · max(income - 74, 0) |
+| tax/seed5 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | candidate only: -0.0327 · max(income - 188, 0); 0.23 · max(income - 74, 0) |
+| window/seed0 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | candidate only: -47.3 · max(x - 0.353, 0); -43.1 · max(x + 0.313, 0); 48 · max(x - 0.668, 0); 40.5 · max(x + 0.668, 0) |
+| window/seed1 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 3 | candidate only: 14.8 · max(x + 0.75, 0); -38 · max(x, 0); 19 · max(x - 0.95, 0) |
+| window/seed2 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | candidate only: -34 · max(x - 0.25, 0); -43 · max(x + 0.4, 0); 45 · max(x + 0.6, 0); 28 · max(x - 0.75, 0) |
+| window/seed3 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 1 | candidate only: -17 · max(x, 0) |
+| window/seed4 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | candidate only: -42 · max(x - 0.35, 0); -37 · max(x + 0.35, 0); 41.2 · max(x - 0.625, 0); 36.2 · max(x + 0.7, 0) |
+| window/seed5 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 8 → 0 → 3 | candidate only: -45 · max(x, 0); 20 · max(x + 0.875, 0); 22 · max(x - 1, 0) |
+| xor/seed0 | development | truth-table | PASS exact | yes | 7 | 64 → 16 → 0 → 1 | candidate only: -45 · max(p + q - 0.8, 0) |
+| xor/seed1 | development | truth-table | PASS exact | yes | 7 | 64 → 16 → 0 → 1 | candidate only: 46 · max(p - q - 0.25, 0) |
+| xor/seed2 | development | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | candidate only: 47 · max(p - 0.75 * q, 0) |
+| xor/seed3 | held-out | truth-table | PASS exact | no | 7 | 64 → 32 → 0 → 1 | candidate only: 40 · max(0.5 * p - q - 0.125, 0) |
+| xor/seed4 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | candidate only: -47 · max(0.8 * p + q - 0.75, 0) |
+| xor/seed5 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | candidate only: -46 · max(0.8 * p + q - 0.75, 0) |
 
 **absdiff/seed0**: `ast2`, then `formula.py`
 
@@ -936,17 +892,14 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | absdiff/seed0 | R² 0.9970 | dump | PASS exact | empirical | 1.52e-06 |  | 0.589 / 6.38 | no | 236 (100%) |  |  |
 | absdiff/seed0 | R² 0.9970 | agent_1 | PASS snap | empirical | 0.0958 |  | 0.595 / 4.19 | no | 45 (19%) | OUTSIDE PATHS (7) | 638s 1075845+14009 tok |
-| absdiff/seed0 | R² 0.9970 | ast | PASS snap | empirical | 0.0778 |  | 0.563 / 6.36 | no | 235 (100%) |  |  |
 | absdiff/seed0 | R² 0.9970 | ast2 | PASS snap | empirical | 0.0995 |  | 0.545 / 3.84 | no | 80 (34%) |  |  |
 | absdiff/seed0 | R² 0.9970 | formula | FAIL | empirical | 0.601 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed1 | R² 0.9970 | dump | PASS exact | empirical | 1.35e-06 |  | 0.541 / 6.37 | no | 232 (100%) |  |  |
 | absdiff/seed1 | R² 0.9970 | agent_1 | PASS snap | empirical | 0.0478 |  | 0.511 / 6.33 | no | 83 (36%) | OUTSIDE PATHS (4) | 360s 977348+10156 tok |
-| absdiff/seed1 | R² 0.9970 | ast | PASS exact | empirical | 1.35e-06 |  | 0.541 / 6.37 | no | 232 (100%) |  |  |
 | absdiff/seed1 | R² 0.9970 | ast2 | PASS snap | empirical | 0.104 |  | 0.452 / 3.65 | no | 95 (41%) |  |  |
 | absdiff/seed1 | R² 0.9970 | formula | FAIL | empirical | 0.553 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed2 | R² 0.9939 | dump | PASS exact | empirical | 1.6e-06 |  | 0.829 / 6.48 | no | 238 (100%) |  |  |
 | absdiff/seed2 | R² 0.9939 | agent_1 | PASS snap | empirical | 0.0844 |  | 0.906 / 6.59 | no | 133 (56%) | OUTSIDE PATHS (1) | 694s 1227474+13299 tok |
-| absdiff/seed2 | R² 0.9939 | ast | PASS exact | empirical | 1.6e-06 |  | 0.829 / 6.48 | no | 238 (100%) |  |  |
 | absdiff/seed2 | R² 0.9939 | ast2 | PASS exact | empirical | 1.6e-06 |  | 0.829 / 6.48 | no | 238 (100%) |  |  |
 | absdiff/seed2 | R² 0.9939 | formula | FAIL | empirical | 0.841 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed3 | R² 0.9917 | dump | PASS exact | empirical | 1.27e-06 |  | 0.875 / 6.79 | no | 234 (100%) |  |  |
@@ -963,66 +916,63 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | absdiff/seed5 | R² 0.9971 | formula | FAIL | empirical | 0.626 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | iris/seed0 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 887 (2.86%) | 0.822 / 0.786 | n/a | 478 (100%) |  |  |
 | iris/seed0 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 4496 (2.86%) | 0.821 / 0.787 | n/a | 81 (17%) | OUTSIDE PATHS (3) | 1056s 2289118+17585 tok |
-| iris/seed0 | acc 0.9805 | ast | PASS exact | empirical |  | 0 / 887 (2.86%) | 0.822 / 0.786 | n/a | 478 (100%) |  |  |
+| iris/seed0 | acc 0.9805 | ast2 | PASS exact | empirical |  | 0 / 887 (2.86%) | 0.822 / 0.786 | n/a | 478 (100%) |  |  |
 | iris/seed1 | acc 0.9862 | dump | PASS exact | empirical |  | 0 / 939 (2.79%) | 0.803 / 0.775 | n/a | 480 (100%) |  |  |
 | iris/seed1 | acc 0.9862 | agent_1 | PASS snap | empirical |  | 0 / 4783 (2.79%) | 0.805 / 0.777 | n/a | 57 (12%) | OUTSIDE PATHS (1) | 1062s 2072994+17798 tok |
-| iris/seed1 | acc 0.9862 | ast | PASS exact | empirical |  | 0 / 939 (2.79%) | 0.803 / 0.775 | n/a | 480 (100%) |  |  |
+| iris/seed1 | acc 0.9862 | ast2 | PASS exact | empirical |  | 0 / 939 (2.79%) | 0.803 / 0.775 | n/a | 480 (100%) |  |  |
 | iris/seed2 | acc 0.9794 | dump | PASS exact | empirical |  | 0 / 892 (2.97%) | 0.806 / 0.772 | n/a | 478 (100%) |  |  |
 | iris/seed2 | acc 0.9794 | agent_1 | PASS snap | empirical |  | 0 / 4435 (2.97%) | 0.808 / 0.775 | n/a | 73 (15%) | OUTSIDE PATHS (1) | 779s 1490212+12349 tok |
-| iris/seed2 | acc 0.9794 | ast | PASS snap | empirical |  | 0 / 3320 (2.97%) | 0.806 / 0.773 | n/a | 72 (15%) |  |  |
+| iris/seed2 | acc 0.9794 | ast2 | PASS snap | empirical |  | 0 / 3320 (2.97%) | 0.806 / 0.773 | n/a | 72 (15%) |  |  |
 | iris/seed3 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1033 (3.25%) | 0.819 / 0.788 | n/a | 476 (100%) |  |  |
 | iris/seed3 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 4168 (3.25%) | 0.819 / 0.787 | n/a | 70 (15%) | OUTSIDE PATHS (4) | 952s 4115257+21962 tok |
-| iris/seed3 | acc 0.9805 | ast | PASS snap | empirical |  | 0 / 3932 (3.25%) | 0.819 / 0.787 | n/a | 74 (16%) |  |  |
+| iris/seed3 | acc 0.9805 | ast2 | PASS snap | empirical |  | 0 / 3932 (3.25%) | 0.819 / 0.787 | n/a | 74 (16%) |  |  |
 | iris/seed4 | acc 0.9786 | dump | PASS exact | empirical |  | 0 / 862 (2.80%) | 0.813 / 0.781 | n/a | 482 (100%) |  |  |
 | iris/seed4 | acc 0.9786 | agent_1 | PASS snap | empirical |  | 0 / 4610 (2.80%) | 0.815 / 0.784 | n/a | 76 (16%) | OUTSIDE PATHS (4) | 1136s 2265096+14961 tok |
-| iris/seed4 | acc 0.9786 | ast | PASS snap | empirical |  | 0 / 3303 (2.80%) | 0.813 / 0.782 | n/a | 74 (15%) |  |  |
+| iris/seed4 | acc 0.9786 | ast2 | PASS snap | empirical |  | 0 / 3303 (2.80%) | 0.813 / 0.782 | n/a | 74 (15%) |  |  |
 | iris/seed5 | acc 0.9741 | dump | PASS exact | empirical |  | 0 / 956 (3.14%) | 0.835 / 0.805 | n/a | 478 (100%) |  |  |
 | iris/seed5 | acc 0.9741 | agent_1 | PASS snap | empirical |  | 0 / 4901 (3.14%) | 0.833 / 0.803 | n/a | 70 (15%) | OUTSIDE PATHS (3) | 915s 1335811+12228 tok |
-| iris/seed5 | acc 0.9741 | ast | PASS snap | empirical |  | 0 / 3528 (3.14%) | 0.834 / 0.805 | n/a | 74 (15%) |  |  |
+| iris/seed5 | acc 0.9741 | ast2 | PASS snap | empirical |  | 0 / 3528 (3.14%) | 0.834 / 0.805 | n/a | 74 (15%) |  |  |
 | iris_petal/seed0 | acc 0.9660 | dump | PASS exact | empirical |  | 0 / 594 (3.65%) | 0.771 / 0.756 | n/a | 374 (100%) |  |  |
 | iris_petal/seed0 | acc 0.9660 | agent_1 | PASS snap | empirical |  | 0 / 3605 (3.65%) | 0.77 / 0.753 | n/a | 48 (13%) | OUTSIDE PATHS (1) | 190s 722175+5921 tok |
-| iris_petal/seed0 | acc 0.9660 | ast | PASS snap | empirical |  | 0 / 5762 (3.65%) | 0.777 / 0.755 | n/a | 42 (11%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | ast2 | PASS snap | empirical |  | 0 / 5762 (3.65%) | 0.777 / 0.755 | n/a | 42 (11%) |  |  |
 | iris_petal/seed1 | acc 0.9464 (NOT learned) | dump | PASS exact | empirical |  | 0 / 546 (3.60%) | 0.784 / 0.77 | n/a | 372 (100%) |  |  |
 | iris_petal/seed1 | acc 0.9464 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 5301 (3.60%) | 0.78 / 0.765 | n/a | 42 (11%) | ok | 252s 806696+8006 tok |
-| iris_petal/seed1 | acc 0.9464 (NOT learned) | ast | PASS snap | empirical |  | 0 / 2909 (3.60%) | 0.784 / 0.768 | n/a | 42 (11%) |  |  |
+| iris_petal/seed1 | acc 0.9464 (NOT learned) | ast2 | PASS snap | empirical |  | 0 / 2909 (3.60%) | 0.784 / 0.768 | n/a | 42 (11%) |  |  |
 | iris_petal/seed2 | acc 0.9560 | dump | PASS exact | empirical |  | 0 / 641 (3.80%) | 0.782 / 0.75 | n/a | 366 (100%) |  |  |
 | iris_petal/seed2 | acc 0.9560 | agent_1 | PASS snap | empirical |  | 0 / 4947 (3.80%) | 0.783 / 0.752 | n/a | 42 (11%) | ok | 210s 653711+6334 tok |
-| iris_petal/seed2 | acc 0.9560 | ast | PASS snap | empirical |  | 0 / 3494 (3.80%) | 0.782 / 0.747 | n/a | 42 (11%) |  |  |
+| iris_petal/seed2 | acc 0.9560 | ast2 | PASS snap | empirical |  | 0 / 3494 (3.80%) | 0.782 / 0.747 | n/a | 42 (11%) |  |  |
 | iris_petal/seed3 | acc 0.9530 | dump | PASS exact | empirical |  | 0 / 668 (4.01%) | 0.742 / 0.71 | n/a | 370 (100%) |  |  |
 | iris_petal/seed3 | acc 0.9530 | agent_1 | PASS snap | empirical |  | 0 / 4008 (4.01%) | 0.741 / 0.689 | n/a | 42 (11%) | ok | 171s 720457+5074 tok |
-| iris_petal/seed3 | acc 0.9530 | ast | PASS snap | empirical |  | 0 / 3537 (4.01%) | 0.742 / 0.7 | n/a | 42 (11%) |  |  |
+| iris_petal/seed3 | acc 0.9530 | ast2 | PASS snap | empirical |  | 0 / 3537 (4.01%) | 0.742 / 0.7 | n/a | 42 (11%) |  |  |
 | iris_petal/seed4 | acc 0.9532 | dump | PASS exact | empirical |  | 0 / 676 (3.55%) | 0.808 / 0.813 | n/a | 374 (100%) |  |  |
 | iris_petal/seed4 | acc 0.9532 | agent_1 | PASS snap | empirical |  | 0 / 4216 (3.55%) | 0.81 / 0.817 | n/a | 48 (13%) | ok | 175s 731507+6099 tok |
-| iris_petal/seed4 | acc 0.9532 | ast | PASS snap | empirical |  | 0 / 5734 (3.55%) | 0.802 / 0.816 | n/a | 42 (11%) |  |  |
+| iris_petal/seed4 | acc 0.9532 | ast2 | PASS snap | empirical |  | 0 / 5734 (3.55%) | 0.802 / 0.816 | n/a | 42 (11%) |  |  |
 | iris_petal/seed5 | acc 0.9450 (NOT learned) | dump | PASS exact | empirical |  | 0 / 663 (3.86%) | 0.768 / 0.738 | n/a | 368 (100%) |  |  |
 | iris_petal/seed5 | acc 0.9450 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 3665 (3.86%) | 0.769 / 0.74 | n/a | 42 (11%) | OUTSIDE PATHS (3) | 712s 1330731+8845 tok |
-| iris_petal/seed5 | acc 0.9450 (NOT learned) | ast | PASS snap | empirical |  | 0 / 5668 (3.86%) | 0.774 / 0.741 | n/a | 42 (11%) |  |  |
+| iris_petal/seed5 | acc 0.9450 (NOT learned) | ast2 | PASS snap | empirical |  | 0 / 5668 (3.86%) | 0.774 / 0.741 | n/a | 42 (11%) |  |  |
 | median3/seed0 | R² 0.9953 | dump | PASS exact | empirical | 1.07e-06 |  | 0.57 / 2.69 | no | 2512 (100%) |  |  |
 | median3/seed0 | R² 0.9953 | agent_1 | PASS snap | empirical | 0.0922 |  | 0.642 / 3.23 | no | 250 (10%) | OUTSIDE PATHS (3) | 3218s 3918371+34838 tok |
 | median3/seed0 | R² 0.9953 | agent_2 | PASS snap | empirical | 0.0828 |  | 0.641 / 2.54 | no | 254 (10%) | OUTSIDE PATHS (4) | 3419s 5396483+45938 tok |
-| median3/seed0 | R² 0.9953 | ast | PASS snap | empirical | 0.117 |  | 0.527 / 2.65 | no | 2437 (97%) |  |  |
+| median3/seed0 | R² 0.9953 | ast2 | PASS snap | empirical | 0.117 |  | 0.527 / 2.65 | no | 2437 (97%) |  |  |
 | median3/seed0 | R² 0.9953 | formula | FAIL | empirical | 0.623 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed1 | R² 0.9952 | dump | PASS exact | empirical | 1.17e-06 |  | 0.609 / 2.6 | no | 2498 (100%) |  |  |
 | median3/seed1 | R² 0.9952 | agent_1 | PASS snap | empirical | 0.0991 |  | 0.608 / 2.64 | no | 216 (9%) | OUTSIDE PATHS (2) | 2006s 5696595+38353 tok |
-| median3/seed1 | R² 0.9952 | ast | PASS exact | empirical | 1.17e-06 |  | 0.609 / 2.6 | no | 2498 (100%) |  |  |
+| median3/seed1 | R² 0.9952 | ast2 | PASS exact | empirical | 1.17e-06 |  | 0.609 / 2.6 | no | 2498 (100%) |  |  |
 | median3/seed1 | R² 0.9952 | formula | FAIL | empirical | 0.64 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed2 | R² 0.9948 | dump | PASS exact | empirical | 1.11e-06 |  | 0.65 / 2.91 | no | 2496 (100%) |  |  |
 | median3/seed2 | R² 0.9948 | agent_1 | PASS snap | empirical | 0.0725 |  | 0.705 / 2.94 | no | 181 (7%) | OUTSIDE PATHS (3) | 991s 2078021+21162 tok |
-| median3/seed2 | R² 0.9948 | ast | PASS snap | empirical | 0.107 |  | 0.645 / 2.89 | no | 1988 (80%) |  |  |
+| median3/seed2 | R² 0.9948 | ast2 | PASS snap | empirical | 0.107 |  | 0.645 / 2.89 | no | 1988 (80%) |  |  |
 | median3/seed2 | R² 0.9948 | formula | FAIL | empirical | 0.707 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | neareq/seed0 | acc 0.9952 | dump | PASS exact | empirical |  | 0 / 1865 (0.91%) | 0.999 / 0.999 | no | 236 (100%) |  |  |
 | neareq/seed0 | acc 0.9952 | agent_1 | PASS snap | empirical |  | 0 / 4946 (0.91%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (2) | 130s 491000+4480 tok |
-| neareq/seed0 | acc 0.9952 | ast | PASS snap | empirical |  | 0 / 8037 (0.91%) | 0.998 / 0.999 | no | 229 (97%) |  |  |
 | neareq/seed0 | acc 0.9952 | ast2 | PASS snap | empirical |  | 0 / 4996 (0.91%) | 0.998 / 0.998 | no | 78 (33%) |  |  |
 | neareq/seed0 | acc 0.9952 | formula | PASS snap | empirical |  | 0 / 4946 (0.91%) | 1 / 1 | yes | 13 (6%) |  |  |
 | neareq/seed1 | acc 0.9978 | dump | PASS exact | empirical |  | 0 / 1602 (1.10%) | 0.999 / 0.999 | no | 236 (100%) |  |  |
 | neareq/seed1 | acc 0.9978 | agent_1 | PASS snap | empirical |  | 0 / 4103 (1.10%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (1) | 92s 417465+3372 tok |
-| neareq/seed1 | acc 0.9978 | ast | PASS exact | empirical |  | 0 / 1602 (1.10%) | 0.999 / 0.999 | no | 236 (100%) |  |  |
 | neareq/seed1 | acc 0.9978 | ast2 | PASS snap | empirical |  | 0 / 5954 (1.10%) | 0.997 / 0.999 | no | 116 (49%) |  |  |
 | neareq/seed1 | acc 0.9978 | formula | PASS snap | empirical |  | 0 / 4103 (1.10%) | 1 / 1 | yes | 13 (6%) |  |  |
 | neareq/seed2 | acc 0.9946 | dump | PASS exact | empirical |  | 0 / 2062 (1.25%) | 0.998 / 0.999 | no | 232 (100%) |  |  |
 | neareq/seed2 | acc 0.9946 | agent_1 | PASS snap | empirical |  | 0 / 5458 (1.25%) | 1 / 1 | yes | 18 (8%) | ok | 136s 420239+3413 tok |
-| neareq/seed2 | acc 0.9946 | ast | PASS exact | empirical |  | 0 / 2062 (1.25%) | 0.998 / 0.999 | no | 232 (100%) |  |  |
 | neareq/seed2 | acc 0.9946 | ast2 | PASS snap | empirical |  | 0 / 8070 (1.25%) | 0.996 / 0.999 | no | 78 (34%) |  |  |
 | neareq/seed2 | acc 0.9946 | formula | PASS snap | empirical |  | 0 / 5458 (1.25%) | 1 / 1 | yes | 13 (6%) |  |  |
 | neareq/seed3 | acc 0.9975 | dump | PASS exact | empirical |  | 0 / 1669 (0.99%) | 0.999 / 0.999 | no | 242 (100%) |  |  |
@@ -1039,17 +989,14 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | neareq/seed5 | acc 0.9968 | formula | PASS snap | empirical |  | 0 / 5099 (1.40%) | 1 / 1 | yes | 13 (6%) |  |  |
 | tax/seed0 | R² 0.9998 | dump | PASS exact | empirical | 1.14e-05 |  | 1.36 / 39.1 | no | 176 (100%) |  |  |
 | tax/seed0 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.914 |  | 0.9 / 8.7 | no | 30 (17%) | OUTSIDE PATHS (4) | 604s 1049675+9651 tok |
-| tax/seed0 | R² 0.9998 | ast | PASS snap | empirical | 0.882 |  | 1.08 / 8.51 | no | 22 (12%) |  |  |
 | tax/seed0 | R² 0.9998 | ast2 | PASS snap | empirical | 0.882 |  | 1.08 / 8.51 | no | 22 (12%) |  |  |
 | tax/seed0 | R² 0.9998 | formula | FAIL | empirical | 1.36 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed1 | R² 0.9997 | dump | PASS exact | empirical | 1.12e-05 |  | 1.34 / 39.4 | no | 176 (100%) |  |  |
 | tax/seed1 | R² 0.9997 | agent_1 | PASS snap | empirical | 1.19 |  | 0.2 / 0.2 | no | 50 (28%) | OUTSIDE PATHS (1) | 671s 904028+9262 tok |
-| tax/seed1 | R² 0.9997 | ast | PASS snap | empirical | 1.05 |  | 1.15 / 8.85 | no | 22 (12%) |  |  |
 | tax/seed1 | R² 0.9997 | ast2 | PASS snap | empirical | 1.05 |  | 1.15 / 8.85 | no | 22 (12%) |  |  |
 | tax/seed1 | R² 0.9997 | formula | FAIL | empirical | 1.34 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed2 | R² 0.9997 | dump | PASS exact | empirical | 1.45e-05 |  | 1.51 / 38.5 | no | 174 (100%) |  |  |
 | tax/seed2 | R² 0.9997 | agent_1 | PASS snap | empirical | 1.03 |  | 1.25 / 11.2 | no | 32 (18%) | ok | 463s 653111+6623 tok |
-| tax/seed2 | R² 0.9997 | ast | PASS snap | empirical | 0.693 |  | 0.956 / 9.74 | no | 22 (13%) |  |  |
 | tax/seed2 | R² 0.9997 | ast2 | PASS snap | empirical | 0.747 |  | 1.01 / 9.01 | no | 20 (11%) |  |  |
 | tax/seed2 | R² 0.9997 | formula | FAIL | empirical | 1.51 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed3 | R² 0.9998 | dump | PASS exact | empirical | 1.14e-05 |  | 1.34 / 39.1 | no | 178 (100%) |  |  |
@@ -1066,17 +1013,14 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | tax/seed5 | R² 0.9996 | formula | FAIL | empirical | 1.46 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | window/seed0 | acc 0.9990 | dump | PASS exact | empirical |  | 0 / 976 (0.87%) | 0.999 / 1 | no | 90 (100%) |  |  |
 | window/seed0 | acc 0.9990 | agent_1 | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) | ok | 236s 417864+2291 tok |
-| window/seed0 | acc 0.9990 | ast | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed0 | acc 0.9990 | ast2 | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed0 | acc 0.9990 | formula | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed1 | acc 0.9977 | dump | PASS exact | empirical |  | 0 / 954 (0.74%) | 0.998 / 1 | no | 92 (100%) |  |  |
 | window/seed1 | acc 0.9977 | agent_1 | PASS exact | empirical |  | 0 / 1445 (0.74%) | 0.998 / 1 | no | 15 (16%) | ok | 435s 714091+3829 tok |
-| window/seed1 | acc 0.9977 | ast | PASS snap | empirical |  | 0 / 14476 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed1 | acc 0.9977 | ast2 | PASS snap | empirical |  | 0 / 14476 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed1 | acc 0.9977 | formula | PASS snap | empirical |  | 0 / 14476 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.9990 | dump | PASS exact | empirical |  | 0 / 990 (0.89%) | 0.999 / 1 | no | 90 (100%) |  |  |
 | window/seed2 | acc 0.9990 | agent_1 | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 19 (21%) | OUTSIDE PATHS (1) | 433s 569037+4067 tok |
-| window/seed2 | acc 0.9990 | ast | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.9990 | ast2 | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.9990 | formula | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed3 | acc 0.9979 | dump | PASS exact | empirical |  | 0 / 1434 (0.84%) | 0.998 / 1 | no | 94 (100%) |  |  |
@@ -1093,17 +1037,14 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | window/seed5 | acc 0.9982 | formula | PASS snap | empirical |  | 0 / 5209 (0.91%) | 1 / 1 | yes | 9 (10%) |  |  |
 | xor/seed0 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed0 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 356s 491278+2425 tok |
-| xor/seed0 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed0 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed0 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 122 (100%) |  |  |
 | xor/seed1 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 250s 349198+2788 tok |
-| xor/seed1 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed2 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 17 (14%) | ok | 241s 420143+2447 tok |
-| xor/seed2 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed3 | acc 0.7500 (NOT learned) | dump | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.75 /  | no | 120 (100%) |  |  |
@@ -1145,20 +1086,12 @@ def net(a, b):
     return min(dist, 3 + 0.4 * dist)
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
-# produced by nndc ast (route: sigmoid-replace)
+# produced by nndc ast (route: kink-merge)
 def net(a, b):
-    h1_0 = sigmoid(1.5760342 * a + 1.5582697 * b + 1.9079688)
-    h1_1 = (-0.9893441702911626 * a - b + 0.6306539312922725 > 0)
-    h1_2 = sigmoid(-1.1844841 * a + 1.1826217 * b - 4.360774)
-    h1_3 = sigmoid(-2.335223 * a + 2.3351378 * b - 2.3598416)
-    h1_4 = sigmoid(2.1175911 * a - 2.1213229 * b - 2.2691188)
-    h1_5 = (-a - 0.9802349859449002 * b + 0.9758940671675741 > 0)
-    h1_6 = sigmoid(1.2869285 * a - 1.2854285 * b - 4.8206944)
-    h1_7 = min(max(0.34650425 * a + 0.33598805 * b + 0.755635775, 0), 1)
-    return -0.19723664 * h1_0 + 0.14666697 * h1_1 + 3.9260743 * h1_2 + 1.9408692 * h1_3 + 2.1633446 * h1_4 - 0.0724625 * h1_5 + 3.6088986 * h1_6 + 0.26983872 * h1_7 - 0.27117229
+    return -0.48 * a + 0.48 * b + 2.596308155986012 + relu(a - b + 0.25) + relu(a - b - 0.25) - 0.55 * relu(a - b - 5) - 0.52 * relu(a - b + 5)
 ```
 
 <details><summary>notes</summary>
@@ -1250,20 +1183,12 @@ def net(a, b):
     return 3 * near_step + 3.2 * far_step - 0.55
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
-# produced by nndc ast (route: structural-exact)
+# produced by nndc ast (route: kink-merge)
 def net(a, b):
-    h1_0 = sigmoid(1.4714818 * a - 1.4191324 * b - 5.7235374)
-    h1_1 = sigmoid(1.0183687 * a + 1.4039124 * b + 0.8537057)
-    h1_2 = sigmoid(-1.4751775 * a - 1.3618672 * b + 1.5963116)
-    h1_3 = sigmoid(1.3925903 * a + 1.3879222 * b + 1.3230511)
-    h1_4 = sigmoid(0.72357696 * a + 0.6559546 * b - 0.012077273)
-    h1_5 = sigmoid(1.7184958 * a - 1.668068 * b - 1.8681703)
-    h1_6 = sigmoid(-1.3814204 * a + 1.4416996 * b - 5.5747676)
-    h1_7 = sigmoid(-1.6858941 * a + 1.728565 * b - 1.8605615)
-    return 3.1832032 * h1_0 - 0.084463075 * h1_1 - 0.17364007 * h1_2 + 0.26733127 * h1_3 - 0.5785187 * h1_4 + 2.9782078 * h1_5 + 3.2468553 * h1_6 + 2.932724 * h1_7 - 0.278823
+    return -0.48 * a + 0.44624263463879404 * b + 2.7644917617627796 + 1.16 * relu(a - 0.99 * b - 0.25) + 0.875 * relu(a - b + 0.35) - 0.54 * relu(a - 0.96 * b - 4.95) - 0.5628749760286466 * relu(0.96 * a - b + 5)
 ```
 
 <details><summary>notes</summary>
@@ -1349,7 +1274,7 @@ def net(a, b):
     return left_ramp + right_ramp + diag_fix - 0.695
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: structural-exact)
@@ -1463,6 +1388,22 @@ def net(a, b):
     return far_right + right + left - 0.2 * valley - 0.65
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: sigmoid-replace)
+def net(a, b):
+    h1_0 = sigmoid(1.5608935 * a - 1.5811212 * b - 5.6978836)
+    h1_1 = (-a - 0.8512399854209328 * b + 0.6136730166551018 > 0)
+    h1_2 = (-a - 0.8256106517620507 * b + 0.17718149539979 > 0)
+    h1_3 = sigmoid(1.7599554 * a + 1.9408717 * b + 1.062507)
+    h1_4 = sigmoid(1.2617681 * a - 1.2578588 * b + 1.5280614)
+    h1_5 = sigmoid(2.485814 * a - 2.508978 * b - 2.8118944)
+    h1_6 = min(max(-0.461176775 * a - 0.404016375 * b + 0.7110216, 0), 1)
+    h1_7 = sigmoid(-0.8145771 * a + 0.8111943 * b - 2.0779521)
+    return 3.3133814 * h1_0 - 0.009013219 * h1_1 + 0.16399612 * h1_2 + 0.2512382 * h1_3 - 0.55989116 * h1_4 + 2.4631565 * h1_5 + 0.0653747 * h1_6 + 5.2271266 * h1_7 - 0.19855295
+```
+
 <details><summary>notes</summary>
 
 ### Notes on m55dec4 (2 inputs, 8 sigmoid units, regression)
@@ -1568,6 +1509,21 @@ def net(a, b):
     return 6 * rise_pos + 2.5 * rise_neg + 4.5 * rise_far + 0.1 * d - 0.9
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: sigmoid-replace)
+def net(a, b):
+    h1_0 = sigmoid(-0.052513428 * a - 0.22641179 * b + 1.3441563)
+    h1_2 = sigmoid(0.04891198 * a - 0.17902395 * b + 0.9946669)
+    h1_3 = sigmoid(0.710797 * a - 0.7152358 * b - 1.7827095)
+    h1_4 = sigmoid(0.19357155 * a - 0.005729861 * b + 1.1464425)
+    h1_5 = sigmoid(1.2538643 * a - 1.253644 * b + 4.500368)
+    h1_6 = sigmoid(0.29027292 * a - 0.15421104 * b + 0.52731156)
+    h1_7 = sigmoid(-2.5734644 * a + 2.5779605 * b - 2.6494086)
+    return 1.0139246 * h1_0 + 0.9775807 * h1_2 + 5.9141073 * h1_3 + 1.0562305 * h1_4 - 4.4847927 * h1_5 + 0.9540187 * h1_6 + 2.4610639 * h1_7 + 0.02232470797128 * a - 0.017561844690624 * b + 0.8597869685896
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -1653,6 +1609,14 @@ def net(a, b):
     near_step = sigmoid(2.5 * (dist - 1.1))
     far_step = sigmoid(1.25 * (dist - 3.7))
     return 0.07 + 1.75 * near_step + 3.8 * far_step
+```
+
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.56 * a + 0.56 * b + 2.1142563598956787 + 1.22 * relu(a - b + 0.25) + 0.8 * relu(a - b - 0.4) - 0.45 * relu(a - b + 4.75) - 0.47 * relu(a - b - 4.875)
 ```
 
 <details><summary>notes</summary>
@@ -1751,7 +1715,7 @@ def net(sepal_length, sepal_width, petal_length, petal_width):
     return 2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: structural-exact)
@@ -1871,7 +1835,7 @@ def net(sepal_length, sepal_width, petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: structural-exact)
@@ -1981,7 +1945,7 @@ def net(sepal_length, sepal_width, petal_length, petal_width):
         return 2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2084,7 +2048,7 @@ def net(sepal_length, sepal_width, petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2196,7 +2160,7 @@ def net(sepal_length, sepal_width, petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2305,7 +2269,7 @@ def net(sepal_length, sepal_width, petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2408,7 +2372,7 @@ def net(petal_length, petal_width):
     return 2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2505,7 +2469,7 @@ def net(petal_length, petal_width):
     return 2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2602,7 +2566,7 @@ def net(petal_length, petal_width):
     return 2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2690,7 +2654,7 @@ def net(petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2772,7 +2736,7 @@ def net(petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2865,7 +2829,7 @@ def net(petal_length, petal_width):
     return 1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: linear-scores)
@@ -2980,7 +2944,7 @@ def net(a, b, c):
     return -3.22046621 * b0 - 164.56205565 * b1 + 62.67736462
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: sigmoid-replace)
@@ -3088,7 +3052,7 @@ def net(a, b, c):
     return 6.55 - 13.15 * sigmoid(score)
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: structural-exact)
@@ -3260,7 +3224,7 @@ def net(a, b, c):
     return 14 * (sigmoid(z) - 0.5)
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: sigmoid-replace)
@@ -3376,20 +3340,12 @@ def net(a, b):
     return gap < 0.2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
-# produced by nndc ast (route: sigmoid-replace)
+# produced by nndc ast (route: kink-merge)
 def net(a, b):
-    h1_0 = (a - 0.09644979628744994 * b + 4.932149266432826 > 0)
-    h1_1 = (-0.29116524310100467 * a - b + 5.464203212048272 > 0)
-    h1_2 = (-a + 0.2722343060175125 * b - 4.558856766924295 > 0)
-    h1_3 = min(max(-2.84792075 * a + 2.85820975 * b - 0.111111175, 0), 1)
-    h1_4 = sigmoid(0.76856107 * a - 0.6093585 * b + 0.87131363)
-    h1_5 = (0.16496809722611477 * a - b + 6.356897386366018 > 0)
-    h1_6 = (0.5954377036945456 * a - 0.9999999999999999 * b + 4.633532649748911 > 0)
-    h1_7 = (-0.9999999999999999 * a + 0.9994466910660027 * b + 0.19617163146416697 > 0)
-    return -1.3107773 * h1_0 - 1.4504701 * h1_1 + 0.66854167 * h1_2 - 16.519886 * h1_3 - 1.2155019 * h1_4 - 1.4078876 * h1_5 - 1.3038645 * h1_6 + 14.458104 * h1_7 - 0.85005003
+    return -0.62761061190875 * a + 0.33640500586924543 * b - 7.550908989773504 - 71.79940707360433 * relu(0.9964411735156969 * a - b + 0.08347857406581637) + 50.985296698527954 * relu(0.9998003811397929 * a - b + 0.34839635090182886) + 20.151716970426854 * relu(0.9975220055043533 * a - b - 0.4609964814891104)
 ```
 
 <details><summary>notes</summary>
@@ -3464,20 +3420,12 @@ def net(a, b):
     return 0.2 - abs(diff)
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
-# produced by nndc ast (route: structural-exact)
+# produced by nndc ast (route: kink-merge)
 def net(a, b):
-    h1_0 = sigmoid(-1.8325301 * a + 0.37399748 * b - 0.9222973)
-    h1_1 = sigmoid(-10.264247 * a + 10.244508 * b - 2.202513)
-    h1_2 = sigmoid(-6.1676908 * a + 6.2344403 * b + 1.8394408)
-    h1_3 = sigmoid(-11.394746 * a + 11.374804 * b - 2.3789897)
-    h1_4 = sigmoid(-7.186394 * a + 7.168465 * b - 1.816756)
-    h1_5 = sigmoid(10.800418 * a - 10.833183 * b - 2.3336902)
-    h1_6 = sigmoid(11.521255 * a - 11.549395 * b - 2.4432764)
-    h1_7 = sigmoid(0.7019879 * a - 0.62826186 * b + 2.4517581)
-    return 0.48466286 * h1_0 - 8.489141 * h1_1 + 4.465596 * h1_2 - 9.370281 * h1_3 - 5.2992163 * h1_4 - 9.283582 * h1_5 - 9.997082 * h1_6 + 3.4543 * h1_7 + 3.1285763
+    return 0.8219404061467296 * a - 0.9386768939277448 * b - 11.134307531881653 - 57.34925463761764 * relu(a - 0.9993277821801555 * b - 0.009016637196360797) + 47.35281987458384 * relu(0.9972544162629186 * a - b - 0.44292047445041755) - 20.384773909208675 * relu(0.9958862435276313 * a - b + 0.029450522941378576) + 39.56542507215085 * relu(a - 0.9982391896134186 * b + 0.47918562236949425) - 10.799263859391239 * relu(0.9911591677233639 * a - b - 0.21384458226749556)
 ```
 
 <details><summary>notes</summary>
@@ -3550,20 +3498,12 @@ def net(a, b):
     return 0.2 - gap
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
-# produced by nndc ast (route: structural-exact)
+# produced by nndc ast (route: kink-merge)
 def net(a, b):
-    h1_0 = sigmoid(8.62893 * a - 8.64645 * b + 2.1212034)
-    h1_1 = sigmoid(-0.10276424 * a + 0.8575647 * b - 3.132426)
-    h1_2 = sigmoid(8.448815 * a - 8.466817 * b + 2.100508)
-    h1_3 = sigmoid(0.26171666 * a - 0.7962463 * b + 2.712764)
-    h1_4 = sigmoid(11.275248 * a - 11.271425 * b - 2.1415203)
-    h1_5 = sigmoid(-3.2834263 * a + 3.329193 * b + 0.9651806)
-    h1_6 = sigmoid(-10.030071 * a + 10.042951 * b - 2.2975478)
-    h1_7 = sigmoid(1.0536516 * a - 0.4829216 * b + 2.2156684)
-    return 5.3289013 * h1_0 + 1.0067987 * h1_1 + 5.553677 * h1_2 - 0.87394315 * h1_3 - 18.034018 * h1_4 + 1.847609 * h1_5 - 13.395647 * h1_6 - 1.366761 * h1_7 + 0.06849926
+    return -0.5249645731825732 * a + 0.5966328853302958 * b - 13.195107738231094 - 75.83693198220226 * relu(0.9990874067610914 * a - b + 0.01307912351162168) + 35.10718264499321 * relu(0.9887273540438497 * a - b - 0.4096478911275829) + 40.78068511386664 * relu(0.9965949455834977 * a - b + 0.5141639726759883)
 ```
 
 <details><summary>notes</summary>
@@ -3632,6 +3572,14 @@ def net(a, b):
     return 0.2 - gap
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return 0.6535989007146568 * a - 0.56 * b - 7.71928640664779 - 70 * relu(a - b - 0.02) + 38.5 * relu(a - b - 0.45) + 31 * relu(a - b + 0.45)
+```
+
 <details><summary>notes</summary>
 
 ### Agent notes
@@ -3697,6 +3645,14 @@ def net(a, b):
     # class 1 iff the two inputs are close: |b - a| < 0.2
     gap = abs(b - a)
     return 0.2 - gap
+```
+
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.56 * a + 0.42 * b - 10.590180854797367 - 72.5 * relu(a - b) + 35 * relu(a - b - 0.48) + 37 * relu(a - b + 0.48)
 ```
 
 <details><summary>notes</summary>
@@ -3769,6 +3725,14 @@ def net(a, b):
     return 0.2 - gap
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return 0.41 * a - 0.30359817059901 * b - 15.166160893752172 - 86 * relu(a - b) + 42.5 * relu(a - b + 0.55) + 36.25 * relu(a - b - 0.45) + 5.75 * relu(a - b - 0.125)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -3831,7 +3795,7 @@ def net(income):
     return max(low_ramp, high_ramp)
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: knot-fit)
@@ -3915,7 +3879,7 @@ def net(income):
     return bracket_1 + bracket_2 + bracket_3 - 0.2
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: knot-fit)
@@ -3991,12 +3955,12 @@ def net(income):
     return base + extra
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
-# produced by nndc ast (route: knot-fit)
+# produced by nndc ast (route: kink-merge)
 def net(income):
-    return 0.1878334015032326 * income - 0.9564485257331397 + 0.2048064595517146 * relu(income - 80)
+    return max(0.18 * income - 1.0107817922647815, 0.39 * income - 16.76078179226478)
 ```
 
 <details><summary>notes</summary>
@@ -4073,6 +4037,14 @@ def net(income):
     return 0.2 * base + 0.2 * upper
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.1713592529296873 * income - 0.9405523423895378 + 0.21728169204695863 * relu(income - 70)
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -4144,6 +4116,14 @@ def net(income):
     mid = 0.2 * income - 2
     high = 0.4 * income - 18
     return min(max(low, mid, high), 60)
+```
+
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.17188822651252814 * income - 1.0523654807506246 + 0.216491556695547 * relu(income - 70)
 ```
 
 <details><summary>notes</summary>
@@ -4225,6 +4205,14 @@ def net(income):
     # Convex part (rising slopes) is a max of lines; the final slowdown is a min cap.
     rising = max(0.1 * income, 0.2 * income - 2, 0.4 * income - 18)
     return min(rising, 0.2 * income + 21)
+```
+
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.1874276644026351 * income - 0.8580347171032285 + 0.20683579522221054 * relu(income - 80)
 ```
 
 <details><summary>notes</summary>
@@ -4318,7 +4306,7 @@ def net(x):
     return abs(x) < 0.5
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: boundary-scan)
@@ -4382,7 +4370,7 @@ def net(x):
     return inside
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: boundary-scan)
@@ -4470,7 +4458,7 @@ def net(x):
     return 1 if inside else -1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: boundary-scan)
@@ -4551,6 +4539,14 @@ def net(x):
     return 0.5 - abs(x)
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
 <details><summary>notes</summary>
 
 ### Agent notes
@@ -4628,6 +4624,14 @@ def net(x):
     return 0.5 - abs(x)
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -4691,6 +4695,14 @@ def net(x):
     return 0.5 - abs(x)
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -4751,7 +4763,7 @@ def net(p, q):
     return p != q
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: truth-table)
@@ -4809,7 +4821,7 @@ def net(p, q):
     return p != q
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: truth-table)
@@ -4885,7 +4897,7 @@ def net(p, q):
     return 1 if differ else -1
 ```
 
-AST tool (no LLM):
+AST tool (no LLM, `ast2`):
 
 ```python
 # produced by nndc ast (route: truth-table)
@@ -4960,6 +4972,14 @@ def net(p, q):
     return p or q
 ```
 
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p or q
+```
+
 <details><summary>notes</summary>
 
 ### Notes
@@ -5017,6 +5037,14 @@ def net(p, q):
 ```python
 def net(p, q):
     # exclusive or: class 1 exactly when the two bool inputs differ
+    return p != q
+```
+
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
     return p != q
 ```
 
@@ -5078,6 +5106,14 @@ def net(p, q):
 ```python
 def net(p, q):
     # XOR of the two boolean inputs: class 1 exactly when they differ
+    return p != q
+```
+
+AST tool (no LLM, `ast2`):
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
     return p != q
 ```
 
