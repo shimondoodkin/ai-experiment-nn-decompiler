@@ -174,8 +174,10 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, kinks: bool = False) -> tuple[
         if spec.output == "regression":
             add("knot-fit", lambda: knot_fit(spec, mlp), ["S5"])
         if kinks:
-            src_k, extra["kink_merge"] = kink_merge(spec, mlp)
-            add("kink-merge", lambda: src_k, ["K1"])
+            def kink_route() -> str | None:   # inside add(), so an error skips only this route
+                src_k, extra["kink_merge"] = kink_merge(spec, mlp)
+                return src_k
+            add("kink-merge", kink_route, ["K1"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:

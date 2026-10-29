@@ -173,3 +173,16 @@ def test_refactor_relu_has_no_kink_merge():
     mlp, spec = _net([2, 4, 1], ["relu"]), _spec(2, "regression")
     _, trace = refactor(dump_program(mlp, spec), spec, mlp)
     assert "kink_merge" not in trace and all(c["route"] != "kink-merge" for c in trace["candidates"])
+
+
+def test_kink_merge_error_skips_only_the_route(monkeypatch):
+    import nndc.ast_tool as ast_tool
+
+    def boom(spec, mlp):
+        raise ValueError("boom")
+    monkeypatch.setattr(ast_tool, "kink_merge", boom)
+    rd = Path("runs_sigmoid/tax/seed2")
+    blind, mlp = _blind(rd)
+    src, trace = ast_tool.refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=True)
+    assert src and all(c["route"] != "kink-merge" for c in trace["candidates"])
+    assert any(ln.startswith("kink-merge: not applicable") and "boom" in ln for ln in trace["trace_lines"])
