@@ -294,6 +294,400 @@
       },
       "meta": null
     },
+    "agent_1": {
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 226423,
+        "max_abs_err": 0.9054136276245117,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.2136341667175292,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 10.0
+            },
+            "net": 0.9054136276245117,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.999841571936564
+            },
+            "net": 0.9053955078125,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.001313527183164
+            },
+            "net": 0.9055624008178711,
+            "program": 0.0002627054366328707,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.00146893137941
+            },
+            "net": 0.9055814743041992,
+            "program": 0.0002937862758820131,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.003293928829994
+            },
+            "net": 0.9057893753051758,
+            "program": 0.0006587857659987151,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.997387812303305
+            },
+            "net": 0.9051151275634766,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.997258208178806
+            },
+            "net": 0.9051008224487305,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.997085666815408
+            },
+            "net": 0.9050807952880859,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.004678551561085
+            },
+            "net": 0.9059476852416992,
+            "program": 0.0009357103122169975,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.99579911724091
+            },
+            "net": 0.9049348831176758,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.005986459700257
+            },
+            "net": 0.9060964584350586,
+            "program": 0.001197291940051315,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.995285524891484
+            },
+            "net": 0.904876708984375,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.006476573377544
+            },
+            "net": 0.9061527252197266,
+            "program": 0.0012953146755087632,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.007193162560114
+            },
+            "net": 0.9062328338623047,
+            "program": 0.001438632512022764,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.009052698315735
+            },
+            "net": 0.9064455032348633,
+            "program": 0.0018105396631469262,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.00932558397376
+            },
+            "net": 0.9064779281616211,
+            "program": 0.0018651167947520975,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.00963809290003
+            },
+            "net": 0.9065122604370117,
+            "program": 0.001927618580005941,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.010182000790447
+            },
+            "net": 0.9065742492675781,
+            "program": 0.0020364001580894355,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 10.010615918540445
+            },
+            "net": 0.9066238403320312,
+            "program": 0.002123183708089016,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 9.991963602702448
+            },
+            "net": 0.9044952392578125,
+            "program": 0.0,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.9998706688499581,
+        "out_of_range": 21.999838557103573,
+        "metric": "max_abs_err",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 3,
+        "nodes": 45,
+        "constants": 5,
+        "relus": 3,
+        "ifs": 0
+      },
+      "meta": {
+        "blind_id": "m035d38",
+        "collected": "2026-10-29T08:02:48",
+        "transcript_found": true,
+        "outside_paths": [],
+        "forbidden_paths": [],
+        "model": "claude-opus-5-5",
+        "duration_s": 251.584,
+        "tokens": {
+          "input": 815419,
+          "output": 7837
+        }
+      }
+    },
+    "ast2": {
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 226443,
+        "max_abs_err": 0.9199577404737198,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 1.2136341667175292,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 183.332744452942
+            },
+            "net": 56.02029800415039,
+            "program": 55.10034026367667,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.332744452942
+            },
+            "net": 56.02029800415039,
+            "program": 55.10034026367667,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.34476025720951
+            },
+            "net": 56.024967193603516,
+            "program": 55.105010097201856,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.34476025720951
+            },
+            "net": 56.024967193603516,
+            "program": 55.105010097201856,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.32196914408442
+            },
+            "net": 56.016109466552734,
+            "program": 55.09615253745986,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.32196914408442
+            },
+            "net": 56.016109466552734,
+            "program": 55.09615253745986,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.33768730650263
+            },
+            "net": 56.022216796875,
+            "program": 55.102261258955366,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.33768730650263
+            },
+            "net": 56.022216796875,
+            "program": 55.102261258955366,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.31512154698686
+            },
+            "net": 56.01344680786133,
+            "program": 55.09349128085304,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.31512154698686
+            },
+            "net": 56.01344680786133,
+            "program": 55.09349128085304,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.3269199937522
+            },
+            "net": 56.01803207397461,
+            "program": 55.09807664035318,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.3269199937522
+            },
+            "net": 56.01803207397461,
+            "program": 55.09807664035318,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.33979981790992
+            },
+            "net": 56.02303695678711,
+            "program": 55.10308226738496,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.33979981790992
+            },
+            "net": 56.02303695678711,
+            "program": 55.10308226738496,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.33422486768274
+            },
+            "net": 56.020870208740234,
+            "program": 55.10091561346047,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.33422486768274
+            },
+            "net": 56.020870208740234,
+            "program": 55.10091561346047,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.35695855015928
+            },
+            "net": 56.02970504760742,
+            "program": 55.10975085330095,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.35695855015928
+            },
+            "net": 56.02970504760742,
+            "program": 55.10975085330095,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.3265012560202
+            },
+            "net": 56.01786804199219,
+            "program": 55.09791390172532,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 183.3265012560202
+            },
+            "net": 56.01786804199219,
+            "program": 55.09791390172532,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.9454022171238652,
+        "out_of_range": 8.076454014190373,
+        "metric": "max_abs_err",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 22,
+        "constants": 4,
+        "relus": 1,
+        "ifs": 0
+      },
+      "meta": null
+    },
     "formula": {
       "check": {
         "exact_pass": false,

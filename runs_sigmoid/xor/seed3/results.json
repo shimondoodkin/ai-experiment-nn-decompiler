@@ -173,6 +173,78 @@
       },
       "meta": null
     },
+    "agent_1": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.5,
+        "margin": 0.49326408147811884,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.75,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 7,
+        "constants": 0,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": {
+        "blind_id": "mb7fb76",
+        "collected": "2026-10-29T08:02:16",
+        "transcript_found": true,
+        "outside_paths": [],
+        "forbidden_paths": [],
+        "model": "claude-opus-5-5",
+        "duration_s": 100.302,
+        "tokens": {
+          "input": 420105,
+          "output": 2708
+        }
+      }
+    },
+    "ast2": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.5,
+        "margin": 0.49326408147811884,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.75,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 7,
+        "constants": 0,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    },
     "formula": {
       "check": {
         "exact_pass": false,
