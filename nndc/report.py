@@ -103,7 +103,8 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
             # nest the agent's own headings under this run's section
             notes = re.sub(r"^(#{1,4}) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", notes, flags=re.M)
             ast_md = ""
-            for name, label in (("ast2", "AST tool (no LLM, `ast2`)"), ("ast", "AST tool (no LLM)")):   # newest first
+            for name, label in (("ast3", "AST tool (no LLM, `ast3`)"), ("ast2", "AST tool (no LLM, `ast2`)"),
+                                ("ast", "AST tool (no LLM)")):   # newest first
                 if (rd / f"{name}.py").exists():
                     ast_src = (rd / f"{name}.py").read_text(encoding="utf-8", errors="replace")
                     ast_md = f"{label}:\n\n```python\n{with_real_names(ast_src, spec)}```\n\n"
@@ -121,7 +122,8 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
             + "\n\n" + reproduction_md(Path(root))
             + (comparison_md(Path(root), Path(root), BUG_ROOT) if compare_to is None
                else flagged_reproduction_md(Path(root)) + formula_md(Path(root))
-               + activation_compare_md(Path(compare_to), Path(root)) + kink_md(Path(root)))
+               + activation_compare_md(Path(compare_to), Path(root)) + kink_md(Path(root))
+               + newest_reproduction_md(Path(root)))
             + _datasets_md(Path(root)) + "## Results\n\n" + "\n".join(rows) + "\n\n" + "\n".join(sections))
 
 
@@ -131,8 +133,8 @@ def _results(rd: Path) -> dict | None:
 
 
 def _tool(versions: dict) -> dict | None:
-    """The newest AST tool version present (ast2, else ast)."""
-    return versions.get("ast2") or versions.get("ast")
+    """The newest AST tool version present (ast3, then ast2, then ast)."""
+    return versions.get("ast3") or versions.get("ast2") or versions.get("ast")
 
 
 def _cell(rd: Path, v: dict | None) -> str:
@@ -185,8 +187,10 @@ def formula_md(root: Path) -> str:
 
 def activation_compare_md(relu_root: Path, root: Path) -> str:
     """One row per task and seed present in both roots: the net, the best agent program and the AST program."""
-    rows = ["| run | learned (ReLU / this) | best agent, ReLU | best agent, this | AST, ReLU | AST, this |",
-            "|---|---|---|---|---|---|"]
+    relu = Path(relu_root).name == "runs"   # the ReLU root; any other root is named as it is
+    other_name = "ReLU" if relu else f"`{Path(relu_root).name}`"
+    rows = [f"| run | learned ({other_name} / this) | best agent, {other_name} | best agent, this | AST, {other_name} | "
+            "AST, this |", "|---|---|---|---|---|---|"]
     for rd in all_runs(root):
         other = Path(relu_root) / rd.parent.name / rd.name
         a, b = _results(other), _results(rd)
@@ -200,18 +204,43 @@ def activation_compare_md(relu_root: Path, root: Path) -> str:
         rows.append(f"| {b['run']} | {learned} | {cells[0][0]} | {cells[1][0]} | {cells[0][1]} | {cells[1][1]} |")
     if len(rows) == 2:
         return ""
-    return (f"## Compared with the ReLU runs\n\nThe same task, seed and training settings, with ReLU "
-            f"(`{Path(relu_root).as_posix()}`) and with this root's activation.\n\n" + "\n".join(rows) + "\n\n")
+    if relu:
+        return (f"## Compared with the ReLU runs\n\nThe same task, seed and training settings, with ReLU "
+                f"(`{Path(relu_root).as_posix()}`) and with this root's activation.\n\n" + "\n".join(rows) + "\n\n")
+    return (f"## Compared with `{Path(relu_root).as_posix()}`\n\nThe same task, seed and training settings, in "
+            f"`{Path(relu_root).as_posix()}` and in this root.\n\n" + "\n".join(rows) + "\n\n")
 
 
 def _kink_heldout(rd: Path) -> bool:
-    """The kink-merge held-out set: formula-task seeds 3-5, built after its freeze."""
+    """The ast2 held-out set: formula-task seeds 3-5, built after its freeze."""
     return is_step1(rd) and rd.name in ("seed3", "seed4", "seed5")
 
 
-def _kink_trace(rd: Path) -> dict | None:
-    """The ast2 trace of a run where the kink-merge route applies, else None."""
-    tp = rd / "ast2_trace.json"
+def load_heldout(root: Path) -> dict | None:
+    """<root>/heldout.json: {"version", "freeze", "runs"}, the held-out set of the newest tool version."""
+    p = Path(root) / "heldout.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+def _heldout_rule(root: Path, version: str):
+    """rd -> held out? From heldout.json when it names this version, else the ast2 rule."""
+    h = load_heldout(root)
+    if h is not None and h.get("version") == version:
+        runs = set(h["runs"])
+        return lambda rd: f"{Path(rd).parent.name}/{Path(rd).name}" in runs
+    return _kink_heldout
+
+
+def _newest_kink_version(root: Path) -> str | None:
+    for name in ("ast3", "ast2"):
+        if any((rd / f"{name}.py").exists() for rd in all_runs(root)):
+            return name
+    return None
+
+
+def _kink_trace(rd: Path, name: str = "ast2") -> dict | None:
+    """The trace of tool version `name` on a run where the kink-merge route applies, else None."""
+    tp = rd / f"{name}_trace.json"
     tr = json.loads(tp.read_text(encoding="utf-8")) if tp.exists() else None
     if tr is None or (tr.get("kink_merge") or {}).get("applies") is not None:
         return None
@@ -225,18 +254,40 @@ def _kink_line(line: dict, spec: Spec) -> str:
     return f"{_num(line['strength'])} · max({with_real_names(z.to_src(), spec)}, 0)"
 
 
+def ast_compare_rows(root: Path) -> list[dict]:
+    """Runs with both ast2 and ast3: ast3 is worse when ast2 passes and ast3 does not, ast2 recovers and ast3 does
+    not, or both pass and ast3 has more nodes (rule fixed in docs/design/2026-10-29-ast3-tanh-design.md)."""
+    rows = []
+    for rd in all_runs(root):
+        res = _results(rd)
+        if res is None or "ast2" not in res["versions"] or "ast3" not in res["versions"]:
+            continue
+        a, b = res["versions"]["ast2"], res["versions"]["ast3"]
+        pa, pb = a["check"]["snap_pass"], b["check"]["snap_pass"]
+        ra, rb = bool(a["task"].get("recovered")), bool(b["task"].get("recovered"))
+        na, nb = (a["size"] or {}).get("nodes"), (b["size"] or {}).get("nodes")
+        worse = (pa and not pb) or (ra and not rb) or (pa and pb and na is not None and nb is not None and nb > na)
+        rows.append({"run": res["run"], "rd": rd, "ast2": a, "ast3": b, "worse": bool(worse)})
+    return rows
+
+
 def kink_md(root: Path) -> str:
-    """The kink-merge tool (ast2): per run, the kink counts and the kept lines; then ast2 next to formula.py."""
-    rows = ["| run | split | route | ast2 vs net | recovered | nodes | kink-merge: kinks → lines → nearly cancelled → "
-            "kept | kink-merge lines |", "|---|---|---|---|---|---|---|---|"]
+    """The newest kink-merge tool version (ast3, else ast2): per run, the kink counts and the kept lines; the ast2
+    vs ast3 comparison when both exist; then the program next to formula.py."""
+    name = _newest_kink_version(root)
+    if name is None:
+        return ""
+    held = _heldout_rule(root, name)
+    rows = [f"| run | split | route | {name} vs net | recovered | nodes | kink-merge: kinks → lines → nearly "
+            "cancelled → kept | kink-merge lines |", "|---|---|---|---|---|---|---|---|"]
     progs, listed = [], set()
     for rd in all_runs(root):
-        res, tr = _results(rd), _kink_trace(rd)
-        if res is None or tr is None or "ast2" not in res["versions"]:
+        res, tr = _results(rd), _kink_trace(rd, name)
+        if res is None or tr is None or name not in res["versions"]:
             continue
         listed.add(res["run"])
         spec = Spec.load(rd / "spec.json")
-        v = res["versions"]["ast2"]
+        v = res["versions"][name]
         km = tr.get("kink_merge") or {}
         w, per = km.get("winner"), km.get("per_offset") or []
         if w:
@@ -250,22 +301,24 @@ def kink_md(root: Path) -> str:
                       else km.get("applies") or "–")
             kept = ""
         rec = _yn(bool(v["task"].get("recovered"))) if is_step1(rd) else "n/a"
-        rows.append(f"| {res['run']} | {'held-out' if _kink_heldout(rd) else 'development'} | {tr.get('winner', '')} | "
+        rows.append(f"| {res['run']} | {'held-out' if held(rd) else 'development'} | {tr.get('winner', '')} | "
                     f"{_verdict(v['check'])} | {rec} | {_num((v['size'] or {}).get('nodes'), 'd')} | {counts} | {kept} |")
-        if (rd / "formula.py").exists() and (rd / "ast2.py").exists():
-            a2 = with_real_names((rd / "ast2.py").read_text(encoding="utf-8"), spec).strip()
+        if (rd / "formula.py").exists() and (rd / f"{name}.py").exists():
+            a2 = with_real_names((rd / f"{name}.py").read_text(encoding="utf-8"), spec).strip()
             fo = with_real_names((rd / "formula.py").read_text(encoding="utf-8"), spec).strip()
-            progs.append(f"**{res['run']}**: `ast2`, then `formula.py`\n\n```python\n{a2}\n```\n\n```python\n{fo}\n```\n")
+            progs.append(f"**{res['run']}**: `{name}`, then `formula.py`\n\n```python\n{a2}\n```\n\n```python\n{fo}\n```\n")
     if len(rows) == 2:
         return ""
-    out = ["## Kink merge (ast2)\n",
-           "The kink-merge tool turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps the "
-           "strongest lines and refits them to the net (`ast2`). Development runs are seeds 0–2; held-out runs "
-           "(seeds 3–5) were built after the tool was frozen. Only runs where the route applies (one sigmoid layer, "
-           "not argmax) are listed. *kinks → lines → nearly cancelled → kept* are the counts for the kink-merge "
-           "candidate's merge tolerance; where another route won, its lines are marked *candidate only* and are not "
-           "in `ast2.py`.\n"]
-    rep = [r for r in reproduction(root, name="ast2", heldout=_kink_heldout) if r["run"] in listed]
+    h = load_heldout(root)
+    held_text = (f"held-out runs are listed in `heldout.json` (frozen at `{h['freeze']}`)"
+                 if h is not None and h.get("version") == name else "held-out runs (seeds 3–5) were built after the tool was frozen")
+    out = [f"## Kink merge ({name})\n",
+           "The kink-merge route turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps "
+           f"the strongest lines and refits them to the net (`{name}`). {held_text[0].upper() + held_text[1:]}; the "
+           "other runs are development runs. Only runs where the route applies (one sigmoid or tanh layer, not argmax) "
+           "are listed. *kinks → lines → nearly cancelled → kept* are the counts for the kink-merge candidate's merge "
+           f"tolerance; where another route won, its lines are marked *candidate only* and are not in `{name}.py`.\n"]
+    rep = [r for r in reproduction(root, name=name, heldout=held) if r["run"] in listed]
     for split, label in (("heldout", "held-out"), ("distill", "development")):
         rs = [r for r in rep if r["split"] == split]
         if rs:
@@ -275,7 +328,40 @@ def kink_md(root: Path) -> str:
             out.append(f"- **{label}**: {ok} of {len(rs)} pass, kink-merge won {routes}, recovered the formula in "
                        f"{sum(r['ast_recovered'] for r in rs)}; reproduces Claude's best valid attempt in "
                        f"{sum(r['reproduces'] for r in vs)} of {len(vs)}")
-    return "\n".join(out) + "\n\n" + "\n".join(rows) + "\n\n" + "\n".join(progs) + "\n"
+    cmp = ast_compare_rows(root)
+    cmp_md = ""
+    if cmp:
+        n = sum(r["worse"] for r in cmp)
+        lines = ["| run | ast2 | ast3 | ast3 worse? |", "|---|---|---|---|"]
+        lines += [f"| {r['run']} | {_cell(r['rd'], r['ast2'])} | {_cell(r['rd'], r['ast3'])} | {_yn(r['worse'])} |"
+                  for r in cmp]
+        cmp_md = (f"### ast2 vs ast3\n\nast3 is worse on {n} of {len(cmp)} runs (worse = ast2 passes and ast3 does not, "
+                  "ast2 recovers the formula and ast3 does not, or both pass and ast3 has more nodes).\n\n"
+                  + "\n".join(lines) + "\n\n")
+    return "\n".join(out) + "\n\n" + "\n".join(rows) + "\n\n" + cmp_md + "\n".join(progs) + "\n"
+
+
+def newest_reproduction_md(root: Path) -> str:
+    """Reproduction count for the tool version named in heldout.json, held-out vs development by that file."""
+    h = load_heldout(root)
+    if h is None:
+        return ""
+    name = h["version"]
+    rows = reproduction(root, name=name, heldout=_heldout_rule(root, name))
+    if not rows:
+        return ""
+    out = [f"## Reproduction ({name})\n",
+           f"Does the AST tool `{name}` (frozen at `{h['freeze']}`) reproduce Claude's best valid attempt? Reproduces = "
+           "passes the check, same recovered status as Claude, and at most max(1.5x, +5) of Claude's nodes. Held-out "
+           "runs are listed in `heldout.json` and were built after the freeze.\n"]
+    for split, label in (("heldout", "held-out"), ("distill", "development")):
+        rs = [r for r in rows if r["split"] == split]
+        if rs:
+            vs = [r for r in rs if r["reproduces"] is not None]
+            out.append(f"- **{label}**: {sum(r['ast_check'].startswith('PASS') for r in rs)} of {len(rs)} pass; "
+                       f"recovered the formula in {sum(r['ast_recovered'] for r in rs)}; reproduces Claude in "
+                       f"{sum(r['reproduces'] for r in vs)} of {len(vs)} with a valid attempt")
+    return "\n".join(out) + "\n\n"
 
 
 def _datasets_md(root: Path) -> str:

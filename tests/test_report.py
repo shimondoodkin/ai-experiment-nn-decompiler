@@ -218,3 +218,61 @@ def test_run_section_shows_ast2(tmp_path):
     evaluate_run(rd)
     md = build_report(tmp_path, compare_to=tmp_path)
     assert "AST tool (no LLM, `ast2`)" in md and "0.25 - abs(x) / 2" in md
+
+
+# --- ast3 ------------------------------------------------------------------------------------------------------
+
+def _tool_files(rd, name, winner="kink-merge"):
+    tr = {"winner": winner, "kink_merge": {
+        "applies": None, "per_offset": [{"off": 0.02, "kinks": 128, "lines": 32, "cancelled": 14}],
+        "winner": {"off": 0.02, "m": 1, "tol": 0.0, "lines": [{"normal": {"x0": 1.0, "x1": -1.0}, "t": 0.0, "strength": 1.0}]}}}
+    (rd / f"{name}_trace.json").write_text(json.dumps(tr))
+    (rd / f"{name}.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")
+
+
+def test_newest_is_ast3(tmp_path):
+    from nndc.report import formula_md
+
+    _fake_run(tmp_path, "absdiff", 0, {"dump": _v(), "ast2": _v(nodes=77), "ast3": _v(nodes=55),
+                                       "formula": _v(snap=False, recovered=True, nodes=5)})
+    md = formula_md(tmp_path)
+    assert "55 nodes" in md and "77 nodes" not in md
+
+
+def test_ast2_vs_ast3_worse_rule(tmp_path):
+    from nndc.report import ast_compare_rows, kink_md
+
+    cases = {0: (_v(nodes=80), _v(snap=False, nodes=60)),    # ast3 fails: worse
+             1: (_v(nodes=80), _v(nodes=90)),                # ast3 more nodes: worse
+             2: (_v(nodes=80), _v(nodes=70))}                # ast3 fewer nodes: not worse
+    for seed, (a2, a3) in cases.items():
+        rd = _fake_run(tmp_path, "absdiff", seed, {"dump": _v(), "ast2": a2, "ast3": a3})
+        _tool_files(rd, "ast2")
+        _tool_files(rd, "ast3")
+    rows = {r["run"]: r["worse"] for r in ast_compare_rows(tmp_path)}
+    assert rows == {"absdiff/seed0": True, "absdiff/seed1": True, "absdiff/seed2": False}
+    assert "ast3 is worse on 2 of 3 runs" in kink_md(tmp_path)
+
+
+def test_heldout_json_split(tmp_path):
+    from nndc.report import kink_md, newest_reproduction_md
+
+    (tmp_path / "heldout.json").write_text(json.dumps({"version": "ast3", "freeze": "abc1234",
+                                                       "runs": ["absdiff/seed3"]}))
+    for seed in (0, 3):
+        rd = _fake_run(tmp_path, "absdiff", seed, {"dump": _v(), "agent_1": _v(nodes=8), "ast3": _v(nodes=9)})
+        _tool_files(rd, "ast3")
+    rows = {ln.split(" | ")[0][2:]: ln for ln in kink_md(tmp_path).splitlines() if ln.startswith("| ") and "/seed" in ln}
+    assert "| held-out |" in rows["absdiff/seed3"] and "| development |" in rows["absdiff/seed0"]
+    md = newest_reproduction_md(tmp_path)
+    assert "ast3" in md and "abc1234" in md and "held-out" in md
+
+
+def test_compare_heading_other_root(tmp_path):
+    from nndc.report import activation_compare_md
+
+    a, b = tmp_path / "runs_sigmoid", tmp_path / "runs_tanh"
+    _fake_run(a, "absdiff", 0, {"dump": _v(), "ast3": _v(nodes=9)})
+    _fake_run(b, "absdiff", 0, {"dump": _v(), "ast3": _v(nodes=11)})
+    md = activation_compare_md(a, b)
+    assert "runs_sigmoid" in md and "ReLU" not in md and "11 nodes" in md
