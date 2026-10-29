@@ -40,23 +40,48 @@ a Claude Code refactoring of it.
 Runs where a refactored program is closer to the *true task* than the network it was decompiled from (better inside or outside the training range, and not worse on either). The refactorer never saw the target; this is the "snapping recovers the intended algorithm" effect.
 
 - **absdiff/seed0** ast: max error inside 0.5886 → 0.5625, outside 6.382 → 6.356
+- **absdiff/seed0** ast2: max error inside 0.5886 → 0.5451, outside 6.382 → 3.841
 - **absdiff/seed1** agent_1: max error inside 0.5405 → 0.5109, outside 6.368 → 6.327 (audit-flagged run)
+- **absdiff/seed1** ast2: max error inside 0.5405 → 0.4522, outside 6.368 → 3.65
+- **absdiff/seed4** agent_1: max error inside 0.76 → 0.7372, outside 7.264 → 7.043 (audit-flagged run)
+- **absdiff/seed4** ast2: max error inside 0.76 → 0.753, outside 7.264 → 7.264
+- **absdiff/seed5** agent_1: max error inside 0.6195 → 0.5763, outside 6.405 → 6.357
+- **absdiff/seed5** ast2: max error inside 0.6195 → 0.5219, outside 6.405 → 3.257
 - **median3/seed0** ast: max error inside 0.5695 → 0.5267, outside 2.686 → 2.646
 - **median3/seed2** ast: max error inside 0.6501 → 0.645, outside 2.907 → 2.892
 - **neareq/seed0** agent_1: accuracy inside 0.9987 → 1, outside 0.9985 → 1; recovered the true algorithm (audit-flagged run)
 - **neareq/seed1** agent_1: accuracy inside 0.9993 → 1, outside 0.9991 → 1; recovered the true algorithm (audit-flagged run)
 - **neareq/seed2** agent_1: accuracy inside 0.9985 → 1, outside 0.9988 → 1; recovered the true algorithm
+- **neareq/seed3** agent_1: accuracy inside 0.999 → 1, outside 0.999 → 1; recovered the true algorithm
+- **neareq/seed4** agent_1: accuracy inside 0.9987 → 1, outside 0.9989 → 1; recovered the true algorithm
+- **neareq/seed5** agent_1: accuracy inside 0.9991 → 1, outside 0.9991 → 1; recovered the true algorithm
 - **tax/seed0** agent_1: max error inside 1.364 → 0.9, outside 39.11 → 8.7 (audit-flagged run)
 - **tax/seed0** ast: max error inside 1.364 → 1.081, outside 39.11 → 8.505
+- **tax/seed0** ast2: max error inside 1.364 → 1.081, outside 39.11 → 8.505
 - **tax/seed1** agent_1: max error inside 1.342 → 0.2, outside 39.36 → 0.2 (audit-flagged run)
 - **tax/seed1** ast: max error inside 1.342 → 1.146, outside 39.36 → 8.855
+- **tax/seed1** ast2: max error inside 1.342 → 1.146, outside 39.36 → 8.855
 - **tax/seed2** agent_1: max error inside 1.506 → 1.25, outside 38.47 → 11.25
 - **tax/seed2** ast: max error inside 1.506 → 0.9564, outside 38.47 → 9.74
+- **tax/seed2** ast2: max error inside 1.506 → 1.011, outside 38.47 → 9.011
+- **tax/seed3** ast2: max error inside 1.339 → 0.9454, outside 39.11 → 8.076
+- **tax/seed4** ast2: max error inside 1.567 → 1.052, outside 40.05 → 8.241
+- **tax/seed5** agent_1: max error inside 1.463 → 0.9999, outside 39.29 → 21 (audit-flagged run)
+- **tax/seed5** ast2: max error inside 1.463 → 0.8905, outside 39.29 → 9.601
 - **window/seed0** agent_1: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed0** ast: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed0** ast2: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed1** ast: accuracy inside 0.9977 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed1** ast2: accuracy inside 0.9977 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed2** agent_1: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm (audit-flagged run)
 - **window/seed2** ast: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed2** ast2: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed3** agent_1: accuracy inside 0.9976 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed3** ast2: accuracy inside 0.9976 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed4** agent_1: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed4** ast2: accuracy inside 0.9988 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed5** agent_1: accuracy inside 0.9979 → 1, outside 1 → 1; recovered the true algorithm
+- **window/seed5** ast2: accuracy inside 0.9979 → 1, outside 1 → 1; recovered the true algorithm
 
 ## Reproduction (step 3)
 
@@ -104,21 +129,36 @@ The intended formula of each task (`formula.py`), checked against the net like a
 | absdiff/seed0 | FAIL | 0.601 (11.6%) | 0 / 0 | PASS snap, not rec, 45 nodes | PASS snap, not rec, 235 nodes |
 | absdiff/seed1 | FAIL | 0.553 (10.6%) | 0 / 0 | PASS snap, not rec, 83 nodes | PASS exact, not rec, 232 nodes |
 | absdiff/seed2 | FAIL | 0.841 (16.3%) | 0 / 0 | PASS snap, not rec, 133 nodes | PASS exact, not rec, 238 nodes |
+| absdiff/seed3 | FAIL | 0.882 (18.0%) | 0 / 0 | PASS snap, not rec, 121 nodes | – |
+| absdiff/seed4 | FAIL | 0.768 (15.2%) | 0 / 0 | PASS snap, not rec, 85 nodes | – |
+| absdiff/seed5 | FAIL | 0.626 (12.0%) | 0 / 0 | PASS snap, not rec, 56 nodes | – |
 | median3/seed0 | FAIL | 0.623 (10.6%) | 0 / 0 | PASS snap, not rec, 250 nodes | PASS snap, not rec, 2437 nodes |
 | median3/seed1 | FAIL | 0.64 (10.9%) | 0 / 0 | PASS snap, not rec, 216 nodes | PASS exact, not rec, 2498 nodes |
 | median3/seed2 | FAIL | 0.707 (12.4%) | 0 / 0 | PASS snap, not rec, 181 nodes | PASS snap, not rec, 1988 nodes |
 | neareq/seed0 | PASS snap | 0, 4946 | 1 / 1 | PASS snap, rec, 18 nodes | PASS snap, not rec, 229 nodes |
 | neareq/seed1 | PASS snap | 0, 4103 | 1 / 1 | PASS snap, rec, 18 nodes | PASS exact, not rec, 236 nodes |
 | neareq/seed2 | PASS snap | 0, 5458 | 1 / 1 | PASS snap, rec, 18 nodes | PASS exact, not rec, 232 nodes |
+| neareq/seed3 | PASS snap | 0, 6446 | 1 / 1 | PASS snap, rec, 18 nodes | – |
+| neareq/seed4 | PASS snap | 0, 6139 | 1 / 1 | PASS snap, rec, 18 nodes | – |
+| neareq/seed5 | PASS snap | 0, 5099 | 1 / 1 | PASS snap, rec, 18 nodes | – |
 | tax/seed0 | FAIL | 1.36 (2.2%) | 0 / 0 | PASS snap, not rec, 30 nodes | PASS snap, not rec, 22 nodes |
 | tax/seed1 | FAIL | 1.34 (2.2%) | 0 / 0 | PASS snap, not rec, 50 nodes | PASS snap, not rec, 22 nodes |
 | tax/seed2 | FAIL | 1.51 (2.5%) | 0 / 0 | PASS snap, not rec, 32 nodes | PASS snap, not rec, 22 nodes |
+| tax/seed3 | FAIL | 1.34 (2.2%) | 0 / 0 | PASS snap, not rec, 45 nodes | – |
+| tax/seed4 | FAIL | 1.57 (2.6%) | 0 / 0 | PASS snap, not rec, 44 nodes | – |
+| tax/seed5 | FAIL | 1.46 (2.4%) | 0 / 0 | PASS snap, not rec, 41 nodes | – |
 | window/seed0 | PASS snap | 0, 8826 | 1 / 1 | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes |
-| window/seed1 | PASS snap | 0, 14456 | 1 / 1 | PASS exact, not rec, 15 nodes | PASS snap, rec, 9 nodes |
+| window/seed1 | PASS snap | 0, 14476 | 1 / 1 | PASS exact, not rec, 15 nodes | PASS snap, rec, 9 nodes |
 | window/seed2 | PASS snap | 0, 4960 | 1 / 1 | PASS snap, rec, 19 nodes | PASS snap, rec, 9 nodes |
+| window/seed3 | PASS snap | 0, 10074 | 1 / 1 | PASS snap, rec, 9 nodes | – |
+| window/seed4 | PASS snap | 0, 4975 | 1 / 1 | PASS snap, rec, 9 nodes | – |
+| window/seed5 | PASS snap | 0, 5209 | 1 / 1 | PASS snap, rec, 9 nodes | – |
 | xor/seed0 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed1 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed2 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 17 nodes | PASS exact, rec, 7 nodes |
+| xor/seed3 | PASS snap | 0, 1 | 1 /  | PASS exact, not rec, 7 nodes | – |
+| xor/seed4 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | – |
+| xor/seed5 | PASS exact | 0, 0 | 1 /  | PASS exact, rec, 7 nodes | – |
 
 **absdiff/seed0**: where the formula and the net disagree most
 
@@ -149,6 +189,36 @@ The intended formula of each task (`formula.py`), checked against the net like a
 | a=3, b=-2.97 | 5.15 | 5.97 | 5.97 |
 | a=2.97, b=-3 | 5.15 | 5.97 | 5.97 |
 | a=2.976, b=-2.993 | 5.15 | 5.97 | 5.97 |
+
+**absdiff/seed3**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| a=-3, b=3 | 5.12 | 6 | 6 |
+| a=-3, b=3 | 5.12 | 6 | 6 |
+| a=-2.989, b=2.992 | 5.11 | 5.98 | 5.98 |
+| a=-2.977, b=2.999 | 5.11 | 5.98 | 5.98 |
+| a=-3, b=2.97 | 5.11 | 5.97 | 5.97 |
+
+**absdiff/seed4**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| a=-3, b=3 | 5.23 | 6 | 6 |
+| a=-3, b=3 | 5.23 | 6 | 6 |
+| a=-2.989, b=2.992 | 5.23 | 5.98 | 5.98 |
+| a=-2.977, b=2.999 | 5.23 | 5.98 | 5.98 |
+| a=-2.97, b=3 | 5.23 | 5.97 | 5.97 |
+
+**absdiff/seed5**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| a=-3, b=3 | 5.37 | 6 | 6 |
+| a=-3, b=3 | 5.37 | 6 | 6 |
+| a=-2.989, b=2.992 | 5.37 | 5.98 | 5.98 |
+| a=-2.977, b=2.999 | 5.37 | 5.98 | 5.98 |
+| a=-3, b=2.97 | 5.37 | 5.97 | 5.97 |
 
 **median3/seed0**: where the formula and the net disagree most
 
@@ -210,6 +280,36 @@ The intended formula of each task (`formula.py`), checked against the net like a
 | a=-1.931, b=-1.73 | 1 | 0 | 0 |
 | a=-1.64, b=-1.44 | 1 | 0 | 0 |
 
+**neareq/seed3**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| a=1.716, b=1.916 | 1 | 0 | 0 |
+| a=1.716, b=1.916 | 1 | 0 | 0 |
+| a=1.62, b=1.82 | 1 | 0 | 0 |
+| a=1.62, b=1.82 | 1 | 0 | 0 |
+| a=1.6, b=1.8 | 1 | 0 | 0 |
+
+**neareq/seed4**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| a=-1.768, b=-1.568 | 1 | 0 | 0 |
+| a=-1.768, b=-1.568 | 1 | 0 | 0 |
+| a=-1.931, b=-1.73 | 1 | 0 | 0 |
+| a=-1.931, b=-1.73 | 1 | 0 | 0 |
+| a=-1.766, b=-1.565 | 1 | 0 | 0 |
+
+**neareq/seed5**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| a=1.716, b=1.916 | 1 | 0 | 0 |
+| a=1.716, b=1.916 | 1 | 0 | 0 |
+| a=1.62, b=1.82 | 1 | 0 | 0 |
+| a=1.62, b=1.82 | 1 | 0 | 0 |
+| a=1.6, b=1.8 | 1 | 0 | 0 |
+
 **tax/seed0**: where the formula and the net disagree most
 
 | inputs | net | formula | true |
@@ -240,6 +340,36 @@ The intended formula of each task (`formula.py`), checked against the net like a
 | income=200 | 60.5 | 62 | 62 |
 | income=200 | 60.5 | 62 | 62 |
 
+**tax/seed3**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| income=200 | 60.7 | 62 | 62 |
+| income=200 | 60.7 | 62 | 62 |
+| income=200 | 60.7 | 62 | 62 |
+| income=200 | 60.7 | 62 | 62 |
+| income=200 | 60.7 | 62 | 62 |
+
+**tax/seed4**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| income=200 | 60.4 | 62 | 62 |
+| income=200 | 60.4 | 62 | 62 |
+| income=200 | 60.4 | 62 | 62 |
+| income=200 | 60.4 | 62 | 62 |
+| income=200 | 60.4 | 62 | 62 |
+
+**tax/seed5**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| income=200 | 60.5 | 62 | 62 |
+| income=200 | 60.5 | 62 | 62 |
+| income=200 | 60.5 | 62 | 62 |
+| income=200 | 60.5 | 62 | 62 |
+| income=200 | 60.5 | 62 | 62 |
+
 **window/seed0**: where the formula and the net disagree most
 
 | inputs | net | formula | true |
@@ -257,8 +387,8 @@ The intended formula of each task (`formula.py`), checked against the net like a
 | x=-0.5 | 1 | 0 | 0 |
 | x=-0.5 | 1 | 0 | 0 |
 | x=-0.5 | 1 | 0 | 0 |
-| x=-0.5001 | 1 | 0 | 0 |
-| x=-0.5001 | 1 | 0 | 0 |
+| x=-0.5 | 1 | 0 | 0 |
+| x=-0.5 | 1 | 0 | 0 |
 
 **window/seed2**: where the formula and the net disagree most
 
@@ -269,6 +399,42 @@ The intended formula of each task (`formula.py`), checked against the net like a
 | x=0.5001 | 1 | 0 | 0 |
 | x=0.5001 | 1 | 0 | 0 |
 | x=0.5001 | 1 | 0 | 0 |
+
+**window/seed3**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+
+**window/seed4**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+
+**window/seed5**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+| x=-0.5 | 0 | 1 | 1 |
+
+**xor/seed3**: where the formula and the net disagree most
+
+| inputs | net | formula | true |
+|---|---|---|---|
+| p=1, q=1 | 1 | 0 | 0 |
 
 ## Compared with the ReLU runs
 
@@ -307,6 +473,459 @@ The same task, seed and training settings, with ReLU (`runs`) and with this root
 | xor/seed1 | yes / yes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes |
 | xor/seed2 | no / yes | PASS exact, not rec, 9 nodes | PASS exact, rec, 17 nodes | PASS exact, not rec, 5 nodes | PASS exact, rec, 7 nodes |
 
+## Kink merge (ast2)
+
+The kink-merge tool turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps the strongest lines and refits them to the net (`ast2`). Development runs are seeds 0–2; held-out runs (seeds 3–5) were built after the tool was frozen. *kinks → lines → nearly cancelled → kept* are the counts for the winning merge tolerance.
+
+- **held-out**: 15 of 15 pass, kink-merge won 4, recovered the formula in 5; reproduces Claude's best valid attempt in 8 of 12
+- **development**: 15 of 15 pass, kink-merge won 6, recovered the formula in 6; reproduces Claude's best valid attempt in 5 of 7
+
+| run | split | route | ast2 vs net | recovered | nodes | kinks → lines → nearly cancelled → kept | kept lines |
+|---|---|---|---|---|---|---|---|
+| absdiff/seed0 | development | kink-merge | PASS snap | no | 80 | 128 → 32 → 14 → 4 | 1 · max(a - b + 0.25, 0); 1 · max(a - b - 0.25, 0); -0.55 · max(a - b - 5, 0); -0.52 · max(a - b + 5, 0) |
+| absdiff/seed1 | development | kink-merge | PASS snap | no | 95 | 128 → 24 → 8 → 4 | 1.16 · max(a - 0.99 * b - 0.25, 0); 0.875 · max(a - b + 0.35, 0); -0.54 · max(a - 0.96 * b - 4.95, 0); -0.563 · max(0.96 * a - b + 5, 0) |
+| absdiff/seed2 | development | structural-exact | PASS exact | no | 238 | 128 → 64 → 6 → – |  |
+| absdiff/seed3 | held-out | sigmoid-replace | PASS snap | no | 233 | 128 → 48 → 1 → – |  |
+| absdiff/seed4 | held-out | sigmoid-replace | PASS snap | no | 216 | 128 → 96 → 1 → – |  |
+| absdiff/seed5 | held-out | kink-merge | PASS snap | no | 86 | 128 → 16 → 7 → 4 | 1.22 · max(a - b + 0.25, 0); 0.8 · max(a - b - 0.4, 0); -0.45 · max(a - b + 4.75, 0); -0.47 · max(a - b - 4.88, 0) |
+| neareq/seed0 | development | kink-merge | PASS snap | no | 78 | 128 → 112 → 0 → 3 | -71.8 · max(0.996 * a - b + 0.0835, 0); 51 · max(a - b + 0.348, 0); 20.2 · max(0.998 * a - b - 0.461, 0) |
+| neareq/seed1 | development | kink-merge | PASS snap | no | 116 | 128 → 48 → 0 → 5 | -57.3 · max(a - 0.999 * b - 0.00902, 0); 47.4 · max(0.997 * a - b - 0.443, 0); -20.4 · max(0.996 * a - b + 0.0295, 0); 39.6 · max(a - 0.998 * b + 0.479, 0); -10.8 · max(0.991 * a - b - 0.214, 0) |
+| neareq/seed2 | development | kink-merge | PASS snap | no | 78 | 128 → 32 → 2 → 3 | -75.8 · max(0.999 * a - b + 0.0131, 0); 35.1 · max(0.989 * a - b - 0.41, 0); 40.8 · max(0.997 * a - b + 0.514, 0) |
+| neareq/seed3 | held-out | kink-merge | PASS snap | no | 67 | 128 → 96 → 0 → 3 | -70 · max(a - b - 0.02, 0); 38.5 · max(a - b - 0.45, 0); 31 · max(a - b + 0.45, 0) |
+| neareq/seed4 | held-out | kink-merge | PASS snap | no | 66 | 128 → 48 → 0 → 3 | -72.5 · max(a - b, 0); 35 · max(a - b - 0.48, 0); 37 · max(a - b + 0.48, 0) |
+| neareq/seed5 | held-out | kink-merge | PASS snap | no | 81 | 128 → 64 → 1 → 4 | -86 · max(a - b, 0); 42.5 · max(a - b + 0.55, 0); 36.2 · max(a - b - 0.45, 0); 5.75 · max(a - b - 0.125, 0) |
+| tax/seed0 | development | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | -0.1 · max(income - 188, 0); 0.22 · max(income - 74, 0) |
+| tax/seed1 | development | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | -0.0652 · max(income - 184, 0); 0.22 · max(income - 74, 0) |
+| tax/seed2 | development | kink-merge | PASS snap | no | 20 | 128 → 8 → 4 → 1 | 0.21 · max(income - 75, 0) |
+| tax/seed3 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 8 → 2 | -0.15 · max(income - 184, 0); 0.22 · max(income - 76, 0) |
+| tax/seed4 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 8 → 2 | -0.2 · max(income - 196, 0); 0.22 · max(income - 74, 0) |
+| tax/seed5 | held-out | knot-fit | PASS snap | no | 22 | 128 → 16 → 7 → 2 | -0.0327 · max(income - 188, 0); 0.23 · max(income - 74, 0) |
+| window/seed0 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | -47.3 · max(x - 0.353, 0); -43.1 · max(x + 0.313, 0); 48 · max(x - 0.668, 0); 40.5 · max(x + 0.668, 0) |
+| window/seed1 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 3 | 14.8 · max(x + 0.75, 0); -38 · max(x, 0); 19 · max(x - 0.95, 0) |
+| window/seed2 | development | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | -34 · max(x - 0.25, 0); -43 · max(x + 0.4, 0); 45 · max(x + 0.6, 0); 28 · max(x - 0.75, 0) |
+| window/seed3 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 1 | -17 · max(x, 0) |
+| window/seed4 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 16 → 0 → 4 | -42 · max(x - 0.35, 0); -37 · max(x + 0.35, 0); 41.2 · max(x - 0.625, 0); 36.2 · max(x + 0.7, 0) |
+| window/seed5 | held-out | boundary-scan | PASS snap | yes | 9 | 64 → 8 → 0 → 3 | -45 · max(x, 0); 20 · max(x + 0.875, 0); 22 · max(x - 1, 0) |
+| xor/seed0 | development | truth-table | PASS exact | yes | 7 | 64 → 16 → 0 → 1 | -45 · max(p + q - 0.8, 0) |
+| xor/seed1 | development | truth-table | PASS exact | yes | 7 | 64 → 16 → 0 → 1 | 46 · max(p - q - 0.25, 0) |
+| xor/seed2 | development | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | 47 · max(p - 0.75 * q, 0) |
+| xor/seed3 | held-out | truth-table | PASS exact | no | 7 | 64 → 32 → 0 → 1 | 40 · max(0.5 * p - q - 0.125, 0) |
+| xor/seed4 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | -47 · max(0.8 * p + q - 0.75, 0) |
+| xor/seed5 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | -46 · max(0.8 * p + q - 0.75, 0) |
+
+**absdiff/seed0**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.48 * a + 0.48 * b + 2.596308155986012 + relu(a - b + 0.25) + relu(a - b - 0.25) - 0.55 * relu(a - b - 5) - 0.52 * relu(a - b + 5)
+```
+
+```python
+def net(a, b):
+    return abs(a - b)
+```
+
+**absdiff/seed1**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.48 * a + 0.44624263463879404 * b + 2.7644917617627796 + 1.16 * relu(a - 0.99 * b - 0.25) + 0.875 * relu(a - b + 0.35) - 0.54 * relu(a - 0.96 * b - 4.95) - 0.5628749760286466 * relu(0.96 * a - b + 5)
+```
+
+```python
+def net(a, b):
+    return abs(a - b)
+```
+
+**absdiff/seed2**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: structural-exact)
+def net(a, b):
+    h1_0 = sigmoid(-2.0719688 * a - 2.0756304 * b + 1.6801947)
+    h1_1 = sigmoid(-1.9540737 * a + 1.9212805 * b - 4.4031773)
+    h1_2 = sigmoid(1.8945265 * a + 1.7272639 * b + 1.3757408)
+    h1_3 = sigmoid(-1.8348596 * a - 0.5835196 * b + 1.8757747)
+    h1_4 = sigmoid(0.8159154 * a - 0.8151339 * b - 1.9160444)
+    h1_5 = sigmoid(-1.3863059 * a + 1.4073154 * b - 5.731608)
+    h1_6 = sigmoid(-3.5555162 * a + 3.5196216 * b - 3.0417547)
+    h1_7 = sigmoid(-0.12992106 * a + 1.0350071 * b + 1.4243454)
+    return 0.20720756 * h1_0 + 1.7069508 * h1_1 + 0.1652027 * h1_2 - 0.255349 * h1_3 + 5.501239 * h1_4 + 2.785724 * h1_5 + 1.6958861 * h1_6 - 0.3259363 * h1_7 - 0.32354715
+```
+
+```python
+def net(a, b):
+    return abs(a - b)
+```
+
+**absdiff/seed3**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: sigmoid-replace)
+def net(a, b):
+    h1_0 = sigmoid(1.5608935 * a - 1.5811212 * b - 5.6978836)
+    h1_1 = (-a - 0.8512399854209328 * b + 0.6136730166551018 > 0)
+    h1_2 = (-a - 0.8256106517620507 * b + 0.17718149539979 > 0)
+    h1_3 = sigmoid(1.7599554 * a + 1.9408717 * b + 1.062507)
+    h1_4 = sigmoid(1.2617681 * a - 1.2578588 * b + 1.5280614)
+    h1_5 = sigmoid(2.485814 * a - 2.508978 * b - 2.8118944)
+    h1_6 = min(max(-0.461176775 * a - 0.404016375 * b + 0.7110216, 0), 1)
+    h1_7 = sigmoid(-0.8145771 * a + 0.8111943 * b - 2.0779521)
+    return 3.3133814 * h1_0 - 0.009013219 * h1_1 + 0.16399612 * h1_2 + 0.2512382 * h1_3 - 0.55989116 * h1_4 + 2.4631565 * h1_5 + 0.0653747 * h1_6 + 5.2271266 * h1_7 - 0.19855295
+```
+
+```python
+def net(a, b):
+    return abs(a - b)
+```
+
+**absdiff/seed4**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: sigmoid-replace)
+def net(a, b):
+    h1_0 = sigmoid(-0.052513428 * a - 0.22641179 * b + 1.3441563)
+    h1_2 = sigmoid(0.04891198 * a - 0.17902395 * b + 0.9946669)
+    h1_3 = sigmoid(0.710797 * a - 0.7152358 * b - 1.7827095)
+    h1_4 = sigmoid(0.19357155 * a - 0.005729861 * b + 1.1464425)
+    h1_5 = sigmoid(1.2538643 * a - 1.253644 * b + 4.500368)
+    h1_6 = sigmoid(0.29027292 * a - 0.15421104 * b + 0.52731156)
+    h1_7 = sigmoid(-2.5734644 * a + 2.5779605 * b - 2.6494086)
+    return 1.0139246 * h1_0 + 0.9775807 * h1_2 + 5.9141073 * h1_3 + 1.0562305 * h1_4 - 4.4847927 * h1_5 + 0.9540187 * h1_6 + 2.4610639 * h1_7 + 0.02232470797128 * a - 0.017561844690624 * b + 0.8597869685896
+```
+
+```python
+def net(a, b):
+    return abs(a - b)
+```
+
+**absdiff/seed5**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.56 * a + 0.56 * b + 2.1142563598956787 + 1.22 * relu(a - b + 0.25) + 0.8 * relu(a - b - 0.4) - 0.45 * relu(a - b + 4.75) - 0.47 * relu(a - b - 4.875)
+```
+
+```python
+def net(a, b):
+    return abs(a - b)
+```
+
+**neareq/seed0**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.62761061190875 * a + 0.33640500586924543 * b - 7.550908989773504 - 71.79940707360433 * relu(0.9964411735156969 * a - b + 0.08347857406581637) + 50.985296698527954 * relu(0.9998003811397929 * a - b + 0.34839635090182886) + 20.151716970426854 * relu(0.9975220055043533 * a - b - 0.4609964814891104)
+```
+
+```python
+def net(a, b):
+    return abs(a - b) < 0.2
+```
+
+**neareq/seed1**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return 0.8219404061467296 * a - 0.9386768939277448 * b - 11.134307531881653 - 57.34925463761764 * relu(a - 0.9993277821801555 * b - 0.009016637196360797) + 47.35281987458384 * relu(0.9972544162629186 * a - b - 0.44292047445041755) - 20.384773909208675 * relu(0.9958862435276313 * a - b + 0.029450522941378576) + 39.56542507215085 * relu(a - 0.9982391896134186 * b + 0.47918562236949425) - 10.799263859391239 * relu(0.9911591677233639 * a - b - 0.21384458226749556)
+```
+
+```python
+def net(a, b):
+    return abs(a - b) < 0.2
+```
+
+**neareq/seed2**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.5249645731825732 * a + 0.5966328853302958 * b - 13.195107738231094 - 75.83693198220226 * relu(0.9990874067610914 * a - b + 0.01307912351162168) + 35.10718264499321 * relu(0.9887273540438497 * a - b - 0.4096478911275829) + 40.78068511386664 * relu(0.9965949455834977 * a - b + 0.5141639726759883)
+```
+
+```python
+def net(a, b):
+    return abs(a - b) < 0.2
+```
+
+**neareq/seed3**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return 0.6535989007146568 * a - 0.56 * b - 7.71928640664779 - 70 * relu(a - b - 0.02) + 38.5 * relu(a - b - 0.45) + 31 * relu(a - b + 0.45)
+```
+
+```python
+def net(a, b):
+    return abs(a - b) < 0.2
+```
+
+**neareq/seed4**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return -0.56 * a + 0.42 * b - 10.590180854797367 - 72.5 * relu(a - b) + 35 * relu(a - b - 0.48) + 37 * relu(a - b + 0.48)
+```
+
+```python
+def net(a, b):
+    return abs(a - b) < 0.2
+```
+
+**neareq/seed5**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(a, b):
+    return 0.41 * a - 0.30359817059901 * b - 15.166160893752172 - 86 * relu(a - b) + 42.5 * relu(a - b + 0.55) + 36.25 * relu(a - b - 0.45) + 5.75 * relu(a - b - 0.125)
+```
+
+```python
+def net(a, b):
+    return abs(a - b) < 0.2
+```
+
+**tax/seed0**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.17480453088088008 * income - 1.0247273606239635 + 0.21216508336580922 * relu(income - 70)
+```
+
+```python
+def net(income):
+    return 0.1 * min(income, 20) + 0.2 * min(max(income - 20, 0), 60) + 0.4 * max(income - 80, 0)
+```
+
+**tax/seed1**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.17708224366721065 * income - 1.1464757754701205 + 0.21109639548053244 * relu(income - 70)
+```
+
+```python
+def net(income):
+    return 0.1 * min(income, 20) + 0.2 * min(max(income - 20, 0), 60) + 0.4 * max(income - 80, 0)
+```
+
+**tax/seed2**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: kink-merge)
+def net(income):
+    return max(0.18 * income - 1.0107817922647815, 0.39 * income - 16.76078179226478)
+```
+
+```python
+def net(income):
+    return 0.1 * min(income, 20) + 0.2 * min(max(income - 20, 0), 60) + 0.4 * max(income - 80, 0)
+```
+
+**tax/seed3**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.1713592529296873 * income - 0.9405523423895378 + 0.21728169204695863 * relu(income - 70)
+```
+
+```python
+def net(income):
+    return 0.1 * min(income, 20) + 0.2 * min(max(income - 20, 0), 60) + 0.4 * max(income - 80, 0)
+```
+
+**tax/seed4**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.17188822651252814 * income - 1.0523654807506246 + 0.216491556695547 * relu(income - 70)
+```
+
+```python
+def net(income):
+    return 0.1 * min(income, 20) + 0.2 * min(max(income - 20, 0), 60) + 0.4 * max(income - 80, 0)
+```
+
+**tax/seed5**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: knot-fit)
+def net(income):
+    return 0.1874276644026351 * income - 0.8580347171032285 + 0.20683579522221054 * relu(income - 80)
+```
+
+```python
+def net(income):
+    return 0.1 * min(income, 20) + 0.2 * min(max(income - 20, 0), 60) + 0.4 * max(income - 80, 0)
+```
+
+**window/seed0**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
+```python
+def net(x):
+    return abs(x) < 0.5
+```
+
+**window/seed1**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
+```python
+def net(x):
+    return abs(x) < 0.5
+```
+
+**window/seed2**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
+```python
+def net(x):
+    return abs(x) < 0.5
+```
+
+**window/seed3**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
+```python
+def net(x):
+    return abs(x) < 0.5
+```
+
+**window/seed4**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
+```python
+def net(x):
+    return abs(x) < 0.5
+```
+
+**window/seed5**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: boundary-scan)
+def net(x):
+    return abs(x) < 0.5
+```
+
+```python
+def net(x):
+    return abs(x) < 0.5
+```
+
+**xor/seed0**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p != q
+```
+
+```python
+def net(p, q):
+    return p != q
+```
+
+**xor/seed1**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p != q
+```
+
+```python
+def net(p, q):
+    return p != q
+```
+
+**xor/seed2**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p != q
+```
+
+```python
+def net(p, q):
+    return p != q
+```
+
+**xor/seed3**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p or q
+```
+
+```python
+def net(p, q):
+    return p != q
+```
+
+**xor/seed4**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p != q
+```
+
+```python
+def net(p, q):
+    return p != q
+```
+
+**xor/seed5**: `ast2`, then `formula.py`
+
+```python
+# produced by nndc ast (route: truth-table)
+def net(p, q):
+    return p != q
+```
+
+```python
+def net(p, q):
+    return p != q
+```
+
 ## Real datasets
 
 Dataset runs (Iris) have no known formula: their task columns below compare with the label of the nearest table row, and `recovered` is n/a. They are left out of the step-3 reproduction and the beats-the-network list above. Their results and held-out runs are in [runs_sigmoid/iris/REPORT.md](runs_sigmoid/iris/REPORT.md).
@@ -318,15 +937,30 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | absdiff/seed0 | R² 0.9970 | dump | PASS exact | empirical | 1.52e-06 |  | 0.589 / 6.38 | no | 236 (100%) |  |  |
 | absdiff/seed0 | R² 0.9970 | agent_1 | PASS snap | empirical | 0.0958 |  | 0.595 / 4.19 | no | 45 (19%) | OUTSIDE PATHS (7) | 638s 1075845+14009 tok |
 | absdiff/seed0 | R² 0.9970 | ast | PASS snap | empirical | 0.0778 |  | 0.563 / 6.36 | no | 235 (100%) |  |  |
+| absdiff/seed0 | R² 0.9970 | ast2 | PASS snap | empirical | 0.0995 |  | 0.545 / 3.84 | no | 80 (34%) |  |  |
 | absdiff/seed0 | R² 0.9970 | formula | FAIL | empirical | 0.601 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed1 | R² 0.9970 | dump | PASS exact | empirical | 1.35e-06 |  | 0.541 / 6.37 | no | 232 (100%) |  |  |
 | absdiff/seed1 | R² 0.9970 | agent_1 | PASS snap | empirical | 0.0478 |  | 0.511 / 6.33 | no | 83 (36%) | OUTSIDE PATHS (4) | 360s 977348+10156 tok |
 | absdiff/seed1 | R² 0.9970 | ast | PASS exact | empirical | 1.35e-06 |  | 0.541 / 6.37 | no | 232 (100%) |  |  |
+| absdiff/seed1 | R² 0.9970 | ast2 | PASS snap | empirical | 0.104 |  | 0.452 / 3.65 | no | 95 (41%) |  |  |
 | absdiff/seed1 | R² 0.9970 | formula | FAIL | empirical | 0.553 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed2 | R² 0.9939 | dump | PASS exact | empirical | 1.6e-06 |  | 0.829 / 6.48 | no | 238 (100%) |  |  |
 | absdiff/seed2 | R² 0.9939 | agent_1 | PASS snap | empirical | 0.0844 |  | 0.906 / 6.59 | no | 133 (56%) | OUTSIDE PATHS (1) | 694s 1227474+13299 tok |
 | absdiff/seed2 | R² 0.9939 | ast | PASS exact | empirical | 1.6e-06 |  | 0.829 / 6.48 | no | 238 (100%) |  |  |
+| absdiff/seed2 | R² 0.9939 | ast2 | PASS exact | empirical | 1.6e-06 |  | 0.829 / 6.48 | no | 238 (100%) |  |  |
 | absdiff/seed2 | R² 0.9939 | formula | FAIL | empirical | 0.841 |  | 0 / 0 | yes | 10 (4%) |  |  |
+| absdiff/seed3 | R² 0.9917 | dump | PASS exact | empirical | 1.27e-06 |  | 0.875 / 6.79 | no | 234 (100%) |  |  |
+| absdiff/seed3 | R² 0.9917 | agent_1 | PASS snap | empirical | 0.0582 |  | 0.877 / 6.73 | no | 121 (52%) | OUTSIDE PATHS (3) | 1402s 2829626+23939 tok |
+| absdiff/seed3 | R² 0.9917 | ast2 | PASS snap | empirical | 0.0851 |  | 0.857 / 6.81 | no | 233 (100%) |  |  |
+| absdiff/seed3 | R² 0.9917 | formula | FAIL | empirical | 0.882 |  | 0 / 0 | yes | 10 (4%) |  |  |
+| absdiff/seed4 | R² 0.9938 | dump | PASS exact | empirical | 1.85e-06 |  | 0.76 / 7.26 | no | 230 (100%) |  |  |
+| absdiff/seed4 | R² 0.9938 | agent_1 | PASS snap | empirical | 0.0649 |  | 0.737 / 7.04 | no | 85 (37%) | OUTSIDE PATHS (2) | 554s 1257049+14816 tok |
+| absdiff/seed4 | R² 0.9938 | ast2 | PASS snap | empirical | 0.0825 |  | 0.753 / 7.26 | no | 216 (94%) |  |  |
+| absdiff/seed4 | R² 0.9938 | formula | FAIL | empirical | 0.768 |  | 0 / 0 | yes | 10 (4%) |  |  |
+| absdiff/seed5 | R² 0.9971 | dump | PASS exact | empirical | 1.21e-06 |  | 0.619 / 6.4 | no | 234 (100%) |  |  |
+| absdiff/seed5 | R² 0.9971 | agent_1 | PASS snap | empirical | 0.0489 |  | 0.576 / 6.36 | no | 56 (24%) | ok | 401s 1370336+14238 tok |
+| absdiff/seed5 | R² 0.9971 | ast2 | PASS snap | empirical | 0.101 |  | 0.522 / 3.26 | no | 86 (37%) |  |  |
+| absdiff/seed5 | R² 0.9971 | formula | FAIL | empirical | 0.626 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | iris/seed0 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 887 (2.86%) | 0.822 / 0.786 | n/a | 478 (100%) |  |  |
 | iris/seed0 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 4496 (2.86%) | 0.821 / 0.787 | n/a | 81 (17%) | OUTSIDE PATHS (3) | 1056s 2289118+17585 tok |
 | iris/seed0 | acc 0.9805 | ast | PASS exact | empirical |  | 0 / 887 (2.86%) | 0.822 / 0.786 | n/a | 478 (100%) |  |  |
@@ -334,35 +968,35 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | iris/seed1 | acc 0.9862 | agent_1 | PASS snap | empirical |  | 0 / 4783 (2.79%) | 0.805 / 0.777 | n/a | 57 (12%) | OUTSIDE PATHS (1) | 1062s 2072994+17798 tok |
 | iris/seed1 | acc 0.9862 | ast | PASS exact | empirical |  | 0 / 939 (2.79%) | 0.803 / 0.775 | n/a | 480 (100%) |  |  |
 | iris/seed2 | acc 0.9794 | dump | PASS exact | empirical |  | 0 / 892 (2.97%) | 0.806 / 0.772 | n/a | 478 (100%) |  |  |
-| iris/seed2 | acc 0.9794 | agent_1 | PASS snap | empirical |  | 0 / 4426 (2.97%) | 0.808 / 0.775 | n/a | 73 (15%) | OUTSIDE PATHS (1) | 779s 1490212+12349 tok |
-| iris/seed2 | acc 0.9794 | ast | PASS snap | empirical |  | 0 / 3300 (2.97%) | 0.806 / 0.773 | n/a | 72 (15%) |  |  |
+| iris/seed2 | acc 0.9794 | agent_1 | PASS snap | empirical |  | 0 / 4435 (2.97%) | 0.808 / 0.775 | n/a | 73 (15%) | OUTSIDE PATHS (1) | 779s 1490212+12349 tok |
+| iris/seed2 | acc 0.9794 | ast | PASS snap | empirical |  | 0 / 3320 (2.97%) | 0.806 / 0.773 | n/a | 72 (15%) |  |  |
 | iris/seed3 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1033 (3.25%) | 0.819 / 0.788 | n/a | 476 (100%) |  |  |
 | iris/seed3 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 4168 (3.25%) | 0.819 / 0.787 | n/a | 70 (15%) | OUTSIDE PATHS (4) | 952s 4115257+21962 tok |
-| iris/seed3 | acc 0.9805 | ast | PASS snap | empirical |  | 0 / 3924 (3.25%) | 0.819 / 0.787 | n/a | 74 (16%) |  |  |
+| iris/seed3 | acc 0.9805 | ast | PASS snap | empirical |  | 0 / 3932 (3.25%) | 0.819 / 0.787 | n/a | 74 (16%) |  |  |
 | iris/seed4 | acc 0.9786 | dump | PASS exact | empirical |  | 0 / 862 (2.80%) | 0.813 / 0.781 | n/a | 482 (100%) |  |  |
-| iris/seed4 | acc 0.9786 | agent_1 | PASS snap | empirical |  | 0 / 4608 (2.80%) | 0.815 / 0.784 | n/a | 76 (16%) | OUTSIDE PATHS (4) | 1136s 2265096+14961 tok |
-| iris/seed4 | acc 0.9786 | ast | PASS snap | empirical |  | 0 / 3283 (2.80%) | 0.813 / 0.782 | n/a | 74 (15%) |  |  |
+| iris/seed4 | acc 0.9786 | agent_1 | PASS snap | empirical |  | 0 / 4610 (2.80%) | 0.815 / 0.784 | n/a | 76 (16%) | OUTSIDE PATHS (4) | 1136s 2265096+14961 tok |
+| iris/seed4 | acc 0.9786 | ast | PASS snap | empirical |  | 0 / 3303 (2.80%) | 0.813 / 0.782 | n/a | 74 (15%) |  |  |
 | iris/seed5 | acc 0.9741 | dump | PASS exact | empirical |  | 0 / 956 (3.14%) | 0.835 / 0.805 | n/a | 478 (100%) |  |  |
 | iris/seed5 | acc 0.9741 | agent_1 | PASS snap | empirical |  | 0 / 4901 (3.14%) | 0.833 / 0.803 | n/a | 70 (15%) | OUTSIDE PATHS (3) | 915s 1335811+12228 tok |
-| iris/seed5 | acc 0.9741 | ast | PASS snap | empirical |  | 0 / 3508 (3.14%) | 0.834 / 0.805 | n/a | 74 (15%) |  |  |
+| iris/seed5 | acc 0.9741 | ast | PASS snap | empirical |  | 0 / 3528 (3.14%) | 0.834 / 0.805 | n/a | 74 (15%) |  |  |
 | iris_petal/seed0 | acc 0.9660 | dump | PASS exact | empirical |  | 0 / 594 (3.65%) | 0.771 / 0.756 | n/a | 374 (100%) |  |  |
 | iris_petal/seed0 | acc 0.9660 | agent_1 | PASS snap | empirical |  | 0 / 3605 (3.65%) | 0.77 / 0.753 | n/a | 48 (13%) | OUTSIDE PATHS (1) | 190s 722175+5921 tok |
-| iris_petal/seed0 | acc 0.9660 | ast | PASS snap | empirical |  | 0 / 5742 (3.65%) | 0.777 / 0.755 | n/a | 42 (11%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | ast | PASS snap | empirical |  | 0 / 5762 (3.65%) | 0.777 / 0.755 | n/a | 42 (11%) |  |  |
 | iris_petal/seed1 | acc 0.9464 (NOT learned) | dump | PASS exact | empirical |  | 0 / 546 (3.60%) | 0.784 / 0.77 | n/a | 372 (100%) |  |  |
 | iris_petal/seed1 | acc 0.9464 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 5301 (3.60%) | 0.78 / 0.765 | n/a | 42 (11%) | ok | 252s 806696+8006 tok |
-| iris_petal/seed1 | acc 0.9464 (NOT learned) | ast | PASS snap | empirical |  | 0 / 2889 (3.60%) | 0.784 / 0.768 | n/a | 42 (11%) |  |  |
+| iris_petal/seed1 | acc 0.9464 (NOT learned) | ast | PASS snap | empirical |  | 0 / 2909 (3.60%) | 0.784 / 0.768 | n/a | 42 (11%) |  |  |
 | iris_petal/seed2 | acc 0.9560 | dump | PASS exact | empirical |  | 0 / 641 (3.80%) | 0.782 / 0.75 | n/a | 366 (100%) |  |  |
-| iris_petal/seed2 | acc 0.9560 | agent_1 | PASS snap | empirical |  | 0 / 4927 (3.80%) | 0.783 / 0.752 | n/a | 42 (11%) | ok | 210s 653711+6334 tok |
-| iris_petal/seed2 | acc 0.9560 | ast | PASS snap | empirical |  | 0 / 3474 (3.80%) | 0.782 / 0.747 | n/a | 42 (11%) |  |  |
+| iris_petal/seed2 | acc 0.9560 | agent_1 | PASS snap | empirical |  | 0 / 4947 (3.80%) | 0.783 / 0.752 | n/a | 42 (11%) | ok | 210s 653711+6334 tok |
+| iris_petal/seed2 | acc 0.9560 | ast | PASS snap | empirical |  | 0 / 3494 (3.80%) | 0.782 / 0.747 | n/a | 42 (11%) |  |  |
 | iris_petal/seed3 | acc 0.9530 | dump | PASS exact | empirical |  | 0 / 668 (4.01%) | 0.742 / 0.71 | n/a | 370 (100%) |  |  |
 | iris_petal/seed3 | acc 0.9530 | agent_1 | PASS snap | empirical |  | 0 / 4008 (4.01%) | 0.741 / 0.689 | n/a | 42 (11%) | ok | 171s 720457+5074 tok |
-| iris_petal/seed3 | acc 0.9530 | ast | PASS snap | empirical |  | 0 / 3522 (4.01%) | 0.742 / 0.7 | n/a | 42 (11%) |  |  |
+| iris_petal/seed3 | acc 0.9530 | ast | PASS snap | empirical |  | 0 / 3537 (4.01%) | 0.742 / 0.7 | n/a | 42 (11%) |  |  |
 | iris_petal/seed4 | acc 0.9532 | dump | PASS exact | empirical |  | 0 / 676 (3.55%) | 0.808 / 0.813 | n/a | 374 (100%) |  |  |
 | iris_petal/seed4 | acc 0.9532 | agent_1 | PASS snap | empirical |  | 0 / 4216 (3.55%) | 0.81 / 0.817 | n/a | 48 (13%) | ok | 175s 731507+6099 tok |
-| iris_petal/seed4 | acc 0.9532 | ast | PASS snap | empirical |  | 0 / 5714 (3.55%) | 0.802 / 0.816 | n/a | 42 (11%) |  |  |
+| iris_petal/seed4 | acc 0.9532 | ast | PASS snap | empirical |  | 0 / 5734 (3.55%) | 0.802 / 0.816 | n/a | 42 (11%) |  |  |
 | iris_petal/seed5 | acc 0.9450 (NOT learned) | dump | PASS exact | empirical |  | 0 / 663 (3.86%) | 0.768 / 0.738 | n/a | 368 (100%) |  |  |
 | iris_petal/seed5 | acc 0.9450 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 3665 (3.86%) | 0.769 / 0.74 | n/a | 42 (11%) | OUTSIDE PATHS (3) | 712s 1330731+8845 tok |
-| iris_petal/seed5 | acc 0.9450 (NOT learned) | ast | PASS snap | empirical |  | 0 / 5653 (3.86%) | 0.774 / 0.741 | n/a | 42 (11%) |  |  |
+| iris_petal/seed5 | acc 0.9450 (NOT learned) | ast | PASS snap | empirical |  | 0 / 5668 (3.86%) | 0.774 / 0.741 | n/a | 42 (11%) |  |  |
 | median3/seed0 | R² 0.9953 | dump | PASS exact | empirical | 1.07e-06 |  | 0.57 / 2.69 | no | 2512 (100%) |  |  |
 | median3/seed0 | R² 0.9953 | agent_1 | PASS snap | empirical | 0.0922 |  | 0.642 / 3.23 | no | 250 (10%) | OUTSIDE PATHS (3) | 3218s 3918371+34838 tok |
 | median3/seed0 | R² 0.9953 | agent_2 | PASS snap | empirical | 0.0828 |  | 0.641 / 2.54 | no | 254 (10%) | OUTSIDE PATHS (4) | 3419s 5396483+45938 tok |
@@ -378,52 +1012,112 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 | median3/seed2 | R² 0.9948 | formula | FAIL | empirical | 0.707 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | neareq/seed0 | acc 0.9952 | dump | PASS exact | empirical |  | 0 / 1865 (0.91%) | 0.999 / 0.999 | no | 236 (100%) |  |  |
 | neareq/seed0 | acc 0.9952 | agent_1 | PASS snap | empirical |  | 0 / 4946 (0.91%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (2) | 130s 491000+4480 tok |
-| neareq/seed0 | acc 0.9952 | ast | PASS snap | empirical |  | 0 / 8017 (0.91%) | 0.998 / 0.999 | no | 229 (97%) |  |  |
+| neareq/seed0 | acc 0.9952 | ast | PASS snap | empirical |  | 0 / 8037 (0.91%) | 0.998 / 0.999 | no | 229 (97%) |  |  |
+| neareq/seed0 | acc 0.9952 | ast2 | PASS snap | empirical |  | 0 / 4996 (0.91%) | 0.998 / 0.998 | no | 78 (33%) |  |  |
 | neareq/seed0 | acc 0.9952 | formula | PASS snap | empirical |  | 0 / 4946 (0.91%) | 1 / 1 | yes | 13 (6%) |  |  |
 | neareq/seed1 | acc 0.9978 | dump | PASS exact | empirical |  | 0 / 1602 (1.10%) | 0.999 / 0.999 | no | 236 (100%) |  |  |
 | neareq/seed1 | acc 0.9978 | agent_1 | PASS snap | empirical |  | 0 / 4103 (1.10%) | 1 / 1 | yes | 18 (8%) | OUTSIDE PATHS (1) | 92s 417465+3372 tok |
 | neareq/seed1 | acc 0.9978 | ast | PASS exact | empirical |  | 0 / 1602 (1.10%) | 0.999 / 0.999 | no | 236 (100%) |  |  |
+| neareq/seed1 | acc 0.9978 | ast2 | PASS snap | empirical |  | 0 / 5954 (1.10%) | 0.997 / 0.999 | no | 116 (49%) |  |  |
 | neareq/seed1 | acc 0.9978 | formula | PASS snap | empirical |  | 0 / 4103 (1.10%) | 1 / 1 | yes | 13 (6%) |  |  |
 | neareq/seed2 | acc 0.9946 | dump | PASS exact | empirical |  | 0 / 2062 (1.25%) | 0.998 / 0.999 | no | 232 (100%) |  |  |
 | neareq/seed2 | acc 0.9946 | agent_1 | PASS snap | empirical |  | 0 / 5458 (1.25%) | 1 / 1 | yes | 18 (8%) | ok | 136s 420239+3413 tok |
 | neareq/seed2 | acc 0.9946 | ast | PASS exact | empirical |  | 0 / 2062 (1.25%) | 0.998 / 0.999 | no | 232 (100%) |  |  |
+| neareq/seed2 | acc 0.9946 | ast2 | PASS snap | empirical |  | 0 / 8070 (1.25%) | 0.996 / 0.999 | no | 78 (34%) |  |  |
 | neareq/seed2 | acc 0.9946 | formula | PASS snap | empirical |  | 0 / 5458 (1.25%) | 1 / 1 | yes | 13 (6%) |  |  |
+| neareq/seed3 | acc 0.9975 | dump | PASS exact | empirical |  | 0 / 1669 (0.99%) | 0.999 / 0.999 | no | 242 (100%) |  |  |
+| neareq/seed3 | acc 0.9975 | agent_1 | PASS snap | empirical |  | 0 / 6446 (0.99%) | 1 / 1 | yes | 18 (7%) | ok | 114s 579230+5118 tok |
+| neareq/seed3 | acc 0.9975 | ast2 | PASS snap | empirical |  | 0 / 10012 (0.99%) | 0.999 / 0.999 | no | 67 (28%) |  |  |
+| neareq/seed3 | acc 0.9975 | formula | PASS snap | empirical |  | 0 / 6446 (0.99%) | 1 / 1 | yes | 13 (5%) |  |  |
+| neareq/seed4 | acc 0.9963 | dump | PASS exact | empirical |  | 0 / 1554 (1.09%) | 0.999 / 0.999 | no | 238 (100%) |  |  |
+| neareq/seed4 | acc 0.9963 | agent_1 | PASS snap | empirical |  | 0 / 6139 (1.09%) | 1 / 1 | yes | 18 (8%) | ok | 107s 424282+3519 tok |
+| neareq/seed4 | acc 0.9963 | ast2 | PASS snap | empirical |  | 0 / 7553 (1.09%) | 0.998 / 0.998 | no | 66 (28%) |  |  |
+| neareq/seed4 | acc 0.9963 | formula | PASS snap | empirical |  | 0 / 6139 (1.09%) | 1 / 1 | yes | 13 (5%) |  |  |
+| neareq/seed5 | acc 0.9968 | dump | PASS exact | empirical |  | 0 / 1743 (1.40%) | 0.999 / 0.999 | no | 232 (100%) |  |  |
+| neareq/seed5 | acc 0.9968 | agent_1 | PASS snap | empirical |  | 0 / 5099 (1.40%) | 1 / 1 | yes | 18 (8%) | ok | 93s 422819+3322 tok |
+| neareq/seed5 | acc 0.9968 | ast2 | PASS snap | empirical |  | 0 / 5761 (1.40%) | 0.997 / 0.999 | no | 81 (35%) |  |  |
+| neareq/seed5 | acc 0.9968 | formula | PASS snap | empirical |  | 0 / 5099 (1.40%) | 1 / 1 | yes | 13 (6%) |  |  |
 | tax/seed0 | R² 0.9998 | dump | PASS exact | empirical | 1.14e-05 |  | 1.36 / 39.1 | no | 176 (100%) |  |  |
 | tax/seed0 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.914 |  | 0.9 / 8.7 | no | 30 (17%) | OUTSIDE PATHS (4) | 604s 1049675+9651 tok |
 | tax/seed0 | R² 0.9998 | ast | PASS snap | empirical | 0.882 |  | 1.08 / 8.51 | no | 22 (12%) |  |  |
+| tax/seed0 | R² 0.9998 | ast2 | PASS snap | empirical | 0.882 |  | 1.08 / 8.51 | no | 22 (12%) |  |  |
 | tax/seed0 | R² 0.9998 | formula | FAIL | empirical | 1.36 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed1 | R² 0.9997 | dump | PASS exact | empirical | 1.12e-05 |  | 1.34 / 39.4 | no | 176 (100%) |  |  |
 | tax/seed1 | R² 0.9997 | agent_1 | PASS snap | empirical | 1.19 |  | 0.2 / 0.2 | no | 50 (28%) | OUTSIDE PATHS (1) | 671s 904028+9262 tok |
 | tax/seed1 | R² 0.9997 | ast | PASS snap | empirical | 1.05 |  | 1.15 / 8.85 | no | 22 (12%) |  |  |
+| tax/seed1 | R² 0.9997 | ast2 | PASS snap | empirical | 1.05 |  | 1.15 / 8.85 | no | 22 (12%) |  |  |
 | tax/seed1 | R² 0.9997 | formula | FAIL | empirical | 1.34 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed2 | R² 0.9997 | dump | PASS exact | empirical | 1.45e-05 |  | 1.51 / 38.5 | no | 174 (100%) |  |  |
 | tax/seed2 | R² 0.9997 | agent_1 | PASS snap | empirical | 1.03 |  | 1.25 / 11.2 | no | 32 (18%) | ok | 463s 653111+6623 tok |
 | tax/seed2 | R² 0.9997 | ast | PASS snap | empirical | 0.693 |  | 0.956 / 9.74 | no | 22 (13%) |  |  |
+| tax/seed2 | R² 0.9997 | ast2 | PASS snap | empirical | 0.747 |  | 1.01 / 9.01 | no | 20 (11%) |  |  |
 | tax/seed2 | R² 0.9997 | formula | FAIL | empirical | 1.51 |  | 0 / 0 | yes | 42 (24%) |  |  |
+| tax/seed3 | R² 0.9998 | dump | PASS exact | empirical | 1.14e-05 |  | 1.34 / 39.1 | no | 178 (100%) |  |  |
+| tax/seed3 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.905 |  | 2 / 22 | no | 45 (25%) | ok | 252s 815419+7837 tok |
+| tax/seed3 | R² 0.9998 | ast2 | PASS snap | empirical | 0.92 |  | 0.945 / 8.08 | no | 22 (12%) |  |  |
+| tax/seed3 | R² 0.9998 | formula | FAIL | empirical | 1.34 |  | 0 / 0 | yes | 42 (24%) |  |  |
+| tax/seed4 | R² 0.9998 | dump | PASS exact | empirical | 1.13e-05 |  | 1.57 / 40 | no | 178 (100%) |  |  |
+| tax/seed4 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.704 |  | 2 / 42 | no | 44 (25%) | ok | 130s 501744+5432 tok |
+| tax/seed4 | R² 0.9998 | ast2 | PASS snap | empirical | 1.04 |  | 1.05 / 8.24 | no | 22 (12%) |  |  |
+| tax/seed4 | R² 0.9998 | formula | FAIL | empirical | 1.57 |  | 0 / 0 | yes | 42 (24%) |  |  |
+| tax/seed5 | R² 0.9996 | dump | PASS exact | empirical | 1.3e-05 |  | 1.46 / 39.3 | no | 176 (100%) |  |  |
+| tax/seed5 | R² 0.9996 | agent_1 | PASS snap | empirical | 0.669 |  | 1 / 21 | no | 41 (23%) | OUTSIDE PATHS (1) | 233s 905280+9740 tok |
+| tax/seed5 | R² 0.9996 | ast2 | PASS snap | empirical | 0.911 |  | 0.891 / 9.6 | no | 22 (12%) |  |  |
+| tax/seed5 | R² 0.9996 | formula | FAIL | empirical | 1.46 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | window/seed0 | acc 0.9990 | dump | PASS exact | empirical |  | 0 / 976 (0.87%) | 0.999 / 1 | no | 90 (100%) |  |  |
 | window/seed0 | acc 0.9990 | agent_1 | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) | ok | 236s 417864+2291 tok |
 | window/seed0 | acc 0.9990 | ast | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed0 | acc 0.9990 | ast2 | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed0 | acc 0.9990 | formula | PASS snap | empirical |  | 0 / 8826 (0.87%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed1 | acc 0.9977 | dump | PASS exact | empirical |  | 0 / 954 (0.74%) | 0.998 / 1 | no | 92 (100%) |  |  |
 | window/seed1 | acc 0.9977 | agent_1 | PASS exact | empirical |  | 0 / 1445 (0.74%) | 0.998 / 1 | no | 15 (16%) | ok | 435s 714091+3829 tok |
-| window/seed1 | acc 0.9977 | ast | PASS snap | empirical |  | 0 / 14456 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
-| window/seed1 | acc 0.9977 | formula | PASS snap | empirical |  | 0 / 14456 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed1 | acc 0.9977 | ast | PASS snap | empirical |  | 0 / 14476 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed1 | acc 0.9977 | ast2 | PASS snap | empirical |  | 0 / 14476 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed1 | acc 0.9977 | formula | PASS snap | empirical |  | 0 / 14476 (0.74%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.9990 | dump | PASS exact | empirical |  | 0 / 990 (0.89%) | 0.999 / 1 | no | 90 (100%) |  |  |
 | window/seed2 | acc 0.9990 | agent_1 | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 19 (21%) | OUTSIDE PATHS (1) | 433s 569037+4067 tok |
 | window/seed2 | acc 0.9990 | ast | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed2 | acc 0.9990 | ast2 | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.9990 | formula | PASS snap | empirical |  | 0 / 4960 (0.89%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed3 | acc 0.9979 | dump | PASS exact | empirical |  | 0 / 1434 (0.84%) | 0.998 / 1 | no | 94 (100%) |  |  |
+| window/seed3 | acc 0.9979 | agent_1 | PASS snap | empirical |  | 0 / 10074 (0.84%) | 1 / 1 | yes | 9 (10%) | ok | 136s 567751+4184 tok |
+| window/seed3 | acc 0.9979 | ast2 | PASS snap | empirical |  | 0 / 10094 (0.84%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed3 | acc 0.9979 | formula | PASS snap | empirical |  | 0 / 10074 (0.84%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed4 | acc 0.9988 | dump | PASS exact | empirical |  | 0 / 1911 (0.97%) | 0.999 / 1 | no | 92 (100%) |  |  |
+| window/seed4 | acc 0.9988 | agent_1 | PASS snap | empirical |  | 0 / 4975 (0.97%) | 1 / 1 | yes | 9 (10%) | ok | 106s 493503+3280 tok |
+| window/seed4 | acc 0.9988 | ast2 | PASS snap | empirical |  | 0 / 4995 (0.97%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed4 | acc 0.9988 | formula | PASS snap | empirical |  | 0 / 4975 (0.97%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed5 | acc 0.9982 | dump | PASS exact | empirical |  | 0 / 1917 (0.91%) | 0.998 / 1 | no | 90 (100%) |  |  |
+| window/seed5 | acc 0.9982 | agent_1 | PASS snap | empirical |  | 0 / 5209 (0.91%) | 1 / 1 | yes | 9 (10%) | ok | 111s 493180+3021 tok |
+| window/seed5 | acc 0.9982 | ast2 | PASS snap | empirical |  | 0 / 5229 (0.91%) | 1 / 1 | yes | 9 (10%) |  |  |
+| window/seed5 | acc 0.9982 | formula | PASS snap | empirical |  | 0 / 5209 (0.91%) | 1 / 1 | yes | 9 (10%) |  |  |
 | xor/seed0 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed0 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 356s 491278+2425 tok |
 | xor/seed0 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed0 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed0 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 122 (100%) |  |  |
 | xor/seed1 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 250s 349198+2788 tok |
 | xor/seed1 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed1 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed2 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 17 (14%) | ok | 241s 420143+2447 tok |
 | xor/seed2 | acc 1.0000 | ast | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed2 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed3 | acc 0.7500 (NOT learned) | dump | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.75 /  | no | 120 (100%) |  |  |
+| xor/seed3 | acc 0.7500 (NOT learned) | agent_1 | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.75 /  | no | 7 (6%) | ok | 100s 420105+2708 tok |
+| xor/seed3 | acc 0.7500 (NOT learned) | ast2 | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.75 /  | no | 7 (6%) |  |  |
+| xor/seed3 | acc 0.7500 (NOT learned) | formula | PASS snap | exhaustive |  | 0 / 1 (50.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed4 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
+| xor/seed4 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 93s 419384+2278 tok |
+| xor/seed4 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed4 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed5 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
+| xor/seed5 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) | ok | 104s 491666+2680 tok |
+| xor/seed5 | acc 1.0000 | ast2 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
+| xor/seed5 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 
 ## absdiff/seed0: dump vs agent_1
 
@@ -734,6 +1428,292 @@ so the best possible pure f(d) has a max error of about 0.086. The snap toleranc
   and least squares left 0.12 where minimax gave 0.097 for the same features.
 - **Get a lower bound to know when to stop.** A quick joint nonlinear minimax optimisation shows
   how much any further snapping or tuning could still gain.
+
+</details>
+
+## absdiff/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: a: float [-3, 3], b: float [-3, 3]
+# output: regression: the returned value
+def net(a, b):
+    h1_0 = sigmoid(1.5608935 * a - 1.5811212 * b - 5.6978836)  # layer 1 neuron 0
+    h1_1 = sigmoid(-1.6999716 * a - 1.4470838 * b + 1.0432267)  # layer 1 neuron 1
+    h1_2 = sigmoid(-2.2282135 * a - 1.8396368 * b + 0.3947982)  # layer 1 neuron 2
+    h1_3 = sigmoid(1.7599554 * a + 1.9408717 * b + 1.062507)  # layer 1 neuron 3
+    h1_4 = sigmoid(1.2617681 * a - 1.2578588 * b + 1.5280614)  # layer 1 neuron 4
+    h1_5 = sigmoid(2.485814 * a - 2.508978 * b - 2.8118944)  # layer 1 neuron 5
+    h1_6 = sigmoid(-1.8447071 * a - 1.6160655 * b + 0.8440864)  # layer 1 neuron 6
+    h1_7 = sigmoid(-0.8145771 * a + 0.8111943 * b - 2.0779521)  # layer 1 neuron 7
+    return 3.3133814 * h1_0 - 0.009013219 * h1_1 + 0.16399612 * h1_2 + 0.2512382 * h1_3 - 0.55989116 * h1_4 + 2.4631565 * h1_5 + 0.0653747 * h1_6 + 5.2271266 * h1_7 - 0.19855295
+```
+
+```python
+def net(a, b):
+    # The net only looks at two directions: the difference d and the sum s.
+    d = a - b
+    s = a + b
+    # g(d): a smooth, asymmetric "|d|"-like curve built from three sigmoid ramps.
+    far_right = 3.25 * sigmoid(1.6 * d - 5.75)     # extra rise for d > ~3.6
+    right = 2.75 * sigmoid(2.25 * d - 2.5)         # main rise for d > ~1.1
+    left = 6.25 * sigmoid(-0.75 * d - 1.75)        # broad rise for d < ~-2.3
+    # small bump (about +0.09) along the diagonal when s is near 0
+    valley = sigmoid(2 * s - 1) + sigmoid(-2 * s - 1)
+    return far_right + right + left - 0.2 * valley - 0.65
+```
+
+<details><summary>notes</summary>
+
+### Notes on m55dec4 (2 inputs, 8 sigmoid units, regression)
+
+#### What the network computes
+
+Every hidden unit has weights of almost equal size on x0 and x1, so each unit reads one of two
+directions only:
+
+- difference `d = x0 - x1`: units 0, 4, 5, 7 (weights like (1.56, -1.58), (-0.81, 0.81));
+- sum `s = x0 + x1`: units 1, 2, 3, 6 (weights like (-2.23, -1.84), (1.76, 1.94)).
+
+Probing the net along these axes shows it is essentially a smooth, slightly asymmetric
+`|x0 - x1|`: about 0.3-0.4 at d = 0, about 2.9 at d = +3 and 3.1 at d = -3, about 5.2 at d = ±6.
+The sum units only add a small bump (about +0.09) near s = 0. Their output weights are small
+(0.16, 0.25, 0.07, -0.009).
+
+A plain `abs(x0 - x1)` is off by about 0.3 at d = 0. The snap tolerance is 0.098, so it fails.
+
+#### What I changed
+
+1. Rewrote all units in terms of `d` and `s`.
+2. Replaced the four d-units with three sigmoid ramps in d. Unit 4 (weight -0.56) is not needed
+   once the others are refit. Hidden slopes and offsets are snapped to a 0.25 grid, except one
+   slope of 1.6.
+3. Replaced the four s-units with one symmetric pair, `sigmoid(2s-1) + sigmoid(-2s-1)`.
+   Unit 1 (weight -0.009) is dropped as noise.
+4. Picked the output weights with a minimax LP on a 61x61 grid. I then searched a grid of
+   0.05-step values for the coarsest set that still has max error < 0.065.
+
+Result: `PASS (snap)` with max |program - net| = 0.058 (tolerance 0.098). There are 4 sigmoids
+instead of 8.
+
+A simpler d-only version also passes, with max error 0.086 and less margin:
+`3*sigmoid(1.9d-7) + 3*sigmoid(2.1d-2.5) + 6.5*sigmoid(-0.7153d-1.7) - 0.8529`. It is very
+sensitive to the slope of the large-weight unit. The best possible d-only fit has error 0.066,
+because the net varies by up to 0.13 along s at fixed d. That leaves little room for snapping.
+Adding the s-bump brings the best-fit error down to 0.028, which gives room to snap.
+
+An exact pass would need practically all 8 original units, so I did not attempt it.
+
+#### Heuristics
+
+- **Look for shared input directions first.** If a unit's weights on two inputs are nearly equal
+  or nearly opposite, rewrite it in terms of `x0+x1` and `x0-x1`. Then probe the net on that
+  rotated grid (fixed d, varying s, and the reverse). This usually shows the function is mostly
+  1-D, here a soft `|x0-x1|`.
+- **Estimate the 1-D floor before snapping.** At each fixed d, take the min and max of the net
+  over s. Half the largest spread is the best error any d-only program can reach. If it is close
+  to the snap tolerance, keep a correction term for the other direction.
+- **Refit the output layer after changing hidden units.** It is linear in the output weights,
+  so a minimax LP (`linprog` minimising t subject to |A w - y| <= t) gives the best weights. Do this
+  instead of snapping each weight separately; snapping one at a time compounds errors quickly.
+- **Separate snapping hidden and output parameters.** Snap hidden slopes and offsets by searching
+  a small grid of nice values, solving the output LP for each combination. Then search the output
+  weights on a fine grid (0.05) and score each set by how coarse its values are, under an error
+  limit of about 2/3 of the tolerance.
+- **Greedy "coarsest first" snapping can throw away a useful term.** It snapped a small weight to
+  0 and lost the term that made the snapping possible. Score coarseness together with error, or
+  search jointly.
+- **Watch large output weights on shallow sigmoids.** A unit like `6.5*sigmoid(-0.7d-1.7)` over
+  |d| <= 6 makes the error very sensitive to the slope (0.01 in slope moves the error by about
+  0.04). Snap such units early and let the other parameters absorb the change.
+- **Symmetric bumps** across a direction can be written as
+  `k*(sigmoid(a*s+b) + sigmoid(-a*s+b))`, one shared pair instead of several one-sided units.
+- **Drop units with tiny output weights** (here |w| < 0.01) at once. They are below any
+  tolerance.
+- **Check the probe yourself before trusting a "nice formula" guess.** `abs(x0-x1)` looked right
+  but was 3x over tolerance at d = 0, where the net smooths out the corner.
+
+</details>
+
+## absdiff/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: a: float [-3, 3], b: float [-3, 3]
+# output: regression: the returned value
+def net(a, b):
+    h1_0 = sigmoid(-0.052513428 * a - 0.22641179 * b + 1.3441563)  # layer 1 neuron 0
+    h1_1 = sigmoid(0.09996305 * a - 0.07863644 * b + 1.2677885)  # layer 1 neuron 1
+    h1_2 = sigmoid(0.04891198 * a - 0.17902395 * b + 0.9946669)  # layer 1 neuron 2
+    h1_3 = sigmoid(0.710797 * a - 0.7152358 * b - 1.7827095)  # layer 1 neuron 3
+    h1_4 = sigmoid(0.19357155 * a - 0.005729861 * b + 1.1464425)  # layer 1 neuron 4
+    h1_5 = sigmoid(1.2538643 * a - 1.253644 * b + 4.500368)  # layer 1 neuron 5
+    h1_6 = sigmoid(0.29027292 * a - 0.15421104 * b + 0.52731156)  # layer 1 neuron 6
+    h1_7 = sigmoid(-2.5734644 * a + 2.5779605 * b - 2.6494086)  # layer 1 neuron 7
+    return 1.0139246 * h1_0 + 0.8933184 * h1_1 + 0.9775807 * h1_2 + 5.9141073 * h1_3 + 1.0562305 * h1_4 - 4.4847927 * h1_5 + 0.9540187 * h1_6 + 2.4610639 * h1_7 + 0.12999307
+```
+
+```python
+# A smoothed |a - b|: the net only looks at the difference d = a - b.
+# Three soft steps in d build the "V":
+#   rise_pos : turns on for d > 2.4 (right arm),
+#   rise_neg : turns on for d < -1  (left arm, inner part),
+#   rise_far : turns on for d < -3.6 (left arm, outer part),
+# plus a small slope and an offset.
+def net(a, b):
+    d = a - b
+    rise_pos = sigmoid(0.7 * (d - 2.4))
+    rise_neg = sigmoid(-2.5 * (d + 1))
+    rise_far = sigmoid(-1.2 * (d + 3.6))
+    return 6 * rise_pos + 2.5 * rise_neg + 4.5 * rise_far + 0.1 * d - 0.9
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+
+The output depends almost only on `d = x0 - x1`. It is a smoothed, slightly lopsided `|x0 - x1|`:
+about 0.3 at d = 0, about 0.9 at |d| = 1, about 2 at |d| = 2, about 4.07 at |d| = 4, and it flattens
+toward 5.2-5.3 at |d| = 6.
+
+#### What I changed
+
+1. **Grouped the hidden units by direction.** Units 3, 5 and 7 have weights `(w, -w)` (0.71/-0.72,
+   1.254/-1.254, -2.573/2.578), so they are functions of `d = x0 - x1`. They are the three soft steps
+   that make the "V".
+2. **Collapsed the five weak units (0, 1, 2, 4, 6).** Their pre-activation slopes are small (|w| <= 0.3)
+   and they stay in a near-linear part of the sigmoid. Together they are about `0.115*x0 - 0.117*x1 + 3.59`,
+   which is again a function of `d` (about `0.116*d`). They were absorbed into a linear term plus the offset.
+   Their remaining curvature (about -0.0045*(x0^2+x1^2)) is the only part that is not a function of `d`.
+   It spreads the output by about +-0.035 at a fixed `d`, which no function of `d` alone can remove.
+3. **Wrote each step as `sigmoid(s * (d - k))`** so that each step has a slope `s` and a centre `k`:
+   centres 2.454 -> 2.4, -3.58 -> -3.6, -1.02 -> -1; slopes 0.718 -> 0.7, 1.262 -> 1.2, 2.589 -> 2.5.
+   I flipped the negative-weight unit with `-w*sigmoid(z) = w*sigmoid(-z) - w`, so all three steps now
+   add to the output.
+4. **Snapped the output weights** to 6, 2.5 and 4.5, the slope to 0.1 and the offset to -0.9.
+   I picked these with a grid search over nice values. It minimised the max error against the net's
+   per-`d` min/max envelope, sampled on a 241x241 grid.
+
+Result: `PASS (snap)`, max |program - net| = 0.065 against a tolerance of 0.101.
+The worst points are near the x1 = -3 edge. An exact pass would need all 8 units.
+The unexplained 2D spread alone is about 0.035, and the best possible fit with 3 free steps in d
+is about 0.037.
+
+#### Heuristics
+
+- **Look for units with weights `(w, -w)` (or a common ratio).** They depend on one combined input such
+  as `x0 - x1`. When all the strong units share a direction, reduce the problem to one variable.
+- **Weak units are linear plus a constant.** A sigmoid unit with |pre-activation slope| * input range
+  well below about 4 stays in its near-linear zone. Fit `a.x + c` to their summed contribution on a grid.
+  Check the max residual before you drop them; here linear alone left 0.09, which used most of the
+  budget until it was merged with the rest of the fit.
+- **Rewrite `sigmoid(w*x + b)` as `sigmoid(s*(x - k))` with `k = -b/w`.** Centres and slopes are easier
+  to snap than raw biases. A negative output weight can be turned positive with
+  `-a*sigmoid(z) = a*sigmoid(-z) - a`.
+- **Fit against the per-coordinate envelope, not the mean.** When the reduced variable leaves some
+  spread, bin the outputs by `d` and record min and max per bin. Minimax fitting against `[lo, hi]` gives the true
+  max error: for each bin it is max(fit - lo, hi - fit). Get those inequalities the right way round: a sign slip
+  made the error look like it was 0.001.
+- **Snap in stages.** First snap the nonlinear parameters (centres, slopes) to a grid. Solve the linear
+  output weights by LP (minimax). Then round those weights to nice values and re-centre the constant as the
+  midpoint of the residual range.
+- **Leave margin.** The checker samples edges and corners, where the error was about 0.007 larger than on
+  my grid. Aim to use at most about 60% of the snap tolerance.
+- **Piecewise-linear is not always simpler.** A smooth V needed 5 or more ReLU knots to reach the
+  tolerance, while 3 sigmoid steps in `d` fit it with lots of room.
+
+</details>
+
+## absdiff/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: a: float [-3, 3], b: float [-3, 3]
+# output: regression: the returned value
+def net(a, b):
+    h1_0 = sigmoid(-0.9675831 * a - 0.9218849 * b + 1.0159254)  # layer 1 neuron 0
+    h1_1 = sigmoid(1.0515056 * a - 0.9950888 * b - 1.2737435)  # layer 1 neuron 1
+    h1_2 = sigmoid(1.1077025 * a - 1.1041028 * b - 4.012792)  # layer 1 neuron 2
+    h1_3 = sigmoid(-1.5625771 * a - 1.5699453 * b + 1.4376283)  # layer 1 neuron 3
+    h1_4 = sigmoid(-2.043423 * a + 2.054188 * b - 2.1983342)  # layer 1 neuron 4
+    h1_5 = sigmoid(2.671079 * a - 2.664358 * b - 2.5020027)  # layer 1 neuron 5
+    h1_6 = sigmoid(-1.3332583 * a + 1.3414316 * b - 5.028585)  # layer 1 neuron 6
+    h1_7 = sigmoid(1.9078987 * a + 1.9712238 * b + 0.7066641)  # layer 1 neuron 7
+    return 0.11193924 * h1_0 + 0.37809524 * h1_1 + 4.0686545 * h1_2 - 0.034991324 * h1_3 + 2.3091571 * h1_4 + 1.5548137 * h1_5 + 3.5025601 * h1_6 + 0.029824596 * h1_7 - 0.34955162
+```
+
+```python
+def net(a, b):
+    # The net depends (almost) only on the distance between the inputs.
+    dist = abs(a - b)
+    # Two smooth steps that together trace a ramp ~ dist on [0, 6]:
+    # a step of 1.75 centred at dist = 1.1, and a step of 3.8 centred at dist = 3.7.
+    near_step = sigmoid(2.5 * (dist - 1.1))
+    far_step = sigmoid(1.25 * (dist - 3.7))
+    return 0.07 + 1.75 * near_step + 3.8 * far_step
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+
+- The 8 hidden sigmoid units split into two groups by input direction:
+  - 5 units with weights (w, -w) on (x0, x1), so they only see `d = x0 - x1`. Three face +d
+    (centres d ~ 0.94, 1.21, 3.63) and two face -d (centres d ~ -1.07, -3.75).
+  - 3 units with weights (w, w), so they only see `s = x0 + x1`. Their output weights are tiny
+    (0.11, -0.035, 0.03): together they vary by only ~0.047 over the domain (about 1% of the output range).
+- Along d, the output is a smoothed ramp close to `|x0 - x1|`. It is ~0.25 at d = 0, tracks |d| within
+  about ±0.09 for |d| in [1, 5], and bends down to ~5.4 at |d| = 6. The two sides of d differ by at most ~0.035.
+  So the net is a soft "absolute difference" of the inputs.
+- Plain `abs(x0 - x1)` does not pass: it is off by 0.25 at d = 0 and by 0.6 at the corners, and the
+  tolerance is 0.104.
+
+#### What I changed
+
+1. Dropped the 3 s-units and folded their mean into the constant. The cost is about ±0.024.
+2. Made the model symmetric in d and wrote it in terms of `dist = abs(x0 - x1)`. On each side, the
+   units pair up into two steps: one near |d| ~ 1.1 (net weights 1.55+0.38 on +d and 2.31 on -d) and one
+   near |d| ~ 3.7 (4.07 on +d and 3.50 on -d).
+3. Fitted `c + A*sigmoid(w1*(dist - t1)) + B*sigmoid(w2*(dist - t2))` to the net's envelope over s.
+   For each d, I took the min and max of the net over all valid s, then did a minimax fit. After that
+   I grid-searched snapped values: w1 = 2.5, t1 = 1.1, w2 = 1.25 (half of w1), t2 = 3.7, A = 1.75,
+   B = 3.8, c = 0.07.
+4. The result has 2 sigmoids instead of 8, and every number is a short decimal.
+   Check: `PASS (snap)`, max |program - net| = 0.049 against a tolerance of 0.104.
+
+Final program:
+
+```python
+dist = abs(x0 - x1)
+return 0.07 + 1.75 * sigmoid(2.5 * (dist - 1.1)) + 3.8 * sigmoid(1.25 * (dist - 3.7))
+```
+
+#### Heuristics
+
+- **Group hidden units by weight direction.** Normalise each unit's input-weight vector. Units with
+  (w, -w) only see x0 - x1, and units with (w, w) only see x0 + x1. That turns a 2-D net into a sum of 1-D
+  functions of a few projections.
+- **Measure a group's total swing before keeping it.** Multiply each output weight by the
+  sigmoid's actual variation over the domain. A group whose swing is well under the snap tolerance
+  becomes its mean, folded into the bias.
+- **Look for mirrored units, then use abs.** Units that face +d and -d with similar centres and
+  similar summed amplitudes form a symmetric function of d. Rewriting it as f(|d|) halves the unit count.
+  Check the asymmetry first, by comparing net(d) with net(-d), so you know how much of the budget it uses.
+- **Several sigmoids in a staircase usually approximate a ramp** (here, |d|). Compare the net with the
+  simple formula. If the formula alone fails, because of the soft corner at 0 and saturation at the
+  domain edge, keep a small number of steps and refit them instead of forcing the ideal formula.
+- **Fit to the envelope, not to samples.** For a model in one projection, compute for each value of
+  that projection the min and max of the net over the remaining directions. Then do a minimax fit to
+  (lo+hi)/2 with error |f - mid| + half-spread. It is fast (1-D) and matches the checker's max-error criterion.
+- **Snap in a grid search.** Fix slopes to nice values (2.5, 1.25), then grid-search centres and
+  amplitudes in steps of 0.05–0.1. The constant has a closed form: (max(hi-f) + min(lo-f))/2.
+  Sigmoid-sum fits have nearly flat valleys, so sequential snap-and-refit wanders. A small grid over
+  rounded values works better.
+- **Write sigmoid arguments as `w * (x - centre)`**, so the threshold can be read directly.
 
 </details>
 
@@ -2627,6 +3607,203 @@ Binary classifier on two floats in [-2, 2]: class 1 when the inputs are nearly e
 
 </details>
 
+## neareq/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: a: float [-2, 2], b: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(a, b):
+    h1_0 = sigmoid(-10.172236 * a + 10.182916 * b + 2.1321692)  # layer 1 neuron 0
+    h1_1 = sigmoid(-0.47127149 * a - 0.1747331 * b + 3.8183677)  # layer 1 neuron 1
+    h1_2 = sigmoid(-0.27824083 * a + 0.049835548 * b + 3.598747)  # layer 1 neuron 2
+    h1_3 = sigmoid(-10.726231 * a + 10.734161 * b + 2.2183373)  # layer 1 neuron 3
+    h1_4 = sigmoid(-0.034101043 * a + 0.28647664 * b + 3.022868)  # layer 1 neuron 4
+    h1_5 = sigmoid(-11.141266 * a + 11.117323 * b - 2.2133014)  # layer 1 neuron 5
+    h1_6 = sigmoid(-0.35331345 * a - 0.041835718 * b + 3.711267)  # layer 1 neuron 6
+    h1_7 = sigmoid(-0.40658635 * a - 0.51572174 * b - 3.3767052)  # layer 1 neuron 7
+    return 8.896664 * h1_0 - 2.4128716 * h1_1 - 2.1298506 * h1_2 + 10.579943 * h1_3 - 2.0974789 * h1_4 - 18.226831 * h1_5 - 2.2201657 * h1_6 + 1.0689062 * h1_7 - 1.4543873
+```
+
+```python
+def net(a, b):
+    # class 1 iff the two inputs are within 0.2 of each other
+    gap = abs(b - a)
+    return 0.2 - gap
+```
+
+<details><summary>notes</summary>
+
+### Agent notes
+
+#### Result
+`agent.py`: `return 0.2 - abs(x1 - x0)`. Class 1 iff |x1 - x0| < 0.2. `check.py`: PASS (snap), with 0
+disagreements where the net is confident. The 6419 disagreements are all in the unsure zone (0.99% of inputs).
+
+#### What I changed and why
+- **Steep units:** h1_0, h1_3 and h1_5 have weights of about ±10..11 on x0 and x1, with opposite signs and
+  equal size, so each one is a soft step in d = x1 - x0. Dividing the bias by the slope puts the steps at
+  d ~ -0.21 (h1_0 and h1_3, together +19.5) and d ~ +0.20 (h1_5, -18.2). The two rising steps sit almost
+  on top of each other, so I merged them.
+- **Slow units:** h1_1, h1_2, h1_4, h1_6 and h1_7 have small weights and large biases (|b| ~ 3-3.8), so
+  they stay saturated over the whole box. With the output bias they add up to about -10, varying only by
+  ±0.17 (a least-squares linear fit gives -9.99 + 0.048 x0 - 0.038 x1). They are a constant offset.
+- **Net shape:** the output is about -10 below the band, +9.5 inside it and -8.7 above it. That is an
+  indicator of |d| < 0.2.
+- **Measured boundaries:** I scanned the class boundary along d for 13 values of (x0+x1)/2. The lower edge
+  is at d = -0.198..-0.203 and the upper edge at +0.198..+0.207. Both snap to ±0.2, a symmetric band.
+- **Exact pass not reached:** keeping the three steep sigmoids and fitting the slow units with a quadratic
+  still did not reach PASS (exact). It halved the unsure-zone disagreements, but the boundary shifts by
+  ~0.005 across the box, and the slow units cause that drift. I kept the simple formula.
+
+#### Heuristics
+- Look for hidden units whose input weights are large, equal in size and opposite in sign. They are
+  steps in a difference (x1 - x0), placed at -bias/slope. Group units with the same direction and close
+  thresholds into one step, and add their output weights.
+- Units with small input weights and a large |bias| are saturated on the whole input box. Treat them as
+  constants (sigmoid(b) ~ 1 or 0) and fold them into the output bias. Bound how much they vary over the
+  box, to confirm they cannot move a decision.
+- For binary outputs, add up the plateau values between the steps (below, between, above). A
+  "+big then -big" pair with a negative base gives a band indicator: `t - abs(d - c)` when the band is
+  symmetric about c.
+- Measure the actual decision boundary numerically along the main direction, at several points across
+  the orthogonal direction, and snap to the shared nice value (here ±0.2). Do not rely only on
+  -bias/slope of each unit, because the summed steps and offsets move the crossing point.
+- When the only gap to an exact pass is slow drift from near-saturated units, accept PASS (snap). A
+  readable formula is worth more than matching the drift of the boundary.
+
+</details>
+
+## neareq/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: a: float [-2, 2], b: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(a, b):
+    h1_0 = sigmoid(-7.2297535 * a + 7.2201376 * b + 1.6592407)  # layer 1 neuron 0
+    h1_1 = sigmoid(-11.0711 * a + 11.107881 * b - 2.3072295)  # layer 1 neuron 1
+    h1_2 = sigmoid(-11.009507 * a + 11.049075 * b - 2.297359)  # layer 1 neuron 2
+    h1_3 = sigmoid(11.97291 * a - 11.954919 * b - 2.382195)  # layer 1 neuron 3
+    h1_4 = sigmoid(0.2731691 * a + 0.67417383 * b - 1.7762611)  # layer 1 neuron 4
+    h1_5 = sigmoid(-0.73122567 * a - 0.18161269 * b - 0.051289845)  # layer 1 neuron 5
+    h1_6 = sigmoid(-4.334327 * a + 4.3353477 * b + 1.3459431)  # layer 1 neuron 6
+    h1_7 = sigmoid(-4.969748 * a + 4.9679775 * b + 1.4074155)  # layer 1 neuron 7
+    return 4.6309066 * h1_0 - 11.063248 * h1_1 - 10.155217 * h1_2 - 12.850809 * h1_3 + 0.8635674 * h1_4 + 0.55362684 * h1_5 + 2.4748213 * h1_6 + 2.9036617 * h1_7 + 0.49948505
+```
+
+```python
+def net(a, b):
+    # class 1 iff the two inputs are close: |b - a| < 0.2
+    gap = abs(b - a)
+    return 0.2 - gap
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+Class 1 iff the two inputs are nearly equal: `|x1 - x0| < 0.2`.
+
+#### How I got there
+- Six of the eight hidden units (0, 1, 2, 3, 6, 7) have weights of the form `w * (x1 - x0)`
+  (the two coefficients agree to within ~0.3%), so they are all functions of one feature
+  `d = x1 - x0`. Units 1 and 2 are near-duplicates (same slope ~11.07, same bias ~-2.30).
+- Units 1, 2 (rising steps at d ~ +0.21) and unit 3 (a falling step at d ~ -0.20) carry large
+  negative output weights (-11, -10, -13): they push the score negative when d is too large
+  or too small. Units 0, 6, 7 (soft steps in d with positive weights) and the bias lift the
+  middle band above 0.
+- Units 4 and 5 have small weights on both inputs and small output weights (0.86, 0.55). They
+  only tilt the boundary slightly (the band edges drift by about 0.005 across the domain), so
+  I dropped them.
+- I scanned the score along d for several fixed values of s = x0 + x1. The sign changes sat at
+  d = -0.200..-0.205 and d = +0.195..+0.207 for every s, so the boundary is two parallel lines
+  at d = +/-0.2. Snapped both to 0.2 (one shared threshold, symmetric).
+- `agent.py` returns `0.2 - abs(x1 - x0)`; it is > 0 exactly in the band.
+
+#### Check
+`PASS (snap)`, empirical, 285425 inputs: 0 disagreements where the net is confident, 6117
+in the net's unsure zone (all on the band edges). An exact match would need the soft
+sigmoid tilts, which are training noise rather than meaning.
+
+#### Heuristics
+- Look at the ratio of the input weights in each first-layer unit. When many units share the
+  same direction (here w*(x1 - x0)), rewrite the net as a 1-D function of that feature and
+  analyse it along that line.
+- Units whose input weights and output weight are both small next to the others mostly tilt
+  the boundary a little; drop them first and see whether the check still passes.
+- Near-duplicate units (same slope and bias) add up to one unit; with large slopes,
+  sigmoid(k*(d - t)) acts as a step at d = t = -bias/slope.
+- For a binary output, find the sign changes of the score along the main feature at several
+  values of the orthogonal coordinate. If they barely move, the boundary is a set of
+  axis-parallel cuts in the feature: snap them to round values, and use abs() when the cuts
+  are symmetric (`c - abs(d)` for a band, `abs(d) - c` for outside a band).
+- A large negative pair of steps on each side plus a positive bias is the motif for
+  "class 1 inside a band" (the net's version of `abs(a - b) < c`).
+
+</details>
+
+## neareq/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 8 -> 1 outputs
+# inputs: a: float [-2, 2], b: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(a, b):
+    h1_0 = sigmoid(8.749549 * a - 8.738662 * b + 2.0211608)  # layer 1 neuron 0
+    h1_1 = sigmoid(0.69822484 * a + 0.06419884 * b + 2.763372)  # layer 1 neuron 1
+    h1_2 = sigmoid(10.054672 * a - 10.059973 * b - 1.9768194)  # layer 1 neuron 2
+    h1_3 = sigmoid(-9.968111 * a + 9.973679 * b + 1.9624091)  # layer 1 neuron 3
+    h1_4 = sigmoid(-7.425706 * a + 7.4212894 * b - 1.870957)  # layer 1 neuron 4
+    h1_5 = sigmoid(0.3636079 * a - 0.990282 * b + 0.91710687)  # layer 1 neuron 5
+    h1_6 = sigmoid(-8.954106 * a + 8.942184 * b - 2.0480843)  # layer 1 neuron 6
+    h1_7 = sigmoid(0.6229638 * a - 0.12688589 * b + 2.1588435)  # layer 1 neuron 7
+    return 7.234173 * h1_0 - 1.34526 * h1_1 - 14.30969 * h1_2 + 9.882558 * h1_3 - 9.431426 * h1_4 - 1.3083005 * h1_5 - 13.052932 * h1_6 - 0.9667872 * h1_7 - 1.0346873
+```
+
+```python
+def net(a, b):
+    # class 1 when the two inputs are close: |a - b| < 0.2
+    gap = abs(a - b)
+    return 0.2 - gap
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I did
+- Five of the eight sigmoid units (h1_0, h1_2, h1_3, h1_4, h1_6) have input weights of the form
+  w*(x0 - x1) with |w| about 7.4-10, so they are soft steps in the single variable d = x0 - x1.
+  Their thresholds (-bias/w) sit at d = -0.231, +0.197, +0.197, -0.252, -0.229: two groups, one near
+  d = -0.2 and one near d = +0.2.
+- The other three units (h1_1, h1_5, h1_7) have small weights (< 1) and large positive biases; over
+  [-2, 2]^2 they are slowly varying and act mostly as a constant offset, only nudging the boundary
+  by a few thousandths.
+- Scanning the net along lines x0 + x1 = const showed the sign change at d = -0.199..-0.207 and
+  d = +0.198..+0.205 everywhere: the positive class is the band |x0 - x1| < 0.2.
+- Final program: `return 0.2 - abs(x0 - x1)`. Checker: PASS (snap), 0 confident disagreements; all
+  disagreements are in the net's unsure zone along the band edges (the net's edges drift by up to
+  0.007 because of the slow units).
+- I did not pursue PASS (exact): it would require keeping the slow sigmoid units to reproduce the
+  small boundary drift, which is noise rather than structure.
+
+#### Heuristics
+- Group hidden units by the direction of their weight vector. Units whose weights are (w, -w) or
+  (-w, w) depend only on the difference x0 - x1; compute each unit's threshold -b/w on that axis.
+- Steep sigmoid units (|w| large relative to the input range) are steps; pairs of rising/falling steps
+  with opposite output signs at nearly the same threshold usually form one edge of a band.
+- Shallow sigmoid units with large biases are near-constant over the input box; treat them as
+  part of the output bias first and only keep them if the check fails.
+- For binary nets, directly locate the decision boundary by scanning sign changes along lines
+  orthogonal to the suspected direction; snap the found thresholds to a simple value (here 0.2)
+  and express the region with abs() for symmetric bands.
+- A band |a - b| < t can be written as a single return value `t - abs(a - b)`, which keeps the
+  output's sign convention (positive = class 1) and gives a margin-like score.
+
+</details>
+
 ## tax/seed0: dump vs agent_1
 
 ```python
@@ -2869,6 +4046,258 @@ A 4-hinge version (slopes 0.1 / +0.1 at 20 / +0.2 at 80 / -0.2 at 190) cuts the 
 
 </details>
 
+## tax/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 1 inputs -> 8 -> 1 outputs
+# inputs: income: float [0, 200]
+# output: regression: the returned value
+def net(income):
+    h1_0 = sigmoid(-0.08143656 * income + 9.816497)  # layer 1 neuron 0
+    h1_1 = sigmoid(0.020150246 * income + 6.02202)  # layer 1 neuron 1
+    h1_2 = sigmoid(0.06303804 * income - 2.0999393)  # layer 1 neuron 2
+    h1_3 = sigmoid(-0.08421991 * income + 14.67481)  # layer 1 neuron 3
+    h1_4 = sigmoid(0.049849574 * income - 4.740201)  # layer 1 neuron 4
+    h1_5 = sigmoid(-0.09408093 * income + 8.733573)  # layer 1 neuron 5
+    h1_6 = sigmoid(0.08799416 * income - 15.660592)  # layer 1 neuron 6
+    h1_7 = sigmoid(0.08064836 * income - 11.411838)  # layer 1 neuron 7
+    return -8.028272 * h1_0 + 12.382518 * h1_1 + 11.064467 * h1_2 - 7.7539163 * h1_3 + 10.1488495 * h1_4 - 7.483179 * h1_5 + 10.206247 * h1_6 + 9.494898 * h1_7 + 9.595372
+```
+
+```python
+def net(income):
+    # piecewise-linear "bracket" schedule: rate 0.2 above 10, an extra 0.2 above 80,
+    # and the extra rate removed again above 190 (where the net flattens at the domain edge)
+    base = relu(income - 10)
+    upper = relu(income - 80) - relu(income - 190)
+    return 0.2 * base + 0.2 * upper
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the net does
+1 input x0 in [0, 200], 8 sigmoid units, regression output (range about 0 .. 60.7).
+Sampling the net densely and looking at its numerical slope showed a smooth piecewise-linear shape:
+
+- slope ~0 at x0=0 rising to 0.2 by x0~30 (a smoothed kink near x0=10; y(0)~0);
+- slope 0.2 on ~30..65 (y ~ 0.2*x0 - 2);
+- slope 0.4 on ~95..175 (y ~ 0.4*x0 - 18); the two lines meet at x0 = 80;
+- slope falls back to ~0.2 near the top of the domain (190..200).
+
+So the net is a "bracket schedule": 0.2 per unit above 10, plus another 0.2 per unit above 80,
+with the extra rate switched off above ~190 (probably a sigmoid-saturation edge effect, but it
+is needed to stay within tolerance at x0=200).
+
+#### What I changed
+- Replaced the 8 sigmoid units with three ReLU hinges:
+  `0.2*relu(x0-10) + 0.2*(relu(x0-80) - relu(x0-190))`.
+- Unit-level observations (not kept as code): h1 (center at x0 = -299) is a near-constant 1
+  over the domain; the other units are soft steps centred at 33, 93, 95, 120, 142, 174, 178;
+  pairs of opposite-sign soft steps (e.g. 93/95, 174/178) build the slope changes, i.e. the
+  sigmoids together approximate integrated steps (ramps).
+- Knots snapped to multiples of 10, slopes to 0.2, intercept 0 (the knot at 10 absorbs it).
+- Checked: `PASS (snap)`, max |program - net| = 0.905 (tolerance 1.214), worst at the
+  smoothed kink x0=10. Dropping the 190 knot fails (error 1.34 at x0=200). Exact pass would
+  require keeping the sigmoids (net is smooth, no simple exact form).
+
+#### Heuristics
+- For a 1-input regression net, plot/sample the output and its numerical derivative first:
+  plateaus in the slope reveal a piecewise-linear target; slope transitions mark knots.
+- Sigmoid nets fit kinks by smooth ramps; write the line for each plateau (y = a*x + b),
+  intersect consecutive lines to get the knot, then snap knots and slopes to round values.
+- A unit whose centre (-b/w) lies far outside the input domain is a constant; fold it into the bias.
+- Expect edge effects near domain bounds (saturation makes the slope sag); an extra hinge near
+  the edge may be needed to stay within tolerance even if the "true" rule has no such knot.
+- Do a small grid search over snapped candidates (knots on a 5/10 grid, slopes in multiples
+  of 0.1/0.2) scoring max error against the net, and keep the simplest under the snap tolerance
+  with margin.
+- The worst error of a hinge approximation to a sigmoid net sits at the knot where the net's
+  transition is widest (lowest |w| of the units involved); check those first.
+
+</details>
+
+## tax/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 1 inputs -> 8 -> 1 outputs
+# inputs: income: float [0, 200]
+# output: regression: the returned value
+def net(income):
+    h1_0 = sigmoid(0.06805449 * income - 2.4489007)  # layer 1 neuron 0
+    h1_1 = sigmoid(-0.14783706 * income + 0.70665395)  # layer 1 neuron 1
+    h1_2 = sigmoid(-0.07640823 * income + 6.910298)  # layer 1 neuron 2
+    h1_3 = sigmoid(0.2355187 * income + 4.2630224)  # layer 1 neuron 3
+    h1_4 = sigmoid(-0.10496228 * income + 18.808764)  # layer 1 neuron 4
+    h1_5 = sigmoid(-0.08284328 * income + 10.636189)  # layer 1 neuron 5
+    h1_6 = sigmoid(0.086354285 * income - 12.973445)  # layer 1 neuron 6
+    h1_7 = sigmoid(0.07901946 * income - 8.017792)  # layer 1 neuron 7
+    return 11.410747 * h1_0 + 0.083200194 * h1_1 - 7.587355 * h1_2 + 16.398783 * h1_3 - 13.216715 * h1_4 - 7.8798323 * h1_5 + 11.339807 * h1_6 + 11.278129 * h1_7 + 11.522534
+```
+
+```python
+def net(income):
+    # Progressive (tax-bracket-like) piecewise-linear rate on income, capped at 60:
+    #   10% on [0, 20], 20% on [20, 80], 40% above 80.
+    low = 0.1 * income
+    mid = 0.2 * income - 2
+    high = 0.4 * income - 18
+    return min(max(low, mid, high), 60)
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network computes
+
+The dump is 1 input -> 8 sigmoid units -> 1 linear output on x0 in [0, 200]. Each sigmoid is a soft
+step at centre c = -b/w (36, 90, 101, 128, 150, 179, plus one at -18 that is almost constant on
+the domain and one at 4.8 with a negligible weight of 0.08). The sum of these steps is a smooth
+increasing curve, not a staircase, so I tabulated the output and its derivative instead of
+reading the units one by one.
+
+The derivative shows three flat plateaus: about 0.1 on [0, 15], about 0.2 on [35, 70], and about 0.4
+on [100, 180], with smooth transitions in between. Then it falls towards 0.14 at x0 = 200. So the
+function is a convex piecewise-linear curve with rates 0.1 / 0.2 / 0.4, like progressive tax brackets:
+
+- 0.1*x0 on [0, 20]
+- 0.2*x0 - 2 on [20, 80] (continuous at 20: both give 2)
+- 0.4*x0 - 18 above 80 (continuous at 80: both give 14)
+
+Lines fitted on the plateaus gave intercepts of about 0, -2 and -17.9, so I snapped them to 0, -2 and -18.
+The knots then fall at round values, 20 and 80. Written as `max(...)` of the three lines, it needs
+no branches, because the curve is convex.
+
+Without a cap the error at x0 = 200 is 1.57, which is above the 1.21 snap tolerance (2% of the
+output range of about 60.4). The net flattens near the top of the domain, so I added `min(..., 60)`.
+The top line hits 60 at x0 = 195. This brings the max error down to 0.70, at x0 = 182, where the soft
+sigmoid corner rounds the kink.
+
+#### Result
+
+`agent.py`: `min(max(0.1*x0, 0.2*x0 - 2, 0.4*x0 - 18), 60)`. Check: PASS (snap), max |diff| 0.704,
+tolerance 1.209. PASS (exact) is not possible: a sum of sigmoids never has true kinks or plateaus.
+
+#### Heuristics
+
+- For 1-input sigmoid regression nets, tabulate the output and its numerical derivative across the
+  domain. Plateaus in the derivative are the linear pieces. Their slopes are often simple
+  numbers (0.1, 0.2, 0.4).
+- A sigmoid's centre is -b/w and its width is about 4/|w|. A decreasing sigmoid with a negative
+  output weight is an increasing step plus a constant. Units centred well outside the domain are
+  constants, or near-linear pieces at the domain edge. Units with tiny output weights can be dropped.
+- When the derivative rises step by step, the curve is convex: write it as `max` of lines and no
+  branches are needed. When it falls step by step, use `min`.
+- Fit each line on its plateau and snap the intercept. Then check that adjacent lines meet at round
+  knots (here 20 and 80). Continuity at round knots is good evidence that the snap is right.
+- A slope that fades at the edge of the domain often hides a cap or saturation. Try `min(..., round
+  value)` before trying extra segments.
+- Measure the error against the snap tolerance (2% of the output range) before and after each
+  simplification. The worst error usually sits at a soft corner, which a sigmoid net can only
+  approximate.
+
+</details>
+
+## tax/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 1 inputs -> 8 -> 1 outputs
+# inputs: income: float [0, 200]
+# output: regression: the returned value
+def net(income):
+    h1_0 = sigmoid(0.08169497 * income - 11.303006)  # layer 1 neuron 0
+    h1_1 = sigmoid(-0.08810667 * income + 15.51726)  # layer 1 neuron 1
+    h1_2 = sigmoid(0.046411935 * income + 2.4653497)  # layer 1 neuron 2
+    h1_3 = sigmoid(0.070200615 * income - 6.788423)  # layer 1 neuron 3
+    h1_4 = sigmoid(0.08831822 * income - 15.62757)  # layer 1 neuron 4
+    h1_5 = sigmoid(-0.07465082 * income + 9.704204)  # layer 1 neuron 5
+    h1_6 = sigmoid(-0.10086226 * income + 9.484457)  # layer 1 neuron 6
+    h1_7 = sigmoid(0.07273815 * income - 2.7647653)  # layer 1 neuron 7
+    return 10.62973 * h1_0 - 7.9049172 * h1_1 + 9.958709 * h1_2 + 10.595965 * h1_3 + 10.447429 * h1_4 - 6.25257 * h1_5 - 6.210617 * h1_6 + 10.472487 * h1_7 + 10.608412
+```
+
+```python
+def net(income):
+    # Piecewise-linear ramp with knots at 20, 80 and 195:
+    #   slope 0.1 on [0, 20], 0.2 on [20, 80], 0.4 on [80, 195], 0.2 on [195, 200].
+    # Convex part (rising slopes) is a max of lines; the final slowdown is a min cap.
+    rising = max(0.1 * income, 0.2 * income - 2, 0.4 * income - 18)
+    return min(rising, 0.2 * income + 21)
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+
+1 input x0 in [0, 200], regression, 8 sigmoid hidden units. Output rises from about 0.05 to 60.5.
+
+Reading the units as smooth steps (center = -bias/weight):
+
+- h7: step up of 10.5 at x ~ 38
+- h3 + h6: together a step up of ~16.8 at x ~ 94-97 (h6 is a falling sigmoid with a negative
+  weight, which is the same as a rising step plus a constant)
+- h0 + h5: together ~16.9 at x ~ 130-138
+- h1 + h4: together ~18.4 at x ~ 176-177
+- h2: center at x ~ -53, so over the domain it is nearly constant (a slow drift of under 1)
+
+The steps are wide (1/slope ~ 11-14) and spaced ~40 apart, so they add up to a smooth ramp rather
+than a staircase. The numerical derivative shows the shape: ~0.2 on about [30, 65], rising to ~0.4
+around x ~ 80-90, ~0.4 (with ripple 0.38-0.46 from the discrete steps) up to ~180, then falling
+off toward 0.17 at x = 200. Near x = 0 the slope is only ~0.08 (the edge of the first step).
+
+#### What I wrote (agent.py)
+
+A continuous piecewise-linear function with snapped slopes and knots:
+
+    rising = max(0.1*x0, 0.2*x0 - 2, 0.4*x0 - 18)   # slopes 0.1 / 0.2 / 0.4, knots at 20 and 80
+    return min(rising, 0.2*x0 + 21)                  # slope back to 0.2 after x = 195
+
+Check: PASS (snap), max |program - net| = 0.669 against a tolerance of 1.21.
+
+How I got there:
+
+1. Tabulated the net and its derivative to see the slope profile.
+2. Minimax (linear-programming) fits of `c + a*x + sum b_k relu(x - k)` for a few knot sets. A
+   single knot at 80 already gets 0.91; knots at (20, 80, 185) get ~0.49.
+3. Grid search with slopes restricted to nice values (0.1, 0.2, 0.4, ...) and knots on multiples
+   of 5. Best: slopes 0.1 / 0.2 / 0.4 / 0.2 with knots 20 / 80 / 195, error 0.56 with a free
+   constant of -0.11. Dropping the constant to 0 costs only 0.11, so it was dropped.
+4. Rewrote the relu sum as max of lines (convex part) and a min (the final concave bend), since
+   each line then has integer intercepts that check against each other (0.2*80-2 = 0.4*80-18 = 14,
+   0.4*195-18 = 0.2*195+21 = 60).
+
+Probable underlying rule: a two-rate ramp, 0.2*x below x = 80 and 0.4*x - 16 above it (like a
+bracketed rate). The 0.1 piece near 0 and the cap after 195 look like sigmoid edge effects: the net
+cannot make a sharp slope at the ends of the domain. Without them the error is 1.7-2.5, beyond the
+tolerance, so they stay in to match the net.
+
+Simpler options that also pass but with less margin: `0.19*x + 0.2*relu(x-80) - 0.78` (error 1.07).
+
+#### Heuristics
+
+- For 1-input sigmoid nets, compute each unit's center (-b/w) and width (1/|w|). A falling sigmoid
+  with a negative output weight is a rising step plus a constant: `-a*sigmoid(-z) = a*sigmoid(z) - a`.
+  Pair units with nearby centers into one step.
+- A unit whose center lies far outside the input domain is nearly constant or nearly linear there;
+  fold it into the constant / slope.
+- Many wide steps spaced closer than about 3-4 widths add up to a ramp, not a staircase. Look at the
+  numerical derivative: plateaus in the derivative are linear pieces, ripple between them is an
+  artifact of discrete units.
+- Fit `c + a*x + sum b_k relu(x - k)` by minimax (linprog over the max abs error), since the snap
+  check is a max-error check. Then snap slopes to simple values and knots to multiples of 5 or 10,
+  grid-searching over the snapped values and taking the midrange constant.
+- Try dropping the constant: if it is small compared with the slack, 0 is nicer.
+- Write convex piecewise-linear parts as `max(line, line, ...)` and concave bends as `min(...)`;
+  with snapped slopes the intercepts usually become integers and the knots can be read off.
+- Sigmoid nets soften slopes at the domain edges; expect extra short pieces at the ends that the
+  "true" rule probably does not have, but keep them if the check needs them.
+
+</details>
+
 ## window/seed0: dump vs agent_1
 
 ```python
@@ -3102,6 +4531,206 @@ approximates.
 
 </details>
 
+## window/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 1 inputs -> 4 -> 1 outputs
+# inputs: x: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(x):
+    h1_0 = sigmoid(-13.056992 * x - 6.5731335)  # layer 1 neuron 0
+    h1_1 = sigmoid(-11.319427 * x - 5.7056246)  # layer 1 neuron 1
+    h1_2 = sigmoid(9.77894 * x - 4.816538)  # layer 1 neuron 2
+    h1_3 = sigmoid(-13.89691 * x + 6.89883)  # layer 1 neuron 3
+    return -7.9286985 * h1_0 - 7.8505735 * h1_1 - 5.6845927 * h1_2 + 9.229124 * h1_3 - 1.75977
+```
+
+```python
+def net(x):
+    # class 1 exactly on the band |x| < 1/2 (net boundaries at -0.495 and +0.4955)
+    return 0.5 - abs(x)
+```
+
+<details><summary>notes</summary>
+
+### Agent notes
+
+#### What the network does
+
+Output is binary (class 1 iff score > 0), one input x0 in [-2, 2]. Each hidden sigmoid has a
+steep slope (|w| 10-14), so each is effectively a step at x = -b/w:
+
+| unit | step at | direction | output weight |
+|------|---------|-----------|---------------|
+| h1_0 | -0.5034 | falls (1 for x < t) | -7.93 |
+| h1_1 | -0.5041 | falls | -7.85 |
+| h1_2 | +0.4925 | rises (1 for x > t) | -5.68 |
+| h1_3 | +0.4964 | falls | +9.23 |
+
+h1_0 and h1_1 are near-duplicate steps (same direction, thresholds 0.0007 apart) and merge into
+one step of weight -15.78 at about -0.5. h1_2 and h1_3 sit at about +0.5 and both push the score down
+for x > 0.5. The score is piecewise constant:
+
+- x < -0.5: -15.78 + 9.23 - 1.76 = -8.3 (class 0)
+- -0.5 < x < 0.5: 9.23 - 1.76 = +7.47 (class 1)
+- x > 0.5: -5.68 - 1.76 = -7.44 (class 0)
+
+The net's exact zero crossings (bisected) are x = -0.49496 and x = +0.49552. Both are within 0.005
+of +-1/2, so I snapped them to one shared threshold, giving a symmetric band.
+
+#### Result
+
+`agent.py`: `return 0.5 - abs(x0)`, so class 1 iff |x0| < 1/2.
+`check.py` says PASS (snap): 0 disagreements where the net is confident. All disagreements are in
+x0 in (-0.5, -0.495) and (0.4955, 0.5), inside the net's unsure zone.
+
+I also checked an unsnapped variant with the raw thresholds, `-0.4949588 < x0 < 0.4955232`
+(scratch/exact.py). It gets PASS (exact), but it only copies the net's training noise, so I kept the
+snapped formula.
+
+#### Heuristics
+
+- For a 1-input binary net, first scan the score on a dense grid and bisect its sign changes. The
+  number and positions of the crossings tell you the whole decision rule before you read the units.
+- A sigmoid with |w| times the input range >> 1 is a step at -b/w. Write each unit as (threshold,
+  direction, output weight). Then the score is a sum of steps, and the plateau values show which
+  units matter.
+- Steps in the same direction whose thresholds are within about 1% of the range are duplicates: add
+  their output weights and treat them as one step.
+- A band of class 1 between two crossings at -t and +t (to within a few thousandths) is |x| < t.
+  Write it with abs and one shared threshold. Returning a margin-like score (t - abs(x)) keeps the
+  decision `raw > 0` readable.
+- Snap thresholds to the nearest half-integer or simple fraction when the offset is well below the
+  net's transition width (here about 0.005 against a sigmoid width of about 0.1). The checker's unsure
+  zone takes up such offsets.
+- An unsnapped program with the bisected crossings gives an exact pass for reference. It shows the
+  snap only moves the boundary, not the topology.
+
+</details>
+
+## window/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 1 inputs -> 4 -> 1 outputs
+# inputs: x: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(x):
+    h1_0 = sigmoid(13.332294 * x - 6.5483165)  # layer 1 neuron 0
+    h1_1 = sigmoid(12.435798 * x + 6.3724947)  # layer 1 neuron 1
+    h1_2 = sigmoid(-9.116508 * x - 4.8254514)  # layer 1 neuron 2
+    h1_3 = sigmoid(-9.445804 * x - 4.970555)  # layer 1 neuron 3
+    return -13.080802 * h1_0 + 7.2067676 * h1_1 - 3.9287426 * h1_2 - 4.455501 * h1_3 - 0.3566925
+```
+
+```python
+def net(x):
+    # class 1 inside the band |x| < 1/2 (net's own boundaries: -0.4968 and +0.4983)
+    return 0.5 - abs(x)
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the net does
+1 input x0 in [-2, 2], binary output, 4 sigmoid units.
+- h1_0 (rising step at x0 = 6.548/13.332 = 0.491, weight -13.08) and h1_1 (rising step at
+  x0 = -6.372/12.436 = -0.512, weight +7.21) form a bump: the score goes up near x0 = -0.5
+  and comes down near x0 = +0.5.
+- h1_2 and h1_3 are two near-duplicate falling steps (at x0 = -0.529 and -0.526, weights
+  -3.93 and -4.46). Together they act as one step of weight -8.38 that pushes the score further
+  down for x0 < -0.5. That only deepens the "class 0" region on the left and does not move the
+  decision boundary much.
+- Scanning the net's score on a fine grid gives exactly two sign changes, at x0 = -0.4968 and
+  x0 = +0.4983. The score is positive (up to 6.77) between them and negative (down to -8.74)
+  outside.
+
+#### What I changed
+- Replaced the whole network with the band rule `class 1 iff |x0| < 1/2`, written as the
+  margin `0.5 - abs(x0)` (positive inside the band).
+- Snapped the two boundaries (-0.4968, +0.4983) to the symmetric half-step ±0.5.
+- Result: PASS (snap). The only disagreements (0.97% of inputs) are in the 0.003-wide slivers
+  between the net's boundaries and ±0.5, where the net's score is within the unsure zone.
+  Keeping the raw thresholds would give an exact match, but it would only fit training noise.
+
+#### Heuristics
+- For 1-input binary nets, skip reading the units one at a time: scan the score densely, find
+  the sign changes, and snap each one. The units only matter for explaining the shape.
+- Two zero crossings at roughly ±c usually mean an `abs(x) < c` (or `abs(x) > c`) band. Snap
+  to a symmetric threshold and write it as the margin `c - abs(x)`, which is shorter than an
+  if/else.
+- Sigmoid units with almost the same step location (-b/w) and the same weight sign are one
+  step split in two. Add their weights.
+- A sigmoid step with a large weight that sits far from every zero crossing (only making
+  confident regions more confident) does not affect the decision and can be dropped.
+- The step location of sigmoid(w*x + b) is -b/w. Compare it with the score's actual zero
+  crossings: the boundary falls where the weighted steps balance, not at any single unit's
+  step.
+- Before snapping a threshold, check that the net's score at the snapped value is inside the
+  unsure zone (here about -0.13 and -0.08 against a 0.44 zone).
+
+</details>
+
+## window/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 1 inputs -> 4 -> 1 outputs
+# inputs: x: float [-2, 2]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(x):
+    h1_0 = sigmoid(-9.792134 * x - 4.807528)  # layer 1 neuron 0
+    h1_1 = sigmoid(10.053341 * x - 5.0705786)  # layer 1 neuron 1
+    h1_2 = sigmoid(11.440424 * x - 5.7717667)  # layer 1 neuron 2
+    h1_3 = sigmoid(11.187054 * x + 5.5143566)  # layer 1 neuron 3
+    return -8.544948 * h1_0 - 8.598668 * h1_1 - 9.444186 * h1_2 + 9.055646 * h1_3 - 0.15467685
+```
+
+```python
+def net(x):
+    # class 1 inside the band |x| < 1/2, class 0 outside
+    return 0.5 - abs(x)
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+Four sigmoid units, each a steep step (slopes ~10-11.4) at a threshold of -bias/weight:
+- h1_0: on for x0 < -0.491 (output weight -8.54)
+- h1_3: on for x0 > -0.493 (output weight +9.06)
+- h1_1: on for x0 > 0.504 (output weight -8.60)
+- h1_2: on for x0 > 0.5045 (output weight -9.44)
+
+Region values of the output score: x0 < -0.5 -> about -8.7 (class 0); -0.5 < x0 < 0.5 -> about +8.9
+(class 1); x0 > 0.5 -> about -9.1 (class 0). h1_0 and h1_3 are complementary steps at the same point
+(one up, one down), and h1_1/h1_2 are two near-duplicate steps at 0.5 that merge into one.
+The exact decision boundaries (by a fine scan) are x0 = -0.4942 and x0 = 0.5020.
+
+#### What I changed
+Snapped both boundaries to +-1/2 and wrote the band as one formula:
+
+    return 0.5 - abs(x0)        # class 1 iff |x0| < 1/2
+
+`check.py`: PASS (snap), 0 disagreements where the net is confident; all disagreements are in the
+net's unsure zone near +-0.5. (A version with the raw thresholds,
+`(x0 > -0.494201) and (x0 < 0.501953)`, gives PASS (exact), but its thresholds are just the
+network's noise around 1/2, so I kept the snapped one.)
+
+#### Heuristics
+- For a sigmoid unit with a large |weight|, treat it as a step at x = -bias/weight; the direction is
+  the sign of the weight.
+- Evaluate the output score region by region between the step points: it is piecewise constant, so a
+  small table of region values gives the decision directly.
+- Steps at almost the same point with the same direction merge (sum their output weights); a pair of
+  opposite-direction steps at the same point with opposite-sign output weights is one "switch".
+- For binary 1-input nets, find the actual zero crossings of the score with a dense scan, then snap
+  them to simple values (here +-1/2). Symmetric boundaries -a and +a become `a - abs(x)`.
+- Return a signed margin (like `0.5 - abs(x0)`) rather than a 0/1 comparison, so the score has the
+  same sign convention as the net (> threshold means class 1).
+
+</details>
+
 ## xor/seed0: dump vs agent_1
 
 ```python
@@ -3308,5 +4937,188 @@ Result: `PASS (exact)` on all 4 inputs.
   by summing their outgoing weights. Here two "NOR" units merged into one.
 - Sigmoid units with large weights (|w| > 6) on 0/1 inputs are effectively step functions. Read
   each one as a threshold on a linear combination of the inputs: AND, OR, NOR, or "x0 and not x1".
+
+</details>
+
+## xor/seed3: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 4 -> 1 outputs
+# inputs: p: bool [0, 1], q: bool [0, 1]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(p, q):
+    h1_0 = sigmoid(-6.589475 * p - 12.774582 * q + 1.460924)  # layer 1 neuron 0
+    h1_1 = sigmoid(8.259559 * p - 15.281261 * q - 4.893095)  # layer 1 neuron 1
+    h1_2 = sigmoid(-6.621455 * p - 13.72509 * q + 1.9255176)  # layer 1 neuron 2
+    h1_3 = sigmoid(5.74104 * p + 11.729524 * q - 0.7797679)  # layer 1 neuron 3
+    return -5.329522 * h1_0 + 9.517665 * h1_1 - 5.525938 * h1_2 + 1.3433632 * h1_3 - 1.3431742
+```
+
+```python
+def net(p, q):
+    # class 1 unless both inputs are 0 (logical OR)
+    return p or q
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I did
+
+- Both inputs are bool, so the domain has only 4 points. I evaluated the dumped net on all of them
+  (scratch/tt.py):
+
+  | x0 | x1 | score     | class |
+  |----|----|-----------|-------|
+  | 0  | 0  | -9.9986   | 0     |
+  | 0  | 1  | +0.000059 | 1     |
+  | 1  | 0  | +9.1096   | 1     |
+  | 1  | 1  | +0.000252 | 1     |
+
+- The decision is class 1 unless both inputs are 0, i.e. logical OR. `agent.py` is `return x0 or x1`.
+  The checker reports PASS (exact), exhaustive over the 4 inputs.
+- Caveat: the two cases with x1 = 1 have scores of about 1e-4. That is inside the checker's unsure
+  zone (|score| < 0.49), so the net is barely deciding there. The confident part of the net is
+  only "x0=1, x1=0 -> 1; x0=0, x1=0 -> 0". `return x0` would also pass in snap mode, since it
+  disagrees only at (0,1), which is in the unsure zone. OR is the version that matches every
+  decision, so that is the one I kept. The sigmoid units all fall away: none of them is needed to
+  express the decision.
+
+#### Heuristics
+
+- For all-bool inputs with a small domain (2^n ≤ a few thousand), enumerate the truth table first
+  and write the program from it. Don't try to simplify the weights unit by unit.
+- Look at score magnitudes as well as signs. Scores near 0 on some rows mean the net is unsure
+  there (its training data was likely ambiguous or contradictory). Match the sign to get an exact
+  pass, but mention that those rows are fragile.
+- Sigmoid nets on bool inputs are piecewise constant on the corners, so the hidden units can be
+  dropped once the truth table is known. Pick the shortest boolean formula that fits the table
+  (OR / AND / XOR / x0 > x1 ...).
+- When a simpler formula would also pass in snap mode by flipping only unsure-zone rows, prefer the
+  one that matches every decision, since exact beats snap.
+
+</details>
+
+## xor/seed4: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 4 -> 1 outputs
+# inputs: p: bool [0, 1], q: bool [0, 1]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(p, q):
+    h1_0 = sigmoid(-8.8685055 * p - 5.927287 * q + 10.538361)  # layer 1 neuron 0
+    h1_1 = sigmoid(-9.445049 * p - 6.5768886 * q + 11.477547)  # layer 1 neuron 1
+    h1_2 = sigmoid(-8.801477 * p - 10.839543 * q + 5.016882)  # layer 1 neuron 2
+    h1_3 = sigmoid(8.641885 * p - 8.952727 * q - 5.726291)  # layer 1 neuron 3
+    return 8.82249 * h1_0 + 7.7790647 * h1_1 - 16.466808 * h1_2 + 5.449029 * h1_3 - 8.447832
+```
+
+```python
+def net(p, q):
+    # exclusive or: class 1 exactly when the two bool inputs differ
+    return p != q
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What I changed
+
+- The net has 2 bool inputs, so there are only 4 inputs. I evaluated the dump on all of them
+  (`scratch/tt.py`):
+
+  | x0 | x1 | score |
+  |----|----|-------|
+  | 0  | 0  | -8.19 |
+  | 0  | 1  | +7.96 |
+  | 1  | 0  | +10.66 |
+  | 1  | 1  | -8.23 |
+
+  Every score is far from the threshold 0 (|score| > 7.9), so there is no ambiguous case.
+- The truth table is XOR. I replaced the four sigmoid units and the output layer with
+  `return x0 != x1` (a comparison gives 1/0, and 1 > 0 is class 1).
+- Check result: `PASS (exact)`, exhaustive over the 4 inputs.
+
+Reading the units (not needed for the result, but it agrees): h1_0 and h1_1 are near-copies, both
+approximately NAND(x0, x1) (on unless both inputs are 1); h1_2 is NOR (on only at 0,0) and has a
+large negative output weight; h1_3 is "x0 and not x1". Together: NAND minus NOR, i.e. OR and not
+AND, which is XOR.
+
+#### Heuristics
+
+- With all-bool inputs and a small input count (2^n up to a few thousand), evaluate the dump on
+  every input and read the truth table first. Name the Boolean function (AND, OR, XOR, majority,
+  threshold count, ...) and write it directly; this beats simplifying the weights unit by unit.
+- For binary outputs, check the margin: if every |score| is well above the threshold, the
+  Boolean formula is the whole function and an exact pass is expected.
+- Sigmoid units with large weights on 0/1 inputs act as Boolean gates. Read each one as a gate by
+  checking the sign of its pre-activation at each corner. Near-duplicate units (similar weights and
+  bias) are one gate whose output weights add up.
+- XOR of two bools is `x0 != x1`; XNOR is `x0 == x1`. Comparisons return 1/0, which works directly
+  as a binary output with threshold 0.
+
+</details>
+
+## xor/seed5: dump vs agent_1
+
+```python
+# dumped from a neural network: 2 inputs -> 4 -> 1 outputs
+# inputs: p: bool [0, 1], q: bool [0, 1]
+# output: binary: class 1 if the returned value > 0, else class 0
+def net(p, q):
+    h1_0 = sigmoid(9.71923 * p + 6.4607253 * q - 11.687334)  # layer 1 neuron 0
+    h1_1 = sigmoid(-10.030352 * p - 12.608243 * q + 5.200202)  # layer 1 neuron 1
+    h1_2 = sigmoid(7.6301403 * p - 8.401334 * q - 5.0557766)  # layer 1 neuron 2
+    h1_3 = sigmoid(-7.705192 * p - 9.411263 * q + 3.7968488)  # layer 1 neuron 3
+    return -16.382105 * h1_0 - 8.22889 * h1_1 + 5.7794385 * h1_2 - 9.118613 * h1_3 + 7.8433204
+```
+
+```python
+def net(p, q):
+    # XOR of the two boolean inputs: class 1 exactly when they differ
+    return p != q
+```
+
+<details><summary>notes</summary>
+
+### Notes
+
+#### What the network does
+Two boolean inputs, binary output (class 1 iff score > 0). The domain has only 4 points, so I
+evaluated the dump on all of them (scratch/tt.py):
+
+| x0 | x1 | score |
+|----|----|-------|
+| 0 | 0 | -9.22 |
+| 0 | 1 | +7.72 |
+| 1 | 0 | +10.96 |
+| 1 | 1 | -8.34 |
+
+That is XOR. Every margin is large (|score| > 7), so there is no ambiguous point.
+
+#### What I changed
+- Replaced the 4 sigmoid units and output layer with `return x0 != x1`. A comparison yields 1/0, and
+  1 > 0 / 0 > 0 gives the same class as the net on every input.
+- Checker: `PASS (exact)` (exhaustive, 4 inputs).
+- How the units read: h1_0 is about AND(x0, x1), weighted -16; h1_1 and h1_3 are both about NOR, a
+  duplicated pair with combined weight -17; h1_2 is about x0 AND NOT x1, weight +5.8, and is redundant
+  given the bias of +7.8. So the score is about 7.8 - 16*AND - 17*NOR, which is positive exactly when
+  the inputs differ.
+
+#### Heuristics
+- With all-boolean inputs (or any small discrete domain), enumerate the full truth table first.
+  The truth table is the function. Reading the weights is only needed to explain it.
+- For binary outputs, look at the score margins. If all of them are far from the threshold, a pure
+  boolean expression gives an exact match. Keep only the sign, not the magnitudes.
+- Recognise standard boolean functions from the truth table (XOR -> `a != b`, XNOR -> `a == b`,
+  AND -> `a and b`, OR -> `a or b`, a single input or its negation). The language's comparisons
+  return 1/0, which already sit on the right side of a threshold of 0.
+- A sigmoid unit with large weights on boolean inputs acts as a logic gate. Read its gate from the
+  sign of its pre-activation at each corner. Two units that are the same gate (here, two NOR units)
+  are duplicates; add their output weights together.
+- A unit that is active only where the bias alone already decides the class (here, x0 AND NOT x1) is
+  redundant; drop it.
 
 </details>

@@ -148,12 +148,12 @@
         "exact_pass": true,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 280970,
+        "n_inputs": 280985,
         "max_abs_err": null,
         "disagreements_outside": 0,
         "disagreements_inside": 668,
         "zone_fraction": 0.04012,
-        "margin": 0.46183122754096984,
+        "margin": 0.46183118343353274,
         "counterexamples": [
           {
             "inputs": {
@@ -359,12 +359,12 @@
         "exact_pass": false,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 280970,
+        "n_inputs": 280985,
         "max_abs_err": null,
         "disagreements_outside": 0,
         "disagreements_inside": 4008,
         "zone_fraction": 0.04012,
-        "margin": 0.46183122754096984,
+        "margin": 0.46183118343353274,
         "counterexamples": [
           {
             "inputs": {
@@ -582,17 +582,35 @@
         "exact_pass": false,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 280970,
+        "n_inputs": 280985,
         "max_abs_err": null,
         "disagreements_outside": 0,
-        "disagreements_inside": 3522,
+        "disagreements_inside": 3537,
         "zone_fraction": 0.04012,
-        "margin": 0.46183122754096984,
+        "margin": 0.46183118343353274,
         "counterexamples": [
           {
             "inputs": {
               "x0": 6.621746146761787,
               "x1": 0.126620014346162
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 6.621746146761787,
+              "x1": 0.126620014346162
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 6.6345,
+              "x1": 0.112
             },
             "net": 2.0,
             "program": 1.0,
@@ -618,8 +636,35 @@
           },
           {
             "inputs": {
+              "x0": 6.611811285133773,
+              "x1": 0.13458139767488603
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
               "x0": 6.626520613786226,
               "x1": 0.11773386585039658
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 6.626520613786226,
+              "x1": 0.11773386585039658
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 6.641556605062452,
+              "x1": 0.10088499048102806
             },
             "net": 2.0,
             "program": 1.0,
@@ -645,8 +690,35 @@
           },
           {
             "inputs": {
+              "x0": 6.612549255497315,
+              "x1": 0.12836489142305121
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
               "x0": 6.605,
               "x1": 0.136
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 6.605,
+              "x1": 0.136
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 6.559221693245372,
+              "x1": 0.1831062854890645
             },
             "net": 2.0,
             "program": 1.0,
@@ -672,6 +744,15 @@
           },
           {
             "inputs": {
+              "x0": 6.546,
+              "x1": 0.196
+            },
+            "net": 2.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
               "x0": 6.593685324197969,
               "x1": 0.14641321258934284
             },
@@ -681,89 +762,8 @@
           },
           {
             "inputs": {
-              "x0": 6.584418589753305,
-              "x1": 0.1557708103235246
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.634789653867228,
-              "x1": 0.10285150615443879
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.634789653867228,
-              "x1": 0.10285150615443879
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.580407250436863,
-              "x1": 0.15848011454797692
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.600428512606667,
-              "x1": 0.13717222402819437
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.535848421588031,
-              "x1": 0.20333061916582995
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.6345,
-              "x1": 0.1
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.6345,
-              "x1": 0.1
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.512113597537347,
-              "x1": 0.22635864969101557
-            },
-            "net": 2.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 6.60664398181656,
-              "x1": 0.128583005640227
+              "x0": 6.593685324197969,
+              "x1": 0.14641321258934284
             },
             "net": 2.0,
             "program": 1.0,
