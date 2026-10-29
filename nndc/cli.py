@@ -268,7 +268,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="with --all: distill = every step-1 run except seed2 (default), heldout = step-1 seed2 "
                          "only, all = every run including dataset runs (iris)")
     at.add_argument("--root", default=str(RUNS))
-    at.add_argument("--name", default="ast",
+    at.add_argument("--name", default="ast", choices=["ast", "ast2"],
                     help="version name to write (<name>.py, <name>_trace.json); ast2 for the kink-merge tool")
     at.set_defaults(func=cmd_ast)
 

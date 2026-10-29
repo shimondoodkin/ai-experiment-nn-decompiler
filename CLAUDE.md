@@ -132,6 +132,8 @@ reconstructed from git history.
 - **Kink merge (`ast2`):** `nndc/heuristics/kinks.py` expands a one-layer sigmoid net into ReLU kinks, merges
   kinks on one line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
   - `nndc ast --name ast2 RUNS…` writes `ast2.py` and `ast2_trace.json` next to the older `ast.py`, which stays.
+    Only `ast` and `ast2` are accepted; the kink-merge route runs only for `ast2`, so plain `nndc ast` is still
+    the project B tool.
   - `ast2` has its own `counterexamples_ast2.json` (`OWN_CEX` in `nndc/run.py`), so older verdicts never change.
   - Runs: development seeds 0–2; held-out seeds 3–5 of the five one-layer formula tasks.
 - **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the

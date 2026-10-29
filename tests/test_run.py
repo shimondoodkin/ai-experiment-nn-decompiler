@@ -128,3 +128,15 @@ def test_run_ast_name_keeps_ast(tmp_path):
     assert (rd / "ast.py").read_bytes() == old and (rd / "ast2.py").exists() and (rd / "ast2_trace.json").exists()
     assert "ast2:" in (rd / "run_git.txt").read_text()
     assert "ast2" in json.loads((rd / "results.json").read_text())["versions"]
+    assert "kink_merge" not in json.loads((rd / "ast_trace.json").read_text())   # plain ast = the project B tool
+    assert "kink_merge" in json.loads((rd / "ast2_trace.json").read_text())
+
+
+def test_run_ast_rejects_other_names(tmp_path):
+    from nndc.ast_tool import run_ast
+    rd = build_run("window", 0, root=tmp_path, act="sigmoid")
+    before = (rd / "dump.py").read_bytes()
+    for name in ("dump", "agent_1", "formula", "ast3"):
+        with pytest.raises(ValueError):
+            run_ast(rd, name=name)
+    assert (rd / "dump.py").read_bytes() == before and not (rd / "ast3.py").exists()

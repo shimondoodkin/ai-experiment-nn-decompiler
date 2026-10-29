@@ -163,7 +163,7 @@ def test_refactor_trace_has_kink_merge():
     from nndc.ast_tool import refactor
     rd = Path("runs_sigmoid/tax/seed0")
     blind, mlp = _blind(rd)
-    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp)
+    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=True)
     assert "kink_merge" in trace and any(c["route"] == "kink-merge" for c in trace["candidates"])
 
 

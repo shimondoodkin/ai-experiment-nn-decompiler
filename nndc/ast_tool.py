@@ -37,6 +37,9 @@ ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary
           "kink-merge"]
 
 
+TOOL_VERSIONS = ("ast", "ast2")   # ast: up to the sigmoid moves (project B); ast2: plus kink-merge
+
+
 @dataclass
 class Candidate:
     route: str
@@ -68,7 +71,8 @@ def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, flo
     return [d for _, d in scored[:top]] + [{v: 1.0} for v in net.inputs]
 
 
-def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
+def refactor(dump_src: str, spec: Spec, mlp: MLP, kinks: bool = False) -> tuple[str, dict]:
+    """kinks=True adds the kink-merge route (the ast2 tool); without it this is the project B tool."""
     if spec.task:
         raise ValueError("refactor needs a blind spec (the task name must not be visible)")
     lines: list[str] = []
@@ -169,8 +173,9 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
             add("linear-cascade", lambda: linear_cascade(spec, mlp), ["S4"])
         if spec.output == "regression":
             add("knot-fit", lambda: knot_fit(spec, mlp), ["S5"])
-        src_k, extra["kink_merge"] = kink_merge(spec, mlp)
-        add("kink-merge", lambda: src_k, ["K1"])
+        if kinks:
+            src_k, extra["kink_merge"] = kink_merge(spec, mlp)
+            add("kink-merge", lambda: src_k, ["K1"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:
@@ -187,12 +192,14 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
 
 def run_ast(rd: Path, name: str = "ast") -> dict:
     """Refactor a run's dump.py with the tool (blind spec only); write <name>.py + <name>_trace.json; re-evaluate.
-    A new tool version gets a new name (ast2), so the older version's files stay."""
+    A new tool version gets a new name (ast2, with the kink-merge route), so the older version's files stay."""
     from .run import evaluate_run, load_run, record_git
 
+    if name not in TOOL_VERSIONS:
+        raise ValueError(f"unknown tool version {name!r} (expected one of {', '.join(TOOL_VERSIONS)})")
     spec, mlp = load_run(rd)
     blind = Spec.from_json(spec.blind())
-    src, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp)
+    src, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, kinks=name == "ast2")
     (rd / f"{name}.py").write_text(f"# produced by nndc ast (route: {trace['winner']})\n{src}", encoding="utf-8")
     (rd / f"{name}_trace.json").write_text(json.dumps(trace, indent=2) + "\n", encoding="utf-8")
     record_git(rd, name)
