@@ -103,8 +103,8 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
             # nest the agent's own headings under this run's section
             notes = re.sub(r"^(#{1,4}) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", notes, flags=re.M)
             ast_md = ""
-            for name, label in (("ast3", "AST tool (no LLM, `ast3`)"), ("ast2", "AST tool (no LLM, `ast2`)"),
-                                ("ast", "AST tool (no LLM)")):   # newest first
+            for name, label in ([(n, f"AST tool (no LLM, `{n}`)") for n in KINK_VERSIONS]
+                                + [("ast", "AST tool (no LLM)")]):   # newest first
                 if (rd / f"{name}.py").exists():
                     ast_src = (rd / f"{name}.py").read_text(encoding="utf-8", errors="replace")
                     ast_md = f"{label}:\n\n```python\n{with_real_names(ast_src, spec)}```\n\n"
@@ -132,9 +132,12 @@ def _results(rd: Path) -> dict | None:
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
 
 
+KINK_VERSIONS = ("ast4", "ast3", "ast2")   # AST tool versions with kink merge, newest first
+
+
 def _tool(versions: dict) -> dict | None:
-    """The newest AST tool version present (ast3, then ast2, then ast)."""
-    return versions.get("ast3") or versions.get("ast2") or versions.get("ast")
+    """The newest AST tool version present (ast4, ast3, ast2, then ast)."""
+    return next((versions[n] for n in (*KINK_VERSIONS, "ast") if versions.get(n)), None)
 
 
 def _cell(rd: Path, v: dict | None) -> str:
@@ -232,7 +235,7 @@ def _heldout_rule(root: Path, version: str):
 
 
 def _newest_kink_version(root: Path) -> str | None:
-    for name in ("ast3", "ast2"):
+    for name in KINK_VERSIONS:
         if any((rd / f"{name}.py").exists() for rd in all_runs(root)):
             return name
     return None
@@ -254,26 +257,26 @@ def _kink_line(line: dict, spec: Spec) -> str:
     return f"{_num(line['strength'])} · max({with_real_names(z.to_src(), spec)}, 0)"
 
 
-def ast_compare_rows(root: Path) -> list[dict]:
-    """Runs with both ast2 and ast3: ast3 is worse when ast2 passes and ast3 does not, ast2 recovers and ast3 does
-    not, or both pass and ast3 has more nodes (rule fixed in docs/design/2026-10-29-ast3-tanh-design.md)."""
+def ast_compare_rows(root: Path, old: str = "ast2", new: str = "ast3") -> list[dict]:
+    """Runs with both versions: `new` is worse when `old` passes and `new` does not, `old` recovers and `new` does
+    not, or both pass and `new` has more nodes (rule fixed in docs/design/2026-10-29-ast3-tanh-design.md)."""
     rows = []
     for rd in all_runs(root):
         res = _results(rd)
-        if res is None or "ast2" not in res["versions"] or "ast3" not in res["versions"]:
+        if res is None or old not in res["versions"] or new not in res["versions"]:
             continue
-        a, b = res["versions"]["ast2"], res["versions"]["ast3"]
+        a, b = res["versions"][old], res["versions"][new]
         pa, pb = a["check"]["snap_pass"], b["check"]["snap_pass"]
         ra, rb = bool(a["task"].get("recovered")), bool(b["task"].get("recovered"))
         na, nb = (a["size"] or {}).get("nodes"), (b["size"] or {}).get("nodes")
         worse = (pa and not pb) or (ra and not rb) or (pa and pb and na is not None and nb is not None and nb > na)
-        rows.append({"run": res["run"], "rd": rd, "ast2": a, "ast3": b, "worse": bool(worse)})
+        rows.append({"run": res["run"], "rd": rd, old: a, new: b, "worse": bool(worse)})
     return rows
 
 
 def kink_md(root: Path) -> str:
-    """The newest kink-merge tool version (ast3, else ast2): per run, the kink counts and the kept lines; the ast2
-    vs ast3 comparison when both exist; then the program next to formula.py."""
+    """The newest kink-merge tool version (ast4, ast3, else ast2): per run, the kink counts and the kept lines; the
+    comparison with each older version present; then the program next to formula.py."""
     name = _newest_kink_version(root)
     if name is None:
         return ""
@@ -328,16 +331,18 @@ def kink_md(root: Path) -> str:
             out.append(f"- **{label}**: {ok} of {len(rs)} pass, kink-merge won {routes}, recovered the formula in "
                        f"{sum(r['ast_recovered'] for r in rs)}; reproduces Claude's best valid attempt in "
                        f"{sum(r['reproduces'] for r in vs)} of {len(vs)}")
-    cmp = ast_compare_rows(root)
     cmp_md = ""
-    if cmp:
+    for old in KINK_VERSIONS[KINK_VERSIONS.index(name) + 1:]:   # the newest version against each older one
+        cmp = ast_compare_rows(root, old, name)
+        if not cmp:
+            continue
         n = sum(r["worse"] for r in cmp)
-        lines = ["| run | ast2 | ast3 | ast3 worse? |", "|---|---|---|---|"]
-        lines += [f"| {r['run']} | {_cell(r['rd'], r['ast2'])} | {_cell(r['rd'], r['ast3'])} | {_yn(r['worse'])} |"
+        lines = [f"| run | {old} | {name} | {name} worse? |", "|---|---|---|---|"]
+        lines += [f"| {r['run']} | {_cell(r['rd'], r[old])} | {_cell(r['rd'], r[name])} | {_yn(r['worse'])} |"
                   for r in cmp]
-        cmp_md = (f"### ast2 vs ast3\n\nast3 is worse on {n} of {len(cmp)} runs (worse = ast2 passes and ast3 does not, "
-                  "ast2 recovers the formula and ast3 does not, or both pass and ast3 has more nodes).\n\n"
-                  + "\n".join(lines) + "\n\n")
+        cmp_md += (f"### {old} vs {name}\n\n{name} is worse on {n} of {len(cmp)} runs (worse = {old} passes and "
+                   f"{name} does not, {old} recovers the formula and {name} does not, or both pass and {name} has more "
+                   "nodes).\n\n" + "\n".join(lines) + "\n\n")
     return "\n".join(out) + "\n\n" + "\n".join(rows) + "\n\n" + cmp_md + "\n".join(progs) + "\n"
 
 

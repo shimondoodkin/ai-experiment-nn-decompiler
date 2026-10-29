@@ -276,3 +276,45 @@ def test_compare_heading_other_root(tmp_path):
     _fake_run(b, "absdiff", 0, {"dump": _v(), "ast3": _v(nodes=11)})
     md = activation_compare_md(a, b)
     assert "runs_sigmoid" in md and "ReLU" not in md and "11 nodes" in md
+
+
+# --- ast4 ------------------------------------------------------------------------------------------------------
+
+def test_newest_is_ast4(tmp_path):
+    from nndc.report import formula_md, kink_md
+
+    rd = _fake_run(tmp_path, "absdiff", 0, {"dump": _v(), "ast3": _v(nodes=55), "ast4": _v(nodes=44),
+                                            "formula": _v(snap=False, recovered=True, nodes=5)})
+    _tool_files(rd, "ast3")
+    _tool_files(rd, "ast4")
+    md = formula_md(tmp_path)
+    assert "44 nodes" in md and "55 nodes" not in md
+    assert "## Kink merge (ast4)" in kink_md(tmp_path)
+
+
+def test_ast4_compared_with_each_older_version(tmp_path):
+    from nndc.report import ast_compare_rows, kink_md
+
+    cases = {0: (_v(nodes=80), _v(nodes=90), _v(nodes=80)),   # ast4 = ast2, smaller than ast3
+             1: (_v(nodes=80), _v(nodes=70), _v(nodes=75))}   # ast4 worse than ast3 only
+    for seed, (a2, a3, a4) in cases.items():
+        rd = _fake_run(tmp_path, "absdiff", seed, {"dump": _v(), "ast2": a2, "ast3": a3, "ast4": a4})
+        for name in ("ast2", "ast3", "ast4"):
+            _tool_files(rd, name)
+    assert {r["run"]: r["worse"] for r in ast_compare_rows(tmp_path, "ast2", "ast4")} == \
+        {"absdiff/seed0": False, "absdiff/seed1": False}
+    assert {r["run"]: r["worse"] for r in ast_compare_rows(tmp_path, "ast3", "ast4")} == \
+        {"absdiff/seed0": False, "absdiff/seed1": True}
+    md = kink_md(tmp_path)
+    assert "### ast2 vs ast4" in md and "### ast3 vs ast4" in md and "ast2 vs ast3" not in md
+    assert "ast4 is worse on 0 of 2 runs" in md and "ast4 is worse on 1 of 2 runs" in md
+
+
+def test_run_section_shows_ast4(tmp_path):
+    rd = build_run("window", 0, root=tmp_path, act="sigmoid")
+    (rd / "agent_1.py").write_text("def net(x0):\n    return 0.5 - abs(x0)\n")
+    (rd / "ast3.py").write_text("def net(x0):\n    return 0.25 - abs(x0) / 2\n")
+    (rd / "ast4.py").write_text("def net(x0):\n    return 0.75 - abs(x0) / 2\n")
+    evaluate_run(rd)
+    md = build_report(tmp_path, compare_to=tmp_path)
+    assert "AST tool (no LLM, `ast4`)" in md and "0.75 - abs(x) / 2" in md
