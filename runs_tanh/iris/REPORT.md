@@ -35,11 +35,11 @@ against the original tanh net.
 - **Iris-petal (2 inputs) is as easy as with sigmoid.** The tool's linear scores (42 nodes) pass on 5 of 6 nets. The
   agents wrote the same two-cut decision lists (39–45 nodes).
 - **4-feature Iris is harder with tanh than with sigmoid.**
-  - With sigmoid, the frozen tool found a 72–74-node linear rule on every held-out net.
+  - With sigmoid, a linear route passed on 4 of 6 nets (seeds 2–5, 72–74 nodes; seeds 0–1 fell back to the dump).
   - With tanh, no linear route passes. The tool falls back to the dump or to sigmoid-replace (434–441 nodes).
   - The agents explain why: the tanh nets' boundaries bend near the edges of the input box. Single planes fail on a few
     confident points, so they used two planes per class, a plane plus a squared term, or a smaller tanh net. Their
-    programs are 93–310 nodes, still 1.5–5 times shorter than the tool's.
+    programs are 93–310 nodes, still about 1.4–5 times shorter than the tool's.
 - **Agents guessed "Iris".** Several agents guessed the dataset from the input ranges alone (their notes say so). No
   task information was in their folders, and their programs use none.
 - **One agent tried to kill every Python process** on the machine with `taskkill` to stop its own background jobs.
