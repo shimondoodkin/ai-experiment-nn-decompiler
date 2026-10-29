@@ -14,6 +14,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from ..check import check_program
+from ..lang import parse_program, program_size
 from ..model import MLP, activate
 from ..spec import Spec
 from ..symnet import Affine
@@ -202,10 +203,12 @@ def _hinges(X: np.ndarray, names: list[str], terms) -> list[np.ndarray]:
     return [np.maximum(X @ np.array([n.get(v, 0.0) for v in names]) - t, 0.0) for n, t, *_ in terms]
 
 
-def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray) -> RealFit:
-    """Direction, position (tol * the line's own range over the box), LP refit, coefficients (relative tol), then
-    the constant (midrange of the error, rounded within tol * output range). A line that leaves the box is folded
-    into the affine part. tol = 0 folds and refits but rounds nothing."""
+def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray, window: str = "line",
+             round_const: bool = True) -> RealFit:
+    """Direction, position (tol * the line's own range over the box; window="span": tol * the largest input range,
+    as in ast2), LP refit, coefficients (relative tol), then the constant (midrange of the error, rounded within
+    tol * output range unless round_const is False). A line that leaves the box is folded into the affine part.
+    tol = 0 folds and refits but rounds nothing."""
     lo, span = unit_box(spec)
     names = spec.arg_names
     X = lo + U * span
@@ -215,7 +218,8 @@ def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray)
         big = max(n, key=lambda v: abs(n[v]))
         n2 = {v: (c if v == big else nice(c, tol)) for v, c in n.items()}
         n2 = {v: c for v, c in n2.items() if c != 0}
-        width = sum(abs(n2.get(v, 0.0)) * float(s) for v, s in zip(names, span))
+        width = (sum(abs(n2.get(v, 0.0)) * float(s) for v, s in zip(names, span)) if window == "line"
+                 else float(np.max(span)))
         t2 = nicest_in(t - tol * width, t + tol * width)
         z = box @ np.array([n2.get(v, 0.0) for v in names]) - t2
         if z.min() >= 0 or z.max() <= 0:                 # always on (affine, refitted below) or always off
@@ -229,7 +233,7 @@ def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray)
     strengths = [_nicest_rel(float(s), tol) for s in c[1 + k:]]
     rest = y - X @ np.array([linear[v] for v in names]) - sum((s * h for s, h in zip(strengths, H)), np.zeros(len(X)))
     const = float((rest.max() + rest.min()) / 2)
-    if tol > 0:
+    if tol > 0 and round_const:
         r = float(y.max() - y.min())
         const = nicest_in(const - tol * r, const + tol * r)
     return RealFit(const, linear, [(n, t, s) for (n, t), s in zip(lines, strengths)])
@@ -242,9 +246,20 @@ def fit_program(fit: RealFit, spec: Spec) -> str:
     return program_from_expr(motif_expr(rs), spec)
 
 
-def kink_merge(spec: Spec, mlp: MLP) -> tuple[str | None, dict]:
-    """The route: smallest m first, merge offset 0.02 before 0.1, snap ladder coarsest first, then unsnapped;
-    the first program that passes the checker wins (snap levels coarsest first, ending at 0)."""
+VARIANTS = (("line", True), ("line", False), ("span", True), ("span", False))   # ast4: (window, round_const)
+
+
+def best_candidate(cands: list[dict]) -> dict:
+    """ast4's pick among passing candidates: fewest nodes, then exact, rounded constant, line window, coarser
+    level, merge offset 0.02 (docs/design/2026-10-30-ast4-design.md)."""
+    return min(cands, key=lambda c: (c["nodes"], not c["exact"], not c["round_const"], c["window"] != "line",
+                                     -c["tol"], c["off"]))
+
+
+def kink_merge(spec: Spec, mlp: MLP, version: str = "ast3") -> tuple[str | None, dict]:
+    """The route: smallest m first. ast3: merge offset 0.02 before 0.1, snap ladder coarsest first, the first
+    program that passes the checker wins. ast4: every offset, level and snap variant for this m is checked, and the
+    passing one with the fewest nodes wins (best_candidate); otherwise the next m."""
     trace: dict = {"applies": applies(spec, mlp), "per_offset": [], "winner": None}
     if trace["applies"] is not None:
         return None, trace
@@ -259,21 +274,37 @@ def kink_merge(spec: Spec, mlp: MLP) -> tuple[str | None, dict]:
         line_sets[off] = merge_lines(kinks, off)
         trace["per_offset"].append({"off": off, "kinks": len(kinks), "lines": len(line_sets[off]),
                                     "cancelled": sum(nearly_cancelled(ln) for ln in line_sets[off])})
+    variants = VARIANTS if version == "ast4" else VARIANTS[:1]
     seen: set[str] = set()
     for m in range(1, MAX_LINES + 1):
+        passing = []
         for off in MERGE_OFFS:
             if len(line_sets[off]) < m:
                 continue
             lines, coefs, _ = refine(line_sets[off][:m], U, y)
             fit = to_real(lines, coefs, spec)
             for tol in SNAP_LEVELS:
-                f = snap_fit(fit, spec, tol, U, y)
-                src = fit_program(f, spec)
-                if src in seen:
-                    continue
-                seen.add(src)
-                if check_program(src, mlp, spec).snap_pass:
-                    trace["winner"] = {"off": off, "m": m, "tol": tol,
-                                       "lines": [{"normal": n, "t": t, "strength": s} for n, t, s in f.terms]}
-                    return src, trace
+                for window, round_const in variants:
+                    f = snap_fit(fit, spec, tol, U, y, window, round_const)
+                    src = fit_program(f, spec)
+                    if src in seen:
+                        continue
+                    seen.add(src)
+                    r = check_program(src, mlp, spec)
+                    if not r.snap_pass:
+                        continue
+                    c = {"off": off, "m": m, "tol": tol, "window": window, "round_const": round_const,
+                         "exact": bool(r.exact_pass), "src": src, "fit": f,
+                         "nodes": program_size(parse_program(src, spec.arg_names))["nodes"]}
+                    if version != "ast4":
+                        return _won(c, trace)
+                    passing.append(c)
+        if passing:
+            return _won(best_candidate(passing), trace)
     return None, trace
+
+
+def _won(c: dict, trace: dict) -> tuple[str, dict]:
+    trace["winner"] = {k: c[k] for k in ("off", "m", "tol", "window", "round_const")} | {
+        "lines": [{"normal": n, "t": t, "strength": s} for n, t, s in c["fit"].terms]}
+    return c["src"], trace

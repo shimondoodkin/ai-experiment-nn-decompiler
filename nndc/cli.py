@@ -268,8 +268,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="with --all: distill = every step-1 run except seed2 (default), heldout = step-1 seed2 "
                          "only, all = every run including dataset runs (iris)")
     at.add_argument("--root", default=str(RUNS))
-    at.add_argument("--name", default="ast", choices=["ast", "ast3"],
-                    help="version name to write (<name>.py, <name>_trace.json); ast3 for the newest tool")
+    at.add_argument("--name", default="ast", choices=["ast", "ast3", "ast4"],
+                    help="version name to write (<name>.py, <name>_trace.json); ast4 for the newest tool")
     at.set_defaults(func=cmd_ast)
 
     bl = sub.add_parser("baseline", help="step-4 baselines: tree, regions, pysr (needs --group pysr), all")

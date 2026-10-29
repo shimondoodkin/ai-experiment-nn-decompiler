@@ -153,7 +153,7 @@ def test_run_ast_rejects_other_names(tmp_path):
     from nndc.ast_tool import run_ast
     rd = build_run("window", 0, root=tmp_path, act="sigmoid")
     before = (rd / "dump.py").read_bytes()
-    for name in ("dump", "agent_1", "formula", "ast2", "ast4"):
+    for name in ("dump", "agent_1", "formula", "ast2", "ast5"):
         with pytest.raises(ValueError):
             run_ast(rd, name=name)
     assert (rd / "dump.py").read_bytes() == before and not (rd / "ast2.py").exists()
@@ -172,3 +172,15 @@ def test_ast3_on_tanh_net(tmp_path):
     src = (rd / "ast3.py").read_text()
     assert check_program(src, mlp, spec).snap_pass          # checked against the original tanh net
     assert "kink_merge" in json.loads((rd / "ast3_trace.json").read_text())
+
+
+def test_run_ast4_keeps_ast3(tmp_path):
+    from nndc.ast_tool import run_ast
+    rd = build_run("window", 0, root=tmp_path, act="sigmoid")
+    run_ast(rd, name="ast3")
+    old = (rd / "ast3.py").read_bytes()
+    run_ast(rd, name="ast4")
+    assert (rd / "ast3.py").read_bytes() == old and (rd / "ast4.py").exists()
+    assert "ast4:" in (rd / "run_git.txt").read_text()
+    assert "ast4" in json.loads((rd / "results.json").read_text())["versions"]
+    assert "kink_merge" in json.loads((rd / "ast4_trace.json").read_text())

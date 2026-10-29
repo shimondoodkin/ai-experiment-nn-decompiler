@@ -178,7 +178,7 @@ def test_refactor_relu_has_no_kink_merge():
 def test_kink_merge_error_skips_only_the_route(monkeypatch):
     import nndc.ast_tool as ast_tool
 
-    def boom(spec, mlp):
+    def boom(spec, mlp, **kw):
         raise ValueError("boom")
     monkeypatch.setattr(ast_tool, "kink_merge", boom)
     rd = Path("runs_sigmoid/tax/seed2")
@@ -228,3 +228,57 @@ def test_constant_rounded():
     snapped = snap_fit(fit, spec, 0.05, U, y + 0.0137)
     assert snapped.const == 0.0                               # nicest value within 0.05 * output range
     assert snap_fit(fit, spec, 0.0, U, y + 0.0137).const == pytest.approx(0.0137, abs=1e-6)
+
+
+# --- ast4: the smallest passing candidate at the first line count ----------------------------------------------
+
+def test_snap_fit_span_window():
+    spec = Spec(task="", output="regression", inputs=[InputSpec("x0", "x0", "float", 0, 200),
+                                                         InputSpec("x1", "x1", "float", 0, 1)])
+    U = np.random.default_rng(3).uniform(0, 1, (3000, 2))
+    X = U * np.array([200.0, 1.0])
+    y = np.maximum(X[:, 1] - 0.433, 0)
+    fit = RealFit(0.0, {"x0": 0.0, "x1": 0.0}, [({"x1": 1.0}, 0.433, 1.0)])
+    assert len(snap_fit(fit, spec, 0.05, U, y, window="line").terms) == 1
+    assert snap_fit(fit, spec, 0.05, U, y, window="span").terms == []   # tol * 200: snapped to 0, out of the box
+
+
+def test_snap_fit_raw_const():
+    spec, U, y, fit = _tax_like()
+    y2 = y + 0.0137
+    f = snap_fit(fit, spec, 0.05, U, y2, round_const=False)
+    X = U * 200
+    rest = y2 - f.linear["x0"] * X[:, 0] - sum(s * np.maximum(X[:, 0] - t, 0) for _, t, s in f.terms)
+    assert f.const == pytest.approx((rest.max() + rest.min()) / 2)
+    assert f.const != snap_fit(fit, spec, 0.05, U, y2).const
+
+
+def test_best_candidate_order():
+    from nndc.heuristics.kinks import best_candidate
+    base = {"nodes": 20, "exact": False, "round_const": True, "window": "line", "tol": 0.05, "off": 0.02}
+    assert best_candidate([base | {"nodes": 30}, base | {"nodes": 20, "id": 1}])["id"] == 1
+    for worse, better in [({"exact": False}, {"exact": True}), ({"round_const": False}, {}),
+                          ({"window": "span"}, {}), ({"tol": 0.01}, {"tol": 0.02}), ({"off": 0.1}, {})]:
+        assert best_candidate([base | worse, base | better | {"id": 2}]).get("id") == 2
+
+
+def test_ast4_route_picks_smallest_at_first_m(monkeypatch):
+    import types
+
+    import nndc.heuristics.kinks as K
+    from nndc.lang import parse_program, program_size
+    seen = []
+
+    def fake_check(src, mlp, spec, *a, **k):                # everything passes: the route stops at m = 1
+        seen.append(src)
+        return types.SimpleNamespace(snap_pass=True, exact_pass=False)
+    monkeypatch.setattr(K, "check_program", fake_check)
+    spec, mlp = _spec(2, "regression"), _net([2, 4, 1], ["sigmoid"])
+    src3, tr3 = kink_merge(spec, mlp)                       # ast3: the first candidate that passes
+    assert src3 == seen[0] and tr3["winner"]["m"] == 1
+    seen.clear()
+    src4, tr4 = kink_merge(spec, mlp, version="ast4")
+    size = lambda s: program_size(parse_program(s, spec.arg_names))["nodes"]
+    assert len(seen) > 1 and tr4["winner"]["m"] == 1
+    assert size(src4) == min(size(s) for s in seen)
+    assert {"window", "round_const", "tol", "off"} <= set(tr4["winner"])
