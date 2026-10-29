@@ -506,4 +506,10 @@ Expected: 15 new folders, each with `formula.py`. Commit: `data: sigmoid held-ou
 
 ## Amendments during execution
 
-(empty)
+
+- **Task 2, runtime (2026-10-29):** `kink_merge` on absdiff seed0 took over 2 minutes, so `SEARCH_SAMPLES = 2000`
+  was set. The offset search fits on the first 2000 fit samples; the final LP and the snap use all 20,000 plus
+  the corners. With it, absdiff seed0 takes 40 s and tax seed0 8 s. The change was made on runtime alone,
+  before the development run.
+- **Task 2:** `fit_program` builds the motif input (`ReluSum`) directly instead of a `SymNet` plus
+  `as_relu_sum`; the result is the same.

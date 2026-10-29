@@ -13,8 +13,15 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from ..check import check_program
 from ..model import MLP, activate
 from ..spec import Spec
+from ..symnet import Affine
+from .cleanup import program_from_expr
+from .decision_list import nicest_in
+from .motifs import ReluSum, motif_expr
+from .sigmoid import SNAP_TOLS, _minimax
+from .snap import nice
 
 PIECES = 17
 COS_MIN = 0.995                 # normals at least this parallel lie on one line ...
@@ -25,6 +32,7 @@ OFF_STEPS = 21
 OFF_ROUNDS = 3
 FIT_SAMPLES = 20_000
 FIT_SEED = 0
+SEARCH_SAMPLES = 2000           # the offset search fits on this many of the samples (runtime; set before the freeze)
 CANCEL_FRAC = 0.25              # a merged line nearly cancels when |strength| < CANCEL_FRAC * sum |strengths|
 
 
@@ -40,6 +48,14 @@ class Expansion:
     const: float
     linear: np.ndarray
     kinks: list[Kink]
+
+
+@dataclass
+class RealFit:
+    const: float
+    linear: dict[str, float]
+    terms: list[tuple[dict[str, float], float, float]]   # (normal over input names, t, strength):
+                                                         # strength * max(normal . x - t, 0); max |normal| = 1
 
 
 @dataclass
@@ -129,3 +145,125 @@ def merge_lines(kinks: list[Kink], off: float, cos_min: float = COS_MIN) -> list
 
 def nearly_cancelled(line: Line) -> bool:
     return line.count >= 2 and abs(line.strength) < CANCEL_FRAC * line.gross
+
+
+def _design(lines: list[Line], offsets: list[float], U: np.ndarray) -> np.ndarray:
+    return np.column_stack([np.ones(len(U)), U] + [np.maximum(U @ ln.normal + d, 0.0) for ln, d in zip(lines, offsets)])
+
+
+def refine(lines: list[Line], U: np.ndarray, y: np.ndarray) -> tuple[list[Line], np.ndarray, float]:
+    """Coordinate search on the offsets (on the first SEARCH_SAMPLES rows); coefficients from the minimax LP on
+    all rows. Returns (lines, [c, a.., s..], max err)."""
+    offsets = [ln.offset for ln in lines]
+    Us, ys = U[:SEARCH_SAMPLES], y[:SEARCH_SAMPLES]
+    _, err = _minimax(_design(lines, offsets, Us), ys)
+    for _ in range(OFF_ROUNDS):
+        for i in range(len(lines)):
+            center = offsets[i]
+            for d in center + np.linspace(-OFF_RANGE, OFF_RANGE, OFF_STEPS):
+                trial = offsets[:i] + [float(d)] + offsets[i + 1:]
+                _, e2 = _minimax(_design(lines, trial, Us), ys)
+                if e2 < err:
+                    offsets, err = trial, e2
+    coefs, err = _minimax(_design(lines, offsets, U), y)
+    k = 1 + U.shape[1]
+    out = [Line(ln.normal, d, float(s), ln.gross, ln.count) for ln, d, s in zip(lines, offsets, coefs[k:])]
+    return out, coefs, float(err)
+
+
+def to_real(lines: list[Line], coefs: np.ndarray, spec: Spec) -> RealFit:
+    """Unit-box fit -> real input coordinates; each kink normal scaled so its largest |component| is 1."""
+    lo, span = unit_box(spec)
+    names = spec.arg_names
+    k = len(names)
+    a_u = np.asarray(coefs[1:1 + k], dtype=np.float64)
+    const = float(coefs[0] - np.sum(a_u * lo / span))
+    linear = {names[i]: float(a_u[i] / span[i]) for i in range(k)}
+    terms = []
+    for ln, s in zip(lines, coefs[1 + k:]):
+        r = ln.normal / span                              # line: r . x + off = 0
+        off = ln.offset - float(np.sum(ln.normal * lo / span))
+        a = float(np.abs(r).max())
+        terms.append(({names[i]: float(r[i] / a) for i in range(k) if r[i] != 0}, -off / a, float(s) * a))
+    return RealFit(const, linear, terms)
+
+
+def _nicest_rel(s: float, tol: float) -> float:
+    return 0.0 if s == 0 else nicest_in(s - tol * abs(s), s + tol * abs(s))
+
+
+def _hinges(X: np.ndarray, names: list[str], terms) -> list[np.ndarray]:
+    return [np.maximum(X @ np.array([n.get(v, 0.0) for v in names]) - t, 0.0) for n, t, *_ in terms]
+
+
+def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray) -> RealFit:
+    """Design Goal 1.7: direction, position (tol * largest input range), LP refit, coefficients (relative tol),
+    then the constant as the midrange of the error. A line that leaves the box is folded into the affine part."""
+    lo, span = unit_box(spec)
+    names = spec.arg_names
+    X = lo + U * span
+    box = lo + _corners(len(names)) * span
+    width = float(span.max())
+    geo: dict[tuple, tuple[dict[str, float], float]] = {}
+    for n, t, _ in fit.terms:
+        big = max(n, key=lambda v: abs(n[v]))
+        n2 = {v: (c if v == big else nice(c, tol)) for v, c in n.items()}
+        n2 = {v: c for v, c in n2.items() if c != 0}
+        t2 = nicest_in(t - tol * width, t + tol * width)
+        z = box @ np.array([n2.get(v, 0.0) for v in names]) - t2
+        if z.min() >= 0 or z.max() <= 0:                 # always on (affine, refitted below) or always off
+            continue
+        geo[(tuple(sorted(n2.items())), t2)] = (n2, t2)  # identical snapped lines become one term
+    lines = list(geo.values())
+    H = _hinges(X, names, lines)
+    c, _ = _minimax(np.column_stack([np.ones(len(X)), X] + H), y)
+    k = len(names)
+    linear = {names[i]: _nicest_rel(float(c[1 + i]), tol) for i in range(k)}
+    strengths = [_nicest_rel(float(s), tol) for s in c[1 + k:]]
+    rest = y - X @ np.array([linear[v] for v in names]) - sum((s * h for s, h in zip(strengths, H)), np.zeros(len(X)))
+    return RealFit(float((rest.max() + rest.min()) / 2), linear,
+                   [(n, t, s) for (n, t), s in zip(lines, strengths)])
+
+
+def fit_program(fit: RealFit, spec: Spec) -> str:
+    """The fit as a program, written through the ReLU motif rewriting (abs / max pairs where they apply)."""
+    terms = [(s, Affine({v: c for v, c in n.items() if c != 0}, -t)) for n, t, s in fit.terms if s != 0]
+    rs = ReluSum(terms, Affine({v: c for v, c in fit.linear.items() if c != 0}, fit.const))
+    return program_from_expr(motif_expr(rs), spec)
+
+
+def kink_merge(spec: Spec, mlp: MLP) -> tuple[str | None, dict]:
+    """The route: smallest m first, merge offset 0.02 before 0.1, snap ladder coarsest first, then unsnapped;
+    the first program that passes the checker wins."""
+    trace: dict = {"applies": applies(spec, mlp), "per_offset": [], "winner": None}
+    if trace["applies"] is not None:
+        return None, trace
+    lo, span = unit_box(spec)
+    d = len(lo)
+    rng = np.random.default_rng(FIT_SEED)
+    U = np.vstack([rng.uniform(0.0, 1.0, (FIT_SAMPLES, d)), _corners(d)])
+    y = mlp.forward((lo + U * span).astype(np.float32))[:, 0].astype(np.float64)
+    kinks = expand(spec, mlp).kinks
+    line_sets = {}
+    for off in MERGE_OFFS:
+        line_sets[off] = merge_lines(kinks, off)
+        trace["per_offset"].append({"off": off, "kinks": len(kinks), "lines": len(line_sets[off]),
+                                    "cancelled": sum(nearly_cancelled(ln) for ln in line_sets[off])})
+    seen: set[str] = set()
+    for m in range(1, MAX_LINES + 1):
+        for off in MERGE_OFFS:
+            if len(line_sets[off]) < m:
+                continue
+            lines, coefs, _ = refine(line_sets[off][:m], U, y)
+            fit = to_real(lines, coefs, spec)
+            for tol in (*SNAP_TOLS, None):
+                f = fit if tol is None else snap_fit(fit, spec, tol, U, y)
+                src = fit_program(f, spec)
+                if src in seen:
+                    continue
+                seen.add(src)
+                if check_program(src, mlp, spec).snap_pass:
+                    trace["winner"] = {"off": off, "m": m, "tol": tol,
+                                       "lines": [{"normal": n, "t": t, "strength": s} for n, t, s in f.terms]}
+                    return src, trace
+    return None, trace

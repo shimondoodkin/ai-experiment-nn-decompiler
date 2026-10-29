@@ -6,7 +6,9 @@ import numpy as np
 import pytest
 
 from experiments.tasks import uniform_sample
-from nndc.heuristics.kinks import (Kink, evaluate_expansion, expand, merge_lines, nearly_cancelled, unit_box)
+from nndc.check import check_program
+from nndc.heuristics.kinks import (Kink, RealFit, evaluate_expansion, expand, fit_program, kink_merge, merge_lines,
+                                     nearly_cancelled, refine, snap_fit, to_real, unit_box)
 from nndc.model import MLP, activate
 from nndc.run import load_run
 from nndc.spec import InputSpec, Spec
@@ -84,3 +86,72 @@ def test_merge_same_line_adds():
     assert not nearly_cancelled(merge_lines(k2, off=0.02)[0])   # 1.8 >= 0.25 * 2.2
     far = [Kink(np.array([1., 0.]), -0.5, 2.0), Kink(np.array([1., 0.]), -0.6, 1.0)]
     assert len(merge_lines(far, off=0.02)) == 2 and len(merge_lines(far, off=0.1 + 1e-9)) == 1
+
+
+# --- Task 2: refine, snap, write -------------------------------------------------------------------------------
+
+def _tax_like(edge=193.3):
+    spec = Spec(task="", output="regression", inputs=[InputSpec("x0", "x0", "float", 0, 200)])
+    x = np.linspace(0, 200, 2001)
+    y = 0.1 * x + 0.1 * np.maximum(x - 20.2, 0) + 0.2 * np.maximum(x - 79.8, 0) - 0.3 * np.maximum(x - edge, 0)
+    fit = RealFit(0.0, {"x0": 0.1}, [({"x0": 1.0}, 20.2, 0.1), ({"x0": 1.0}, 79.8, 0.2), ({"x0": 1.0}, edge, -0.3)])
+    return spec, (x / 200)[:, None], y, fit
+
+
+def _net(sizes, acts, seed=3):
+    rng = np.random.default_rng(seed)
+    return MLP([rng.normal(size=(o, i)).astype(np.float32) for i, o in zip(sizes, sizes[1:])],
+               [rng.normal(size=o).astype(np.float32) for o in sizes[1:]], acts)
+
+
+def _spec(n_in, output, n_out=1):
+    return Spec(task="", output=output, n_outputs=n_out,
+                inputs=[InputSpec(f"x{i}", f"x{i}", "float", -3, 3) for i in range(n_in)])
+
+
+def test_kink_merge_tax_passes():
+    blind, mlp = _blind("runs_sigmoid/tax/seed0")
+    src, trace = kink_merge(blind, mlp)
+    assert src is not None and check_program(src, mlp, blind).snap_pass
+    assert trace["applies"] is None and trace["winner"]["m"] <= 8
+    assert "relu" in src or "max" in src
+    assert {p["off"] for p in trace["per_offset"]} == {0.02, 0.1}
+
+
+def test_snap_real_coordinates_tax():
+    spec, U, y, fit = _tax_like()
+    snapped = snap_fit(fit, spec, 0.005, U, y)
+    assert 192 < snapped.terms[-1][1] < 194
+    assert {round(t, 6) for _, t, _ in snapped.terms[:2]} == {20.0, 80.0}
+
+
+def test_snap_line_leaving_box_folds():
+    spec, U, y, fit = _tax_like(edge=199.6)
+    snapped = snap_fit(fit, spec, 0.005, U, y)  # (198.6, 200.6): nicest_in picks 200, the box edge
+    assert len(snapped.terms) == 2
+    src = fit_program(snapped, spec)
+    assert src.count("relu(") + src.count("max(") <= 2
+
+
+def test_to_real_matches_unit_fit():
+    blind, mlp = _blind("runs_sigmoid/absdiff/seed0")
+    lines = merge_lines(expand(blind, mlp).kinks, off=0.02)[:3]
+    U = np.random.default_rng(2).uniform(0, 1, (3000, 2))
+    lo, span = unit_box(blind)
+    y = mlp.forward((lo + U * span).astype(np.float32))[:, 0].astype(np.float64)
+    lines2, coefs, err = refine(lines, U, y)
+    fit = to_real(lines2, coefs, blind)
+    X = lo + U * span
+    pred = fit.const + sum(c * X[:, i] for i, c in enumerate(fit.linear.values())) + sum(
+        s * np.maximum(sum(n.get(f"x{i}", 0.0) * X[:, i] for i in range(2)) - t, 0) for n, t, s in fit.terms)
+    assert np.abs(pred - y).max() == pytest.approx(err, rel=1e-6, abs=1e-9)
+    assert all(max(abs(c) for c in n.values()) == pytest.approx(1.0) for n, _, _ in fit.terms)
+
+
+def test_kink_merge_refuses():
+    for sizes, acts, out in [([2, 4, 4, 1], ["sigmoid", "sigmoid"], "regression"),
+                             ([2, 4, 3], ["sigmoid"], "argmax"),
+                             ([2, 4, 1], ["relu"], "regression"),
+                             ([2, 4, 1], ["tanh"], "regression")]:
+        src, trace = kink_merge(_spec(2, out, n_out=sizes[-1]), _net(sizes, acts))
+        assert src is None and trace["applies"]
