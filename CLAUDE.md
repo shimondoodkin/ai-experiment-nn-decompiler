@@ -132,7 +132,7 @@ reconstructed from git history.
   They run only for nets with non-ReLU units.
 - **Kink merge (`ast2`):** `nndc/heuristics/kinks.py` expands a one-layer sigmoid net into ReLU kinks, merges
   kinks on one line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
-  - Every sigmoid run has `ast2`; the older `ast.py` was removed (it is in git history). Where the route does
+  - Every sigmoid run of seeds 0–5 (and median3, Iris) has `ast2`; the older `ast.py` was removed (it is in git history). Where the route does
     not apply (median3, Iris), `ast2` equals the project B program. Its held-out set was seeds 3–5.
   - `ast2` can no longer be produced (its code is at `93d7199`); its files stay while `ast3` is worse on some runs.
 - **`ast3`** (design `docs/design/2026-10-29-ast3-tanh-design.md`): `ast2` plus kink merge v2 (antiparallel
@@ -141,8 +141,9 @@ reconstructed from git history.
   - Commands: `nndc ast --name ast3 RUNS…` writes `ast3.py`, `ast3_trace.json` and `counterexamples_ast3.json`.
     `TOOL_VERSIONS = ("ast", "ast3")`; plain `nndc ast` is still the project B tool.
   - Sigmoid runs seeds 0–8 have `ast3`: 0–5 are its development set, 6–8 its held-out set (`runs_sigmoid/heldout.json`).
-  - **`ast3` vs `ast2`** (rule fixed in the design): `ast3` was larger on 5 of 45 runs (the rounded constant can
-    cost a snap level), so the `ast2` files were kept. The report has the table.
+  - **`ast3` vs `ast2`** (rule fixed in the design): `ast3` was larger on 5 of 45 runs, so the `ast2` files were kept.
+    The cause is the line-range position window (twice the old window for diagonal lines) and the rounded constant;
+    see `CONCLUSIONS.md`. The report has the table.
 - **`<root>/heldout.json`** names the held-out runs of the newest tool version (`version`, `freeze`, `runs`); the
   report reads it.
 - **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the
@@ -152,10 +153,11 @@ reconstructed from git history.
   `INSTRUCTIONS.md` asks the agent to use it (`io` and `fix` folders do not have one yet). Before that, agents wrote to the shared session scratchpad and the audit flagged it.
 
 **Tanh runs** (`runs_tanh/`):
-- **Build:** `nndc run <task> --seed <k> --act tanh --root runs_tanh`. They are the same tasks, seeds and settings
-  as the sigmoid runs.
+- **Build:** `nndc run <task> --seed <k> --act tanh --root runs_tanh`. Same tasks and settings as the sigmoid runs;
+  formula seeds 0–2 and Iris seeds 0–5.
 - **Tool:** only `ast3` runs on them. `refactor` rewrites tanh layers as sigmoid layers for the routes
-  (`as_sigmoid` in `nndc/model.py`: `tanh(z) = 2·sigmoid(2z) − 1`). The checker always uses the original tanh net.
+  (`as_sigmoid` in `nndc/model.py`: `tanh(z) = 2·sigmoid(2z) − 1`). Final acceptance always checks against the original
+  tanh net; checks inside a route use the rewritten net, which differs by about 1e-7.
 - **Agents:** `--index runs_tanh/blind_index.json`. Heuristics go to `runs_tanh/HEURISTICS.md` (development) and
   `HEURISTICS_heldout.md`.
 - **Held-out:** formula seed 2 and Iris seeds 3–5 (`runs_tanh/heldout.json`).

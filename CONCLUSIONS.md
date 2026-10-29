@@ -266,17 +266,32 @@ These are the open items from the section above. Design: `docs/design/2026-10-29
     cannot do it for median3 (see the spike below).
   - **Tax:** agents wrote the brackets plus an edge cap or knot.
 - **4-feature Iris is harder with tanh.**
-  - With sigmoid, linear scores passed on every held-out net (72–74 nodes). With tanh no linear route passes, and the
-    tool gives 434–484 nodes.
+  - With sigmoid, a linear route passed on 4 of 6 nets: seeds 2–5, at 72–74 nodes. Seeds 0–1 fell back to the dump.
+    With tanh no linear route passes on any of the 6, and the tool gives 434–484 nodes.
   - The agents found the reason: the boundaries bend near the box edges. They used two planes per class or a squared
     term, and wrote 93–310 nodes.
-- **The review fixes (kink merge v2) changed little,** as predicted.
+- **The review fixes (kink merge v2) changed little overall, but one prediction was wrong.**
   - On 45 sigmoid runs that have both versions, `ast3` was the same size as `ast2` on 37, smaller on 3 (absdiff seed
     4: 216 → 158 nodes) and larger on 5 (up to 81 → 118).
-  - The cause is the rounded constant. Rounding it uses part of the error budget, so the program passes only at a
-    finer snap level, where the coefficients stay unrounded.
   - By the rule fixed before the results, `ast3` is worse on those 5 runs, so the `ast2` files stay next to `ast3`.
-  - The next version should try the constant both rounded and unrounded at each level.
+  - **Two of the four fixes cause the regressions, not one.** The final review re-ran the 5 runs with fix 3 (the
+    position window) and fix 4 (the rounded constant) undone, one at a time and together:
+
+    | run | `ast3` | constant unrounded | old position window | both undone (= `ast2`) |
+    |---|---|---|---|---|
+    | neareq/seed5 | 118 | 118 | 66 | 81 |
+    | neareq/seed4 | 76 | 76 | 66 | 66 |
+    | absdiff/seed0 | 86 | 86 | 86 | 80 |
+    | absdiff/seed1 | 98 | 95 | 98 | 95 |
+    | absdiff/seed5 | 89 | 89 | 89 | 86 |
+
+    - The constant alone explains absdiff seed 1, and the window alone neareq seeds 4–5. The other two need both.
+    - **Refuted prediction:** the design expected fix 3 to matter only for near-axis normals or mixed input ranges.
+      But every kink line on absdiff and neareq is diagonal (`x0 − x1`), and for a diagonal line the new window
+      `Σ|n_i|·span_i` is twice the old `max span` window. So it changes exactly the tasks where kink merge wins.
+    - Fix 4's constant window `tol·R` can also take the whole 2% error budget at the coarse levels.
+  - **Next version:** at each level, try both position windows and both constant treatments, and keep the smallest
+    passing program. Cap the constant window well below 2%, and make the direction snap span-aware.
 - **Held-out:** the frozen `ast3` passed on all 27 held-out nets (sigmoid seeds 6–8; tanh formula seed 2 and Iris
   seeds 3–5). The sigmoid route winners matched the prediction: neareq kink merge, tax knot-fit, xor and window as
   before.
