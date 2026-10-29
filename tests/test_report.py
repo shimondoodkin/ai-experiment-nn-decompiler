@@ -180,3 +180,20 @@ def test_kink_md_empty(tmp_path):
 
     _fake_run(tmp_path, "absdiff", 0, {"dump": _v(), "ast": _v()})
     assert kink_md(tmp_path) == ""
+
+
+def test_kink_md_marks_lost_candidates_and_other_runs(tmp_path):
+    from nndc.report import kink_md
+
+    won = _fake_run(tmp_path, "absdiff", 0, {"dump": _v(), "ast2": _v(nodes=30)})
+    _kink_files(won)
+    lost = _fake_run(tmp_path, "absdiff", 1, {"dump": _v(), "ast2": _v(nodes=22)})
+    _kink_files(lost)
+    tr = json.loads((lost / "ast2_trace.json").read_text())
+    tr["winner"] = "knot-fit"
+    (lost / "ast2_trace.json").write_text(json.dumps(tr))
+    iris = _fake_run(tmp_path, "iris", 3, {"dump": _v(), "ast2": _v()})
+    (iris / "ast2_trace.json").write_text(json.dumps({"winner": "linear-scores", "kink_merge": {"applies": "argmax output"}}))
+    rows = {ln.split(" | ")[0][2:]: ln for ln in kink_md(tmp_path).splitlines() if ln.startswith("| ") and "seed" in ln}
+    assert "candidate only:" in rows["absdiff/seed1"] and "candidate only:" not in rows["absdiff/seed0"]
+    assert "iris/seed3" not in rows          # the route does not apply there: not part of this section

@@ -198,8 +198,17 @@ def activation_compare_md(relu_root: Path, root: Path) -> str:
 
 
 def _kink_heldout(rd: Path) -> bool:
-    """The kink-merge held-out set: seeds 3-5, built after its freeze."""
-    return rd.name in ("seed3", "seed4", "seed5")
+    """The kink-merge held-out set: formula-task seeds 3-5, built after its freeze."""
+    return is_step1(rd) and rd.name in ("seed3", "seed4", "seed5")
+
+
+def _kink_trace(rd: Path) -> dict | None:
+    """The ast2 trace of a run where the kink-merge route applies, else None."""
+    tp = rd / "ast2_trace.json"
+    tr = json.loads(tp.read_text(encoding="utf-8")) if tp.exists() else None
+    if tr is None or (tr.get("kink_merge") or {}).get("applies") is not None:
+        return None
+    return tr
 
 
 def _kink_line(line: dict, spec: Spec) -> str:
@@ -211,23 +220,24 @@ def _kink_line(line: dict, spec: Spec) -> str:
 
 def kink_md(root: Path) -> str:
     """The kink-merge tool (ast2): per run, the kink counts and the kept lines; then ast2 next to formula.py."""
-    rows = ["| run | split | route | ast2 vs net | recovered | nodes | kinks → lines → nearly cancelled → kept "
-            "| kept lines |", "|---|---|---|---|---|---|---|---|"]
-    progs = []
+    rows = ["| run | split | route | ast2 vs net | recovered | nodes | kink-merge: kinks → lines → nearly cancelled → "
+            "kept | kink-merge lines |", "|---|---|---|---|---|---|---|---|"]
+    progs, listed = [], set()
     for rd in all_runs(root):
-        res = _results(rd)
-        if res is None or "ast2" not in res["versions"]:
+        res, tr = _results(rd), _kink_trace(rd)
+        if res is None or tr is None or "ast2" not in res["versions"]:
             continue
+        listed.add(res["run"])
         spec = Spec.load(rd / "spec.json")
         v = res["versions"]["ast2"]
-        tp = rd / "ast2_trace.json"
-        tr = json.loads(tp.read_text(encoding="utf-8")) if tp.exists() else {}
         km = tr.get("kink_merge") or {}
         w, per = km.get("winner"), km.get("per_offset") or []
         if w:
             po = next((p for p in per if p["off"] == w["off"]), None)
             counts = f"{po['kinks']} → {po['lines']} → {po['cancelled']} → {w['m']}" if po else ""
             kept = "; ".join(_kink_line(ln, spec) for ln in w["lines"])
+            if tr.get("winner") != "kink-merge":
+                kept = f"candidate only: {kept}"
         else:
             counts = (f"{per[0]['kinks']} → {per[0]['lines']} → {per[0]['cancelled']} → –" if per
                       else km.get("applies") or "–")
@@ -244,9 +254,11 @@ def kink_md(root: Path) -> str:
     out = ["## Kink merge (ast2)\n",
            "The kink-merge tool turns each sigmoid into straight pieces, merges the kinks that lie on one line, keeps the "
            "strongest lines and refits them to the net (`ast2`). Development runs are seeds 0–2; held-out runs "
-           "(seeds 3–5) were built after the tool was frozen. *kinks → lines → nearly cancelled → kept* are the "
-           "counts for the winning merge tolerance.\n"]
-    rep = reproduction(root, name="ast2", heldout=_kink_heldout)
+           "(seeds 3–5) were built after the tool was frozen. Only runs where the route applies (one sigmoid layer, "
+           "not argmax) are listed. *kinks → lines → nearly cancelled → kept* are the counts for the kink-merge "
+           "candidate's merge tolerance; where another route won, its lines are marked *candidate only* and are not "
+           "in `ast2.py`.\n"]
+    rep = [r for r in reproduction(root, name="ast2", heldout=_kink_heldout) if r["run"] in listed]
     for split, label in (("heldout", "held-out"), ("distill", "development")):
         rs = [r for r in rep if r["split"] == split]
         if rs:
