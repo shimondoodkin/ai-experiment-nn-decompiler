@@ -20,6 +20,7 @@ from .heuristics.cleanup import program_from_expr
 from .heuristics.decision_list import decision_list
 from .heuristics.sigmoid import knot_fit, linear_cascade, linear_scores, merge_steps, replace_units
 from .heuristics.fit import fit_expr
+from .heuristics.kinks import kink_merge
 from .heuristics.merge import merge_units, normalize
 from .heuristics.motifs import as_relu_sum, motif_expr
 from .heuristics.snap import snap_net
@@ -32,7 +33,8 @@ from .symnet import SymNet, from_dump, input_bounds, to_program
 
 ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit",
           "decision-list-snap", "decision-list",   # snapped first: when neither is exact, prefer round constants
-          "sigmoid-replace-snap", "sigmoid-replace", "linear-cascade", "linear-scores", "knot-fit"]   # non-ReLU nets
+          "sigmoid-replace-snap", "sigmoid-replace", "linear-cascade", "linear-scores", "knot-fit",   # non-ReLU nets
+          "kink-merge"]
 
 
 @dataclass
@@ -71,6 +73,7 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
         raise ValueError("refactor needs a blind spec (the task name must not be visible)")
     lines: list[str] = []
     cands: list[Candidate] = []
+    extra: dict = {}
 
     def add(route: str, build: Callable[[], str | None], passes: list[str]) -> None:
         try:
@@ -166,6 +169,8 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
             add("linear-cascade", lambda: linear_cascade(spec, mlp), ["S4"])
         if spec.output == "regression":
             add("knot-fit", lambda: knot_fit(spec, mlp), ["S5"])
+        src_k, extra["kink_merge"] = kink_merge(spec, mlp)
+        add("kink-merge", lambda: src_k, ["K1"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:
@@ -176,18 +181,19 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP) -> tuple[str, dict]:
         best = next((c for c in cands if c.route == "structural-exact"), None)
         if best is None:
             best = Candidate("dump", dump_src, [], check_program(dump_src, mlp, spec).to_json(), None)
-    trace = {"candidates": [asdict(c) for c in cands], "winner": best.route, "trace_lines": lines}
+    trace = {"candidates": [asdict(c) for c in cands], "winner": best.route, "trace_lines": lines} | extra
     return best.src, trace
 
 
-def run_ast(rd: Path) -> dict:
-    """Refactor a run's dump.py with the tool (blind spec only); write ast.py + ast_trace.json; re-evaluate."""
+def run_ast(rd: Path, name: str = "ast") -> dict:
+    """Refactor a run's dump.py with the tool (blind spec only); write <name>.py + <name>_trace.json; re-evaluate.
+    A new tool version gets a new name (ast2), so the older version's files stay."""
     from .run import evaluate_run, load_run, record_git
 
     spec, mlp = load_run(rd)
     blind = Spec.from_json(spec.blind())
     src, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp)
-    (rd / "ast.py").write_text(f"# produced by nndc ast (route: {trace['winner']})\n{src}", encoding="utf-8")
-    (rd / "ast_trace.json").write_text(json.dumps(trace, indent=2) + "\n", encoding="utf-8")
-    record_git(rd, "ast")
+    (rd / f"{name}.py").write_text(f"# produced by nndc ast (route: {trace['winner']})\n{src}", encoding="utf-8")
+    (rd / f"{name}_trace.json").write_text(json.dumps(trace, indent=2) + "\n", encoding="utf-8")
+    record_git(rd, name)
     return evaluate_run(rd)

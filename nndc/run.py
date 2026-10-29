@@ -163,6 +163,9 @@ def _load_counterexamples(path: Path) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
 
 
+OWN_CEX = ("ast2",)   # versions whose counterexamples go to counterexamples_<name>.json, not the shared file
+
+
 def evaluate_run(rd: Path) -> dict:
     spec, mlp = load_run(rd)
     task = get_task(spec.task)
@@ -173,6 +176,7 @@ def evaluate_run(rd: Path) -> dict:
     versions = {"dump": rd / "dump.py"} | {f"agent_{n}": p for n, p in agent_attempts(rd)}
     if (rd / "ast.py").exists():
         versions["ast"] = rd / "ast.py"
+    versions |= {name: rd / f"{name}.py" for name in OWN_CEX if (rd / f"{name}.py").exists()}
     versions |= {f"io_agent_{n}": p for n, p in agent_attempts(rd, "io_agent")}
     versions |= {name: rd / f"{name}.py" for name in BASELINE_VERSIONS if (rd / f"{name}.py").exists()}
     if (rd / "formula.py").exists():   # reference only: its counterexamples are not shared with other versions
@@ -190,12 +194,27 @@ def evaluate_run(rd: Path) -> dict:
                                   "error": str(e)},
                          "size": None, "meta": meta}
             continue
-        r = check_program(src, mlp, spec, extra_inputs=extra)
+        own = None
+        if name in OWN_CEX:   # a later tool version: checked on the shared set plus its own, adds only to its own
+            own_path = rd / f"counterexamples_{name}.json"
+            own = _load_counterexamples(own_path)
+            more = np.array([[c[n] for n in spec.arg_names] for c in own], dtype=np.float64) if own else None
+            ex = extra if more is None else more if extra is None else np.vstack([extra, more])
+            r = check_program(src, mlp, spec, extra_inputs=ex)
+        else:
+            r = check_program(src, mlp, spec, extra_inputs=extra)
         try:
             size = program_size(parse_program(src))
         except ProgramError:
             size = None
         out[name] = {"check": r.to_json(), "task": grade_task(src, task), "size": size, "meta": meta}
+        if own is not None:
+            known = seen | {tuple(c[n] for n in spec.arg_names) for c in own}
+            new = [c["inputs"] for c in r.counterexamples
+                   if tuple(c["inputs"][n] for n in spec.arg_names) not in known]
+            if new:
+                _write_json(own_path, own + new)
+            continue
         for c in ([] if name == "formula" else r.counterexamples):
             key = tuple(c["inputs"][n] for n in spec.arg_names)
             if key not in seen:

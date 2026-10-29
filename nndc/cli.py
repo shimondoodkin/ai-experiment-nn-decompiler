@@ -123,14 +123,14 @@ def cmd_ast(args) -> int:
         return 2
     for rd in runs:
         try:
-            res = run_ast(rd)
+            res = run_ast(rd, name=args.name)
         except (ValueError, KeyError, OSError) as e:   # one bad run (malformed dump, missing file) never stops the batch
             print(f"{rd.as_posix()}: ERROR {type(e).__name__}: {e}", flush=True)
             continue
-        v = res["versions"]["ast"]
+        v = res["versions"][args.name]
         c = v["check"]
         verdict = "ERROR" if c["error"] else "PASS exact" if c["exact_pass"] else "PASS snap" if c["snap_pass"] else "FAIL"
-        route = json.loads((rd / "ast_trace.json").read_text(encoding="utf-8"))["winner"]
+        route = json.loads((rd / f"{args.name}_trace.json").read_text(encoding="utf-8"))["winner"]
         print(f"{rd.as_posix()}: {verdict}; recovered={v['task']['recovered']}; "
               f"nodes={(v['size'] or {}).get('nodes')}; route={route}", flush=True)
     return 0
@@ -268,6 +268,8 @@ def main(argv: list[str] | None = None) -> int:
                     help="with --all: distill = every step-1 run except seed2 (default), heldout = step-1 seed2 "
                          "only, all = every run including dataset runs (iris)")
     at.add_argument("--root", default=str(RUNS))
+    at.add_argument("--name", default="ast",
+                    help="version name to write (<name>.py, <name>_trace.json); ast2 for the kink-merge tool")
     at.set_defaults(func=cmd_ast)
 
     bl = sub.add_parser("baseline", help="step-4 baselines: tree, regions, pysr (needs --group pysr), all")

@@ -155,3 +155,21 @@ def test_kink_merge_refuses():
                              ([2, 4, 1], ["tanh"], "regression")]:
         src, trace = kink_merge(_spec(2, out, n_out=sizes[-1]), _net(sizes, acts))
         assert src is None and trace["applies"]
+
+
+# --- Task 3: the route in refactor -----------------------------------------------------------------------------
+
+def test_refactor_trace_has_kink_merge():
+    from nndc.ast_tool import refactor
+    rd = Path("runs_sigmoid/tax/seed0")
+    blind, mlp = _blind(rd)
+    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp)
+    assert "kink_merge" in trace and any(c["route"] == "kink-merge" for c in trace["candidates"])
+
+
+def test_refactor_relu_has_no_kink_merge():
+    from nndc.ast_tool import refactor
+    from nndc.dump import dump_program
+    mlp, spec = _net([2, 4, 1], ["relu"]), _spec(2, "regression")
+    _, trace = refactor(dump_program(mlp, spec), spec, mlp)
+    assert "kink_merge" not in trace and all(c["route"] != "kink-merge" for c in trace["candidates"])

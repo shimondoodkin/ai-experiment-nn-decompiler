@@ -104,3 +104,27 @@ def test_act_mismatch_refused(tmp_path):
     with pytest.raises(ValueError, match="relu"):
         build_run("window", 0, root=tmp_path, act="sigmoid")
     assert not (rd / "formula.py").exists()
+
+
+def test_ast2_cex_separate(tmp_path):
+    rd = build_run("absdiff", 0, root=tmp_path, act="sigmoid")
+    shared = rd / "counterexamples.json"
+    before = shared.read_bytes() if shared.exists() else b""
+    (rd / "ast2.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")   # the sharp formula fails vs the net
+    res = evaluate_run(rd)
+    assert not res["versions"]["ast2"]["check"]["snap_pass"]
+    assert json.loads((rd / "counterexamples_ast2.json").read_text())
+    assert (shared.read_bytes() if shared.exists() else b"") == before
+    res2 = evaluate_run(rd)                     # its own counterexamples are reused on the next evaluation
+    assert res2["versions"]["ast2"]["check"]["n_inputs"] >= res["versions"]["ast2"]["check"]["n_inputs"]
+
+
+def test_run_ast_name_keeps_ast(tmp_path):
+    from nndc.ast_tool import run_ast
+    rd = build_run("window", 0, root=tmp_path, act="sigmoid")
+    run_ast(rd)
+    old = (rd / "ast.py").read_bytes()
+    run_ast(rd, name="ast2")
+    assert (rd / "ast.py").read_bytes() == old and (rd / "ast2.py").exists() and (rd / "ast2_trace.json").exists()
+    assert "ast2:" in (rd / "run_git.txt").read_text()
+    assert "ast2" in json.loads((rd / "results.json").read_text())["versions"]
