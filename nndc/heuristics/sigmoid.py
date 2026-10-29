@@ -214,7 +214,7 @@ def linear_cascade(spec: Spec, mlp: MLP) -> str | None:
     return _first_passing([program(t) for t in SNAP_TOLS] + [program(None)], mlp, spec)
 
 
-def _minimax(A: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, float]:
+def minimax(A: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, float]:
     """min_c max |A c - y| by a linear program; returns (c, max error)."""
     from scipy.optimize import linprog
 
@@ -253,9 +253,9 @@ def knot_fit(spec: Spec, mlp: MLP) -> str | None:
 
     knots: list[float] = []
     for _ in range(MAX_KNOTS):
-        best = min((g for g in grid if g not in knots), key=lambda g: _minimax(design(sorted(knots + [g])), y)[1])
+        best = min((g for g in grid if g not in knots), key=lambda g: minimax(design(sorted(knots + [g])), y)[1])
         knots = sorted(knots + [best])
-        c, _ = _minimax(design(knots), y)
+        c, _ = minimax(design(knots), y)
         slopes = list(np.cumsum(c[1:]))
         tol = 0.05 * max(abs(s) for s in slopes) if any(slopes) else 0.0
         snapped = [nice(float(s), tol) for s in slopes]

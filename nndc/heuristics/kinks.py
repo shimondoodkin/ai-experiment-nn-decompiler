@@ -20,7 +20,7 @@ from ..symnet import Affine
 from .cleanup import program_from_expr
 from .decision_list import nicest_in
 from .motifs import ReluSum, motif_expr
-from .sigmoid import SNAP_TOLS, _minimax
+from .sigmoid import SNAP_TOLS, minimax
 from .snap import nice
 
 PIECES = 17
@@ -156,16 +156,16 @@ def refine(lines: list[Line], U: np.ndarray, y: np.ndarray) -> tuple[list[Line],
     all rows. Returns (lines, [c, a.., s..], max err)."""
     offsets = [ln.offset for ln in lines]
     Us, ys = U[:SEARCH_SAMPLES], y[:SEARCH_SAMPLES]
-    _, err = _minimax(_design(lines, offsets, Us), ys)
+    _, err = minimax(_design(lines, offsets, Us), ys)
     for _ in range(OFF_ROUNDS):
         for i in range(len(lines)):
             center = offsets[i]
             for d in center + np.linspace(-OFF_RANGE, OFF_RANGE, OFF_STEPS):
                 trial = offsets[:i] + [float(d)] + offsets[i + 1:]
-                _, e2 = _minimax(_design(lines, trial, Us), ys)
+                _, e2 = minimax(_design(lines, trial, Us), ys)
                 if e2 < err:
                     offsets, err = trial, e2
-    coefs, err = _minimax(_design(lines, offsets, U), y)
+    coefs, err = minimax(_design(lines, offsets, U), y)
     k = 1 + U.shape[1]
     out = [Line(ln.normal, d, float(s), ln.gross, ln.count) for ln, d, s in zip(lines, offsets, coefs[k:])]
     return out, coefs, float(err)
@@ -216,7 +216,7 @@ def snap_fit(fit: RealFit, spec: Spec, tol: float, U: np.ndarray, y: np.ndarray)
         geo[(tuple(sorted(n2.items())), t2)] = (n2, t2)  # identical snapped lines become one term
     lines = list(geo.values())
     H = _hinges(X, names, lines)
-    c, _ = _minimax(np.column_stack([np.ones(len(X)), X] + H), y)
+    c, _ = minimax(np.column_stack([np.ones(len(X)), X] + H), y)
     k = len(names)
     linear = {names[i]: _nicest_rel(float(c[1 + i]), tol) for i in range(k)}
     strengths = [_nicest_rel(float(s), tol) for s in c[1 + k:]]
