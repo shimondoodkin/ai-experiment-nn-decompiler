@@ -1,0 +1,226 @@
+{
+  "task": "xor",
+  "run": "xor/seed1",
+  "kind": "trained",
+  "train": {
+    "seed": 1,
+    "steps": 3000,
+    "lr": 0.05,
+    "hidden": [
+      4
+    ],
+    "batch": 512,
+    "loss_curve": [
+      [
+        0,
+        0.6954523324966431
+      ],
+      [
+        100,
+        0.3514478802680969
+      ],
+      [
+        200,
+        0.34838736057281494
+      ],
+      [
+        300,
+        0.3475685119628906
+      ],
+      [
+        400,
+        0.34721553325653076
+      ],
+      [
+        500,
+        0.3470272421836853
+      ],
+      [
+        600,
+        0.34691351652145386
+      ],
+      [
+        700,
+        0.3468390107154846
+      ],
+      [
+        800,
+        0.3467872142791748
+      ],
+      [
+        900,
+        0.34674936532974243
+      ],
+      [
+        1000,
+        0.3467210531234741
+      ],
+      [
+        1100,
+        0.3466990292072296
+      ],
+      [
+        1200,
+        0.3466816544532776
+      ],
+      [
+        1300,
+        0.34666746854782104
+      ],
+      [
+        1400,
+        0.3466561436653137
+      ],
+      [
+        1500,
+        0.3466464877128601
+      ],
+      [
+        1600,
+        0.34663861989974976
+      ],
+      [
+        1700,
+        0.34663164615631104
+      ],
+      [
+        1800,
+        0.34662577509880066
+      ],
+      [
+        1900,
+        0.34662067890167236
+      ],
+      [
+        2000,
+        0.3466164171695709
+      ],
+      [
+        2100,
+        0.3466126322746277
+      ],
+      [
+        2200,
+        0.34661024808883667
+      ],
+      [
+        2300,
+        0.3466061055660248
+      ],
+      [
+        2400,
+        0.3466067314147949
+      ],
+      [
+        2500,
+        0.34660112857818604
+      ],
+      [
+        2600,
+        0.34659913182258606
+      ],
+      [
+        2700,
+        0.3465971350669861
+      ],
+      [
+        2800,
+        0.34659552574157715
+      ],
+      [
+        2900,
+        0.3465941250324249
+      ],
+      [
+        2999,
+        0.3465926945209503
+      ]
+    ],
+    "quality": {
+      "accuracy": 0.5
+    },
+    "learned": false,
+    "act": "tanh"
+  },
+  "versions": {
+    "dump": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.5,
+        "margin": 0.5748402452468871,
+        "counterexamples": [],
+        "error": null
+      },
+      "task": {
+        "in_range": 0.5,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": false,
+        "error": null
+      },
+      "size": {
+        "lines": 5,
+        "nodes": 122,
+        "constants": 17,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    },
+    "formula": {
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "exhaustive",
+        "n_inputs": 4,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 2,
+        "zone_fraction": 0.5,
+        "margin": 0.5748402452468871,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 1,
+              "x1": 1
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0,
+              "x1": 1
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "task": {
+        "in_range": 1.0,
+        "out_of_range": null,
+        "metric": "accuracy",
+        "recovered": true,
+        "error": null
+      },
+      "size": {
+        "lines": 1,
+        "nodes": 7,
+        "constants": 0,
+        "relus": 0,
+        "ifs": 0
+      },
+      "meta": null
+    }
+  }
+}
