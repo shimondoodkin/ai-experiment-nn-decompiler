@@ -148,12 +148,12 @@
         "exact_pass": true,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 278885,
+        "n_inputs": 278905,
         "max_abs_err": null,
         "disagreements_outside": 0,
         "disagreements_inside": 655,
         "zone_fraction": 0.04057,
-        "margin": 0.5149145174026489,
+        "margin": 0.5149115800857544,
         "counterexamples": [
           {
             "inputs": {
@@ -359,17 +359,35 @@
         "exact_pass": false,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 278885,
+        "n_inputs": 278905,
         "max_abs_err": null,
         "disagreements_outside": 0,
-        "disagreements_inside": 4546,
+        "disagreements_inside": 4566,
         "zone_fraction": 0.04057,
-        "margin": 0.5149145174026489,
+        "margin": 0.5149115800857544,
         "counterexamples": [
           {
             "inputs": {
               "x0": 1.0432617114872782,
               "x1": 1.638129635317992
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.0432617114872782,
+              "x1": 1.638129635317992
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.08525868202125,
+              "x1": 1.6100214614242447
             },
             "net": 0.0,
             "program": 1.0,
@@ -395,8 +413,35 @@
           },
           {
             "inputs": {
+              "x0": 1.118,
+              "x1": 1.588
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
               "x0": 1.0295,
               "x1": 1.6480000000000001
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.0295,
+              "x1": 1.6480000000000001
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.0063732214260386,
+              "x1": 1.6636735715588242
             },
             "net": 0.0,
             "program": 1.0,
@@ -422,8 +467,35 @@
           },
           {
             "inputs": {
+              "x0": 1.2288341440743495,
+              "x1": 1.514315884972621
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
               "x0": 1.2188830707707505,
               "x1": 1.521134723338929
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.2188830707707505,
+              "x1": 1.521134723338929
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.0447769320341538,
+              "x1": 1.639105364701798
             },
             "net": 0.0,
             "program": 1.0,
@@ -449,6 +521,15 @@
           },
           {
             "inputs": {
+              "x0": 1.2728709057090268,
+              "x1": 1.4850464561260839
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
               "x0": 1.0435104695302777,
               "x1": 1.6401233794073444
             },
@@ -458,89 +539,8 @@
           },
           {
             "inputs": {
-              "x0": 1.365688739381361,
-              "x1": 1.4229408482920933
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.309591869779882,
-              "x1": 1.4609520307860295
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.161990568998741,
-              "x1": 1.5610343025334632
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.2991560513266316,
-              "x1": 1.468607989063852
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.0027320033259788,
-              "x1": 1.6691877196850315
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.4425,
-              "x1": 1.372
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.354,
-              "x1": 1.4320000000000002
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.277860259933823,
-              "x1": 1.483502309634394
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.2655,
-              "x1": 1.4920000000000002
-            },
-            "net": 0.0,
-            "program": 1.0,
-            "in_zone": true
-          },
-          {
-            "inputs": {
-              "x0": 1.33248945966429,
-              "x1": 1.4467540745818805
+              "x0": 1.0435104695302777,
+              "x1": 1.6401233794073444
             },
             "net": 0.0,
             "program": 1.0,
@@ -582,12 +582,12 @@
         "exact_pass": false,
         "snap_pass": true,
         "label": "empirical",
-        "n_inputs": 278905,
+        "n_inputs": 278925,
         "max_abs_err": null,
         "disagreements_outside": 0,
         "disagreements_inside": 5513,
         "zone_fraction": 0.04057,
-        "margin": 0.5149115800857544,
+        "margin": 0.5149098813533783,
         "counterexamples": [
           {
             "inputs": {
