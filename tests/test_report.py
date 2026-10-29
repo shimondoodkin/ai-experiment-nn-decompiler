@@ -197,3 +197,24 @@ def test_kink_md_marks_lost_candidates_and_other_runs(tmp_path):
     rows = {ln.split(" | ")[0][2:]: ln for ln in kink_md(tmp_path).splitlines() if ln.startswith("| ") and "seed" in ln}
     assert "candidate only:" in rows["absdiff/seed1"] and "candidate only:" not in rows["absdiff/seed0"]
     assert "iris/seed3" not in rows          # the route does not apply there: not part of this section
+
+
+def test_report_reads_newest_tool_version(tmp_path):
+    from nndc.report import activation_compare_md, formula_md
+
+    relu, sig = tmp_path / "relu", tmp_path / "sig"
+    _fake_run(relu, "absdiff", 0, {"dump": _v(), "ast": _v(nodes=9)})
+    _fake_run(sig, "absdiff", 0, {"dump": _v(), "ast2": _v(nodes=77),
+                                  "formula": _v(snap=False, recovered=True, nodes=5)})
+    assert "77 nodes" in formula_md(sig)
+    md = activation_compare_md(relu, sig)
+    assert "9 nodes" in md and "77 nodes" in md
+
+
+def test_run_section_shows_ast2(tmp_path):
+    rd = build_run("window", 0, root=tmp_path, act="sigmoid")
+    (rd / "agent_1.py").write_text("def net(x0):\n    return 0.5 - abs(x0)\n")
+    (rd / "ast2.py").write_text("def net(x0):\n    return 0.25 - abs(x0) / 2\n")
+    evaluate_run(rd)
+    md = build_report(tmp_path, compare_to=tmp_path)
+    assert "AST tool (no LLM, `ast2`)" in md and "0.25 - abs(x) / 2" in md

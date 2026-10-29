@@ -103,9 +103,11 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
             # nest the agent's own headings under this run's section
             notes = re.sub(r"^(#{1,4}) ", lambda m: "#" * (len(m.group(1)) + 2) + " ", notes, flags=re.M)
             ast_md = ""
-            if (rd / "ast.py").exists():
-                ast_src = (rd / "ast.py").read_text(encoding="utf-8", errors="replace")
-                ast_md = f"AST tool (no LLM):\n\n```python\n{with_real_names(ast_src, spec)}```\n\n"
+            for name, label in (("ast2", "AST tool (no LLM, `ast2`)"), ("ast", "AST tool (no LLM)")):   # newest first
+                if (rd / f"{name}.py").exists():
+                    ast_src = (rd / f"{name}.py").read_text(encoding="utf-8", errors="replace")
+                    ast_md = f"{label}:\n\n```python\n{with_real_names(ast_src, spec)}```\n\n"
+                    break
             sections.append(f"## {res['run']}: dump vs {best}\n\n```python\n{with_real_names(dump_src, spec)}```\n\n"
                             f"```python\n{with_real_names(best_src, spec)}```\n\n{ast_md}<details><summary>notes"
                             f"</summary>\n\n{notes}\n\n</details>\n")
@@ -126,6 +128,11 @@ def build_report(root: Path = RUNS, compare_to: Path | None = None) -> str:
 def _results(rd: Path) -> dict | None:
     p = rd / "results.json"
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else None
+
+
+def _tool(versions: dict) -> dict | None:
+    """The newest AST tool version present (ast2, else ast)."""
+    return versions.get("ast2") or versions.get("ast")
 
 
 def _cell(rd: Path, v: dict | None) -> str:
@@ -157,7 +164,7 @@ def formula_md(root: Path) -> str:
         best = _best_attempt(vs)
         rows.append(f"| {res['run']} | {_verdict(c)} | {size} | {_num(f['task'].get('in_range'))} / "
                     f"{_num(f['task'].get('out_of_range'))} | {_cell(rd, vs.get(best) if best else None)} | "
-                    f"{_cell(rd, vs.get('ast'))} |")
+                    f"{_cell(rd, _tool(vs))} |")
         cex = c.get("counterexamples") or []
         if cex:
             target = get_task(spec.task).target
@@ -188,7 +195,7 @@ def activation_compare_md(relu_root: Path, root: Path) -> str:
         cells = []
         for res, d in ((a, other), (b, rd)):
             best = _best_attempt(res["versions"])
-            cells.append((_cell(d, res["versions"].get(best) if best else None), _cell(d, res["versions"].get("ast"))))
+            cells.append((_cell(d, res["versions"].get(best) if best else None), _cell(d, _tool(res["versions"]))))
         learned = " / ".join("yes" if (r.get("train") or {}).get("learned") else "no" for r in (a, b))
         rows.append(f"| {b['run']} | {learned} | {cells[0][0]} | {cells[1][0]} | {cells[0][1]} | {cells[1][1]} |")
     if len(rows) == 2:
