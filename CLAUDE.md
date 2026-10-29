@@ -32,7 +32,8 @@ There is no linter configured.
 **Run folders** are the unit of everything: `runs/<task>/<hand|seedK>/`. Each holds:
 - `spec.json`, `weights.npz` (and `net.pt`), `train_log.json`;
 - `dump.py`: the net as code;
-- program versions: `agent_<n>.py`, `ast.py`, plus later baselines;
+- program versions: `agent_<n>.py`, `ast.py` or `ast2.py` (the AST tool), `formula.py` (sigmoid runs), plus later
+  baselines;
 - `results.json`.
 
 `nndc/run.py:evaluate_run` checks and grades every version present and rewrites `results.json`.
@@ -70,7 +71,7 @@ next to the formula runs. `nndc run all` builds them (seeds 0–5), and `nndc as
 with `--split all`. In `REPORT.md` they appear in the results table with `recovered` n/a, and are left
 out of the step-3 reproduction and the beats-the-network list (`nndc/run.py: is_step1`).
 
-**Run versions:** each run folder has `run_git.txt`, one line per step (`build`, `ast`, `agent_<n>`)
+**Run versions:** each run folder has `run_git.txt`, one line per step (`build`, `ast`, `ast2`, `agent_<n>`)
 with the git commit the step ran with (`+dirty` for uncommitted code in `nndc/` or `experiments/`).
 `nndc run`, `nndc ast` and `nndc agent collect` write it (`record_git`); lines marked `backfilled` were
 reconstructed from git history.
@@ -131,15 +132,17 @@ reconstructed from git history.
   They run only for nets with non-ReLU units.
 - **Kink merge (`ast2`):** `nndc/heuristics/kinks.py` expands a one-layer sigmoid net into ReLU kinks, merges
   kinks on one line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
-  - `nndc ast --name ast2 RUNS…` writes `ast2.py` and `ast2_trace.json` next to the older `ast.py`, which stays.
-    Only `ast` and `ast2` are accepted; the kink-merge route runs only for `ast2`, so plain `nndc ast` is still
-    the project B tool.
+  - `nndc ast --name ast2 RUNS…` writes `ast2.py` and `ast2_trace.json`. Only `ast` and `ast2` are accepted;
+    the kink-merge route runs only for `ast2`, so plain `nndc ast` is still the project B tool.
+  - Every sigmoid run has `ast2`; the older `ast.py` was removed (it is in git history). Where the route does
+    not apply (median3, Iris), `ast2` equals the project B program.
   - `ast2` has its own `counterexamples_ast2.json` (`OWN_CEX` in `nndc/run.py`), so older verdicts never change.
   - Runs: development seeds 0–2; held-out seeds 3–5 of the five one-layer formula tasks.
+  - The report shows the newest tool version (`ast2`, else `ast`).
 - **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the
   "Formula vs net", "Compared with the ReLU runs" and "Kink merge (ast2)" sections.
-- **Agent scratch files:** `prepare` gives each blind folder a `scratch/` directory, and `INSTRUCTIONS.md` asks the
-  agent to use it. Before that, agents wrote to the shared session scratchpad and the audit flagged it.
+- **Agent scratch files:** `prepare` gives each `agent`-kind blind folder a `scratch/` directory, and
+  `INSTRUCTIONS.md` asks the agent to use it (`io` and `fix` folders do not have one yet). Before that, agents wrote to the shared session scratchpad and the audit flagged it.
 
 ## Practical notes
 
@@ -182,9 +185,13 @@ reconstructed from git history.
 - **Baselines:** hyperparameters are fixed in the design doc before any run, never tuned per task.
 - **Commits:** data commits (new run results) are separate from code commits and use the `data:`
   prefix. Existing `agent_n` / `ast` results are reused, not regenerated.
-- **Older runs stay:** never delete or overwrite older runs (`runs/`, `runs_bugs/`, their
-  `agent_*`, `ast`, baseline and `repair/` files, and checks logs). They are the record
-  of the work and what the reports cite. New work goes in new files or a new root. To try a command
-  that rewrites or deletes run files, work on a copy in a scratch folder outside the repo, and never
-  point `rm -rf`, `shutil.rmtree`, `git clean` or `experiments/equivalence.py copy` at the repo, its
-  parent or `runs*/`. Tests that exercise a delete must patch it out or use `tmp_path`.
+- **Superseded results may go; git keeps them:** run files are results of code, and every committed version
+  stays in git history (each run's `run_git.txt` names the commit a step ran with). A result may be removed
+  when a newer version replaces it (for example `ast.py` once `ast2.py` exists), in a commit of its own, after
+  the user agrees. Never remove a result that has no replacement, and never silently overwrite one: a new
+  tool version writes a new file name. For sigmoid runs `ast2` replaced `ast` (2026-10-29); the project B
+  `ast.py` files are in git history before that removal.
+- **No destructive commands on the repo:** to try a command that rewrites or deletes run files, work on a copy
+  in a scratch folder outside the repo, and never point `rm -rf`, `shutil.rmtree`, `git clean` or
+  `experiments/equivalence.py copy` at the repo, its parent or `runs*/`. Tests that exercise a delete must patch
+  it out or use `tmp_path`.
