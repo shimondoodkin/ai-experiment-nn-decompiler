@@ -19,3 +19,4 @@ write down what you learned and any heuristics you used that would apply to othe
 - Write `agent_notes.md`: what you changed and why, then a section titled exactly
   `## Heuristics` listing heuristics that would apply to other networks.
 - Work only with the files in this folder.
+- Put any scratch scripts or files in the scratch/ folder here.

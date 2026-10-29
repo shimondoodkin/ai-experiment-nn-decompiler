@@ -84,6 +84,7 @@ def prepare(rd: Path, blind_root: Path = BLIND_ROOT, index: Path = INDEX, kind: 
         shutil.copyfile(rd / "dump.py", b / "dump.py")
         shutil.copyfile(rd / "weights.npz", b / "weights.npz")
         _instructions(b, "instruction.md")
+        (b / "scratch").mkdir()   # the agent's own scratch space (parallel agents shared the session scratchpad)
         shutil.copyfile(_PKG / "agent" / "check_template.py", b / "check.py")
         _copy_checker(b, CHECKER_MODULES)
     elif kind == "io":

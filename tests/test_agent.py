@@ -17,7 +17,7 @@ def test_prepare_is_blind_and_self_contained(tmp_path):
     rd, broot, idx = setup_run(tmp_path)
     b = prepare(rd, blind_root=broot, index=idx)
     names = sorted(p.name for p in b.iterdir())
-    assert names == ["INSTRUCTIONS.md", "_checker", "check.py", "dump.py", "spec.json", "weights.npz"]
+    assert names == ["INSTRUCTIONS.md", "_checker", "check.py", "dump.py", "scratch", "spec.json", "weights.npz"]
     blob = "".join(p.read_text(errors="ignore") for p in b.rglob("*") if p.suffix in {".py", ".md", ".json"})
     assert "neareq" not in blob and str(rd) not in blob
     r = subprocess.run([sys.executable, "-I", "check.py", "dump.py"], cwd=b, capture_output=True, text=True)
@@ -144,3 +144,10 @@ def test_collect_heuristics_path(tmp_path, capsys):
                  "--transcript", str(tr)]) == 0
     assert "pair -> abs" in heur.read_text()
     assert (repo_index.read_bytes() if repo_index.exists() else None) == before
+
+
+def test_prepare_scratch_dir(tmp_path):
+    rd, broot, idx = setup_run(tmp_path)
+    b = prepare(rd, blind_root=broot, index=idx)
+    assert (b / "scratch").is_dir() and not any((b / "scratch").iterdir())
+    assert "scratch/" in (b / "INSTRUCTIONS.md").read_text(encoding="utf-8")
