@@ -79,6 +79,21 @@ class MLP:
         return activate(self.acts[-1], pre[-2]).astype(np.float64)   # activate in the net's float32, then cast
 
 
+def as_sigmoid(mlp: MLP) -> MLP:
+    """The same function with every tanh layer written as a sigmoid layer: tanh(z) = 2 sigmoid(2z) - 1.
+    Layer i gets W, b scaled by 2; the next layer absorbs the 2x and the -1."""
+    W = [w.copy() for w in mlp.weights]
+    b = [x.copy() for x in mlp.biases]
+    acts = list(mlp.acts)
+    for i, a in enumerate(mlp.acts):
+        if a != "tanh":
+            continue
+        W[i], b[i], acts[i] = 2 * W[i], 2 * b[i], "sigmoid"
+        b[i + 1] = (b[i + 1] - W[i + 1].astype(np.float64).sum(axis=1)).astype(np.float32)
+        W[i + 1] = 2 * W[i + 1]
+    return MLP(W, b, acts)
+
+
 def from_torch(module) -> MLP:
     from torch import nn
 

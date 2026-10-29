@@ -120,3 +120,44 @@ def test_hidden_sigmoid_matches_forward_pass():
     X = rng.uniform(-3, 3, (100, 3)).astype(np.float32)
     own = activate("sigmoid", m.preactivations(X)[0])     # the input to the last layer in the forward pass
     np.testing.assert_array_equal(m.hidden(X), own.astype(np.float64))
+
+
+def _rand_mlp(sizes, acts, seed=0):
+    import numpy as np
+    from nndc.model import MLP
+    rng = np.random.default_rng(seed)
+    return MLP([rng.normal(size=(o, i)).astype(np.float32) for i, o in zip(sizes, sizes[1:])],
+               [rng.normal(size=o).astype(np.float32) for o in sizes[1:]], acts)
+
+
+def test_as_sigmoid_matches_tanh():
+    import numpy as np
+    from nndc.model import as_sigmoid
+    for sizes, acts in (([2, 4, 1], ["tanh"]), ([3, 5, 4, 1], ["tanh", "tanh"])):
+        m = _rand_mlp(sizes, acts)
+        s = as_sigmoid(m)
+        X = np.random.default_rng(1).uniform(-3, 3, (2000, sizes[0]))
+        assert s.acts == ["sigmoid"] * len(acts)
+        assert np.abs(s.forward(X) - m.forward(X)).max() <= 1e-5
+
+
+def test_as_sigmoid_mixed_layers():
+    import numpy as np
+    from nndc.model import as_sigmoid
+    m = _rand_mlp([2, 4, 3, 1], ["relu", "tanh"])
+    s = as_sigmoid(m)
+    X = np.random.default_rng(2).uniform(-3, 3, (2000, 2))
+    assert s.acts == ["relu", "sigmoid"]
+    np.testing.assert_array_equal(s.weights[0], m.weights[0])
+    np.testing.assert_array_equal(s.biases[0], m.biases[0])
+    assert np.abs(s.forward(X) - m.forward(X)).max() <= 1e-5
+
+
+def test_as_sigmoid_no_tanh_is_a_copy():
+    import numpy as np
+    from nndc.model import as_sigmoid
+    m = _rand_mlp([2, 4, 1], ["sigmoid"])
+    s = as_sigmoid(m)
+    assert s is not m and s.acts == m.acts
+    for a, b in zip(s.weights + s.biases, m.weights + m.biases):
+        np.testing.assert_array_equal(a, b)
