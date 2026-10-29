@@ -236,7 +236,8 @@ Results are in `runs_sigmoid/REPORT.md` and `runs_sigmoid/iris/REPORT.md`.
 - **Superseded results:** the user decided that runs are results of code and git keeps them. So `ast2` replaced
   `ast` in every sigmoid run, and the project B `ast.py` files live in git history.
 
-**Not done yet**
+**Not done yet** (at the time; all three are handled in the next section: the review changes and tanh in `ast3`,
+median3 as a spike finding)
 - Two-layer sigmoid nets (median3): after expansion, their kinks bend, so they do not lie on lines.
 - Tool changes the final review found. They need a new freeze and a fresh held-out set:
   - near-axis lines can split in two;
@@ -244,6 +245,59 @@ Results are in `runs_sigmoid/REPORT.md` and `runs_sigmoid/iris/REPORT.md`.
   - the position tolerance should scale with the line, not the largest input range;
   - constants are written at full precision.
 - Tanh, which is a scaled sigmoid and should reuse everything here.
+
+## Tanh nets and `ast3` (2026-10-29)
+
+These are the open items from the section above. Design: `docs/design/2026-10-29-ast3-tanh-design.md`. Results:
+`runs_tanh/REPORT.md`, `runs_tanh/iris/REPORT.md` and the "Kink merge (ast3)" section of `runs_sigmoid/REPORT.md`.
+
+**What we learned**
+- **Tanh is a sigmoid in disguise:** `tanh(z) = 2·sigmoid(2z) − 1`.
+  - Rewriting tanh layers as sigmoid layers (exact maths) let every sigmoid move run on tanh nets unchanged.
+  - Checking against the original tanh net kept the result honest.
+  - `ast3` passed on all 30 tanh nets. Kink merge won 7 of 10 development and 3 of 5 held-out tanh formula nets
+    where it applies.
+- **Tanh nets behave like sigmoid nets.**
+  - Sharp tasks (xor, window, neareq) are recovered by the agents.
+  - Smooth tasks (absdiff, tax, median3) get faithful programs: the formula plus correction terms.
+- **"Formula plus corrections" is how agents write a smooth net, even with two layers.**
+  - **Median3:** all three tanh agents wrote the median plus named terms: rounding at ties, flattening at the box
+    corners, and an offset or a pull toward the mean. That is what kink merge does for one-layer nets, and kink merge
+    cannot do it for median3 (see the spike below).
+  - **Tax:** agents wrote the brackets plus an edge cap or knot.
+- **4-feature Iris is harder with tanh.**
+  - With sigmoid, linear scores passed on every held-out net (72–74 nodes). With tanh no linear route passes, and the
+    tool gives 434–484 nodes.
+  - The agents found the reason: the boundaries bend near the box edges. They used two planes per class or a squared
+    term, and wrote 93–310 nodes.
+- **The review fixes (kink merge v2) changed little,** as predicted.
+  - On 45 sigmoid runs that have both versions, `ast3` was the same size as `ast2` on 37, smaller on 3 (absdiff seed
+    4: 216 → 158 nodes) and larger on 5 (up to 81 → 118).
+  - The cause is the rounded constant. Rounding it uses part of the error budget, so the program passes only at a
+    finer snap level, where the coefficients stay unrounded.
+  - By the rule fixed before the results, `ast3` is worse on those 5 runs, so the `ast2` files stay next to `ast3`.
+  - The next version should try the constant both rounded and unrounded at each level.
+- **Held-out:** the frozen `ast3` passed on all 27 held-out nets (sigmoid seeds 6–8; tanh formula seed 2 and Iris
+  seeds 3–5). The sigmoid route winners matched the prediction: neareq kink merge, tax knot-fit, xor and window as
+  before.
+
+**The median3 spike** (scratchpad, before the design)
+- Expanding both sigmoid layers of median3 into 17-piece chords stays within 1.6% of the net.
+- But the first layer's 256 kinks still form 147–224 lines in 9–14 directions. Nothing cancels at the first layer: the
+  cancellation happens only after the second layer mixes the units.
+- So line merging does not reach two-layer nets. The agents' "median plus corrections" programs suggest a different
+  route: guess an order-statistic form, then fit corrections in the sorted values.
+
+**What did not work, or surprised us**
+- **A blind agent tried to kill every Python process** on the machine with `taskkill`, to stop its own background
+  job. The permission rules blocked it, and it used its task tools instead. If it had gone through, it would have
+  killed the tool runs.
+- **Several agents guessed "Iris"** from the input ranges alone. Blindness held (no task information in the
+  folders), but input ranges are themselves a hint.
+- **The shell hook (`rtk`) rewrites `grep`**, which silently broke a collect loop. Use `awk` for filters in scripts.
+- **Some trained nets did not learn,** with tanh more than sigmoid: tanh xor seed 1, window seeds 1–2, absdiff seeds
+  0 and 2, Iris-petal seeds 2 and 4; sigmoid absdiff seed 7. They stay in and are marked. Agents found what such nets
+  really compute ("always class 0", "just `x0`").
 
 ## Open questions and next steps
 
