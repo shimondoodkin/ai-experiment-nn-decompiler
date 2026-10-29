@@ -513,3 +513,12 @@ Expected: 15 new folders, each with `formula.py`. Commit: `data: sigmoid held-ou
   before the development run.
 - **Task 2:** `fit_program` builds the motif input (`ReluSum`) directly instead of a `SymNet` plus
   `as_relu_sum`; the result is the same.
+- **Task 6, development run (2026-10-29):** 15 runs, all pass.
+  - Kink-merge won on neareq seeds 0–2 (78/116/78 nodes), absdiff seeds 0–1 (80/95) and tax seed 2 (20).
+  - Absdiff seed 2 fell back to the dump (structural-exact, 238), as the spike's 4.0% suggested.
+  - Tax seeds 0–1 keep knot-fit (22). Xor and window keep truth-table and boundary-scan.
+  - No bug fixes were needed.
+  - The committed `results.json` of 6 runs were stale (`n_inputs` +20 against their committed
+    `counterexamples.json`). Verdicts, nodes and recovered are unchanged for every older version.
+- **Freeze: `93d7199`** (the last code commit; the development `ast2:` lines record it). Held-out nets are built
+  after this point.
