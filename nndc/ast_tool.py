@@ -38,9 +38,9 @@ ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary
           "kink-merge"]
 
 
-TOOL_VERSIONS = ("ast", "ast3", "ast4")   # ast: up to the sigmoid moves (project B); ast3: plus kink merge v2 and
-                                          # the tanh rewrite (ast2, kink merge v1, is in git at 93d7199); ast4: ast3
-                                          # keeping the smallest passing kink-merge candidate
+TOOL_VERSIONS = ("ast", "ast4")   # ast: up to the sigmoid moves (project B, the ReLU runs' ast.py); ast4: plus kink
+                                  # merge and the tanh rewrite, the current tool (ast2 is in git at 93d7199, ast3 at
+                                  # 7806fb2)
 
 
 @dataclass
@@ -75,15 +75,14 @@ def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, flo
 
 
 def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple[str, dict]:
-    """version "ast3" adds the kink-merge route and rewrites tanh layers as sigmoid layers for the routes; the
-    checker always compares with the original net. "ast4" is ast3 with the kink-merge route keeping the smallest
-    passing candidate (heuristics/kinks.py). "ast" is the project B tool."""
+    """version "ast4" adds the kink-merge route and rewrites tanh layers as sigmoid layers for the routes; the
+    checker always compares with the original net. "ast" is the project B tool."""
     if spec.task:
         raise ValueError("refactor needs a blind spec (the task name must not be visible)")
     lines: list[str] = []
     cands: list[Candidate] = []
     extra: dict = {}
-    kinks = version in ("ast3", "ast4")
+    kinks = version == "ast4"
     check_mlp = mlp                                    # every candidate is checked against the original net
     orig_dump = dump_src
     if kinks and "tanh" in mlp.acts:
@@ -187,7 +186,7 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple
             add("knot-fit", lambda: knot_fit(spec, mlp), ["S5"])
         if kinks:
             def kink_route() -> str | None:   # inside add(), so an error skips only this route
-                src_k, extra["kink_merge"] = kink_merge(spec, mlp, version=version)
+                src_k, extra["kink_merge"] = kink_merge(spec, mlp)
                 return src_k
             add("kink-merge", kink_route, ["K1"])
 
@@ -206,7 +205,7 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple
 
 def run_ast(rd: Path, name: str = "ast") -> dict:
     """Refactor a run's dump.py with the tool (blind spec only); write <name>.py + <name>_trace.json; re-evaluate.
-    A new tool version gets a new name (ast3, ast4), so the older version's files stay."""
+    A new tool version gets a new name (ast4), so the older version's files stay."""
     from .run import evaluate_run, load_run, record_git
 
     if name not in TOOL_VERSIONS:

@@ -163,7 +163,7 @@ def test_refactor_trace_has_kink_merge():
     from nndc.ast_tool import refactor
     rd = Path("runs_sigmoid/tax/seed0")
     blind, mlp = _blind(rd)
-    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version="ast3")
+    _, trace = refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version="ast4")
     assert "kink_merge" in trace and any(c["route"] == "kink-merge" for c in trace["candidates"])
 
 
@@ -183,7 +183,7 @@ def test_kink_merge_error_skips_only_the_route(monkeypatch):
     monkeypatch.setattr(ast_tool, "kink_merge", boom)
     rd = Path("runs_sigmoid/tax/seed2")
     blind, mlp = _blind(rd)
-    src, trace = ast_tool.refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version="ast3")
+    src, trace = ast_tool.refactor((rd / "dump.py").read_text(encoding="utf-8"), blind, mlp, version="ast4")
     assert src and all(c["route"] != "kink-merge" for c in trace["candidates"])
     assert any(ln.startswith("kink-merge: not applicable") and "boom" in ln for ln in trace["trace_lines"])
 
@@ -263,9 +263,8 @@ def test_best_candidate_order():
 
 
 def _scripted_route(monkeypatch, passes):
-    """Run kink_merge with a fake checker and fake sizes: the i-th distinct source checked has 1000 - i nodes (later
-    candidates are smaller), and it passes when passes(i) is true. Returns (seen sources in order, src3/trace3 runner,
-    ast4 runner)."""
+    """Patch kink_merge's checker and sizes: the i-th distinct source checked has 1000 - i nodes (later candidates
+    are smaller), and it passes when passes(i) is true. Returns the list of sources seen, in order."""
     import types
 
     import nndc.heuristics.kinks as K
@@ -284,21 +283,18 @@ def _scripted_route(monkeypatch, passes):
 def test_ast4_route_picks_smallest_at_first_m(monkeypatch):
     spec, mlp = _spec(2, "regression"), _net([2, 4, 1], ["sigmoid"])
     seen = _scripted_route(monkeypatch, lambda i: True)     # everything passes: the route stops at m = 1
-    src3, tr3 = kink_merge(spec, mlp)                       # ast3: the first candidate that passes
-    assert src3 == seen[0] and tr3["winner"]["m"] == 1
-    seen.clear()
-    src4, tr4 = kink_merge(spec, mlp, version="ast4")
+    src4, tr4 = kink_merge(spec, mlp)
     assert len(seen) > 1 and tr4["winner"]["m"] == 1
-    assert src4 == seen[-1] != seen[0]                      # the smallest, which ast3's order reaches last
+    assert src4 == seen[-1] != seen[0]                      # the smallest, not the first that passes
     assert {"window", "round_const", "tol", "off"} <= set(tr4["winner"])
 
 
 def test_ast4_route_stops_at_first_passing_m(monkeypatch):
     spec, mlp = _spec(2, "regression"), _net([2, 4, 1], ["sigmoid"])
     seen = _scripted_route(monkeypatch, lambda i: True)
-    kink_merge(spec, mlp, version="ast4")                   # all pass: ast4 checks exactly the m = 1 sources
+    kink_merge(spec, mlp)                                   # all pass: ast4 checks exactly the m = 1 sources
     n1 = len(seen)
     seen2 =_scripted_route(monkeypatch, lambda i: i >= n1)  # m = 1 fails, every later candidate passes
-    src4, tr4 = kink_merge(spec, mlp, version="ast4")
+    src4, tr4 = kink_merge(spec, mlp)
     assert tr4["winner"]["m"] == 2                           # not m = 3+, although their candidates are smaller
     assert src4 == seen2[-1] and len(seen2) > n1

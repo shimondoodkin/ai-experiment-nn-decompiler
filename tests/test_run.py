@@ -106,34 +106,19 @@ def test_act_mismatch_refused(tmp_path):
     assert not (rd / "formula.py").exists()
 
 
-def test_ast2_cex_separate(tmp_path):
+def test_ast4_cex_separate(tmp_path):
     rd = build_run("absdiff", 0, root=tmp_path, act="sigmoid")
     shared = rd / "counterexamples.json"
     before = shared.read_bytes() if shared.exists() else b""
-    (rd / "ast2.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")   # the sharp formula fails vs the net
+    (rd / "ast4.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")   # the sharp formula fails vs the net
     res = evaluate_run(rd)
-    assert not res["versions"]["ast2"]["check"]["snap_pass"]
-    assert json.loads((rd / "counterexamples_ast2.json").read_text())
+    assert not res["versions"]["ast4"]["check"]["snap_pass"]
+    assert json.loads((rd / "counterexamples_ast4.json").read_text())
     assert (shared.read_bytes() if shared.exists() else b"") == before
-    own = json.loads((rd / "counterexamples_ast2.json").read_text())
-    res2 = evaluate_run(rd)   # ast2 is checked on the shared set plus its own; the other versions on the shared set
+    own = json.loads((rd / "counterexamples_ast4.json").read_text())
+    res2 = evaluate_run(rd)   # ast4 is checked on the shared set plus its own; the other versions on the shared set
     v = res2["versions"]
-    assert v["ast2"]["check"]["n_inputs"] == v["dump"]["check"]["n_inputs"] + len(own)
-
-
-def test_ast3_cex_separate(tmp_path):
-    rd = build_run("absdiff", 0, root=tmp_path, act="sigmoid")
-    shared = rd / "counterexamples.json"
-    before = shared.read_bytes() if shared.exists() else b""
-    (rd / "ast3.py").write_text("def net(x0, x1):\n    return abs(x0 - x1)\n")   # the sharp formula fails vs the net
-    res = evaluate_run(rd)
-    assert not res["versions"]["ast3"]["check"]["snap_pass"]
-    assert json.loads((rd / "counterexamples_ast3.json").read_text())
-    assert (shared.read_bytes() if shared.exists() else b"") == before
-    own = json.loads((rd / "counterexamples_ast3.json").read_text())
-    res2 = evaluate_run(rd)   # ast3 is checked on the shared set plus its own; the other versions on the shared set
-    v = res2["versions"]
-    assert v["ast3"]["check"]["n_inputs"] == v["dump"]["check"]["n_inputs"] + len(own)
+    assert v["ast4"]["check"]["n_inputs"] == v["dump"]["check"]["n_inputs"] + len(own)
 
 
 def test_run_ast_name_keeps_ast(tmp_path):
@@ -141,46 +126,48 @@ def test_run_ast_name_keeps_ast(tmp_path):
     rd = build_run("window", 0, root=tmp_path, act="sigmoid")
     run_ast(rd)
     old = (rd / "ast.py").read_bytes()
-    run_ast(rd, name="ast3")
-    assert (rd / "ast.py").read_bytes() == old and (rd / "ast3.py").exists() and (rd / "ast3_trace.json").exists()
-    assert "ast3:" in (rd / "run_git.txt").read_text()
-    assert "ast3" in json.loads((rd / "results.json").read_text())["versions"]
+    run_ast(rd, name="ast4")
+    assert (rd / "ast.py").read_bytes() == old and (rd / "ast4.py").exists() and (rd / "ast4_trace.json").exists()
+    assert "ast4:" in (rd / "run_git.txt").read_text()
+    assert "ast4" in json.loads((rd / "results.json").read_text())["versions"]
     assert "kink_merge" not in json.loads((rd / "ast_trace.json").read_text())   # plain ast = the project B tool
-    assert "kink_merge" in json.loads((rd / "ast3_trace.json").read_text())
+    assert "kink_merge" in json.loads((rd / "ast4_trace.json").read_text())
 
 
 def test_run_ast_rejects_other_names(tmp_path):
     from nndc.ast_tool import run_ast
     rd = build_run("window", 0, root=tmp_path, act="sigmoid")
     before = (rd / "dump.py").read_bytes()
-    for name in ("dump", "agent_1", "formula", "ast2", "ast5"):
+    for name in ("dump", "agent_1", "formula", "ast2", "ast3", "ast5"):
         with pytest.raises(ValueError):
             run_ast(rd, name=name)
     assert (rd / "dump.py").read_bytes() == before and not (rd / "ast2.py").exists()
 
 
-def test_ast3_on_tanh_net(tmp_path):
+def test_ast4_on_tanh_net(tmp_path):
     from nndc.ast_tool import run_ast
     from nndc.check import check_program
     from nndc.run import load_run
     rd = build_run("window", 0, root=tmp_path, act="tanh")
     run_ast(rd)                                             # the project B tool: no rewrite, no kink merge
     assert "kink_merge" not in json.loads((rd / "ast_trace.json").read_text())
-    run_ast(rd, name="ast3")
+    run_ast(rd, name="ast4")
     spec, mlp = load_run(rd)
     assert mlp.acts == ["tanh"]
-    src = (rd / "ast3.py").read_text()
+    src = (rd / "ast4.py").read_text()
     assert check_program(src, mlp, spec).snap_pass          # checked against the original tanh net
-    assert "kink_merge" in json.loads((rd / "ast3_trace.json").read_text())
-
-
-def test_run_ast4_keeps_ast3(tmp_path):
-    from nndc.ast_tool import run_ast
-    rd = build_run("window", 0, root=tmp_path, act="sigmoid")
-    run_ast(rd, name="ast3")
-    old = (rd / "ast3.py").read_bytes()
-    run_ast(rd, name="ast4")
-    assert (rd / "ast3.py").read_bytes() == old and (rd / "ast4.py").exists()
-    assert "ast4:" in (rd / "run_git.txt").read_text()
-    assert "ast4" in json.loads((rd / "results.json").read_text())["versions"]
     assert "kink_merge" in json.loads((rd / "ast4_trace.json").read_text())
+
+
+
+def test_cli_ast_default_is_ast4(monkeypatch):
+    import nndc.ast_tool as ast_tool
+    from nndc.cli import main
+    names = []
+
+    def fake_run_ast(rd, name="ast"):
+        names.append(name)
+        raise ValueError("stop")                            # cmd_ast reports it and goes on
+    monkeypatch.setattr(ast_tool, "run_ast", fake_run_ast)
+    main(["ast", "some/run"])
+    assert names == ["ast4"]

@@ -256,10 +256,10 @@ def best_candidate(cands: list[dict]) -> dict:
                                      -c["tol"], c["off"]))
 
 
-def kink_merge(spec: Spec, mlp: MLP, version: str = "ast3") -> tuple[str | None, dict]:
-    """The route: smallest m first. ast3: merge offset 0.02 before 0.1, snap ladder coarsest first, the first
-    program that passes the checker wins. ast4: every offset, level and snap variant for this m is checked, and the
-    passing one with the fewest nodes wins (best_candidate); otherwise the next m."""
+def kink_merge(spec: Spec, mlp: MLP) -> tuple[str | None, dict]:
+    """The route (ast4): smallest m first. Every merge offset, snap level and snap variant for this m is checked,
+    and the passing one with the fewest nodes wins (best_candidate); otherwise the next m. (ast3 took the first
+    passing candidate, default variant only; its code is in git at 7806fb2.)"""
     trace: dict = {"applies": applies(spec, mlp), "per_offset": [], "winner": None}
     if trace["applies"] is not None:
         return None, trace
@@ -274,7 +274,6 @@ def kink_merge(spec: Spec, mlp: MLP, version: str = "ast3") -> tuple[str | None,
         line_sets[off] = merge_lines(kinks, off)
         trace["per_offset"].append({"off": off, "kinks": len(kinks), "lines": len(line_sets[off]),
                                     "cancelled": sum(nearly_cancelled(ln) for ln in line_sets[off])})
-    variants = VARIANTS if version == "ast4" else VARIANTS[:1]
     seen: set[str] = set()
     for m in range(1, MAX_LINES + 1):
         passing = []
@@ -284,7 +283,7 @@ def kink_merge(spec: Spec, mlp: MLP, version: str = "ast3") -> tuple[str | None,
             lines, coefs, _ = refine(line_sets[off][:m], U, y)
             fit = to_real(lines, coefs, spec)
             for tol in SNAP_LEVELS:
-                for window, round_const in variants:
+                for window, round_const in VARIANTS:
                     f = snap_fit(fit, spec, tol, U, y, window, round_const)
                     src = fit_program(f, spec)
                     if src in seen:
@@ -296,8 +295,6 @@ def kink_merge(spec: Spec, mlp: MLP, version: str = "ast3") -> tuple[str | None,
                     c = {"off": off, "m": m, "tol": tol, "window": window, "round_const": round_const,
                          "exact": bool(r.exact_pass), "src": src, "fit": f,
                          "nodes": program_size(parse_program(src, spec.arg_names))["nodes"]}
-                    if version != "ast4":
-                        return _won(c, trace)
                     passing.append(c)
         if passing:
             return _won(best_candidate(passing), trace)
