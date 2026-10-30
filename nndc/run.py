@@ -104,11 +104,18 @@ def _bug_learned(mlp: MLP, t, defect, target, seed: int) -> float:
 
 
 def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = False, bug: bool = False,
-              act: str = "relu") -> Path:
+              act: str = "relu", wide: bool = False) -> Path:
     """bug=True trains on a planted-bug target (experiments/defects.py, defect seed = seed); the spec keeps
     the true task, so grading measures the truth. act sets the hidden activation of a trained net; a non-ReLU
-    run of a formula task also gets formula.py, the intended formula as a reference version."""
+    run of a formula task also gets formula.py, the intended formula as a reference version, and so does every run
+    of an irrational task. wide=True trains the wide variant (4x hidden units, 3x steps)."""
+    from experiments.irrational import is_irrational, widened
+
     t = get_task(task)
+    if wide:
+        if seed is None or t.hidden is None:
+            raise ValueError("a wide net needs a trained seed")
+        t = widened(t)
     if act != "relu" and (seed is None or bug):
         raise ValueError(f"act={act} needs a trained seed without a planted bug (hand nets are ReLU)")
     if bug and seed is None:
@@ -118,6 +125,12 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
     if seed is not None and t.hidden is None:
         raise ValueError(f"task {task} is hand-only (no training setup)")
     rd = run_dir(task, seed, root)
+    log_path = rd / "train_log.json"
+    if seed is not None and not retrain and log_path.exists():
+        had = json.loads(log_path.read_text(encoding="utf-8")).get("hidden")
+        if had is not None and had != t.hidden:
+            raise ValueError(f"{rd} holds a net with hidden sizes {had}, not {t.hidden} "
+                             f"(wide={wide}); use another --root")
     attempts = agent_attempts(rd) if rd.exists() else []
     if retrain and attempts:
         raise RuntimeError(f"{rd} has agent attempts ({', '.join(p.name for _, p in attempts)}) that belong to "
@@ -151,7 +164,7 @@ def build_run(task: str, seed: int | None, root: Path = RUNS, retrain: bool = Fa
     if any(a != act for a in mlp.acts):
         raise ValueError(f"{rd} holds a net with activations {mlp.acts}, not act={act}; use another --root")
     (rd / "dump.py").write_text(dump_program(mlp, spec), encoding="utf-8")
-    if any(a != "relu" for a in mlp.acts) and task in TASKS:
+    if (any(a != "relu" for a in mlp.acts) and task in TASKS) or is_irrational(task):
         (rd / "formula.py").write_text(expected_program(t), encoding="utf-8")
     res = evaluate_run(rd)
     if not res["versions"]["dump"]["check"]["exact_pass"]:

@@ -37,7 +37,11 @@ def out_of_range_inputs(task: Task, rng: np.random.Generator) -> np.ndarray | No
 
 
 def _score(task: Task, raw: np.ndarray, X: np.ndarray) -> tuple[float, bool]:
-    y = task.target(X).astype(np.float64)
+    with np.errstate(all="ignore"):
+        y = task.target(X).astype(np.float64)
+    ok = np.isfinite(y)   # outside the true function's domain (log, sqrt, 1/x out of range) there is nothing to grade
+    if not ok.all():
+        raw, y = raw[ok], y[ok]
     if task.spec.output == "regression":
         err = np.where(np.isfinite(raw), np.abs(raw - y), np.inf)
         rng_y = float(y.max() - y.min()) or 1.0

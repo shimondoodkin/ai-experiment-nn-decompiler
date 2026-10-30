@@ -102,11 +102,13 @@ TASKS: dict[str, Task] = {t.name: t for t in _ALL}
 
 def get_task(name: str) -> Task:
     from .datasets import DATASET_TASKS
+    from .irrational import IRRATIONAL_HELDOUT_TASKS, IRRATIONAL_TASKS
 
-    try:
-        return TASKS[name] if name in TASKS else DATASET_TASKS[name]
-    except KeyError:
-        raise KeyError(f"unknown task {name!r}; known: {', '.join([*TASKS, *DATASET_TASKS])}") from None
+    for table in (TASKS, DATASET_TASKS, IRRATIONAL_TASKS, IRRATIONAL_HELDOUT_TASKS):
+        if name in table:
+            return table[name]
+    known = [*TASKS, *DATASET_TASKS, *IRRATIONAL_TASKS, *IRRATIONAL_HELDOUT_TASKS]
+    raise KeyError(f"unknown task {name!r}; known: {', '.join(known)}")
 
 
 def expected_program(task: Task) -> str:

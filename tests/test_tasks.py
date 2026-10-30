@@ -49,3 +49,38 @@ def test_train_sigmoid_window():
     assert mlp.acts == ["sigmoid"]
     assert log["act"] == "sigmoid"
     assert log["quality"]["accuracy"] >= 0.98
+
+
+def _irrational():
+    from experiments.irrational import IRRATIONAL_HELDOUT_TASKS, IRRATIONAL_TASKS
+    return IRRATIONAL_TASKS, IRRATIONAL_HELDOUT_TASKS
+
+
+def test_irrational_tasks_resolve_and_stay_out_of_TASKS():
+    from experiments.irrational import FAMILY
+
+    dev, held = _irrational()
+    assert set(dev) == {"exp", "log", "sqrt", "square", "recip", "circle", "dist", "bump", "product"}
+    assert set(held) == {"decay", "logshift", "ellipse", "hypot1"}
+    assert not (set(dev) | set(held)) & set(TASKS)
+    assert set(FAMILY) == set(dev) | set(held)
+    assert get_task("ellipse").spec.output == "binary" and get_task("exp").spec.output == "regression"
+    assert all(t.seeds == (0, 1, 2) and t.steps == 6000 for t in dev.values())
+    assert all(t.seeds == (0, 1) for t in held.values())
+    assert all(t.hidden == ([8] if len(t.spec.inputs) == 1 else [16]) for t in [*dev.values(), *held.values()])
+
+
+@pytest.mark.parametrize("name", ["exp", "log", "sqrt", "square", "recip", "circle", "dist", "bump", "product",
+                                  "decay", "logshift", "ellipse", "hypot1"])
+def test_irrational_expected_formula_is_correct(name):
+    t = get_task(name)
+    g = grade_task(expected_program(t), t)
+    assert g["error"] is None and g["recovered"], g
+
+
+def test_widened():
+    from experiments.irrational import widened
+
+    t = widened(get_task("exp"))
+    assert t.hidden == [32] and t.steps == 18000 and get_task("exp").hidden == [8]
+    assert widened(get_task("circle")).hidden == [64]

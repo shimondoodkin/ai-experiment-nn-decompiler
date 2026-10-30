@@ -171,3 +171,54 @@ def test_cli_ast_default_is_ast4(monkeypatch):
     monkeypatch.setattr(ast_tool, "run_ast", fake_run_ast)
     main(["ast", "some/run"])
     assert names == ["ast4"]
+
+
+@pytest.fixture
+def short_irrational(monkeypatch):
+    import experiments.irrational as irr
+
+    monkeypatch.setitem(irr.IRRATIONAL_TASKS, "exp", replace(irr.IRRATIONAL_TASKS["exp"], steps=50))
+
+
+def test_irrational_run_gets_formula_py_for_relu(tmp_path, short_irrational):
+    rd = build_run("exp", 0, root=tmp_path)
+    assert (rd / "formula.py").read_text().strip().endswith("return exp(x0)")
+    assert "formula" in json.loads((rd / "results.json").read_text())["versions"]
+
+
+def test_wide_build_trains_wider_net(tmp_path, short_irrational):
+    rd = build_run("exp", 0, root=tmp_path, wide=True)
+    log = json.loads((rd / "train_log.json").read_text())
+    assert log["hidden"] == [32] and log["steps"] == 150
+
+
+def test_wide_build_refuses_small_folder(tmp_path, short_irrational):
+    build_run("exp", 0, root=tmp_path)
+    with pytest.raises(ValueError, match="wide"):
+        build_run("exp", 0, root=tmp_path, wide=True)
+    build_run("exp", 1, root=tmp_path / "w", wide=True)
+    with pytest.raises(ValueError, match="wide"):
+        build_run("exp", 1, root=tmp_path / "w")
+
+
+def test_run_irrational_set_excludes_heldout(monkeypatch, tmp_path):
+    import nndc.cli as cli
+
+    built = []
+    res = tmp_path / "res"
+    res.mkdir()
+    (res / "results.json").write_text(json.dumps({"versions": {"dump": {"check": {"exact_pass": True, "label": "x"}}}}))
+
+    def fake_build(name, seed, root, **kw):
+        built.append((name, seed, kw))
+        return res
+    monkeypatch.setattr(cli, "build_run", fake_build)
+    monkeypatch.setattr(cli, "_train_summary", lambda r: "")
+    main(["run", "irrational", "--act", "sigmoid", "--wide", "--root", str(tmp_path)])
+    names = {n for n, _, _ in built}
+    assert names == {"exp", "log", "sqrt", "square", "recip", "circle", "dist", "bump", "product"}
+    assert {s for _, s, _ in built} == {0, 1, 2} and all(kw["wide"] and kw["act"] == "sigmoid" for _, _, kw in built)
+    built.clear()
+    main(["run", "irrational-heldout", "--root", str(tmp_path)])
+    assert {n for n, _, _ in built} == {"decay", "logshift", "ellipse", "hypot1"}
+

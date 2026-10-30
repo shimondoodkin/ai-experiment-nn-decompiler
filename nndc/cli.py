@@ -22,9 +22,12 @@ def _train_summary(res: dict) -> str:
 
 def cmd_run(args) -> int:
     from experiments.datasets import DATASET_TASKS
+    from experiments.irrational import IRRATIONAL_HELDOUT_TASKS, IRRATIONAL_TASKS
     from experiments.tasks import TASKS, get_task
 
-    names = [*TASKS, *DATASET_TASKS] if args.task == "all" else [args.task]
+    sets = {"all": [*TASKS, *DATASET_TASKS], "irrational": list(IRRATIONAL_TASKS),
+            "irrational-heldout": list(IRRATIONAL_HELDOUT_TASKS)}
+    names = sets.get(args.task, [args.task])
     for name in names:
         t = get_task(name)
         if args.hand:
@@ -35,7 +38,8 @@ def cmd_run(args) -> int:
             hand = [None] if t.handcrafted and args.act == "relu" else []   # hand nets are ReLU
             seeds = hand + (list(t.seeds) if t.hidden else [])
         for seed in seeds:
-            rd = build_run(name, seed, Path(args.root), retrain=args.retrain, bug=args.bug, act=args.act)
+            rd = build_run(name, seed, Path(args.root), retrain=args.retrain, bug=args.bug, act=args.act,
+                           wide=args.wide)
             res = json.loads((rd / "results.json").read_text(encoding="utf-8"))
             dump = res["versions"]["dump"]["check"]
             print(f"{rd.as_posix()}: {_train_summary(res)}; dump "
@@ -220,7 +224,8 @@ def main(argv: list[str] | None = None) -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
 
     r = sub.add_parser("run", help="build/train a model, dump it, check and grade every version")
-    r.add_argument("task", help="task name or 'all'")
+    r.add_argument("task", help="task name, 'all', 'irrational' or 'irrational-heldout'")
+    r.add_argument("--wide", action="store_true", help="the wide variant: 4x hidden units, 3x steps (irrational runs)")
     g = r.add_mutually_exclusive_group()
     g.add_argument("--seed", type=int)
     g.add_argument("--hand", action="store_true")
