@@ -192,7 +192,8 @@ def _before_after(dev: list[dict], base: Path) -> tuple[str, bool | None]:
     passing = [(b, a) for b, a in both if b.get("ast5_pass") and a.get("ast5_pass")
                and b.get("ast5_nodes") is not None and a.get("ast5_nodes") is not None]
     larger = sum(a["ast5_nodes"] > b["ast5_nodes"] for b, a in passing)
-    return f"found {fb} before, {fn} now; larger on {larger} of {len(passing)}", fn >= fb and larger == 0
+    measured = f"found {fb} before, {fn} now; larger on {larger} of {len(passing)}"
+    return measured, (fn >= fb and larger == 0) if both else None
 
 
 def _gate_predictions_md(dev: list[dict], base: Path) -> str:

@@ -77,6 +77,19 @@ def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, flo
     return [d for _, d in scored[:top]] + [{v: 1.0} for v in net.inputs]
 
 
+def _checked_near(cands: list[dict], mlp: MLP, spec: Spec) -> list[dict]:
+    """Near-formula candidates with their max error measured by the checker (share of the net's range on the
+    checker's inputs, the same inputs the 2% check uses); the fit sample's error is kept as fit_err. Candidates the
+    checker cannot evaluate, or with a non-finite error, are dropped."""
+    out = []
+    for c in cands:
+        r = check_program(c["src"], mlp, spec)
+        if r.error or not np.isfinite(r.max_abs_err) or not r.margin > 0:
+            continue
+        out.append(c | {"fit_err": c["err"], "err": r.max_abs_err * spec.snap_tol_frac / r.margin})
+    return out
+
+
 def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple[str, dict]:
     """version "ast4" adds the kink-merge route and rewrites tanh layers as sigmoid layers for the routes; the
     checker always compares with the original net. "ast5" also adds the family and conic routes. "ast" is the
@@ -223,6 +236,8 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple
             extra["near"] = {"family": "conic", "src": conic.src, "terms": 0, "nodes": conic.nodes,
                              "err": conic.check["disagreements_outside"] / conic.check["n_inputs"]}
         elif spec.output == "regression":
+            for row in extra["families"]:
+                row["near"] = _checked_near(row.get("near") or [], check_mlp, spec)
             extra["near"] = near_formula(extra["families"], len(spec.inputs))
         else:
             extra["near"] = None

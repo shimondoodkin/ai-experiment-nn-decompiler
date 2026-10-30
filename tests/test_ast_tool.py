@@ -49,8 +49,12 @@ def _spec(n_in, output="regression"):
     return Spec(task="", output=output, inputs=[InputSpec(f"x{i}", f"x{i}", "float", -1, 1) for i in range(n_in)])
 
 
-NEAR_ROWS = [{"family": "sqrt", "near": [{"terms": 0, "src": "s0", "err": 0.025, "nodes": 9}]},
-             {"family": "exp", "near": [{"terms": 1, "src": "e1", "err": 0.021, "nodes": 12}]}]
+# the net is x0 on [-1, 1] (range 2): 1.05·x0 is off by 0.05 (2.5%), 1.2·x0 by 0.2 (10%), whatever the fit sample said
+S05 = "def net(x0):\n    return 1.05 * x0\n"
+S20 = "def net(x0):\n    return 1.2 * x0\n"
+NEAR_ROWS = [{"family": "sqrt", "near": [{"terms": 0, "src": S05, "err": 0.001, "nodes": 9}]},
+             {"family": "exp", "near": [{"terms": 0, "src": S20, "err": 0.0005, "nodes": 5},
+                                       {"terms": 1, "src": "not a program", "err": 0.0001, "nodes": 7}]}]
 
 
 def test_ast5_trace_near_when_no_formula_passes(monkeypatch):
@@ -59,7 +63,12 @@ def test_ast5_trace_near_when_no_formula_passes(monkeypatch):
     monkeypatch.setattr(at, "family_candidates", lambda spec, mlp: ([], [dict(r) for r in NEAR_ROWS]))
     mlp, spec = _x0_net(1), _spec(1)
     _, trace = refactor(dump_program(mlp, spec), spec, mlp, version="ast5")
-    assert trace["near"] == {"family": "sqrt", "src": "s0", "err": 0.025, "terms": 0, "nodes": 9}
+    near = trace["near"]          # errors measured by the checker, not the fit sample: exp's 10% is out of the 3%
+    assert {k: near[k] for k in ("family", "src", "terms", "nodes", "fit_err")} == \
+        {"family": "sqrt", "src": S05, "terms": 0, "nodes": 9, "fit_err": 0.001}
+    assert near["err"] == pytest.approx(0.025, rel=1e-3)
+    exp_rows = next(r for r in trace["families"] if r["family"] == "exp")["near"]
+    assert exp_rows[0]["err"] == pytest.approx(0.1, rel=1e-3) and len(exp_rows) == 1    # the bad program is dropped
 
 
 def test_ast5_trace_near_none_when_formula_passes(monkeypatch):

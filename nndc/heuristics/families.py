@@ -429,7 +429,9 @@ def near_formula(rows: list[dict], dim: int) -> dict | None:
     terms, then the smaller error, then fewer nodes; if none is within, the smallest error. The 1-input identity
     family is a hinge program, never a near formula."""
     cands = [{"family": r["family"], "src": c["src"], "err": c["err"], "terms": c["terms"], "nodes": c["nodes"]}
-             for r in rows if not (dim == 1 and r["family"] == "identity") for c in (r.get("near") or [])]
+             | ({"fit_err": c["fit_err"]} if "fit_err" in c else {})
+             for r in rows if not (dim == 1 and r["family"] == "identity") for c in (r.get("near") or [])
+             if np.isfinite(c["err"])]
     if not cands:
         return None
     within = [c for c in cands if c["err"] <= NEAR_WITHIN]

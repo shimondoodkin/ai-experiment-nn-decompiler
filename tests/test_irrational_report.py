@@ -61,4 +61,7 @@ def test_gate_view_predictions(tmp_path):
         "sigmoid/dist/seed0": {"formula_found": True, "ast5_nodes": 12, "ast5_pass": True},
         "sigmoid/dist/seed1": {"formula_found": False, "ast5_nodes": 400, "ast5_pass": True}}}))
     md = build_irrational_report(tmp_path)
-    assert "| found 1 before, 1 now; larger on 0 of 2 |" in md
+    assert "| found 1 before, 1 now; larger on 0 of 2 | met |" in md
+    (tmp_path / "before_minimax.json").write_text(json.dumps({"runs": {
+        "tanh/dist/seed9": {"formula_found": True, "ast5_nodes": 12, "ast5_pass": True}}}))
+    assert "| found 0 before, 0 now; larger on 0 of 0 | – |" in build_irrational_report(tmp_path)   # nothing compared
