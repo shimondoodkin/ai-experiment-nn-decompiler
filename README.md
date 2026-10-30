@@ -14,6 +14,8 @@ Status: steps 1–4 done:
 3. a deterministic tool distilled from the agents' notes;
 4. a comparison with existing methods, and decompile → fix → reinsert.
 
+A side track added sigmoid and tanh nets and the kink-merge route (below).
+
 See [the design](docs/design/2026-10-27-nn-decompiler-design.md) for the full plan, [REPORT.md](REPORT.md)
 for results, and [CONCLUSIONS.md](CONCLUSIONS.md) for what each step taught us.
 
@@ -42,9 +44,28 @@ the net. Every net reduces to an if-chain of two linear tests. The AST tool got 
 argmax nets; its second version produced passing lists on all 6 fresh held-out nets, as did blind Claude
 agents. Details are in [runs/iris/REPORT.md](runs/iris/REPORT.md).
 
-## Sigmoid nets
+## Sigmoid and tanh nets
 
-The same pipeline on 30 nets with sigmoid hidden units, the same tasks, seeds and training settings: blind Claude agents, and the AST tool with sigmoid moves (step, line, clamped line, constant; linear scores and a linear cascade for argmax; a knot fit for 1-input regression), frozen before the held-out run. Each formula task also carries its intended formula as a reference program. Results, the formula-vs-net comparison and the comparison with the ReLU runs are in [runs_sigmoid/REPORT.md](runs_sigmoid/REPORT.md).
+The same pipeline on nets with sigmoid or tanh hidden units: the same tasks and training settings, blind Claude
+agents, and the AST tool with sigmoid moves (step, line, clamped line, constant; linear scores and a linear cascade
+for argmax; a knot fit for 1-input regression). Tanh layers are rewritten as sigmoid layers
+(`tanh(z) = 2·sigmoid(2z) − 1`), so every move runs on them too. Each formula task carries its intended formula as a
+reference program.
+
+- **Sharp nets are as easy as ReLU nets.** On xor and window the units are steep steps; agents and the tool recover
+  the formula.
+- **Smooth nets are the formula plus corrections.** A sum of sigmoids cannot keep climbing to the edge of the input
+  box, so on absdiff, tax and median3 the net flattens there (up to 9–14% of the output range) and the plain formula
+  fails against the net.
+- **Kink merge finds those corrections.** Each sigmoid is expanded into straight pieces (ReLU kinks); kinks on the
+  same line add up and about half of the lines cancel. What is left is the formula's kinks plus one edge kink, so
+  neareq and absdiff went from 230–240 nodes to about 65–115.
+- **`ast4` is the current tool** (`nndc ast`). It keeps the smallest passing program at the first line count that
+  passes, and it was never worse than the two earlier kink-merge versions. It passed on all 20 nets of its fresh
+  held-out set.
+
+Results are in [runs_sigmoid/REPORT.md](runs_sigmoid/REPORT.md) and [runs_tanh/REPORT.md](runs_tanh/REPORT.md); what
+each version taught us is in [CONCLUSIONS.md](CONCLUSIONS.md).
 
 Each run folder records the git commit each step ran with in `run_git.txt`.
 
@@ -55,7 +76,8 @@ uv sync
 uv run pytest                      # all tests; no Claude needed (uses a mock agent)
 uv run nndc run all                # build/train every model (step-1 and Iris) into runs/<task>/<hand|seedK>/
 uv run nndc check my.py --run runs/absdiff/seed0
-uv run nndc ast --all              # deterministic heuristics tool (no LLM); --split heldout for seed 2
+uv run nndc ast --all              # deterministic heuristics tool (no LLM, ast4); --split heldout for seed 2
+uv run nndc run all --act sigmoid --root runs_sigmoid   # the sigmoid nets (--act tanh --root runs_tanh)
 ```
 
 Refactoring with Claude Code (you run Claude yourself; the tool never launches it):
