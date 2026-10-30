@@ -138,7 +138,7 @@ def test_run_ast_rejects_other_names(tmp_path):
     from nndc.ast_tool import run_ast
     rd = build_run("window", 0, root=tmp_path, act="sigmoid")
     before = (rd / "dump.py").read_bytes()
-    for name in ("dump", "agent_1", "formula", "ast2", "ast3", "ast5"):
+    for name in ("dump", "agent_1", "formula", "ast2", "ast3", "ast6"):
         with pytest.raises(ValueError):
             run_ast(rd, name=name)
     assert (rd / "dump.py").read_bytes() == before and not (rd / "ast2.py").exists()
@@ -222,3 +222,53 @@ def test_run_irrational_set_excludes_heldout(monkeypatch, tmp_path):
     main(["run", "irrational-heldout", "--root", str(tmp_path)])
     assert {n for n, _, _ in built} == {"decay", "logshift", "ellipse", "hypot1"}
 
+
+@pytest.fixture
+def irr_1000(monkeypatch):
+    import experiments.irrational as irr
+
+    for name in ("exp", "circle"):
+        monkeypatch.setitem(irr.IRRATIONAL_TASKS, name, replace(irr.IRRATIONAL_TASKS[name], steps=1000))
+
+
+def test_ast5_adds_family_candidates_ast4_does_not(tmp_path, irr_1000):
+    from nndc.ast_tool import refactor
+    from nndc.run import load_run
+    from nndc.spec import Spec
+
+    rd = build_run("exp", 0, root=tmp_path, act="sigmoid")
+    spec, mlp = load_run(rd)
+    blind = Spec.from_json(spec.blind())
+    dump = (rd / "dump.py").read_text()
+    _, t5 = refactor(dump, blind, mlp, version="ast5")
+    assert {r["family"] for r in t5["families"]} == {"identity", "square", "exp", "log", "sqrt", "reciprocal"}
+    assert any(c["route"] == "family" for c in t5["candidates"])
+    assert "kink_merge" in t5
+    _, t4 = refactor(dump, blind, mlp, version="ast4")
+    assert "families" not in t4 and not any(c["route"] in ("family", "conic") for c in t4["candidates"])
+
+
+def test_run_ast_ast5_writes_own_files(tmp_path, irr_1000):
+    from nndc.ast_tool import run_ast
+
+    rd = build_run("circle", 0, root=tmp_path, act="sigmoid")
+    run_ast(rd, name="ast4")
+    old = (rd / "ast4.py").read_bytes()
+    run_ast(rd, name="ast5")
+    assert (rd / "ast4.py").read_bytes() == old and (rd / "ast5.py").exists()
+    trace = json.loads((rd / "ast5_trace.json").read_text())
+    assert [r["family"] for r in trace["families"]] == ["conic"]
+    assert "ast5:" in (rd / "run_git.txt").read_text()
+    assert "ast5" in json.loads((rd / "results.json").read_text())["versions"]
+
+
+def test_cli_ast_accepts_ast5(monkeypatch):
+    import nndc.ast_tool as ast_tool
+    names = []
+
+    def fake_run_ast(rd, name="ast"):
+        names.append(name)
+        raise ValueError("stop")
+    monkeypatch.setattr(ast_tool, "run_ast", fake_run_ast)
+    main(["ast", "some/run", "--name", "ast5"])
+    assert names == ["ast5"]

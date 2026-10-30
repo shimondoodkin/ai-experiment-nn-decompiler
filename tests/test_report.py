@@ -318,3 +318,9 @@ def test_run_section_shows_ast4(tmp_path):
     evaluate_run(rd)
     md = build_report(tmp_path, compare_to=tmp_path)
     assert "AST tool (no LLM, `ast4`)" in md and "0.75 - abs(x) / 2" in md
+
+
+def test_tool_prefers_ast5():
+    from nndc.report import _tool
+
+    assert _tool({"ast": {"v": 1}, "ast4": {"v": 4}, "ast5": {"v": 5}}) == {"v": 5}

@@ -17,8 +17,10 @@ from .heuristics.boundary import boundary_expr
 from .heuristics.boundary_scan import scan_boundary_expr
 from .heuristics.bounds import prune_dead_and_linear
 from .heuristics.cleanup import program_from_expr
+from .heuristics.conic import conic_candidate
 from .heuristics.decision_list import decision_list
 from .heuristics.sigmoid import knot_fit, linear_cascade, linear_scores, merge_steps, replace_units
+from .heuristics.families import family_candidates
 from .heuristics.fit import fit_expr
 from .heuristics.kinks import kink_merge
 from .heuristics.merge import merge_units, normalize
@@ -35,12 +37,13 @@ from .symnet import SymNet, from_dump, input_bounds, to_program
 ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit",
           "decision-list-snap", "decision-list",   # snapped first: when neither is exact, prefer round constants
           "sigmoid-replace-snap", "sigmoid-replace", "linear-cascade", "linear-scores", "knot-fit",   # non-ReLU nets
-          "kink-merge"]
+          "kink-merge", "family", "conic"]
 
 
-TOOL_VERSIONS = ("ast", "ast4")   # ast: up to the sigmoid moves (project B, the ReLU runs' ast.py); ast4: plus kink
-                                  # merge and the tanh rewrite, the current tool (ast2 is in git at 93d7199, ast3 at
-                                  # 7806fb2)
+TOOL_VERSIONS = ("ast", "ast4", "ast5")   # ast: up to the sigmoid moves (project B, the ReLU runs' ast.py); ast4:
+                                          # plus kink merge and the tanh rewrite, the current tool (ast2 is in git at
+                                          # 93d7199, ast3 at 7806fb2); ast5: plus the family and conic routes
+                                          # (irrational functions)
 
 
 @dataclass
@@ -76,13 +79,15 @@ def scan_directions(net: SymNet, spec: Spec, top: int = 4) -> list[dict[str, flo
 
 def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple[str, dict]:
     """version "ast4" adds the kink-merge route and rewrites tanh layers as sigmoid layers for the routes; the
-    checker always compares with the original net. "ast" is the project B tool."""
+    checker always compares with the original net. "ast5" also adds the family and conic routes. "ast" is the
+    project B tool."""
     if spec.task:
         raise ValueError("refactor needs a blind spec (the task name must not be visible)")
     lines: list[str] = []
     cands: list[Candidate] = []
     extra: dict = {}
-    kinks = version == "ast4"
+    kinks = version in ("ast4", "ast5")
+    formulas = version == "ast5"
     check_mlp = mlp                                    # every candidate is checked against the original net
     orig_dump = dump_src
     if kinks and "tanh" in mlp.acts:
@@ -189,6 +194,25 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple
                 src_k, extra["kink_merge"] = kink_merge(spec, mlp)
                 return src_k
             add("kink-merge", kink_route, ["K1"])
+
+    if formulas:
+        extra["families"] = []
+        if spec.output == "regression":
+            def families() -> None:
+                progs, rows = family_candidates(spec, mlp)
+                extra["families"] += rows
+                for _, src in progs:
+                    add("family", lambda src=src: src, ["F1"])
+            try:
+                families()
+            except (ValueError, ProgramError, ZeroDivisionError, np.linalg.LinAlgError) as e:
+                lines.append(f"family: not applicable ({e})")
+        if spec.output == "binary":
+            def conic_route() -> str | None:
+                src_c, row = conic_candidate(spec, mlp)
+                extra["families"].append(row)
+                return src_c
+            add("conic", conic_route, ["F2"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:

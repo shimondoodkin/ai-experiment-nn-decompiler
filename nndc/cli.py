@@ -141,11 +141,11 @@ def cmd_ast(args) -> int:
 
 
 def _baseline_fns() -> dict:
-    from .baselines.pysr_run import run_pysr
+    from .baselines.pysr_run import run_pysr, run_pysr_irr
     from .baselines.regions import run_regions
     from .baselines.tree import run_tree
 
-    return {"tree": run_tree, "regions": run_regions, "pysr": run_pysr}
+    return {"tree": run_tree, "regions": run_regions, "pysr": run_pysr, "pysr_irr": run_pysr_irr}
 
 
 def cmd_baseline(args) -> int:
@@ -207,6 +207,33 @@ def cmd_report(args) -> int:
 
     cmp = Path(args.compare_to) if args.compare_to else None
     Path(args.out).write_text(build_report(Path(args.root), compare_to=cmp), encoding="utf-8")
+    print(f"wrote {args.out}")
+    return 0
+
+
+def cmd_irr_analyse(args) -> int:
+    from experiments.irrational_analysis import analyse_run
+    from .run import all_runs
+
+    runs = all_runs(Path(args.root)) if args.all else [Path(r) for r in args.runs]
+    if not runs:
+        print("nothing to do: give run folders or --all")
+        return 2
+    for rd in runs:
+        try:
+            a = analyse_run(rd)
+        except (ValueError, KeyError, OSError) as e:   # one bad run never stops the batch
+            print(f"{rd.as_posix()}: ERROR {type(e).__name__}: {e}", flush=True)
+            continue
+        print(f"{rd.as_posix()}: learned={a['learned']} formula_found={a['formula_found']} "
+              f"terms={a['found_terms']} won={a['won_on_size']} pick={a['route_pick']}", flush=True)
+    return 0
+
+
+def cmd_irr_report(args) -> int:
+    from .irrational_report import build_irrational_report
+
+    Path(args.out).write_text(build_irrational_report(Path(args.base)), encoding="utf-8")
     print(f"wrote {args.out}")
     return 0
 
@@ -273,13 +300,13 @@ def main(argv: list[str] | None = None) -> int:
                     help="with --all: distill = every step-1 run except seed2 (default), heldout = step-1 seed2 "
                          "only, all = every run including dataset runs (iris)")
     at.add_argument("--root", default=str(RUNS))
-    at.add_argument("--name", default="ast4", choices=["ast", "ast4"],
+    at.add_argument("--name", default="ast4", choices=["ast", "ast4", "ast5"],
                     help="tool version to run and write (<name>.py, <name>_trace.json): ast4 (default) is the current "
                          "tool; ast is the project B tool that wrote the ReLU runs' ast.py")
     at.set_defaults(func=cmd_ast)
 
     bl = sub.add_parser("baseline", help="step-4 baselines: tree, regions, pysr (needs --group pysr), all")
-    bl.add_argument("name", choices=["tree", "regions", "pysr", "all"])
+    bl.add_argument("name", choices=["tree", "regions", "pysr", "pysr_irr", "all"])
     bl.add_argument("runs", nargs="*")
     bl.add_argument("--all", action="store_true")
     bl.add_argument("--root", default=str(RUNS))
@@ -297,6 +324,16 @@ def main(argv: list[str] | None = None) -> int:
     rp.add_argument("--out", default="REPORT.md")
     rp.add_argument("--compare-to", help="a root of ReLU runs: adds the formula-vs-net and activation comparison sections")
     rp.set_defaults(func=cmd_report)
+
+    ia = sub.add_parser("irr-analyse", help="irrational runs: how the net models the function, formula found (report only)")
+    ia.add_argument("runs", nargs="*")
+    ia.add_argument("--all", action="store_true")
+    ia.add_argument("--root", default="runs_irr/sigmoid")
+    ia.set_defaults(func=cmd_irr_analyse)
+    ir = sub.add_parser("irr-report", help="write runs_irr/REPORT.md from the irrational runs' analyses")
+    ir.add_argument("--base", default="runs_irr")
+    ir.add_argument("--out", default="runs_irr/REPORT.md")
+    ir.set_defaults(func=cmd_irr_report)
 
     gt = sub.add_parser("gate", help="evaluate the spike gate")
     gt.add_argument("--root", default=str(RUNS))

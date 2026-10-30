@@ -136,8 +136,8 @@ KINK_VERSIONS = ("ast4", "ast3", "ast2")   # AST tool versions with kink merge, 
 
 
 def _tool(versions: dict) -> dict | None:
-    """The newest AST tool version present (ast4, ast3, ast2, then ast)."""
-    return next((versions[n] for n in (*KINK_VERSIONS, "ast") if versions.get(n)), None)
+    """The newest AST tool version present (ast5, ast4, ast3, ast2, then ast)."""
+    return next((versions[n] for n in ("ast5", *KINK_VERSIONS, "ast") if versions.get(n)), None)
 
 
 def _cell(rd: Path, v: dict | None) -> str:

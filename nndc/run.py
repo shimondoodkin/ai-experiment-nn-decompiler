@@ -176,7 +176,7 @@ def _load_counterexamples(path: Path) -> list[dict]:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
 
 
-OWN_CEX = ("ast4",)   # versions whose counterexamples go to counterexamples_<name>.json, not the shared file
+OWN_CEX = ("ast4", "ast5")   # versions whose counterexamples go to counterexamples_<name>.json, not the shared file
 
 
 def evaluate_run(rd: Path) -> dict:
