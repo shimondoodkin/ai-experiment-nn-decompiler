@@ -230,6 +230,24 @@ def cmd_irr_analyse(args) -> int:
     return 0
 
 
+def cmd_explain(args) -> int:
+    from .explain import explain_run
+    from .run import all_runs
+
+    runs = all_runs(Path(args.root)) if args.all else [Path(r) for r in args.runs]
+    if not runs:
+        print("nothing to do: give run folders or --all")
+        return 2
+    for rd in runs:
+        try:
+            explain_run(rd)
+        except (ValueError, KeyError, OSError) as e:   # one bad run never stops the batch
+            print(f"{rd.as_posix()}: ERROR {type(e).__name__}: {e}", flush=True)
+            continue
+        print(f"{rd.as_posix()}: wrote explain.md", flush=True)
+    return 0
+
+
 def cmd_irr_report(args) -> int:
     from .irrational_report import build_irrational_report
 
@@ -330,6 +348,11 @@ def main(argv: list[str] | None = None) -> int:
     ia.add_argument("--all", action="store_true")
     ia.add_argument("--root", default="runs_irr/sigmoid")
     ia.set_defaults(func=cmd_irr_analyse)
+    ex = sub.add_parser("explain", help="per run: formula or near formula, residual and gate view (explain.md)")
+    ex.add_argument("runs", nargs="*")
+    ex.add_argument("--all", action="store_true")
+    ex.add_argument("--root", default="runs_irr/sigmoid")
+    ex.set_defaults(func=cmd_explain)
     ir = sub.add_parser("irr-report", help="write runs_irr/REPORT.md from the irrational runs' analyses")
     ir.add_argument("--base", default="runs_irr")
     ir.add_argument("--out", default="runs_irr/REPORT.md")
