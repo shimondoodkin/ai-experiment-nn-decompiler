@@ -1,6 +1,6 @@
 import numpy as np
 
-from nndc.heuristics.families import MAX_TERMS, family_candidates
+from nndc.heuristics.families import MAX_TERMS, family_candidates, near_formula
 from nndc.lang import evaluate, parse_program
 from nndc.spec import InputSpec, Spec
 
@@ -98,3 +98,40 @@ def test_not_applicable_to_binary_or_three_inputs():
     three = Spec(task="", output="regression", inputs=[InputSpec(f"x{k}", f"x{k}", "float", 0, 1) for k in range(3)])
     assert family_candidates(spec_1d(0, 1, "binary"), None, predict=lambda X: X[:, 0], check=lambda s: True) == ([], [])
     assert family_candidates(three, None, predict=lambda X: X[:, 0], check=lambda s: True) == ([], [])
+
+
+def test_near_formula_prefers_fewer_terms_within_3pct():
+    rows = [{"family": "reciprocal", "near": [{"terms": 4, "src": "r4", "err": 0.021, "nodes": 30}]},
+            {"family": "sqrt", "near": [{"terms": 0, "src": "s0", "err": 0.025, "nodes": 9},
+                                       {"terms": 4, "src": "s4", "err": 0.022, "nodes": 31}]}]
+    assert near_formula(rows, 2)["src"] == "s0"
+
+
+def test_near_formula_falls_back_to_smallest_error():
+    rows = [{"family": "exp", "near": [{"terms": 0, "src": "e0", "err": 0.06, "nodes": 6}]},
+            {"family": "log", "near": [{"terms": 2, "src": "l2", "err": 0.04, "nodes": 15}]}]
+    assert near_formula(rows, 1)["src"] == "l2"
+
+
+def test_identity_is_never_near_in_1d_but_quadratic_is_in_2d():
+    assert near_formula([{"family": "identity", "near": [{"terms": 0, "src": "i", "err": 0.01, "nodes": 3}]}], 1) is None
+    q = near_formula([{"family": "quadratic", "near": [{"terms": 0, "src": "q", "err": 0.025, "nodes": 5}]}], 2)
+    assert q == {"family": "quadratic", "src": "q", "err": 0.025, "terms": 0, "nodes": 5}
+
+
+def test_near_formula_skips_rows_without_near():
+    assert near_formula([{"family": "conic", "passed": False}, {"family": "exp", "near": []}], 2) is None
+
+
+def test_near_rows_filled_when_family_fails():
+    f = lambda X: np.sqrt(X[:, 0]) + 0.05 * np.sin(6 * X[:, 0])     # noqa: E731  sqrt plus ripple: fails at 2%
+    progs, info = run(f, spec_1d(0, 4))
+    assert not any(fam == "sqrt" for fam, _ in progs)
+    near = next(r for r in info if r["family"] == "sqrt")["near"]
+    assert near and all(0 < c["err"] for c in near) and [c["terms"] for c in near] == sorted({c["terms"] for c in near})
+    assert all(c["src"].startswith("def net(x0):") and c["nodes"] > 0 for c in near)
+
+
+def test_near_rows_empty_for_a_passing_family():
+    _, info = run(lambda X: np.exp(X[:, 0]), spec_1d(-2, 2))
+    assert next(r for r in info if r["family"] == "exp")["near"] == []

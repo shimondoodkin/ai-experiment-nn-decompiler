@@ -29,6 +29,8 @@ N_SNAP_2D = 4000      # snapping refits in 2-D use a subsample (plus the extreme
 BIG = 1e3             # residual for a non-finite model output, in output ranges
 LAWSON_ROUNDS = 40    # minimax refinement after each fit and hinge refit
 LAWSON_SNAP_ROUNDS = 10   # ... and inside snapping, on the snapping subsample
+NEAR_SLACK = 1.25     # near formulas: snapping may add at most a quarter to the fit's max error
+NEAR_WITHIN = 0.03    # near formulas within this share of the range: fewest correction terms wins
 
 FAMILIES_1D = ("identity", "square", "exp", "log", "sqrt", "reciprocal")
 FAMILIES_2D = ("quadratic", "sqrt", "exp", "log", "reciprocal")
@@ -406,6 +408,36 @@ def _fit_sample(spec: Spec, predict: Callable[[np.ndarray], np.ndarray]) -> tupl
     return np.vstack([X, X[ext]]), np.concatenate([y, y[ext]])
 
 
+def _near_rows(pre: list[tuple[int, Model]], spec: Spec, X: np.ndarray, y: np.ndarray, Xs: np.ndarray,
+               ys: np.ndarray, R: float, tol: float) -> list[dict]:
+    """For a family that failed every term count: each term count's fit snapped with the relaxed tolerance
+    max(tol, NEAR_SLACK x its own max error)."""
+    out = []
+    for terms, m in pre:
+        s = _snap(m, X, y, Xs, ys, R, max(tol, NEAR_SLACK * _err(m, m.values, X, y)))
+        src = _emit(s, spec)
+        try:
+            nodes = program_size(parse_program(src, spec.arg_names))["nodes"]
+        except ProgramError:
+            continue
+        out.append({"terms": terms, "src": src, "err": _err(s, s.values, X, y) / R, "nodes": nodes})
+    return out
+
+
+def near_formula(rows: list[dict], dim: int) -> dict | None:
+    """The near formula among the info rows' near candidates: within NEAR_WITHIN of the range, the fewest correction
+    terms, then the smaller error, then fewer nodes; if none is within, the smallest error. The 1-input identity
+    family is a hinge program, never a near formula."""
+    cands = [{"family": r["family"], "src": c["src"], "err": c["err"], "terms": c["terms"], "nodes": c["nodes"]}
+             for r in rows if not (dim == 1 and r["family"] == "identity") for c in (r.get("near") or [])]
+    if not cands:
+        return None
+    within = [c for c in cands if c["err"] <= NEAR_WITHIN]
+    if within:
+        return min(within, key=lambda c: (c["terms"], c["err"], c["nodes"]))
+    return min(cands, key=lambda c: c["err"])
+
+
 def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray], np.ndarray] | None = None,
                       check: Callable[[str], bool] | None = None) -> tuple[list[tuple[str, str]], list[dict]]:
     """Passing family programs as (family, src), and one info row per family tried. predict and check are test
@@ -428,19 +460,22 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
     else:
         Xs, ys = X, y
     passing, info = [], []
+    pending: list[tuple[dict, list[tuple[int, Model]]]] = []
     for family in (FAMILIES_1D if dim == 1 else FAMILIES_2D):
         m, e_ls, e = _fit_family(family, dim, X, y, Xs, ys, R)
         row = {"family": family, "fit_err": e_ls / R, "minimax_err": e / R, "snapped_err": None,
-               "terms": 0, "passed": False, "nodes": None, "src": None, "params": None}
+               "terms": 0, "passed": False, "nodes": None, "src": None, "params": None, "near": []}
         info.append(row)
         if m is None or not e / R <= DROP_FRAC:
             continue
+        pre: list[tuple[int, Model]] = []     # each term count's fit before snapping, for near formulas
         for terms in range(MAX_TERMS + 1):
             if terms:
                 n = _add_hinge(m, X, y, R)
                 if n is None:
                     break
                 m = n
+            pre.append((terms, m))
             m = _snap(m, X, y, Xs, ys, R, tol)
             src = _emit(m, spec)
             try:
@@ -453,4 +488,9 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
             if ok:
                 passing.append((family, src))
                 break
+        if not (dim == 1 and family == "identity"):    # never a near formula
+            pending.append((row, pre))
+    if not passing:      # near formulas are recorded only when no family program passes
+        for row, pre in pending:
+            row["near"] = _near_rows(pre, spec, X, y, Xs, ys, R, tol)
     return passing, info

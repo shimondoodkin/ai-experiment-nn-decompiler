@@ -20,7 +20,7 @@ from .heuristics.cleanup import program_from_expr
 from .heuristics.conic import conic_candidate
 from .heuristics.decision_list import decision_list
 from .heuristics.sigmoid import knot_fit, linear_cascade, linear_scores, merge_steps, replace_units
-from .heuristics.families import family_candidates
+from .heuristics.families import family_candidates, near_formula
 from .heuristics.fit import fit_expr
 from .heuristics.kinks import kink_merge
 from .heuristics.merge import merge_units, normalize
@@ -213,6 +213,19 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple
                 extra["families"].append(row)
                 return src_c
             add("conic", conic_route, ["F2"])
+
+    if formulas:   # the near formula: recorded only when no family or conic program passes (trace only)
+        fam = [c for c in cands if c.route in ("family", "conic")]
+        conic = next((c for c in fam if c.route == "conic"), None)
+        if any(c.check["snap_pass"] for c in fam):
+            extra["near"] = None
+        elif conic is not None:
+            extra["near"] = {"family": "conic", "src": conic.src, "terms": 0, "nodes": conic.nodes,
+                             "err": conic.check["disagreements_outside"] / conic.check["n_inputs"]}
+        elif spec.output == "regression":
+            extra["near"] = near_formula(extra["families"], len(spec.inputs))
+        else:
+            extra["near"] = None
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:
