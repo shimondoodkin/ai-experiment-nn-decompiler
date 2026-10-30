@@ -55,3 +55,14 @@ def test_pysr_found_by_family_function():
     assert pysr_found("def net(x0):\n    return (1.0 / (x0 + 1.0))\n", "reciprocal")
     assert pysr_found("def net(x0, x1):\n    return (x0 * x1)\n", "quadratic")
     assert pysr_found("def net(x0, x1):\n    return ((x0 * x0) + (x1 * x1) < 4.0)\n", "conic")
+
+
+def test_near_fields():
+    from experiments.irrational_analysis import near_fields
+
+    near = {"family": "sqrt", "src": "s", "err": 0.025, "terms": 1, "nodes": 9}
+    assert near_fields(near, "sqrt") == {"near_family": "sqrt", "near_err": 0.025, "near_terms": 1,
+                                         "near_family_is_task_family": True}
+    assert near_fields(near, "exp")["near_family_is_task_family"] is False
+    assert near_fields(None, "exp") == {"near_family": None, "near_err": None, "near_terms": None,
+                                        "near_family_is_task_family": None}

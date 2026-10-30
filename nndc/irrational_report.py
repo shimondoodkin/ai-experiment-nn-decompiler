@@ -1,7 +1,8 @@
 """runs_irr/REPORT.md: the irrational-function nets (design docs/design/2026-10-30-irrational-functions-design.md).
 
-Reads only <base>/<variant>/<task>/<seed>/irr_analysis.json (written by `nndc irr-analyse`) and each variant's
-heldout.json; it runs no checks.
+Reads only <base>/<variant>/<task>/<seed>/irr_analysis.json (written by `nndc irr-analyse`), each variant's
+heldout.json and <base>/before_minimax.json (the ast5 results before the gate-view design, for its third prediction);
+it runs no checks.
 """
 from __future__ import annotations
 
@@ -10,6 +11,7 @@ from pathlib import Path
 
 VARIANTS = ("relu", "relu_wide", "sigmoid", "tanh")
 DEV_SEEDS = ("seed0", "seed1", "seed2")
+NEAR_WITHIN = 0.03
 
 
 def load_rows(base: Path) -> list[dict]:
@@ -40,14 +42,26 @@ def _yn(b) -> str:
     return "–" if b is None else "yes" if b else "no"
 
 
+def _is_regression(a: dict) -> bool:
+    return a.get("family") != "conic"
+
+
+def _near_ok(a: dict) -> bool:
+    """Found, or the near formula is of the task's family and within 3% of the output range."""
+    return bool(a["formula_found"] or (a.get("near_family_is_task_family") and a.get("near_err") is not None
+                                       and a["near_err"] <= NEAR_WITHIN))
+
+
 def _results_md(rows: list[dict]) -> str:
     out = ["## Results", "",
            "One row per net. *formula found*: a passing `ast5` family program of the task's family with at most 4 "
            "correction terms (the number in brackets). *won*: that program has fewer nodes than both the hinge-only "
-           "fit (1-D) and `ast4`.", "",
+           "fit (1-D) and `ast4`. *near formula*: where no formula passes, `ast5`'s near formula (family, max error as "
+           "a share of the output range; for a conic, the share of inputs decided differently). *explain*: the run's "
+           "`explain.md` (formula, residual and gate view).", "",
            "| variant | task | seed | learned | true vs net | formula.py | formula found | route pick | ast4 nodes "
-           "| ast5 nodes (route) | hinge-only | won | PySR |",
-           "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+           "| ast5 nodes (route) | near formula | hinge-only | won | PySR | explain |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for a in rows:
         found = f"yes ({a['found_terms']})" if a["formula_found"] else "no"
         h = a.get("hinge_only") or {}
@@ -57,9 +71,12 @@ def _results_md(rows: list[dict]) -> str:
               if a["ast5_nodes"] is not None else "–")
         tvn = "–" if a.get("true_vs_net") is None else f"{100 * a['true_vs_net']:.1f}%"
         seed = a["seed"] + (" (held-out)" if a["heldout"] else "")
+        near = (f"{a['near_family']} {100 * a['near_err']:.1f}%"
+                if not a["formula_found"] and a.get("near_family") and a.get("near_err") is not None else "–")
+        link = f"[explain]({a['variant']}/{a['task']}/{a['seed']}/explain.md)" if a.get("explain") else "–"
         out.append(f"| {a['variant']} | {a['task']} | {seed} | {_yn(a['learned'])} | {tvn} | "
-                   f"{_yn(a.get('formula_py_pass'))} | {found} | {a.get('route_pick') or '–'} | {a4} | {a5} | {hinge} | "
-                   f"{_yn(a['won_on_size'])} | {_yn(a.get('pysr_found'))} |")
+                   f"{_yn(a.get('formula_py_pass'))} | {found} | {a.get('route_pick') or '–'} | {a4} | {a5} | {near} | "
+                   f"{hinge} | {_yn(a['won_on_size'])} | {_yn(a.get('pysr_found'))} | {link} |")
     return "\n".join(out) + "\n"
 
 
@@ -104,7 +121,8 @@ def _model_md(rows: list[dict], base: Path) -> str:
 
 def _snap_table(rows: list[dict]) -> list[str]:
     out = ["| variant | learned | formula found | with 0 terms | with 1–4 terms | route pick is the family | won on size "
-           "| other family passed | PySR found |", "|---|---|---|---|---|---|---|---|---|"]
+           "| other family passed | PySR found | near formula within 3% (regression, of the family) |",
+           "|---|---|---|---|---|---|---|---|---|---|"]
     for v in VARIANTS:
         ls = [a for a in rows if a["variant"] == v and a["learned"]]
         if not [a for a in rows if a["variant"] == v]:
@@ -113,7 +131,8 @@ def _snap_table(rows: list[dict]) -> list[str]:
         out.append(f"| {v} | {len(ls)} | {_cnt(len(f), len(ls))} | {sum(a['found_terms'] == 0 for a in f)} | "
                    f"{sum((a['found_terms'] or 0) > 0 for a in f)} | {sum(a['route_pick'] == a['family'] for a in ls)} | "
                    f"{sum(bool(a['won_on_size']) for a in ls)} | {sum(bool(a['other_families']) for a in ls)} | "
-                   f"{sum(bool(a.get('pysr_found')) for a in ls)} |")
+                   f"{sum(bool(a.get('pysr_found')) for a in ls)} | "
+                   f"{sum(_near_ok(a) and not a['formula_found'] for a in ls if _is_regression(a))} |")
     return out
 
 
@@ -161,6 +180,43 @@ def _predictions_md(dev: list[dict], held: list[dict]) -> str:
                       "| prediction | measured | met |", "|---|---|---|", *rows]) + "\n"
 
 
+def _before_after(dev: list[dict], base: Path) -> tuple[str, bool | None]:
+    p = Path(base) / "before_minimax.json"
+    if not p.exists():
+        return "– (no saved list)", None
+    before = json.loads(p.read_text(encoding="utf-8"))["runs"]
+    now = {f"{a['variant']}/{a['task']}/{a['seed']}": a for a in dev}
+    both = [(b, now[k]) for k, b in before.items() if k in now]
+    fb = sum(bool(b["formula_found"]) for b, _ in both)
+    fn = sum(bool(a["formula_found"]) for _, a in both)
+    passing = [(b, a) for b, a in both if b.get("ast5_pass") and a.get("ast5_pass")
+               and b.get("ast5_nodes") is not None and a.get("ast5_nodes") is not None]
+    larger = sum(a["ast5_nodes"] > b["ast5_nodes"] for b, a in passing)
+    return f"found {fb} before, {fn} now; larger on {larger} of {len(passing)}", fn >= fb and larger == 0
+
+
+def _gate_predictions_md(dev: list[dict], base: Path) -> str:
+    rows = []
+
+    def add(text, measured, met):
+        rows.append(f"| {text} | {measured} | {'–' if met is None else 'met' if met else 'not met'} |")
+
+    dist = [a for a in dev if a["variant"] == "sigmoid" and a["task"] == "dist"]
+    k = sum(bool(a["formula_found"]) for a in dist)
+    add("with minimax, the formula is found on at least 2 of the 3 sigmoid dist nets", _pct(k, len(dist)),
+        bool(dist) and k >= 2)
+    reg = [a for a in dev if a["learned"] and _is_regression(a)]
+    ok = sum(_near_ok(a) for a in reg)
+    add("on at least 90% of the learned regression development nets, the formula is found or the near formula is of "
+        "the task's family and within 3%", _pct(ok, len(reg)), bool(reg) and ok >= 0.9 * len(reg))
+    measured, met = _before_after(dev, base)
+    add("on the nets run before minimax, ast5 finds the formula on at least as many, and is never larger where both "
+        "pass", measured, met)
+    return "\n".join(["## Predictions (near formulas and gate view)", "",
+                      "Written in `docs/design/2026-10-31-formula-residual-gate-view-design.md` before any of its code.",
+                      "", "| prediction | measured | met |", "|---|---|---|", *rows]) + "\n"
+
+
 def build_irrational_report(base: Path) -> str:
     rows = load_rows(base)
     dev = [a for a in rows if not a["heldout"]]
@@ -172,7 +228,7 @@ def build_irrational_report(base: Path) -> str:
              "each run's `irr_analysis.json`.", "",
              _results_md(rows), _model_md(rows, base),
              "\n".join(["## Snapping to formulas", "", "Development nets.", "", *_snap_table(dev)]) + "\n",
-             _predictions_md(dev, held)]
+             _predictions_md(dev, held), _gate_predictions_md(dev, base)]
     if held:
         freezes = sorted({a["freeze"] for a in held if a["freeze"]})
         parts.append("\n".join(["## Held-out", "",

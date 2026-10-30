@@ -47,6 +47,15 @@ def formula_found(rows: list[dict], family: str) -> dict:
             "route_pick": pick["family"] if pick else None}
 
 
+def near_fields(near: dict | None, family: str) -> dict:
+    """ast5's near formula (recorded when no formula passes): its family, error, terms, and whether it is the task's
+    family."""
+    if not near:
+        return {"near_family": None, "near_err": None, "near_terms": None, "near_family_is_task_family": None}
+    return {"near_family": near["family"], "near_err": near["err"], "near_terms": near["terms"],
+            "near_family_is_task_family": near["family"] == family}
+
+
 def merge_kinks(xs: list[float], width: float) -> list[float]:
     """Sorted kinks; neighbours closer than MERGE_FRAC of the width become one (their mean, 3 digits)."""
     out: list[list[float]] = []
@@ -214,7 +223,8 @@ def analyse_run(rd: Path) -> dict:
     out = {"task": spec.task, "variant": rd.parent.parent.name, "seed": rd.name, "learned": bool(log.get("learned")),
            "family": family, **formula_found(rows, family),
            "ast4_nodes": nodes("ast4"), "ast4_pass": passes("ast4"), "ast5_nodes": nodes("ast5"),
-           "ast5_pass": passes("ast5"), "ast5_route": trace.get("winner"), "formula_py_pass": passes("formula")}
+           "ast5_pass": passes("ast5"), "ast5_route": trace.get("winner"), "formula_py_pass": passes("formula"),
+           **near_fields(trace.get("near"), family), "explain": (rd / "explain.md").exists()}
     if spec.output == "regression":
         X, _ = build_input_set(mlp, spec, 0)
         yn = net_output(mlp, spec, X)[0]
