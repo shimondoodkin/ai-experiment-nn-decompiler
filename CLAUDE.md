@@ -19,7 +19,7 @@ uv run pytest tests/test_check.py::test_name -v  # a single test
 uv run nndc run all                              # build/train every model (formula tasks and Iris) into runs/
 uv run nndc run iris --seed 0                    # one model
 uv run nndc check prog.py --run runs/absdiff/seed0
-uv run nndc ast --all --split distill|heldout|all [--root R]   # deterministic refactoring tool
+uv run nndc ast --all --split distill|heldout|all [--root R]   # deterministic refactoring tool (ast4; --name ast: project B)
 uv run nndc agent prepare <run>                  # blind folder for a Claude refactoring run (outside the repo)
 uv run nndc agent collect <blind> --transcript <jsonl>         # bring it back, audit, re-check
 uv run nndc report                               # regenerate REPORT.md from runs/
@@ -32,8 +32,8 @@ There is no linter configured.
 **Run folders** are the unit of everything: `runs/<task>/<hand|seedK>/`. Each holds:
 - `spec.json`, `weights.npz` (and `net.pt`), `train_log.json`;
 - `dump.py`: the net as code;
-- program versions: `agent_<n>.py`, `ast.py`, `ast2.py`, `ast3.py` or `ast4.py` (the AST tool), `formula.py` (sigmoid runs), plus later
-  baselines;
+- program versions: `agent_<n>.py`, `ast4.py` (the AST tool) or `ast.py` (the project B tool, ReLU runs), `formula.py`
+  (sigmoid and tanh runs), plus later baselines;
 - `results.json`.
 
 `nndc/run.py:evaluate_run` checks and grades every version present and rewrites `results.json`.
@@ -130,37 +130,35 @@ reconstructed from git history.
   - `knot-fit` for 1-input regression.
 
   They run only for nets with non-ReLU units.
-- **Kink merge (`ast2`):** `nndc/heuristics/kinks.py` expands a one-layer sigmoid net into ReLU kinks, merges
-  kinks on one line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
-  - Every sigmoid run of seeds 0–5 (and median3, Iris) has `ast2`; the older `ast.py` was removed (it is in git history). Where the route does
-    not apply (median3, Iris), `ast2` equals the project B program. Its held-out set was seeds 3–5.
-  - `ast2` can no longer be produced (its code is at `93d7199`); its files stay until the user agrees to remove them (`ast4` is never worse).
-- **`ast3`** (design `docs/design/2026-10-29-ast3-tanh-design.md`): `ast2` plus kink merge v2 (antiparallel
-  merge, snap level 0 folds out-of-box lines, position window from the line's own range, rounded constant) and the
-  tanh rewrite.
-  - Commands: `nndc ast --name ast3 RUNS…` writes `ast3.py`, `ast3_trace.json` and `counterexamples_ast3.json`.
-  - Sigmoid runs seeds 0–11 have `ast3`: 0–5 were its development set, 6–8 its held-out set
-    (`runs_sigmoid/heldout_ast3.json`); on 9–11 it ran as `ast4`'s comparison.
-  - **`ast3` vs `ast2`:** `ast3` was larger on 5 of 45 runs. The cause was the search order: the route stopped at the
-    first passing program, and `ast3` rounds more. See `CONCLUSIONS.md`.
-- **`ast4`** (design `docs/design/2026-10-30-ast4-design.md`): `ast3` whose kink-merge route checks every merge offset,
-  snap level and snap variant (position window line-range or max-span, constant rounded or not) at each line count,
-  and keeps the passing one with the fewest nodes (`best_candidate` in `kinks.py`).
-  - `nndc ast --name ast4 RUNS…`. `TOOL_VERSIONS = ("ast", "ast3", "ast4")`; plain `nndc ast` is still the project B
-    tool.
-  - Every sigmoid and tanh run has `ast4`. It is never worse than `ast2` or `ast3` (report tables).
+- **Kink merge:** `nndc/heuristics/kinks.py` expands a one-layer sigmoid net into ReLU kinks, merges kinks on one
+  line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
+- **`ast4`, the current tool** (design `docs/design/2026-10-30-ast4-design.md`): kink merge v2 (antiparallel merge,
+  snap level 0 folds out-of-box lines) plus the tanh rewrite. At each line count the kink-merge route checks every
+  merge offset, snap level and snap variant (position window line-range or max-span, constant rounded or not), and
+  keeps the passing one with the fewest nodes (`best_candidate` in `kinks.py`).
+  - `nndc ast RUNS…` runs it by default and writes `ast4.py`, `ast4_trace.json` and `counterexamples_ast4.json`.
+    `TOOL_VERSIONS = ("ast", "ast4")`; `--name ast` is the project B tool, which wrote the ReLU runs' `ast.py` (on ReLU
+    nets `ast4` gives the same programs, since kink merge and the tanh rewrite do not apply).
+  - Every sigmoid and tanh run has `ast4`.
+- **Older versions, removed 2026-10-30** (the user agreed; `ast4` was never worse than either). Their files are in git
+  history before that removal:
+  - `ast2` (kink merge v1; code at `93d7199`) on sigmoid seeds 0–5, median3 and Iris; its held-out set was seeds 3–5;
+  - `ast3` (code at `7806fb2`) on sigmoid seeds 0–11 and every tanh run; its held-out sets are in `heldout_ast3.json`;
+  - `ast3` was larger than `ast2` on 5 of 45 runs because its route stopped at the first passing program and it
+    rounds more. See `CONCLUSIONS.md`.
 - **`<root>/heldout.json`** names the held-out runs of the newest tool version (`version`, `freeze`, `runs`); the
   report reads it. Older versions' sets are in `heldout_<version>.json`.
 - **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the
   "Formula vs net", "Compared with the ReLU runs", "Kink merge" (newest version, with a table against each older
-  version) and "Reproduction (<newest>)" sections. It shows the newest tool version (`ast4`, `ast3`, `ast2`, then `ast`).
+  version still present) and "Reproduction (<newest>)" sections. It shows the newest tool version (`ast4`, then
+  `ast3`, `ast2`, `ast`).
 - **Agent scratch files:** `prepare` gives each `agent`-kind blind folder a `scratch/` directory, and
   `INSTRUCTIONS.md` asks the agent to use it (`io` and `fix` folders do not have one yet). Before that, agents wrote to the shared session scratchpad and the audit flagged it.
 
 **Tanh runs** (`runs_tanh/`):
 - **Build:** `nndc run <task> --seed <k> --act tanh --root runs_tanh`. Same tasks and settings as the sigmoid runs;
   formula seeds 0–2 and Iris seeds 0–5.
-- **Tool:** only `ast3` and `ast4` run on them. `refactor` rewrites tanh layers as sigmoid layers for the routes
+- **Tool:** `ast4` (earlier `ast3`, now removed). `refactor` rewrites tanh layers as sigmoid layers for the routes
   (`as_sigmoid` in `nndc/model.py`: `tanh(z) = 2·sigmoid(2z) − 1`). Final acceptance always checks against the original
   tanh net; checks inside a route use the rewritten net, which differs by about 1e-7.
 - **Agents:** `--index runs_tanh/blind_index.json`. Heuristics go to `runs_tanh/HEURISTICS.md` (development) and
@@ -218,8 +216,8 @@ reconstructed from git history.
   stays in git history (each run's `run_git.txt` names the commit a step ran with). A result may be removed
   when a newer version replaces it (for example `ast.py` once `ast2.py` exists), in a commit of its own, after
   the user agrees. Never remove a result that has no replacement, and never silently overwrite one: a new
-  tool version writes a new file name. For sigmoid runs `ast2` replaced `ast` (2026-10-29); the project B
-  `ast.py` files are in git history before that removal.
+  tool version writes a new file name. For sigmoid runs `ast2` replaced `ast` (2026-10-29), and `ast4` replaced
+  `ast2` and `ast3` in the sigmoid and tanh runs (2026-10-30); the removed files are in git history.
 - **No destructive commands on the repo:** to try a command that rewrites or deletes run files, work on a copy
   in a scratch folder outside the repo, and never point `rm -rf`, `shutil.rmtree`, `git clean` or
   `experiments/equivalence.py copy` at the repo, its parent or `runs*/`. Tests that exercise a delete must patch

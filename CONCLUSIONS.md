@@ -341,8 +341,10 @@ Design: `docs/design/2026-10-30-ast4-design.md`. Spike: `experiments/spikes/ast4
   - Every prediction in the design held. The frozen `ast4` (`5ed6ee8`) passed on all 20 held-out nets.
   - The biggest gains are on neareq: 116 → 64 (seed 1) and 118 → 66 (seed 5). On held-out, 116 → 83 (seed 9) and
     tanh 81 → 67.
-- **`ast4` is never worse than either older version,** so the `ast2` and `ast3` files can go (CLAUDE.md:
-  superseded results may go). That needs the user's agreement and a commit of its own.
+- **`ast4` is never worse than either older version.** So, with the user's agreement, `ast4` became the default tool
+  (`nndc ast`), and the `ast2` and `ast3` files were removed from the sigmoid and tanh runs on 2026-10-30, in a commit
+  of their own (391 files; git history keeps them). No other verdict changed. The table above is now the record of
+  the comparison; the reports no longer show it.
 
 **Deferred** (from the `ast3` review, still open): route-internal checks use the rewritten tanh net; the direction
 snap is not span-aware; `refactor` accepts any version string; `_heldout_rule` falls back to the old seeds-3–5 rule
