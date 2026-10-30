@@ -64,3 +64,34 @@ def test_run_pysr_on_absdiff(tmp_path):
     info = run_pysr(rd)
     assert info["best"] and (rd / "pysr.py").exists()
     assert evaluate_run(rd)["versions"]["pysr"]["check"]["snap_pass"]
+
+
+def test_printer_irr_converts_exp_log_sqrt_division():
+    x0, x1 = sympy.symbols("x0 x1")
+    e = sympy.exp(x0) + sympy.log(x1 + 4) + sympy.sqrt(x0 + 4) + 1 / (x0 + 4) + x1 / (x0 * x0 + 1)
+    src = sympy_to_program(e, two_float_spec(), irr=True)
+    X = np.array([[1.0, -2.0], [0.5, 3.0]])
+    want = sympy.lambdify((x0, x1), e, "numpy")(X[:, 0], X[:, 1])
+    assert np.allclose(evaluate(parse_program(src, ["x0", "x1"]), X), want)
+
+
+def test_printer_default_still_rejects_exp_and_division_by_variable():
+    x0, _ = sympy.symbols("x0 x1")
+    for e in (1 / (x0 + 1), sympy.exp(x0)):
+        with pytest.raises(UnsupportedExpr):
+            sympy_to_program(e, two_float_spec())
+
+
+def test_irr_settings_only_add_operators():
+    from nndc.baselines.pysr_run import PYSR_IRR_SETTINGS, PYSR_SETTINGS
+
+    assert {k: v for k, v in PYSR_IRR_SETTINGS.items() if "operators" not in k} == \
+           {k: v for k, v in PYSR_SETTINGS.items() if "operators" not in k}
+    assert PYSR_IRR_SETTINGS["binary_operators"] == PYSR_SETTINGS["binary_operators"] + ["/"]
+    assert PYSR_IRR_SETTINGS["unary_operators"] == PYSR_SETTINGS["unary_operators"] + ["exp", "log", "sqrt"]
+
+
+def test_baseline_versions_include_pysr_irr():
+    from nndc.baselines.common import BASELINE_VERSIONS
+
+    assert BASELINE_VERSIONS[-2:] == ["pysr_irr", "pysr_irr_snap"]

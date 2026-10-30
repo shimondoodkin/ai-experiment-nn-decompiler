@@ -15,7 +15,7 @@ from ..model import MLP
 from ..spec import Spec
 
 N_SAMPLES = 50_000
-BASELINE_VERSIONS = ["tree", "regions", "pysr", "pysr_snap"]
+BASELINE_VERSIONS = ["tree", "regions", "pysr", "pysr_snap", "pysr_irr", "pysr_irr_snap"]
 
 
 def net_samples(spec: Spec, mlp: MLP, n: int = N_SAMPLES, seed: int = 0) -> tuple[np.ndarray, np.ndarray, np.ndarray]:

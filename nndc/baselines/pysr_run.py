@@ -23,6 +23,8 @@ N_PYSR = 5000
 PYSR_SETTINGS = dict(binary_operators=["+", "-", "*", "max", "min", "greater", "cond"],
                      unary_operators=["abs", "relu"], maxsize=25, niterations=40, timeout_in_seconds=120,
                      deterministic=True, parallelism="serial", random_state=0)
+PYSR_IRR_SETTINGS = {**PYSR_SETTINGS, "binary_operators": PYSR_SETTINGS["binary_operators"] + ["/"],
+                     "unary_operators": PYSR_SETTINGS["unary_operators"] + ["exp", "log", "sqrt"]}   # irrational runs
 COEF_REL, ADD_FRAC, CMP_FRAC = 0.05, 0.01, 0.01
 
 
@@ -34,7 +36,11 @@ def _num(v) -> str:
     return repr(float(v))
 
 
-def _src(e) -> str:
+def _src(e, irr: bool = False) -> str:
+    """Program text of a sympy expression. irr=True (pysr_irr) also prints exp, log, sqrt and division by a
+    non-constant, which the language allows since the irrational-functions project."""
+    def rec(a) -> str:
+        return _src(a, irr)
     if isinstance(e, sympy.Symbol):
         return e.name
     if e is sympy.true:
@@ -44,49 +50,61 @@ def _src(e) -> str:
     if e.is_Number:
         return _num(e)
     if isinstance(e, sympy.Add):
-        return "(" + " + ".join(_src(a) for a in e.args) + ")"
+        return "(" + " + ".join(rec(a) for a in e.args) + ")"
     if isinstance(e, sympy.Mul):
         num, den = [], []
         for a in e.args:
             if isinstance(a, sympy.Pow) and a.exp.is_Number and a.exp < 0:
                 if not a.base.is_Number:
-                    raise UnsupportedExpr(f"division by a non-constant: {e}")
+                    if not irr:
+                        raise UnsupportedExpr(f"division by a non-constant: {e}")
+                    den.append(sympy.Pow(a.base, -a.exp))
+                    continue
                 num.append(sympy.Pow(a.base, a.exp))
             else:
                 num.append(a)
-        return "(" + " * ".join(_src(a) for a in num + den) + ")"
+        body = " * ".join(rec(a) for a in num) or "1.0"
+        if den:
+            return f"({body} / ({' * '.join(rec(a) for a in den)}))"
+        return f"({body})"
     if isinstance(e, sympy.Pow):
         if e.base.is_Number and e.exp.is_Number:
             return _num(e)
         if e.exp.is_Integer and e.exp > 0:
-            return "(" + " * ".join([_src(e.base)] * int(e.exp)) + ")"
+            return "(" + " * ".join([rec(e.base)] * int(e.exp)) + ")"
+        if irr and e.exp == sympy.Rational(1, 2):
+            return f"sqrt({rec(e.base)})"
+        if irr and e.exp.is_Number and e.exp < 0:
+            return f"(1.0 / {rec(sympy.Pow(e.base, -e.exp))})"
         raise UnsupportedExpr(f"power {e}")
+    if irr and isinstance(e, (sympy.exp, sympy.log)):
+        return f"{'exp' if isinstance(e, sympy.exp) else 'log'}({rec(e.args[0])})"
     if isinstance(e, sympy.Abs):
-        return f"abs({_src(e.args[0])})"
+        return f"abs({rec(e.args[0])})"
     if isinstance(e, (sympy.Max, sympy.Min)):
-        return f"{'max' if isinstance(e, sympy.Max) else 'min'}({', '.join(_src(a) for a in e.args)})"
+        return f"{'max' if isinstance(e, sympy.Max) else 'min'}({', '.join(rec(a) for a in e.args)})"
     if isinstance(e, sympy.Piecewise):
         (val, cond), rest = e.args[0], e.args[1:]
         if cond is sympy.true:
-            return _src(val)
-        other = _src(sympy.Piecewise(*rest)) if rest else "0.0"
-        return f"({_src(val)} if {_src(cond)} else {other})"
+            return rec(val)
+        other = rec(sympy.Piecewise(*rest)) if rest else "0.0"
+        return f"({rec(val)} if {rec(cond)} else {other})"
     if isinstance(e, sympy.core.relational.Relational):
         op = {sympy.StrictGreaterThan: ">", sympy.GreaterThan: ">=", sympy.StrictLessThan: "<",
               sympy.LessThan: "<=", sympy.Eq: "==", sympy.Ne: "!="}.get(type(e))
         if op is None:
             raise UnsupportedExpr(f"relation {e}")
-        return f"({_src(e.lhs)} {op} {_src(e.rhs)})"
+        return f"({rec(e.lhs)} {op} {rec(e.rhs)})"
     if isinstance(e, (sympy.And, sympy.Or)):
-        return "(" + (" and " if isinstance(e, sympy.And) else " or ").join(_src(a) for a in e.args) + ")"
+        return "(" + (" and " if isinstance(e, sympy.And) else " or ").join(rec(a) for a in e.args) + ")"
     if isinstance(e, sympy.Not):
-        return f"(not {_src(e.args[0])})"
+        return f"(not {rec(e.args[0])})"
     raise UnsupportedExpr(f"unsupported {type(e).__name__}: {e}")
 
 
-def sympy_to_program(expr, spec: Spec) -> str:
+def sympy_to_program(expr, spec: Spec, irr: bool = False) -> str:
     """One expression as a program; raises UnsupportedExpr outside the language."""
-    body = _src(expr)
+    body = _src(expr, irr)
     src = f"def net({', '.join(spec.arg_names)}):\n    return {body}\n"
     try:
         parse_program(src, spec.arg_names)
@@ -116,10 +134,10 @@ def snap_expr(expr, out_range: float, in_range: float):
     return rec(expr, "add")
 
 
-def _program(exprs: list, spec: Spec) -> str:
+def _program(exprs: list, spec: Spec, irr: bool = False) -> str:
     if spec.output != "argmax":
-        return sympy_to_program(exprs[0], spec)
-    body = "argmax(" + ", ".join(_src(e) for e in exprs) + ")"
+        return sympy_to_program(exprs[0], spec, irr)
+    body = "argmax(" + ", ".join(_src(e, irr) for e in exprs) + ")"
     src = f"def net({', '.join(spec.arg_names)}):\n    return {body}\n"
     try:
         parse_program(src, spec.arg_names)
@@ -128,7 +146,8 @@ def _program(exprs: list, spec: Spec) -> str:
     return src
 
 
-def run_pysr(rd: Path) -> dict:
+def run_pysr(rd: Path, name: str = "pysr", settings: dict = PYSR_SETTINGS, irr: bool = False) -> dict:
+    """Writes <name>.py, <name>_snap.py and <name>_info.json."""
     from pysr import PySRRegressor
 
     t0 = time.perf_counter()
@@ -137,20 +156,20 @@ def run_pysr(rd: Path) -> dict:
     X, raw, _ = net_samples(spec, mlp)
     X, y = X[:N_PYSR], raw[:N_PYSR]
     with tempfile.TemporaryDirectory() as tmp:
-        model = PySRRegressor(**PYSR_SETTINGS, progress=False, verbosity=0, output_directory=tmp)
+        model = PySRRegressor(**settings, progress=False, verbosity=0, output_directory=tmp)
         model.fit(X, y, variable_names=spec.arg_names)
         fronts = model.equations_ if isinstance(model.equations_, list) else [model.equations_]
         best = model.sympy()
     best = best if isinstance(best, list) else [best]
-    info = {"settings": PYSR_SETTINGS, "n_samples": int(len(X)), "best": [str(b) for b in best],
+    info = {"settings": settings, "n_samples": int(len(X)), "best": [str(b) for b in best],
             "fronts": [[{"complexity": int(r.complexity), "loss": float(r.loss), "equation": str(r.equation)}
                         for r in f.itertuples()] for f in fronts], "errors": []}
     rd = Path(rd)
     try:
-        (rd / "pysr.py").write_text(_program(best, spec), encoding="utf-8")
+        (rd / f"{name}.py").write_text(_program(best, spec, irr), encoding="utf-8")
     except UnsupportedExpr as e:
-        info["errors"].append(f"pysr: {e}")
-        (rd / "pysr.py").unlink(missing_ok=True)
+        info["errors"].append(f"{name}: {e}")
+        (rd / f"{name}.py").unlink(missing_ok=True)
 
     yr = np.atleast_2d(y.T).T
     out_ranges = [float(yr[:, k].max() - yr[:, k].min()) or 1.0 for k in range(yr.shape[1])]
@@ -171,18 +190,23 @@ def run_pysr(rd: Path) -> dict:
     cands = []
     for exprs in combos:
         try:
-            cands.append(_program(exprs, spec))
+            cands.append(_program(exprs, spec, irr))
         except UnsupportedExpr as e:
-            info["errors"].append(f"pysr_snap: {e}")
+            info["errors"].append(f"{name}_snap: {e}")
     idx, rows = smallest_passing(cands, mlp, spec) if cands else (None, [])
     info["snap_candidates"] = rows
     info["snap_passed"] = idx is not None
     if cands:
         # nothing passes: report the snapped largest candidate as a failing program, as the tree does
-        (rd / "pysr_snap.py").write_text(cands[idx if idx is not None else -1], encoding="utf-8")
+        (rd / f"{name}_snap.py").write_text(cands[idx if idx is not None else -1], encoding="utf-8")
     else:
-        (rd / "pysr_snap.py").unlink(missing_ok=True)
+        (rd / f"{name}_snap.py").unlink(missing_ok=True)
     info["seconds"] = round(time.perf_counter() - t0, 2)
-    write_info(rd, "pysr", info)
-    record_git(rd, "pysr")
+    write_info(rd, name, info)
+    record_git(rd, name)
     return info
+
+
+def run_pysr_irr(rd: Path) -> dict:
+    """PySR with exp, log, sqrt and / added (irrational runs); writes pysr_irr.py and pysr_irr_snap.py."""
+    return run_pysr(rd, "pysr_irr", PYSR_IRR_SETTINGS, irr=True)
