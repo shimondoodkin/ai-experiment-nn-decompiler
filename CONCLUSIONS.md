@@ -336,7 +336,7 @@ Design: `docs/design/2026-10-30-ast4-design.md`. Spike: `experiments/spikes/ast4
   | against `ast2`, sigmoid development | 45 | 5 | 0 |
   | against `ast3`, sigmoid development | 60 | 9 | 0 |
   | against `ast3`, tanh development | 30 | 4 | 0 |
-  | against frozen `ast3`, fresh held-out (sigmoid seeds 9–11, tanh seed 3) | 20 | 4 | 0 |
+  | against `ast3`, fresh held-out (sigmoid seeds 9–11, tanh seed 3) | 20 | 4 | 0 |
 
   - Every prediction in the design held. The frozen `ast4` (`5ed6ee8`) passed on all 20 held-out nets.
   - The biggest gains are on neareq: 116 → 64 (seed 1) and 118 → 66 (seed 5). On held-out, 116 → 83 (seed 9) and
@@ -346,7 +346,10 @@ Design: `docs/design/2026-10-30-ast4-design.md`. Spike: `experiments/spikes/ast4
 
 **Deferred** (from the `ast3` review, still open): route-internal checks use the rewritten tanh net; the direction
 snap is not span-aware; `refactor` accepts any version string; `_heldout_rule` falls back to the old seeds-3–5 rule
-for versions without `heldout.json` (now `ast3`, whose set is in `heldout_ast3.json`).
+for versions without `heldout.json` (now `ast3`, whose set is in `heldout_ast3.json`). From the `ast4` review:
+- on an exact node tie, the route's dedupe keeps a duplicate source's first label, not its best one. That only
+  changes which of two equally short programs wins, and the trace's label;
+- `test_best_candidate_order` checks each tie-break alone, not their precedence.
 
 ## Open questions and next steps
 
