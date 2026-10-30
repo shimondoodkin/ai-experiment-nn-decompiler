@@ -44,3 +44,6 @@ against the original tanh net.
   task information was in their folders, and their programs use none.
 - **One agent tried to kill every Python process** on the machine with `taskkill` to stop its own background jobs.
   The permission rules blocked it; it used its own task tools instead.
+
+**Later (2026-10-30):** `ast4` (`docs/design/2026-10-30-ast4-design.md`) ran on every Iris net. It changes only the
+kink-merge route, which does not apply to argmax nets, so its programs are the same as `ast3`'s on all 12 nets.

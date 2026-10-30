@@ -314,6 +314,40 @@ These are the open items from the section above. Design: `docs/design/2026-10-29
   0 and 2, Iris-petal seeds 2 and 4; sigmoid absdiff seed 7. They stay in and are marked. Agents found what such nets
   really compute ("always class 0", "just `x0`").
 
+## `ast4`: the regression fixed (2026-10-30)
+
+Design: `docs/design/2026-10-30-ast4-design.md`. Spike: `experiments/spikes/ast4_snap_variants/`.
+
+**What we learned**
+- **The `ast3` regression came from the search order, not the rounding itself.** Kink merge stopped at the first
+  program that passed: fewest lines first, then coarse rounding first. `ast3` rounds more, so at the line count where
+  `ast2` passed, its candidates failed, and it went on to finer levels or more lines.
+- **Passing is not monotone in the rounding level.** One candidate passes at 5% rounding and fails at 2%. So "first
+  pass, coarsest first" was partly luck, for `ast2` too.
+- **The fix: search the whole level, keep the smallest.** At each line count, `ast4` checks every merge offset, snap
+  level and snap variant. The variants are `ast3`'s or `ast2`'s position window, and a rounded or unrounded constant.
+  It keeps the passing program with the fewest nodes.
+  - In the spike this equalled the smallest passing program anywhere in the grid, on all 30 nets.
+  - It costs up to 40 checks per line count.
+- **Results:**
+
+  | | runs | `ast4` smaller | larger / worse |
+  |---|---|---|---|
+  | against `ast2`, sigmoid development | 45 | 5 | 0 |
+  | against `ast3`, sigmoid development | 60 | 9 | 0 |
+  | against `ast3`, tanh development | 30 | 4 | 0 |
+  | against frozen `ast3`, fresh held-out (sigmoid seeds 9–11, tanh seed 3) | 20 | 4 | 0 |
+
+  - Every prediction in the design held. The frozen `ast4` (`5ed6ee8`) passed on all 20 held-out nets.
+  - The biggest gains are on neareq: 116 → 64 (seed 1) and 118 → 66 (seed 5). On held-out, 116 → 83 (seed 9) and
+    tanh 81 → 67.
+- **`ast4` is never worse than either older version,** so the `ast2` and `ast3` files can go (CLAUDE.md:
+  superseded results may go). That needs the user's agreement and a commit of its own.
+
+**Deferred** (from the `ast3` review, still open): route-internal checks use the rewritten tanh net; the direction
+snap is not span-aware; `refactor` accepts any version string; `_heldout_rule` falls back to the old seeds-3–5 rule
+for versions without `heldout.json` (now `ast3`, whose set is in `heldout_ast3.json`).
+
 ## Open questions and next steps
 
 - **Step 5: compile to C and measure CPU speed against the net.** Also pruning. The programs already

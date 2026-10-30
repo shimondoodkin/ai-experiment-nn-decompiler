@@ -32,7 +32,7 @@ There is no linter configured.
 **Run folders** are the unit of everything: `runs/<task>/<hand|seedK>/`. Each holds:
 - `spec.json`, `weights.npz` (and `net.pt`), `train_log.json`;
 - `dump.py`: the net as code;
-- program versions: `agent_<n>.py`, `ast.py`, `ast2.py` or `ast3.py` (the AST tool), `formula.py` (sigmoid runs), plus later
+- program versions: `agent_<n>.py`, `ast.py`, `ast2.py`, `ast3.py` or `ast4.py` (the AST tool), `formula.py` (sigmoid runs), plus later
   baselines;
 - `results.json`.
 
@@ -71,7 +71,7 @@ next to the formula runs. `nndc run all` builds them (seeds 0–5), and `nndc as
 with `--split all`. In `REPORT.md` they appear in the results table with `recovered` n/a, and are left
 out of the step-3 reproduction and the beats-the-network list (`nndc/run.py: is_step1`).
 
-**Run versions:** each run folder has `run_git.txt`, one line per step (`build`, `ast`, `ast2`, `ast3`, `agent_<n>`)
+**Run versions:** each run folder has `run_git.txt`, one line per step (`build`, `ast`, `ast2`, `ast3`, `ast4`, `agent_<n>`)
 with the git commit the step ran with (`+dirty` for uncommitted code in `nndc/` or `experiments/`).
 `nndc run`, `nndc ast` and `nndc agent collect` write it (`record_git`); lines marked `backfilled` were
 reconstructed from git history.
@@ -134,33 +134,39 @@ reconstructed from git history.
   kinks on one line, keeps the strongest lines and refits them (design `docs/design/2026-10-29-kink-merge-design.md`).
   - Every sigmoid run of seeds 0–5 (and median3, Iris) has `ast2`; the older `ast.py` was removed (it is in git history). Where the route does
     not apply (median3, Iris), `ast2` equals the project B program. Its held-out set was seeds 3–5.
-  - `ast2` can no longer be produced (its code is at `93d7199`); its files stay while `ast3` is worse on some runs.
+  - `ast2` can no longer be produced (its code is at `93d7199`); its files stay until the user agrees to remove them (`ast4` is never worse).
 - **`ast3`** (design `docs/design/2026-10-29-ast3-tanh-design.md`): `ast2` plus kink merge v2 (antiparallel
   merge, snap level 0 folds out-of-box lines, position window from the line's own range, rounded constant) and the
   tanh rewrite.
   - Commands: `nndc ast --name ast3 RUNS…` writes `ast3.py`, `ast3_trace.json` and `counterexamples_ast3.json`.
-    `TOOL_VERSIONS = ("ast", "ast3")`; plain `nndc ast` is still the project B tool.
-  - Sigmoid runs seeds 0–8 have `ast3`: 0–5 are its development set, 6–8 its held-out set (`runs_sigmoid/heldout.json`).
-  - **`ast3` vs `ast2`** (rule fixed in the design): `ast3` was larger on 5 of 45 runs, so the `ast2` files were kept.
-    The cause is the line-range position window (twice the old window for diagonal lines) and the rounded constant;
-    see `CONCLUSIONS.md`. The report has the table.
+  - Sigmoid runs seeds 0–11 have `ast3`: 0–5 were its development set, 6–8 its held-out set
+    (`runs_sigmoid/heldout_ast3.json`); on 9–11 it ran as `ast4`'s comparison.
+  - **`ast3` vs `ast2`:** `ast3` was larger on 5 of 45 runs. The cause was the search order: the route stopped at the
+    first passing program, and `ast3` rounds more. See `CONCLUSIONS.md`.
+- **`ast4`** (design `docs/design/2026-10-30-ast4-design.md`): `ast3` whose kink-merge route checks every merge offset,
+  snap level and snap variant (position window line-range or max-span, constant rounded or not) at each line count,
+  and keeps the passing one with the fewest nodes (`best_candidate` in `kinks.py`).
+  - `nndc ast --name ast4 RUNS…`. `TOOL_VERSIONS = ("ast", "ast3", "ast4")`; plain `nndc ast` is still the project B
+    tool.
+  - Every sigmoid and tanh run has `ast4`. It is never worse than `ast2` or `ast3` (report tables).
 - **`<root>/heldout.json`** names the held-out runs of the newest tool version (`version`, `freeze`, `runs`); the
-  report reads it.
+  report reads it. Older versions' sets are in `heldout_<version>.json`.
 - **Report:** `nndc report --root runs_sigmoid --out runs_sigmoid/REPORT.md --compare-to runs` adds the
-  "Formula vs net", "Compared with the ReLU runs", "Kink merge" (newest version, with the `ast2` vs `ast3` table) and
-  "Reproduction (ast3)" sections. It shows the newest tool version (`ast3`, then `ast2`, then `ast`).
+  "Formula vs net", "Compared with the ReLU runs", "Kink merge" (newest version, with a table against each older
+  version) and "Reproduction (<newest>)" sections. It shows the newest tool version (`ast4`, `ast3`, `ast2`, then `ast`).
 - **Agent scratch files:** `prepare` gives each `agent`-kind blind folder a `scratch/` directory, and
   `INSTRUCTIONS.md` asks the agent to use it (`io` and `fix` folders do not have one yet). Before that, agents wrote to the shared session scratchpad and the audit flagged it.
 
 **Tanh runs** (`runs_tanh/`):
 - **Build:** `nndc run <task> --seed <k> --act tanh --root runs_tanh`. Same tasks and settings as the sigmoid runs;
   formula seeds 0–2 and Iris seeds 0–5.
-- **Tool:** only `ast3` runs on them. `refactor` rewrites tanh layers as sigmoid layers for the routes
+- **Tool:** only `ast3` and `ast4` run on them. `refactor` rewrites tanh layers as sigmoid layers for the routes
   (`as_sigmoid` in `nndc/model.py`: `tanh(z) = 2·sigmoid(2z) − 1`). Final acceptance always checks against the original
   tanh net; checks inside a route use the rewritten net, which differs by about 1e-7.
 - **Agents:** `--index runs_tanh/blind_index.json`. Heuristics go to `runs_tanh/HEURISTICS.md` (development) and
   `HEURISTICS_heldout.md`.
-- **Held-out:** formula seed 2 and Iris seeds 3–5 (`runs_tanh/heldout.json`).
+- **Held-out:** `ast3`'s were formula seed 2 and Iris seeds 3–5 (`runs_tanh/heldout_ast3.json`); `ast4`'s are formula
+  seed 3 of xor, window, neareq, absdiff and tax (`runs_tanh/heldout.json`, no agents).
 - **Report:** `nndc report --root runs_tanh --out runs_tanh/REPORT.md --compare-to runs_sigmoid`.
 
 ## Practical notes
@@ -191,12 +197,14 @@ reconstructed from git history.
   - formula runs: seed 2 is held out from AST-tool development (`--split distill` excludes it);
   - Iris: seeds 3–5 were held out from tool v2.
   - kink merge (`ast2`): sigmoid seeds 3–5 of xor, window, neareq, absdiff and tax, built after its freeze;
-  - `ast3`: sigmoid seeds 6–8 of the same five tasks, tanh formula seed 2 and tanh Iris seeds 3–5 (`heldout.json`).
+  - `ast3`: sigmoid seeds 6–8 of the same five tasks, tanh formula seed 2 and tanh Iris seeds 3–5
+    (`heldout_ast3.json`);
+  - `ast4`: sigmoid seeds 9–11 and tanh seed 3 of the same five tasks (`heldout.json`).
 - **Freezes:** the tool version used on each held-out run is the `ast:` line of its `run_git.txt`
   (step 3: `1076f21`; Iris v1: `e62d74b`, later overwritten by v2; Iris v2: `363b8c9`; sigmoid: `15b943b`, whose
   held-out runs record `797e0ae`, a data-only commit on top of it; kink merge (`ast2`): `93d7199`, whose held-out
   runs record `fad7e52`, data and docs on top of it; `ast3`: `38b1e15`, whose held-out runs record
-  `b438fbb`). Commit the tool
+  `b438fbb`; `ast4`: `5ed6ee8`, whose held-out runs record `8cef8ac`). Commit the tool
   before running held-out models. Changing the AST tool or heuristics means a new freeze and a fresh
   held-out set, not re-running old held-out models.
 - **Blindness:** no task name, real input names, `expected` formula or target may enter a blind

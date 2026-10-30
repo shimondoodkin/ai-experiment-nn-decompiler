@@ -43,3 +43,6 @@ in, as the ReLU nets that did not learn did.
 **Later (2026-10-29):** `ast2` (the kink-merge tool) replaced `ast` in every sigmoid run. Kink merge does not apply to
 argmax nets, so on Iris `ast2` is the same program as the AST tool column above; the old `ast.py` files are in git
 history.
+
+**Later (2026-10-30):** `ast3` and then `ast4` ran on every Iris net. Kink merge does not apply to argmax nets, so
+both give the same program as `ast2` here.
