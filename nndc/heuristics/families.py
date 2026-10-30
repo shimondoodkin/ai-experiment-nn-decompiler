@@ -27,6 +27,8 @@ N_FIT_2D = 20_000
 N_EXTREME = 200
 N_SNAP_2D = 4000      # snapping refits in 2-D use a subsample (plus the extremes); errors are on the full sample
 BIG = 1e3             # residual for a non-finite model output, in output ranges
+LAWSON_ROUNDS = 40    # minimax refinement after each fit and hinge refit
+LAWSON_SNAP_ROUNDS = 10   # ... and inside snapping, on the snapping subsample
 
 FAMILIES_1D = ("identity", "square", "exp", "log", "sqrt", "reciprocal")
 FAMILIES_2D = ("quadratic", "sqrt", "exp", "log", "reciprocal")
@@ -103,22 +105,58 @@ def _err(m: Model, v: np.ndarray, X: np.ndarray, y: np.ndarray) -> float:
     return float(np.max(np.where(np.isfinite(r), r, np.inf)))
 
 
-def _refit(m: Model, X: np.ndarray, y: np.ndarray, R: float, nfev: int) -> np.ndarray:
+def _refit(m: Model, X: np.ndarray, y: np.ndarray, R: float, nfev: int,
+           weights: np.ndarray | None = None) -> np.ndarray:
     free = np.nonzero(~m.fixed)[0]
     v = m.values.copy()
     if not len(free) or len(X) <= len(free):
         return v
+    sw = 1.0 if weights is None else np.sqrt(weights)
 
     def res(z: np.ndarray) -> np.ndarray:
         w = v.copy()
         w[free] = z
-        return np.nan_to_num(m.eval(w, X) - y, nan=BIG * R, posinf=BIG * R, neginf=-BIG * R)
+        return sw * np.nan_to_num(m.eval(w, X) - y, nan=BIG * R, posinf=BIG * R, neginf=-BIG * R)
     try:
         z = least_squares(res, v[free], method="lm", max_nfev=nfev).x
     except (ValueError, np.linalg.LinAlgError):
         return v
     v[free] = z
     return v
+
+
+def _lawson(m: Model, X: np.ndarray, y: np.ndarray, R: float, rounds: int, nfev: int) -> np.ndarray:
+    """Minimax refinement by Lawson reweighting: the weights are multiplied by the absolute error and renormalised to
+    mean 1, then a weighted refit. Stops when every error is 0 or the max error has not fallen for 3 rounds. Returns
+    the values with the smallest max error, or m.values when no round beats them (or a round goes non-finite)."""
+    best, best_e = m.values, _err(m, m.values, X, y)
+    t = m.copy()
+    w = np.ones(len(X))
+    stall = 0
+    for _ in range(rounds):
+        if not best_e > 0:
+            break
+        v = _refit(t, X, y, R, nfev, weights=w)
+        if not np.isfinite(v).all():
+            break
+        with np.errstate(all="ignore"):
+            r = np.abs(t.eval(v, X) - y)
+        if not np.isfinite(r).all():
+            break
+        t.values = v
+        e = float(r.max())
+        if e < best_e:
+            best, best_e, stall = v.copy(), e, 0
+        else:
+            stall += 1
+            if stall >= 3:
+                break
+        w = w * r
+        mean = float(w.mean())
+        if not mean > 0:
+            break
+        w = w / mean
+    return best
 
 
 def _lin(cols: list[np.ndarray], t: np.ndarray) -> np.ndarray | None:
@@ -209,8 +247,9 @@ def _starts(family: str, dim: int, X: np.ndarray, y: np.ndarray, R: float) -> It
 
 
 def _fit_family(family: str, dim: int, X: np.ndarray, y: np.ndarray, Xs: np.ndarray, ys: np.ndarray,
-                R: float) -> tuple[Model | None, float]:
-    """A short fit from every start on the subsample (Xs, ys), then the best one in full on (X, y)."""
+                R: float) -> tuple[Model | None, float, float]:
+    """A short fit from every start on the subsample (Xs, ys), then the best one in full on (X, y), then its minimax
+    refinement. Returns the model (minimax values) with its least-squares and minimax max errors."""
     best, best_err = None, np.inf
     for start, fixed in _starts(family, dim, Xs, ys, R):
         m = _new(family, dim, start, fixed)
@@ -218,10 +257,12 @@ def _fit_family(family: str, dim: int, X: np.ndarray, y: np.ndarray, Xs: np.ndar
         e = _err(m, m.values, Xs, ys)
         if e < best_err:
             best, best_err = m, e
-    if best is not None:
-        best.values = _refit(best, X, y, R, 4000)
-        best_err = _err(best, best.values, X, y)
-    return best, best_err
+    if best is None:
+        return None, np.inf, np.inf
+    best.values = _refit(best, X, y, R, 4000)
+    best_err = _err(best, best.values, X, y)
+    best.values = _lawson(best, X, y, R, LAWSON_ROUNDS, 300)
+    return best, best_err, _err(best, best.values, X, y)
 
 
 def _is_nice(c: float) -> bool:
@@ -251,7 +292,7 @@ def _snap(m: Model, X: np.ndarray, y: np.ndarray, Xs: np.ndarray, ys: np.ndarray
                 t.values[i] = c
                 t.fixed[i] = True
                 if _err(t, t.values, X, y) > tol:
-                    t.values = _refit(t, Xs, ys, R, 100)
+                    t.values = _lawson(t, Xs, ys, R, LAWSON_SNAP_ROUNDS, 100)
                     if _err(t, t.values, X, y) > tol:
                         continue
                 best = (lev, t)
@@ -349,6 +390,7 @@ def _add_hinge(m: Model, X: np.ndarray, y: np.ndarray, R: float) -> Model | None
     for (i, _), ci in zip(lin, c[:-1]):
         n.values[i] = ci
     n.values = _refit(n, X, y, R, 500)
+    n.values = _lawson(n, X, y, R, LAWSON_ROUNDS, 300)
     return n
 
 
@@ -387,8 +429,8 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
         Xs, ys = X, y
     passing, info = [], []
     for family in (FAMILIES_1D if dim == 1 else FAMILIES_2D):
-        m, e = _fit_family(family, dim, X, y, Xs, ys, R)
-        row = {"family": family, "fit_err": e / R if m is not None else float("inf"), "snapped_err": None,
+        m, e_ls, e = _fit_family(family, dim, X, y, Xs, ys, R)
+        row = {"family": family, "fit_err": e_ls / R, "minimax_err": e / R, "snapped_err": None,
                "terms": 0, "passed": False, "nodes": None, "src": None, "params": None}
         info.append(row)
         if m is None or not e / R <= DROP_FRAC:
