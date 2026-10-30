@@ -1,0 +1,180 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0):\n    h1_0 = sigmoid(-0.026394248 * x0 - 2.746535)\n    h1_1 = sigmoid(0.030853268 * x0 + 1.9692343)\n    h1_2 = sigmoid(-0.038288478 * x0 - 0.96950334)\n    h1_3 = sigmoid(0.03828592 * x0 + 1.0082637)\n    return 0.8817179 * h1_0 - 0.78797525 * h1_1 + 0.67752326 * h1_2 - 0.3368626 * h1_3 - 0.42544055\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 200203,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.05724081873893738,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 90
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0):\n    h1_0 = sigmoid(-0.026394248 * x0 - 2.7463215044)\n    h1_1 = sigmoid(0.03 * x0 + 1.96875)\n    h1_2 = sigmoid(-0.04 * x0 - 0.97)\n    h1_3 = sigmoid(0.04 * x0 + 1.008)\n    return 0.875 * h1_0 - 0.75 * h1_1 + 0.7 * h1_2 - 0.35 * h1_3 - 0.42544055000000003\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 200203,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.05724081873893738,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 90
+    },
+    {
+      "route": "sigmoid-replace",
+      "src": "def net(x0):\n    h1_2 = (-x0 - 25.321020595281954 > 0)\n    h1_3 = (x0 + 26.33510439346893 > 0)\n    return 0.67752326 * h1_2 - 0.3368626 * h1_3 - 1.0636871484458927\n",
+      "passes": [
+        "S1",
+        "S2"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 200203,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.05724081873893738,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 40
+    },
+    {
+      "route": "sigmoid-replace-snap",
+      "src": "def net(x0):\n    h1_2 = (-x0 - 25.3 > 0)\n    h1_3 = (x0 + 26.375 > 0)\n    return 0.7 * h1_2 - 0.35 * h1_3 - 1.0636871484458927\n",
+      "passes": [
+        "S1",
+        "S2",
+        "P3"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 200203,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.05724081873893738,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 40
+    },
+    {
+      "route": "kink-merge",
+      "src": "def net(x0):\n    return max(-0.01123416424231349 * x0 - 1.1252818146503287, -0.011797793542971068 * x0 - 1.125)\n",
+      "passes": [
+        "K1"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 200203,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.05724081873893738,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 24
+    }
+  ],
+  "winner": "kink-merge",
+  "trace_lines": [
+    "tanh layers rewritten as sigmoid layers",
+    "snap route: h1_0: threshold 104.0580887169053 -> 104.05",
+    "snap route: h1_1: x0 coefficient 0.030853268 -> 0.03",
+    "snap route: h1_1: threshold -65.64114333333335 -> -65.625",
+    "snap route: h1_2: x0 coefficient -0.038288478 -> -0.04",
+    "snap route: h1_2: threshold 24.2375835 -> 24.25",
+    "snap route: h1_3: x0 coefficient 0.03828592 -> 0.04",
+    "snap route: h1_3: threshold -25.206592500000003 -> -25.2",
+    "snap route: output 0: h1_0 coefficient 0.8817179 -> 0.875",
+    "snap route: output 0: h1_1 coefficient -0.78797525 -> -0.75",
+    "snap route: output 0: h1_2 coefficient 0.67752326 -> 0.7",
+    "snap route: output 0: h1_3 coefficient -0.3368626 -> -0.35",
+    "spline: not applicable",
+    "spline: not applicable",
+    "boundary: not applicable",
+    "boundary-scan: not applicable",
+    "truth-table: not applicable",
+    "sigmoid: h1_0: const (soft share 1.000)",
+    "sigmoid: h1_1: const (soft share 1.000)",
+    "sigmoid: h1_2: step (soft share 1.000)",
+    "sigmoid: h1_3: step (soft share 1.000)",
+    "sigmoid snap: h1_2: threshold 25.321020595281954 -> 25.3",
+    "sigmoid snap: h1_3: threshold -26.33510439346893 -> -26.375",
+    "sigmoid snap: output 0: h1_2 coefficient 0.67752326 -> 0.7",
+    "sigmoid snap: output 0: h1_3 coefficient -0.3368626 -> -0.35"
+  ],
+  "kink_merge": {
+    "applies": null,
+    "per_offset": [
+      {
+        "off": 0.02,
+        "kinks": 64,
+        "lines": 16,
+        "cancelled": 0
+      },
+      {
+        "off": 0.1,
+        "kinks": 64,
+        "lines": 8,
+        "cancelled": 0
+      }
+    ],
+    "winner": {
+      "off": 0.02,
+      "m": 1,
+      "tol": 0.05,
+      "window": "line",
+      "round_const": true,
+      "lines": [
+        {
+          "normal": {
+            "x0": 1.0
+          },
+          "t": 0.5,
+          "strength": 0.0005636293006575789
+        }
+      ]
+    }
+  }
+}
