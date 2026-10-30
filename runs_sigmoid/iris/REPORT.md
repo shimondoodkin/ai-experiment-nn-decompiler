@@ -46,3 +46,6 @@ history.
 
 **Later (2026-10-30):** `ast3` and then `ast4` ran on every Iris net. Kink merge does not apply to argmax nets, so
 both give the same program as `ast2` here.
+
+The `ast2` and `ast3` files were removed on 2026-10-30 (they are in git history). The same programs are in each run's
+`ast4.py`.

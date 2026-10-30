@@ -40,38 +40,27 @@ a Claude Code refactoring of it.
 Runs where a refactored program is closer to the *true task* than the network it was decompiled from (better inside or outside the training range, and not worse on either). The refactorer never saw the target; this is the "snapping recovers the intended algorithm" effect.
 
 - **absdiff/seed0** agent_1: max error inside 0.8817 → 0.8463, outside 6.493 → 6.481
-- **absdiff/seed0** ast3: max error inside 0.8817 → 0.7979, outside 6.493 → 3.689
 - **absdiff/seed0** ast4: max error inside 0.8817 → 0.7955, outside 6.493 → 3.64
-- **absdiff/seed1** ast3: max error inside 0.3544 → 0.3245, outside 5.697 → 2.338
 - **absdiff/seed1** ast4: max error inside 0.3544 → 0.347, outside 5.697 → 2.432
 - **absdiff/seed2** agent_1: max error inside 0.8994 → 0.8723, outside 6.558 → 6.506
-- **absdiff/seed2** ast3: max error inside 0.8994 → 0.8232, outside 6.558 → 3.767
 - **absdiff/seed2** ast4: max error inside 0.8994 → 0.8327, outside 6.558 → 3.811
 - **median3/seed0** agent_1: max error inside 0.1571 → 0.1138, outside 2.292 → 0.8068 (audit-flagged run)
 - **median3/seed1** agent_1: max error inside 0.1983 → 0.1173, outside 2.188 → 0.7552
 - **median3/seed2** agent_1: max error inside 0.2208 → 0.1811, outside 2.272 → 0.5335 (audit-flagged run)
-- **median3/seed2** ast3: max error inside 0.2208 → 0.2208, outside 2.272 → 2.272
 - **median3/seed2** ast4: max error inside 0.2208 → 0.2208, outside 2.272 → 2.272
 - **neareq/seed0** agent_1: accuracy inside 0.9988 → 1, outside 0.9989 → 1; recovered the true algorithm
-- **neareq/seed0** ast3: accuracy inside 0.9988 → 0.9995, outside 0.9989 → 0.9998
 - **neareq/seed0** ast4: accuracy inside 0.9988 → 0.9996, outside 0.9989 → 0.9999
 - **neareq/seed1** agent_1: accuracy inside 0.9992 → 1, outside 0.9996 → 1; recovered the true algorithm
 - **neareq/seed2** agent_1: accuracy inside 0.9979 → 1, outside 0.9986 → 1; recovered the true algorithm
 - **tax/seed0** agent_1: max error inside 1.055 → 1, outside 38.85 → 5 (audit-flagged run)
-- **tax/seed0** ast3: max error inside 1.055 → 1, outside 38.85 → 10
 - **tax/seed0** ast4: max error inside 1.055 → 1, outside 38.85 → 10
 - **tax/seed1** agent_1: max error inside 1.434 → 1, outside 42.31 → 10
-- **tax/seed1** ast3: max error inside 1.434 → 1, outside 42.31 → 10
 - **tax/seed1** ast4: max error inside 1.434 → 1, outside 42.31 → 10
 - **tax/seed2** agent_1: max error inside 1.455 → 1.4, outside 38.67 → 7
-- **tax/seed2** ast3: max error inside 1.455 → 1, outside 38.67 → 10
 - **tax/seed2** ast4: max error inside 1.455 → 1, outside 38.67 → 10
-- **tax/seed3** ast3: max error inside 1.204 → 1, outside 38.73 → 10
 - **tax/seed3** ast4: max error inside 1.204 → 1, outside 38.73 → 10
 - **window/seed0** agent_1: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed0** ast3: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
 - **window/seed0** ast4: accuracy inside 0.9991 → 1, outside 1 → 1; recovered the true algorithm
-- **window/seed3** ast3: accuracy inside 0.9977 → 0.9998, outside 1 → 1
 - **window/seed3** ast4: accuracy inside 0.9977 → 0.9998, outside 1 → 1
 
 ## Formula vs net
@@ -373,48 +362,6 @@ The kink-merge route turns each sigmoid into straight pieces, merges the kinks t
 | xor/seed2 | development | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | candidate only: 53 · max(p - 0.75 * q, 0) |
 | xor/seed3 | held-out | truth-table | PASS exact | yes | 7 | 64 → 48 → 0 → 1 | candidate only: -57 · max(p + 0.75 * q - 0.75, 0) |
 
-### ast3 vs ast4
-
-ast4 is worse on 0 of 35 runs (worse = ast3 passes and ast4 does not, ast3 recovers the formula and ast4 does not, or both pass and ast4 has more nodes).
-
-| run | ast3 | ast4 | ast4 worse? |
-|---|---|---|---|
-| absdiff/seed0 | PASS snap, not rec, 138 nodes | PASS snap, not rec, 135 nodes | no |
-| absdiff/seed1 | PASS snap, not rec, 89 nodes | PASS snap, not rec, 86 nodes | no |
-| absdiff/seed2 | PASS snap, not rec, 138 nodes | PASS snap, not rec, 120 nodes | no |
-| absdiff/seed3 | PASS exact, not rec, 242 nodes | PASS exact, not rec, 242 nodes | no |
-| iris/seed0 | PASS exact, n/a, 482 nodes | PASS exact, n/a, 482 nodes | no |
-| iris/seed1 | PASS exact, n/a, 484 nodes | PASS exact, n/a, 484 nodes | no |
-| iris/seed2 | PASS snap, n/a, 440 nodes | PASS snap, n/a, 440 nodes | no |
-| iris/seed3 | PASS snap, n/a, 434 nodes | PASS snap, n/a, 434 nodes | no |
-| iris/seed4 | PASS snap, n/a, 441 nodes | PASS snap, n/a, 441 nodes | no |
-| iris/seed5 | PASS snap, n/a, 435 nodes | PASS snap, n/a, 435 nodes | no |
-| iris_petal/seed0 | PASS snap, n/a, 42 nodes | PASS snap, n/a, 42 nodes | no |
-| iris_petal/seed1 | PASS snap, n/a, 42 nodes | PASS snap, n/a, 42 nodes | no |
-| iris_petal/seed2 | PASS snap, n/a, 292 nodes | PASS snap, n/a, 292 nodes | no |
-| iris_petal/seed3 | PASS snap, n/a, 42 nodes | PASS snap, n/a, 42 nodes | no |
-| iris_petal/seed4 | PASS snap, n/a, 42 nodes | PASS snap, n/a, 42 nodes | no |
-| iris_petal/seed5 | PASS snap, n/a, 42 nodes | PASS snap, n/a, 42 nodes | no |
-| median3/seed0 | PASS snap, not rec, 2508 nodes | PASS snap, not rec, 2508 nodes | no |
-| median3/seed1 | PASS exact, not rec, 2498 nodes | PASS exact, not rec, 2498 nodes | no |
-| median3/seed2 | PASS exact, not rec, 2504 nodes | PASS exact, not rec, 2504 nodes | no |
-| neareq/seed0 | PASS snap, not rec, 66 nodes | PASS snap, not rec, 64 nodes | no |
-| neareq/seed1 | PASS snap, not rec, 64 nodes | PASS snap, not rec, 64 nodes | no |
-| neareq/seed2 | PASS snap, not rec, 78 nodes | PASS snap, not rec, 78 nodes | no |
-| neareq/seed3 | PASS snap, not rec, 81 nodes | PASS snap, not rec, 67 nodes | no |
-| tax/seed0 | PASS snap, not rec, 20 nodes | PASS snap, not rec, 20 nodes | no |
-| tax/seed1 | PASS snap, not rec, 20 nodes | PASS snap, not rec, 20 nodes | no |
-| tax/seed2 | PASS snap, not rec, 20 nodes | PASS snap, not rec, 20 nodes | no |
-| tax/seed3 | PASS snap, not rec, 20 nodes | PASS snap, not rec, 20 nodes | no |
-| window/seed0 | PASS snap, rec, 9 nodes | PASS snap, rec, 9 nodes | no |
-| window/seed1 | PASS exact, not rec, 24 nodes | PASS exact, not rec, 24 nodes | no |
-| window/seed2 | PASS exact, not rec, 20 nodes | PASS exact, not rec, 20 nodes | no |
-| window/seed3 | PASS snap, not rec, 22 nodes | PASS snap, not rec, 22 nodes | no |
-| xor/seed0 | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | no |
-| xor/seed1 | PASS exact, not rec, 3 nodes | PASS exact, not rec, 3 nodes | no |
-| xor/seed2 | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | no |
-| xor/seed3 | PASS exact, rec, 7 nodes | PASS exact, rec, 7 nodes | no |
-
 **absdiff/seed0**: `ast4`, then `formula.py`
 
 ```python
@@ -701,160 +648,125 @@ Dataset runs (Iris) have no known formula: their task columns below compare with
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | absdiff/seed0 | R² 0.9845 (NOT learned) | dump | PASS exact | empirical | 1.32e-06 |  | 0.882 / 6.49 | no | 236 (100%) |  |  |
 | absdiff/seed0 | R² 0.9845 (NOT learned) | agent_1 | PASS snap | empirical | 0.0552 |  | 0.846 / 6.48 | no | 61 (26%) | ok | 285s 746685+6655 tok |
-| absdiff/seed0 | R² 0.9845 (NOT learned) | ast3 | PASS snap | empirical | 0.0913 |  | 0.798 / 3.69 | no | 138 (58%) |  |  |
 | absdiff/seed0 | R² 0.9845 (NOT learned) | ast4 | PASS snap | empirical | 0.0942 |  | 0.796 / 3.64 | no | 135 (57%) |  |  |
 | absdiff/seed0 | R² 0.9845 (NOT learned) | formula | FAIL | empirical | 0.888 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed1 | R² 0.9988 | dump | PASS exact | empirical | 1.27e-06 |  | 0.354 / 5.7 | no | 232 (100%) |  |  |
 | absdiff/seed1 | R² 0.9988 | agent_1 | PASS snap | empirical | 0.0639 |  | 0.413 / 5.78 | no | 79 (34%) | ok | 293s 747381+7226 tok |
-| absdiff/seed1 | R² 0.9988 | ast3 | PASS snap | empirical | 0.0903 |  | 0.325 / 2.34 | no | 89 (38%) |  |  |
 | absdiff/seed1 | R² 0.9988 | ast4 | PASS snap | empirical | 0.105 |  | 0.347 / 2.43 | no | 86 (37%) |  |  |
 | absdiff/seed1 | R² 0.9988 | formula | FAIL | empirical | 0.359 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed2 | R² 0.9840 (NOT learned) | dump | PASS exact | empirical | 1.3e-06 |  | 0.899 / 6.56 | no | 234 (100%) |  |  |
 | absdiff/seed2 | R² 0.9840 (NOT learned) | agent_1 | PASS snap | empirical | 0.0281 |  | 0.872 / 6.51 | no | 79 (34%) | ok | 157s 812647+6838 tok |
-| absdiff/seed2 | R² 0.9840 (NOT learned) | ast3 | PASS snap | empirical | 0.0796 |  | 0.823 / 3.77 | no | 138 (59%) |  |  |
 | absdiff/seed2 | R² 0.9840 (NOT learned) | ast4 | PASS snap | empirical | 0.0914 |  | 0.833 / 3.81 | no | 120 (51%) |  |  |
 | absdiff/seed2 | R² 0.9840 (NOT learned) | formula | FAIL | empirical | 0.906 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | absdiff/seed3 | R² 0.9856 (NOT learned) | dump | PASS exact | empirical | 1.5e-06 |  | 0.835 / 6.49 | no | 242 (100%) |  |  |
-| absdiff/seed3 | R² 0.9856 (NOT learned) | ast3 | PASS exact | empirical | 1.49e-06 |  | 0.835 / 6.49 | no | 242 (100%) |  |  |
 | absdiff/seed3 | R² 0.9856 (NOT learned) | ast4 | PASS exact | empirical | 1.49e-06 |  | 0.835 / 6.49 | no | 242 (100%) |  |  |
 | absdiff/seed3 | R² 0.9856 (NOT learned) | formula | FAIL | empirical | 0.841 |  | 0 / 0 | yes | 10 (4%) |  |  |
 | iris/seed0 | acc 0.9805 | dump | PASS exact | empirical |  | 0 / 1101 (3.00%) | 0.825 / 0.795 | n/a | 482 (100%) |  |  |
 | iris/seed0 | acc 0.9805 | agent_1 | PASS snap | empirical |  | 0 / 5234 (3.00%) | 0.826 / 0.793 | n/a | 139 (29%) | OUTSIDE PATHS (4) | 1189s 3229767+27267 tok |
-| iris/seed0 | acc 0.9805 | ast3 | PASS exact | empirical |  | 0 / 1162 (3.00%) | 0.825 / 0.795 | n/a | 482 (100%) |  |  |
-| iris/seed0 | acc 0.9805 | ast4 | PASS exact | empirical |  | 0 / 1159 (3.00%) | 0.825 / 0.795 | n/a | 482 (100%) |  |  |
+| iris/seed0 | acc 0.9805 | ast4 | PASS exact | empirical |  | 0 / 1162 (3.00%) | 0.825 / 0.795 | n/a | 482 (100%) |  |  |
 | iris/seed1 | acc 0.9796 | dump | PASS exact | empirical |  | 0 / 947 (3.49%) | 0.781 / 0.742 | n/a | 484 (100%) |  |  |
 | iris/seed1 | acc 0.9796 | agent_1 | PASS snap | empirical |  | 0 / 4863 (3.49%) | 0.779 / 0.742 | n/a | 145 (30%) | OUTSIDE PATHS (5) | 1499s 4948080+35998 tok |
-| iris/seed1 | acc 0.9796 | ast3 | PASS exact | empirical |  | 0 / 976 (3.49%) | 0.781 / 0.742 | n/a | 484 (100%) |  |  |
-| iris/seed1 | acc 0.9796 | ast4 | PASS exact | empirical |  | 0 / 974 (3.49%) | 0.781 / 0.742 | n/a | 484 (100%) |  |  |
+| iris/seed1 | acc 0.9796 | ast4 | PASS exact | empirical |  | 0 / 976 (3.49%) | 0.781 / 0.742 | n/a | 484 (100%) |  |  |
 | iris/seed2 | acc 0.9732 | dump | PASS exact | empirical |  | 0 / 887 (3.18%) | 0.805 / 0.764 | n/a | 478 (100%) |  |  |
 | iris/seed2 | acc 0.9732 | agent_1 | PASS snap | empirical |  | 0 / 5713 (3.18%) | 0.804 / 0.764 | n/a | 200 (42%) | OUTSIDE PATHS (1) | 1794s 3785544+35292 tok |
-| iris/seed2 | acc 0.9732 | ast3 | PASS snap | empirical |  | 0 / 4828 (3.18%) | 0.806 / 0.764 | n/a | 440 (92%) |  |  |
-| iris/seed2 | acc 0.9732 | ast4 | PASS snap | empirical |  | 0 / 4808 (3.18%) | 0.806 / 0.764 | n/a | 440 (92%) |  |  |
+| iris/seed2 | acc 0.9732 | ast4 | PASS snap | empirical |  | 0 / 4828 (3.18%) | 0.806 / 0.764 | n/a | 440 (92%) |  |  |
 | iris/seed3 | acc 0.9867 | dump | PASS exact | empirical |  | 0 / 964 (3.03%) | 0.803 / 0.764 | n/a | 482 (100%) |  |  |
 | iris/seed3 | acc 0.9867 | agent_1 | PASS snap | empirical |  | 0 / 4851 (3.03%) | 0.803 / 0.763 | n/a | 310 (64%) | OUTSIDE PATHS (15) | 5946s 4428972+29931 tok |
-| iris/seed3 | acc 0.9867 | ast3 | PASS snap | empirical |  | 0 / 3609 (3.03%) | 0.803 / 0.765 | n/a | 434 (90%) |  |  |
-| iris/seed3 | acc 0.9867 | ast4 | PASS snap | empirical |  | 0 / 3589 (3.03%) | 0.803 / 0.765 | n/a | 434 (90%) |  |  |
+| iris/seed3 | acc 0.9867 | ast4 | PASS snap | empirical |  | 0 / 3609 (3.03%) | 0.803 / 0.765 | n/a | 434 (90%) |  |  |
 | iris/seed4 | acc 0.9856 | dump | PASS exact | empirical |  | 0 / 1062 (3.09%) | 0.788 / 0.746 | n/a | 482 (100%) |  |  |
 | iris/seed4 | acc 0.9856 | agent_1 | PASS snap | empirical |  | 0 / 4632 (3.09%) | 0.789 / 0.746 | n/a | 93 (19%) | OUTSIDE PATHS (4) | 595s 2618815+23959 tok |
-| iris/seed4 | acc 0.9856 | ast3 | PASS snap | empirical |  | 0 / 3501 (3.09%) | 0.79 / 0.746 | n/a | 441 (91%) |  |  |
-| iris/seed4 | acc 0.9856 | ast4 | PASS snap | empirical |  | 0 / 3481 (3.09%) | 0.79 / 0.746 | n/a | 441 (91%) |  |  |
+| iris/seed4 | acc 0.9856 | ast4 | PASS snap | empirical |  | 0 / 3501 (3.09%) | 0.79 / 0.746 | n/a | 441 (91%) |  |  |
 | iris/seed5 | acc 0.9804 | dump | PASS exact | empirical |  | 0 / 999 (3.76%) | 0.79 / 0.75 | n/a | 476 (100%) |  |  |
 | iris/seed5 | acc 0.9804 | agent_1 | PASS snap | empirical |  | 0 / 4952 (3.76%) | 0.791 / 0.752 | n/a | 216 (45%) | OUTSIDE PATHS (5) | 1034s 3441232+33311 tok |
-| iris/seed5 | acc 0.9804 | ast3 | PASS snap | empirical |  | 0 / 3575 (3.76%) | 0.788 / 0.748 | n/a | 435 (91%) |  |  |
-| iris/seed5 | acc 0.9804 | ast4 | PASS snap | empirical |  | 0 / 3555 (3.76%) | 0.788 / 0.748 | n/a | 435 (91%) |  |  |
+| iris/seed5 | acc 0.9804 | ast4 | PASS snap | empirical |  | 0 / 3575 (3.76%) | 0.788 / 0.748 | n/a | 435 (91%) |  |  |
 | iris_petal/seed0 | acc 0.9660 | dump | PASS exact | empirical |  | 0 / 592 (4.33%) | 0.751 / 0.72 | n/a | 374 (100%) |  |  |
 | iris_petal/seed0 | acc 0.9660 | agent_1 | PASS snap | empirical |  | 0 / 4590 (4.33%) | 0.753 / 0.722 | n/a | 42 (11%) | ok | 255s 763309+6911 tok |
-| iris_petal/seed0 | acc 0.9660 | ast3 | PASS snap | empirical |  | 0 / 5629 (4.33%) | 0.752 / 0.72 | n/a | 42 (11%) |  |  |
-| iris_petal/seed0 | acc 0.9660 | ast4 | PASS snap | empirical |  | 0 / 5609 (4.33%) | 0.752 / 0.72 | n/a | 42 (11%) |  |  |
+| iris_petal/seed0 | acc 0.9660 | ast4 | PASS snap | empirical |  | 0 / 5629 (4.33%) | 0.752 / 0.72 | n/a | 42 (11%) |  |  |
 | iris_petal/seed1 | acc 0.9664 | dump | PASS exact | empirical |  | 0 / 655 (4.06%) | 0.81 / 0.836 | n/a | 370 (100%) |  |  |
 | iris_petal/seed1 | acc 0.9664 | agent_1 | PASS snap | empirical |  | 0 / 4566 (4.06%) | 0.81 / 0.834 | n/a | 42 (11%) | ok | 287s 751754+6409 tok |
-| iris_petal/seed1 | acc 0.9664 | ast3 | PASS snap | empirical |  | 0 / 5513 (4.06%) | 0.806 / 0.835 | n/a | 42 (11%) |  |  |
-| iris_petal/seed1 | acc 0.9664 | ast4 | PASS snap | empirical |  | 0 / 5493 (4.06%) | 0.806 / 0.835 | n/a | 42 (11%) |  |  |
+| iris_petal/seed1 | acc 0.9664 | ast4 | PASS snap | empirical |  | 0 / 5513 (4.06%) | 0.806 / 0.835 | n/a | 42 (11%) |  |  |
 | iris_petal/seed2 | acc 0.9489 (NOT learned) | dump | PASS exact | empirical |  | 0 / 584 (4.45%) | 0.808 / 0.866 | n/a | 366 (100%) |  |  |
 | iris_petal/seed2 | acc 0.9489 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 5574 (4.45%) | 0.812 / 0.865 | n/a | 45 (12%) | ok | 318s 842611+9279 tok |
-| iris_petal/seed2 | acc 0.9489 (NOT learned) | ast3 | PASS snap | empirical |  | 0 / 4277 (4.45%) | 0.809 / 0.858 | n/a | 292 (80%) |  |  |
-| iris_petal/seed2 | acc 0.9489 (NOT learned) | ast4 | PASS snap | empirical |  | 0 / 4257 (4.45%) | 0.809 / 0.858 | n/a | 292 (80%) |  |  |
+| iris_petal/seed2 | acc 0.9489 (NOT learned) | ast4 | PASS snap | empirical |  | 0 / 4277 (4.45%) | 0.809 / 0.858 | n/a | 292 (80%) |  |  |
 | iris_petal/seed3 | acc 0.9661 | dump | PASS exact | empirical |  | 0 / 623 (3.50%) | 0.744 / 0.716 | n/a | 372 (100%) |  |  |
 | iris_petal/seed3 | acc 0.9661 | agent_1 | PASS snap | empirical |  | 0 / 5172 (3.50%) | 0.746 / 0.708 | n/a | 42 (11%) | ok | 168s 818941+7098 tok |
-| iris_petal/seed3 | acc 0.9661 | ast3 | PASS snap | empirical |  | 0 / 3464 (3.50%) | 0.745 / 0.712 | n/a | 42 (11%) |  |  |
-| iris_petal/seed3 | acc 0.9661 | ast4 | PASS snap | empirical |  | 0 / 3444 (3.50%) | 0.745 / 0.712 | n/a | 42 (11%) |  |  |
+| iris_petal/seed3 | acc 0.9661 | ast4 | PASS snap | empirical |  | 0 / 3464 (3.50%) | 0.745 / 0.712 | n/a | 42 (11%) |  |  |
 | iris_petal/seed4 | acc 0.9457 (NOT learned) | dump | PASS exact | empirical |  | 0 / 700 (3.75%) | 0.786 / 0.765 | n/a | 372 (100%) |  |  |
 | iris_petal/seed4 | acc 0.9457 (NOT learned) | agent_1 | PASS snap | empirical |  | 0 / 3524 (3.75%) | 0.785 / 0.762 | n/a | 39 (10%) | ok | 133s 660150+5606 tok |
-| iris_petal/seed4 | acc 0.9457 (NOT learned) | ast3 | PASS snap | empirical |  | 0 / 5469 (3.75%) | 0.79 / 0.762 | n/a | 42 (11%) |  |  |
-| iris_petal/seed4 | acc 0.9457 (NOT learned) | ast4 | PASS snap | empirical |  | 0 / 5449 (3.75%) | 0.79 / 0.762 | n/a | 42 (11%) |  |  |
+| iris_petal/seed4 | acc 0.9457 (NOT learned) | ast4 | PASS snap | empirical |  | 0 / 5469 (3.75%) | 0.79 / 0.762 | n/a | 42 (11%) |  |  |
 | iris_petal/seed5 | acc 0.9656 | dump | PASS exact | empirical |  | 0 / 658 (3.71%) | 0.772 / 0.74 | n/a | 368 (100%) |  |  |
 | iris_petal/seed5 | acc 0.9656 | agent_1 | PASS snap | empirical |  | 0 / 5723 (3.71%) | 0.775 / 0.745 | n/a | 39 (11%) | ok | 134s 661312+4921 tok |
-| iris_petal/seed5 | acc 0.9656 | ast3 | PASS snap | empirical |  | 0 / 3618 (3.71%) | 0.771 / 0.741 | n/a | 42 (11%) |  |  |
-| iris_petal/seed5 | acc 0.9656 | ast4 | PASS snap | empirical |  | 0 / 3598 (3.71%) | 0.771 / 0.741 | n/a | 42 (11%) |  |  |
+| iris_petal/seed5 | acc 0.9656 | ast4 | PASS snap | empirical |  | 0 / 3618 (3.71%) | 0.771 / 0.741 | n/a | 42 (11%) |  |  |
 | median3/seed0 | R² 0.9993 | dump | PASS exact | empirical | 8.81e-07 |  | 0.157 / 2.29 | no | 2512 (100%) |  |  |
 | median3/seed0 | R² 0.9993 | agent_1 | PASS snap | empirical | 0.103 |  | 0.114 / 0.807 | no | 170 (7%) | OUTSIDE PATHS (1) | 1175s 4237492+33148 tok |
-| median3/seed0 | R² 0.9993 | ast3 | PASS snap | empirical | 0.112 |  | 0.226 / 2.29 | no | 2508 (100%) |  |  |
 | median3/seed0 | R² 0.9993 | ast4 | PASS snap | empirical | 0.112 |  | 0.226 / 2.29 | no | 2508 (100%) |  |  |
 | median3/seed0 | R² 0.9993 | formula | FAIL | empirical | 0.163 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed1 | R² 0.9994 | dump | PASS exact | empirical | 8.85e-07 |  | 0.198 / 2.19 | no | 2498 (100%) |  |  |
 | median3/seed1 | R² 0.9994 | agent_1 | PASS snap | empirical | 0.112 |  | 0.117 / 0.755 | no | 131 (5%) | ok | 388s 1405754+10686 tok |
-| median3/seed1 | R² 0.9994 | ast3 | PASS exact | empirical | 1.03e-06 |  | 0.198 / 2.19 | no | 2498 (100%) |  |  |
 | median3/seed1 | R² 0.9994 | ast4 | PASS exact | empirical | 1.03e-06 |  | 0.198 / 2.19 | no | 2498 (100%) |  |  |
 | median3/seed1 | R² 0.9994 | formula | FAIL | empirical | 0.236 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | median3/seed2 | R² 0.9993 | dump | PASS exact | empirical | 1.01e-06 |  | 0.221 / 2.27 | no | 2504 (100%) |  |  |
 | median3/seed2 | R² 0.9993 | agent_1 | PASS snap | empirical | 0.0949 |  | 0.181 / 0.533 | no | 213 (9%) | OUTSIDE PATHS (1) | 3510s 10335312+46826 tok |
-| median3/seed2 | R² 0.9993 | ast3 | PASS exact | empirical | 1.2e-06 |  | 0.221 / 2.27 | no | 2504 (100%) |  |  |
 | median3/seed2 | R² 0.9993 | ast4 | PASS exact | empirical | 1.2e-06 |  | 0.221 / 2.27 | no | 2504 (100%) |  |  |
 | median3/seed2 | R² 0.9993 | formula | FAIL | empirical | 0.253 |  | 0 / 0 | yes | 23 (1%) |  |  |
 | neareq/seed0 | acc 0.9966 | dump | PASS exact | empirical |  | 0 / 1519 (0.75%) | 0.999 / 0.999 | no | 238 (100%) |  |  |
 | neareq/seed0 | acc 0.9966 | agent_1 | PASS snap | empirical |  | 0 / 9385 (0.75%) | 1 / 1 | yes | 18 (8%) | ok | 69s 431168+3289 tok |
-| neareq/seed0 | acc 0.9966 | ast3 | PASS snap | empirical |  | 0 / 11850 (0.75%) | 1 / 1 | no | 66 (28%) |  |  |
-| neareq/seed0 | acc 0.9966 | ast4 | PASS snap | empirical |  | 0 / 11431 (0.75%) | 1 / 1 | no | 64 (27%) |  |  |
+| neareq/seed0 | acc 0.9966 | ast4 | PASS snap | empirical |  | 0 / 11449 (0.75%) | 1 / 1 | no | 64 (27%) |  |  |
 | neareq/seed0 | acc 0.9966 | formula | PASS snap | empirical |  | 0 / 9385 (0.75%) | 1 / 1 | yes | 13 (5%) |  |  |
 | neareq/seed1 | acc 0.9975 | dump | PASS exact | empirical |  | 0 / 1677 (0.77%) | 0.999 / 1 | no | 238 (100%) |  |  |
 | neareq/seed1 | acc 0.9975 | agent_1 | PASS snap | empirical |  | 0 / 5148 (0.77%) | 1 / 1 | yes | 13 (5%) | ok | 239s 509287+5577 tok |
-| neareq/seed1 | acc 0.9975 | ast3 | PASS snap | empirical |  | 0 / 5222 (0.77%) | 0.999 / 1 | no | 64 (27%) |  |  |
-| neareq/seed1 | acc 0.9975 | ast4 | PASS snap | empirical |  | 0 / 5202 (0.77%) | 0.999 / 1 | no | 64 (27%) |  |  |
+| neareq/seed1 | acc 0.9975 | ast4 | PASS snap | empirical |  | 0 / 5222 (0.77%) | 0.999 / 1 | no | 64 (27%) |  |  |
 | neareq/seed1 | acc 0.9975 | formula | PASS snap | empirical |  | 0 / 5148 (0.77%) | 1 / 1 | yes | 13 (5%) |  |  |
 | neareq/seed2 | acc 0.9935 | dump | PASS exact | empirical |  | 0 / 1477 (1.04%) | 0.998 / 0.999 | no | 236 (100%) |  |  |
 | neareq/seed2 | acc 0.9935 | agent_1 | PASS snap | empirical |  | 0 / 5813 (1.04%) | 1 / 1 | yes | 18 (8%) | ok | 109s 578952+4367 tok |
-| neareq/seed2 | acc 0.9935 | ast3 | PASS snap | empirical |  | 0 / 5401 (1.04%) | 0.998 / 0.998 | no | 78 (33%) |  |  |
-| neareq/seed2 | acc 0.9935 | ast4 | PASS snap | empirical |  | 0 / 5381 (1.04%) | 0.998 / 0.998 | no | 78 (33%) |  |  |
+| neareq/seed2 | acc 0.9935 | ast4 | PASS snap | empirical |  | 0 / 5401 (1.04%) | 0.998 / 0.998 | no | 78 (33%) |  |  |
 | neareq/seed2 | acc 0.9935 | formula | PASS snap | empirical |  | 0 / 5813 (1.04%) | 1 / 1 | yes | 13 (6%) |  |  |
 | neareq/seed3 | acc 0.9954 | dump | PASS exact | empirical |  | 0 / 1499 (1.19%) | 0.999 / 1 | no | 236 (100%) |  |  |
-| neareq/seed3 | acc 0.9954 | ast3 | PASS snap | empirical |  | 0 / 6254 (1.19%) | 0.994 / 0.998 | no | 81 (34%) |  |  |
 | neareq/seed3 | acc 0.9954 | ast4 | PASS snap | empirical |  | 0 / 5484 (1.19%) | 0.997 / 0.999 | no | 67 (28%) |  |  |
 | neareq/seed3 | acc 0.9954 | formula | PASS snap | empirical |  | 0 / 5335 (1.19%) | 1 / 1 | yes | 13 (6%) |  |  |
 | tax/seed0 | R² 0.9998 | dump | PASS exact | empirical | 1.33e-05 |  | 1.06 / 38.9 | no | 178 (100%) |  |  |
 | tax/seed0 | R² 0.9998 | agent_1 | PASS snap | empirical | 0.997 |  | 1 / 5 | no | 40 (22%) | OUTSIDE PATHS (1) | 329s 754310+9379 tok |
-| tax/seed0 | R² 0.9998 | ast3 | PASS snap | empirical | 0.766 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed0 | R² 0.9998 | ast4 | PASS snap | empirical | 0.766 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed0 | R² 0.9998 | formula | PASS snap | empirical | 1.06 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed1 | R² 0.9996 | dump | PASS exact | empirical | 1.25e-05 |  | 1.43 / 42.3 | no | 176 (100%) |  |  |
 | tax/seed1 | R² 0.9996 | agent_1 | PASS snap | empirical | 0.644 |  | 1 / 10 | no | 32 (18%) | ok | 224s 753699+8243 tok |
-| tax/seed1 | R² 0.9996 | ast3 | PASS snap | empirical | 0.644 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed1 | R² 0.9996 | ast4 | PASS snap | empirical | 0.644 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed1 | R² 0.9996 | formula | FAIL | empirical | 1.43 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed2 | R² 0.9997 | dump | PASS exact | empirical | 1.26e-05 |  | 1.46 / 38.7 | no | 176 (100%) |  |  |
 | tax/seed2 | R² 0.9997 | agent_1 | PASS snap | empirical | 0.923 |  | 1.4 / 7 | no | 27 (15%) | ok | 120s 667515+7004 tok |
-| tax/seed2 | R² 0.9997 | ast3 | PASS snap | empirical | 1.06 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed2 | R² 0.9997 | ast4 | PASS snap | empirical | 1.06 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed2 | R² 0.9997 | formula | FAIL | empirical | 1.46 |  | 0 / 0 | yes | 42 (24%) |  |  |
 | tax/seed3 | R² 0.9997 | dump | PASS exact | empirical | 1.13e-05 |  | 1.2 / 38.7 | no | 182 (100%) |  |  |
-| tax/seed3 | R² 0.9997 | ast3 | PASS snap | empirical | 0.797 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed3 | R² 0.9997 | ast4 | PASS snap | empirical | 0.797 |  | 1 / 10 | no | 20 (11%) |  |  |
 | tax/seed3 | R² 0.9997 | formula | PASS snap | empirical | 1.2 |  | 0 / 0 | yes | 42 (23%) |  |  |
 | window/seed0 | acc 0.9990 | dump | PASS exact | empirical |  | 0 / 976 (0.58%) | 0.999 / 1 | no | 90 (100%) |  |  |
 | window/seed0 | acc 0.9990 | agent_1 | PASS snap | empirical |  | 0 / 5895 (0.58%) | 1 / 1 | yes | 14 (16%) | ok | 176s 498115+2837 tok |
-| window/seed0 | acc 0.9990 | ast3 | PASS snap | empirical |  | 0 / 5915 (0.58%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed0 | acc 0.9990 | ast4 | PASS snap | empirical |  | 0 / 5895 (0.58%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed0 | acc 0.9990 | formula | PASS snap | empirical |  | 0 / 5895 (0.58%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed1 | acc 0.7492 (NOT learned) | dump | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 90 (100%) |  |  |
 | window/seed1 | acc 0.7492 (NOT learned) | agent_1 | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 4 (4%) | ok | 123s 424014+2191 tok |
-| window/seed1 | acc 0.7492 (NOT learned) | ast3 | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 24 (27%) |  |  |
 | window/seed1 | acc 0.7492 (NOT learned) | ast4 | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 24 (27%) |  |  |
 | window/seed1 | acc 0.7492 (NOT learned) | formula | FAIL | empirical |  | 50228 / 0 (0.00%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed2 | acc 0.7492 (NOT learned) | dump | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 90 (100%) |  |  |
 | window/seed2 | acc 0.7492 (NOT learned) | agent_1 | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 4 (4%) | ok | 86s 421058+2039 tok |
-| window/seed2 | acc 0.7492 (NOT learned) | ast3 | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 20 (22%) |  |  |
 | window/seed2 | acc 0.7492 (NOT learned) | ast4 | PASS exact | empirical |  | 0 / 0 (0.00%) | 0.749 / 1 | no | 20 (22%) |  |  |
 | window/seed2 | acc 0.7492 (NOT learned) | formula | FAIL | empirical |  | 55163 / 0 (0.00%) | 1 / 1 | yes | 9 (10%) |  |  |
 | window/seed3 | acc 0.9977 | dump | PASS exact | empirical |  | 0 / 1443 (0.57%) | 0.998 / 1 | no | 94 (100%) |  |  |
-| window/seed3 | acc 0.9977 | ast3 | PASS snap | empirical |  | 0 / 9026 (0.57%) | 1 / 1 | no | 22 (23%) |  |  |
 | window/seed3 | acc 0.9977 | ast4 | PASS snap | empirical |  | 0 / 9046 (0.57%) | 1 / 1 | no | 22 (23%) |  |  |
 | window/seed3 | acc 0.9977 | formula | FAIL | empirical |  | 19 / 9048 (0.57%) | 1 / 1 | yes | 9 (10%) |  |  |
 | xor/seed0 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 120 (100%) |  |  |
 | xor/seed0 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 12 (10%) | ok | 144s 355220+3009 tok |
-| xor/seed0 | acc 1.0000 | ast3 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed0 | acc 1.0000 | ast4 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed0 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed1 | acc 0.5000 (NOT learned) | dump | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.5 /  | no | 122 (100%) |  |  |
 | xor/seed1 | acc 0.5000 (NOT learned) | agent_1 | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.5 /  | no | 3 (2%) | ok | 148s 425962+2602 tok |
-| xor/seed1 | acc 0.5000 (NOT learned) | ast3 | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.5 /  | no | 3 (2%) |  |  |
 | xor/seed1 | acc 0.5000 (NOT learned) | ast4 | PASS exact | exhaustive |  | 0 / 0 (50.00%) | 0.5 /  | no | 3 (2%) |  |  |
 | xor/seed1 | acc 0.5000 (NOT learned) | formula | PASS exact | exhaustive |  | 0 / 2 (50.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 116 (100%) |  |  |
 | xor/seed2 | acc 1.0000 | agent_1 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 12 (10%) | ok | 85s 421838+2215 tok |
-| xor/seed2 | acc 1.0000 | ast3 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | ast4 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed2 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed3 | acc 1.0000 | dump | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 122 (100%) |  |  |
-| xor/seed3 | acc 1.0000 | ast3 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed3 | acc 1.0000 | ast4 | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 | xor/seed3 | acc 1.0000 | formula | PASS exact | exhaustive |  | 0 / 0 (0.00%) | 1 /  | yes | 7 (6%) |  |  |
 

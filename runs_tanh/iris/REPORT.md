@@ -47,3 +47,5 @@ against the original tanh net.
 
 **Later (2026-10-30):** `ast4` (`docs/design/2026-10-30-ast4-design.md`) ran on every Iris net. It changes only the
 kink-merge route, which does not apply to argmax nets, so its programs are the same as `ast3`'s on all 12 nets.
+
+The `ast3` files were removed on 2026-10-30 (they are in git history). The same programs are in each run's `ast4.py`.
