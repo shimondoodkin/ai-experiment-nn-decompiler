@@ -341,8 +341,8 @@ def compile_program(src: str, spec: Spec) -> tuple[MLP, dict]:
     except SyntaxError:
         tree = None   # parse_program reports it
     if tree is not None and any(isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
-                                and n.func.id in ("sigmoid", "tanh") for n in ast.walk(tree)):
-        raise CompileError("compile_back: sigmoid/tanh cannot be compiled into a ReLU net")
+                                and n.func.id in ("sigmoid", "tanh", "exp", "log", "sqrt") for n in ast.walk(tree)):
+        raise CompileError("compile_back: sigmoid/tanh/exp/log/sqrt cannot be compiled into a ReLU net")
     prog = parse_program(src, spec.arg_names)
     expr = _flatten(prog.body, {})
     b = _Builder(spec)

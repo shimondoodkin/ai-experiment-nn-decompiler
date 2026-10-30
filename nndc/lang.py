@@ -14,7 +14,7 @@ from pathlib import Path
 import numpy as np
 
 LANG_VERSION = 1
-FUNCTIONS = {"relu", "sigmoid", "tanh", "min", "max", "abs", "sum", "argmax"}
+FUNCTIONS = {"relu", "sigmoid", "tanh", "exp", "log", "sqrt", "min", "max", "abs", "sum", "argmax"}
 
 _BINOPS = {ast.Add: np.add, ast.Sub: np.subtract, ast.Mult: np.multiply, ast.Div: np.divide}
 _CMPOPS = {ast.Lt: np.less, ast.LtE: np.less_equal, ast.Gt: np.greater, ast.GtE: np.greater_equal,
@@ -37,9 +37,10 @@ def allowlist_summary() -> str:
     return (
         "exactly one function `def net(x0, x1, ...)` with the same arguments as dump.py; "
         "statements: assignment to a plain name, if/elif/else, return; "
-        "expressions: numbers, True/False, + - *, division by a nonzero number constant, "
+        "expressions: numbers, True/False, + - * /, "
         "unary - and not, and/or, comparisons < <= > >= == != (chains allowed), "
-        "`a if cond else b`, and the functions relu(x), sigmoid(x), tanh(x), min(...), max(...), abs(x), "
+        "`a if cond else b`, and the functions relu(x), sigmoid(x), tanh(x), exp(x), log(x), sqrt(x), min(...), "
+        "max(...), abs(x), "
         "sum(a, b, ...) or sum((a, b, ...)), argmax(a, b, ...) (index of the first maximum); "
         "comparisons give 1/0. No imports, loops, other functions, attributes, ** or comprehensions."
     )
@@ -76,10 +77,8 @@ def _check_expr(node: ast.AST) -> None:
     if isinstance(node, ast.BinOp):
         if type(node.op) not in _BINOPS:
             raise _not_allowed(node.op, node)
-        if isinstance(node.op, ast.Div):
-            c = _is_number_const(node.right)
-            if c is None or c == 0:
-                raise _err(node, "division is allowed only by a nonzero number constant")
+        if isinstance(node.op, ast.Div) and _is_number_const(node.right) == 0:
+            raise _err(node, "division by the constant 0 is not allowed")
         _check_expr(node.left)
         _check_expr(node.right)
         return
@@ -115,7 +114,7 @@ def _check_expr(node: ast.AST) -> None:
             raise _err(node, f"keyword arguments to {name} are not allowed")
         if not node.args:
             raise _err(node, f"{name} needs at least one argument")
-        if name in ("relu", "sigmoid", "tanh", "abs") and len(node.args) != 1:
+        if name in ("relu", "sigmoid", "tanh", "exp", "log", "sqrt", "abs") and len(node.args) != 1:
             raise _err(node, f"{name} takes exactly one argument")
         for a in node.args:
             if isinstance(a, (ast.Tuple, ast.List)):
@@ -289,6 +288,8 @@ class _Interp:
                 return _sigmoid(args[0])
             if name == "tanh":
                 return np.tanh(args[0])
+            if name in ("exp", "log", "sqrt"):   # outside the domain: nan/inf, which the checker counts as wrong
+                return getattr(np, name)(args[0])
             if name == "abs":
                 return np.abs(args[0])
             if name == "min":

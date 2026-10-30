@@ -82,5 +82,18 @@ def test_non_strict_comparisons_on_integer_inputs(body):
 def test_compile_back_refuses_sigmoid(fn):
     spec = Spec.from_json(get_task("absdiff").spec.blind())
     src = f"def net(x0, x1):\n    return {fn}(x0 - x1)\n"
-    with pytest.raises(ValueError, match="compile_back: sigmoid/tanh cannot be compiled into a ReLU net"):
+    with pytest.raises(ValueError, match="cannot be compiled into a ReLU net"):
         compile_program(src, spec)
+
+
+@pytest.mark.parametrize("call", ["exp(x0)", "log(x0 + 3)", "sqrt(x0 + 3)"])
+def test_compile_back_refuses_exp_log_sqrt(call):
+    spec = Spec.from_json(get_task("absdiff").spec.blind())
+    with pytest.raises(CompileError, match="cannot be compiled into a ReLU net"):
+        compile_program(f"def net(x0, x1):\n    return {call}\n", spec)
+
+
+def test_compile_back_refuses_division_by_expression():
+    spec = Spec.from_json(get_task("absdiff").spec.blind())
+    with pytest.raises(CompileError):
+        compile_program("def net(x0, x1):\n    return x0 / (x1 + 4)\n", spec)

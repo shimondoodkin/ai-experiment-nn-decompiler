@@ -35,7 +35,6 @@ def test_bool_results_and_ifexp():
     ("def f(x0):\n    return x0\ndef net(x0):\n    return f(x0)", "one function"),
     ("def net(x0):\n    for i in (1,2):\n        pass\n    return x0", "For"),
     ("def net(x0):\n    return x0 / 0", "division"),
-    ("def net(x0):\n    return x0 / x0", "division"),
     ("def net(x0):\n    return round(x0)", "round"),
 ])
 def test_rejects_with_named_construct(src, word):
@@ -113,3 +112,42 @@ def test_evaluator_sigmoid_goes_through_the_stable_function(monkeypatch):
     import nndc.lang as lang
     monkeypatch.setattr(lang, "_sigmoid", lambda z: np.full_like(z, 0.25))
     np.testing.assert_array_equal(ev("def net(x0):\n    return sigmoid(x0)", np.array([[-1e4], [0.0], [1e4]])), 0.25)
+
+
+def test_exp_log_sqrt_evaluate():
+    p = parse_program("def net(x0):\n    return exp(x0) + log(x0) + sqrt(x0)\n", ["x0"])
+    X = np.array([[1.0], [4.0]])
+    assert np.allclose(evaluate(p, X), np.exp(X[:, 0]) + np.log(X[:, 0]) + np.sqrt(X[:, 0]))
+
+
+def test_division_by_expression():
+    p = parse_program("def net(x0, x1):\n    return x0 / (x1 + 1)\n", ["x0", "x1"])
+    assert np.allclose(evaluate(p, np.array([[3.0, 2.0]])), [1.0])
+
+
+def test_new_functions_take_one_argument():
+    for name in ("exp", "log", "sqrt"):
+        with pytest.raises(ProgramError, match="exactly one argument"):
+            parse_program(f"def net(x0):\n    return {name}(x0, x0)\n", ["x0"])
+
+
+def test_out_of_domain_gives_nonfinite_without_warning():
+    import warnings
+
+    p = parse_program("def net(x0):\n    return log(x0) + sqrt(x0) + 1 / x0\n", ["x0"])
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        out = evaluate(p, np.array([[-1.0], [0.0]]))
+    assert not np.isfinite(out).any()
+
+
+def test_new_function_counts_one_node():
+    assert program_size(parse_program("def net(x0):\n    return exp(x0)\n"))["nodes"] == \
+           program_size(parse_program("def net(x0):\n    return relu(x0)\n"))["nodes"]
+
+
+def test_allowlist_mentions_new_functions():
+    from nndc.lang import allowlist_summary
+
+    s = allowlist_summary()
+    assert "exp(x)" in s and "log(x)" in s and "sqrt(x)" in s and "division by a nonzero number constant" not in s

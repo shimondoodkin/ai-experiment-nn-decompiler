@@ -191,3 +191,10 @@ def test_rounding_bound_relu_unchanged():
     mlp = _random_net([3, 8, 8, 2], 5)
     X = np.random.default_rng(6).uniform(-3, 3, (500, 3))
     assert np.array_equal(_rounding_bound(mlp, X), _old_bound(mlp, X))
+
+
+def test_nonfinite_program_output_fails_regression():
+    spec = Spec(task="t", output="regression", inputs=[InputSpec("x0", "a", "float", 0, 1)])
+    mlp = MLP([np.array([[1]], np.float32), np.array([[1]], np.float32)], [np.zeros(1, np.float32), np.zeros(1, np.float32)])
+    r = check_program("def net(x0):\n    return log(x0 - 100)\n", mlp, spec)
+    assert not r.snap_pass and r.error is None
