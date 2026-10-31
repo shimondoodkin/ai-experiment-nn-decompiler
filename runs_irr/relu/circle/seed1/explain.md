@@ -35,10 +35,10 @@ The dirt: each fitted value against its clean one. Effect: the largest change of
 
 | term | clean | faithful | effect |
 |---|---|---|---|
-| x1 | 0 | -0.03379 | 2.55% |
-| x0² | 1 | 0.9918 | 1.86% |
-| x0·x1 | 0 | 0.00524 | 1.18% |
-| threshold | 3.975 | 3.959 | 0.40% |
+| x1 | 0 | -0.03379 | 2.53% |
+| x0² | 1 | 0.9918 | 1.84% |
+| x0·x1 | 0 | 0.00524 | 1.17% |
+| threshold | 4 | 3.959 | 1.02% |
 | x0 | 0 | -0.003098 | 0.23% |
 
 ## Units

@@ -37,7 +37,7 @@ The dirt: each fitted value against its clean one. Effect: the largest change of
 |---|---|---|---|
 | x0·x1 | 0 | 0.008473 | 1.90% |
 | x0² | 1 | 0.9957 | 0.97% |
-| x0 | -0.02 | -0.01179 | 0.62% |
+| x0 | 0 | -0.01179 | 0.88% |
 | threshold | 4 | 3.992 | 0.20% |
 | x1 | 0 | -0.002069 | 0.16% |
 
