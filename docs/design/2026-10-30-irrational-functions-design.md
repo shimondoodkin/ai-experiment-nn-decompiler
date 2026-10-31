@@ -243,3 +243,74 @@ boundary points, the plot styling, and how the route's code is split across `nnd
   4. **Held-out:** after the freeze, agents also run on the 68 held-out nets, with heuristics to
      `runs_irr/HEURISTICS_heldout.md`, which development never reads. Reproduction on the held-out nets is the
      headline.
+- **2026-10-31, route changes distilled from the agent pass** (plan Task 9; the user: "whatever you think"). All 108
+  agents pass. A count of their final programs (60 plain formulas, 13 edge clamps, 2 smoothing constants, 6
+  formula + correction, 8 min/max of lines, 3 line + hinges, 15 pruned nets) and the ranked heuristics are in the
+  distillation note kept with the data commit. On the 45 one-input wide-ReLU, sigmoid and tanh nets the family route
+  already passes a 0-term formula, so nothing below targets them. The four changes go where the agents beat `ast5`.
+  Clusters are cited as `HEURISTICS.md` entries (variant/task/seed).
+  1. **Border-aware 2-D fit sample, margin retry.** Add the box border (a fine grid on each edge) and the corners to
+     the 2-D family fit sample. When a snapped family program fails the checker, add the checker's counterexamples to
+     the sample, refit, and re-snap with the tolerance scaled to 0.8, then 0.6. At most two retries per family.
+     Agents keep a 10–40% margin and fit on border and corner points (about 35 and 9 agents; sigmoid bump/seed2,
+     sigmoid dist/seed1, sigmoid dist/seed2, relu bump/seed0, tanh dist/seed0). In 7 nets, 16 family rows came within
+     2.0% on the fit sample and then failed the checker (relu/dist 0, 2; relu/product 0, 1; sigmoid/dist 0–2).
+     Expected to fix sigmoid/dist 0–1.
+  2. **Prune with a minimax output refit**, a new route that runs only when no formula passes, for nets with one
+     hidden layer:
+     - remove hidden units greedily, one at a time;
+     - after each removal, re-solve the output weights plus a free affine term `c + a·x` by LP (minimax);
+     - fit on grid, border and counterexample points;
+     - stop when the best removal would exceed 0.8 of the tolerance;
+     - then snap the hidden weights one at a time, coarse values first, with an LP re-solve after each; then the
+       output weights, finer.
+
+     It is a candidate like any other: it is kept only if it passes and has the fewest nodes. Sources: minimax LP
+     refit (14 agents; sigmoid bump/seed1, sigmoid dist/seed1, relu bump/seed0, tanh bump/seed2), backward
+     elimination (13; sigmoid dist/seed0, tanh dist/seed0, relu_wide bump/seed0), one-at-a-time snapping (16; tanh
+     dist/seed1), and stopping the formula search when the ripple exceeds the tolerance (15; tanh bump/seed1).
+     Expected gain is size, not formulas: tanh/dist 0–2 (agents 106–189 nodes, `ast5` 436–470), sigmoid/dist
+     (283–334 vs 392–462), and sigmoid/bump (354–413 vs 452–476). Not expected on relu/bump, where `ast5` is already
+     smaller. LP: scipy `linprog` (HiGHS), with the `highs-ipm` fallback.
+  3. **Joint fold of near-linear smooth units**, inside change 2's route:
+     - before elimination, sigmoid/tanh units whose pre-activation range over the box is small (below 1 in units of
+       the activation's slope scale) are folded together into one affine term, plus a quadratic term in 2-D;
+     - the fold's coefficients are re-solved in the same LP as the output weights, not fixed at each unit's Taylor
+       line.
+
+     Source: 18 agents (sigmoid dist/seed1, tanh dist/seed0, tanh dist/seed2, tanh exp/seed0). sigmoid dist/seed1
+     reports that one affine term in place of 10 units took the error from 0.039 to 0.013.
+  4. **Clean conic snap.** After the conic route's snap, try a cleaner version of each passing (or failing) conic:
+     - set to 0 every linear and cross coefficient whose effect over the box is below the tolerance;
+     - round the threshold to the nicest value within the tolerance (integers first);
+     - keep the cleaner program if the checker passes it.
+
+     Sources: prefer the clean formula and take r from the boundary (about 35 and 12 agents; sigmoid exp/seed2, tanh
+     circle/seed1, sigmoid circle/seed0). In 4 circle nets the agents pass `x0² + x1² < 4` (23 nodes) where `ast5`
+     keeps terms such as `0.01 * x0 * x1 + 0.01 * x1 < 3.977` (25–36 nodes): sigmoid/circle/1, tanh/circle/0,
+     relu_wide/circle/0 and relu_wide/circle/2.
+
+     This replaces a first change 4, fewer-segment min/max of lines for small 1-D ReLU nets (about 30 and 10
+     agents). The development rerun showed it is not needed: on its targets `ast5` is already smaller than the
+     agents (relu log/1–2: 35 and 40 nodes against 43 and 56; relu sqrt/1–2: 28 and 28 against 50 and 43; on sqrt it
+     already writes `min(...)` of three lines). relu/square/0 (`ast5` 55, agent 41, a mirror-symmetric hinge sum) is
+     left.
+
+  **Where the agents stand (rerun, before these changes):**
+  - `ast5` passes all 108 nets and is no larger than the agent on 90 of them.
+  - The 18 where it is larger:
+    - tanh/dist 0–2 (2.5–4.1× larger) and sigmoid/dist 0–1 (1.4×): changes 1–3;
+    - sigmoid/bump 0–2, relu_wide/bump 0–2 and tanh/bump/2 (1.0–1.3×): change 2;
+    - the 4 circles above: change 4;
+    - relu/product/0 (30 vs 27 nodes) and relu/square/0: left.
+
+  This is the size-only part of the reproduction measure (amendment 3 above). The family-match part goes into the
+  report with the data commit.
+
+  Not taken:
+  - odd/even shrink and clip terms for product (4 agents; readability only, since `ast5` passes those nets);
+  - an edge clamp for log/sqrt (13 agents; the minimax-fitted shift or offset already passes all 13 of those nets,
+    so a clamp would only change the form).
+
+  Both stay in the distillation note for later. Changes 1–4 do not touch `ast4` or the ReLU equivalence anti-goal: they
+  live in `ast5`'s routes only. The development numbers are re-reported after them, then the freeze.
