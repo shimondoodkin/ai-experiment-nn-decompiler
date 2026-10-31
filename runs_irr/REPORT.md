@@ -278,3 +278,37 @@ Written in `docs/design/2026-10-31-formula-residual-gate-view-design.md` before 
 | with minimax, the formula is found on at least 2 of the 3 sigmoid dist nets | 1/3 (33%) | not met |
 | on at least 90% of the learned regression development nets, the formula is found or the near formula is of the task's family and within 3% | 79/88 (90%) | not met |
 | on the nets run before minimax, ast5 finds the formula on at least as many, and is never larger where both pass | found 10 before, 10 now; larger on 1 of 18 | not met |
+
+## Reproduction
+
+Per development net with an agent attempt (`agent_1`, not excluded in `agent_excluded.json`): `ast5` reproduces it when both pass, `ast5` is not larger, and where the agent's program uses the task family's function, `ast5`'s does too. Smaller / equal / larger compare the node counts where both pass.
+
+| variant | agents passing | reproduced | smaller | equal | larger |
+|---|---|---|---|---|---|
+| relu | 27 | 25/27 (93%) | 20 | 5 | 2 |
+| relu_wide | 26 | 22/26 (85%) | 9 | 13 | 4 |
+| sigmoid | 27 | 21/27 (78%) | 15 | 6 | 6 |
+| tanh | 27 | 21/27 (78%) | 13 | 9 | 5 |
+
+Total: 89/107 (83%).
+Before the distilled changes: 89/107 (83%) (`before_distill.json`).
+
+Not reproduced:
+- relu/product/seed0: ast5 30 nodes, agent 27 (larger)
+- relu/square/seed0: ast5 55 nodes, agent 41 (larger)
+- relu_wide/bump/seed0: ast5 1142 nodes, agent 1043 (larger)
+- relu_wide/bump/seed2: ast5 1093 nodes, agent 973 (larger, not the family)
+- relu_wide/circle/seed0: ast5 25 nodes, agent 23 (larger)
+- relu_wide/circle/seed2: ast5 36 nodes, agent 23 (larger)
+- sigmoid/bump/seed0: ast5 476 nodes, agent 413 (larger)
+- sigmoid/bump/seed1: ast5 452 nodes, agent 413 (larger)
+- sigmoid/bump/seed2: ast5 466 nodes, agent 354 (larger)
+- sigmoid/circle/seed1: ast5 25 nodes, agent 23 (larger)
+- sigmoid/dist/seed0: ast5 462 nodes, agent 334 (larger)
+- sigmoid/dist/seed1: ast5 392 nodes, agent 283 (larger)
+- tanh/bump/seed0: ast5 474 nodes, agent 501 (not the family)
+- tanh/bump/seed2: ast5 468 nodes, agent 461 (larger)
+- tanh/circle/seed0: ast5 25 nodes, agent 23 (larger)
+- tanh/dist/seed0: ast5 470 nodes, agent 189 (larger)
+- tanh/dist/seed1: ast5 436 nodes, agent 106 (larger)
+- tanh/dist/seed2: ast5 464 nodes, agent 145 (larger)

@@ -1,0 +1,761 @@
+{
+  "note": "ast5 before the distilled route changes (data 2962329, analysis code 34f035e), from irr_analysis.json; reproduced is None for runs in agent_excluded.json",
+  "runs": {
+    "relu/bump/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 284,
+      "ast5_pass": true,
+      "agent_nodes": 323,
+      "reproduced": true
+    },
+    "relu/bump/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 318,
+      "ast5_pass": true,
+      "agent_nodes": 418,
+      "reproduced": true
+    },
+    "relu/bump/seed2": {
+      "formula_found": false,
+      "ast5_nodes": 331,
+      "ast5_pass": true,
+      "agent_nodes": 350,
+      "reproduced": true
+    },
+    "relu/circle/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "relu/circle/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 28,
+      "reproduced": true
+    },
+    "relu/circle/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "relu/dist/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 18,
+      "reproduced": true
+    },
+    "relu/dist/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 21,
+      "ast5_pass": true,
+      "agent_nodes": 21,
+      "reproduced": true
+    },
+    "relu/dist/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "relu/exp/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 35,
+      "ast5_pass": true,
+      "agent_nodes": 43,
+      "reproduced": true
+    },
+    "relu/exp/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu/exp/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu/log/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 21,
+      "reproduced": true
+    },
+    "relu/log/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 35,
+      "ast5_pass": true,
+      "agent_nodes": 43,
+      "reproduced": true
+    },
+    "relu/log/seed2": {
+      "formula_found": false,
+      "ast5_nodes": 40,
+      "ast5_pass": true,
+      "agent_nodes": 56,
+      "reproduced": true
+    },
+    "relu/product/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 30,
+      "ast5_pass": true,
+      "agent_nodes": 27,
+      "reproduced": false
+    },
+    "relu/product/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 53,
+      "ast5_pass": true,
+      "agent_nodes": 64,
+      "reproduced": true
+    },
+    "relu/product/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 19,
+      "ast5_pass": true,
+      "agent_nodes": 22,
+      "reproduced": true
+    },
+    "relu/recip/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 24,
+      "ast5_pass": true,
+      "agent_nodes": 37,
+      "reproduced": true
+    },
+    "relu/recip/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 24,
+      "ast5_pass": true,
+      "agent_nodes": 35,
+      "reproduced": true
+    },
+    "relu/recip/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 37,
+      "ast5_pass": true,
+      "agent_nodes": 43,
+      "reproduced": true
+    },
+    "relu/sqrt/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 19,
+      "reproduced": true
+    },
+    "relu/sqrt/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 28,
+      "ast5_pass": true,
+      "agent_nodes": 50,
+      "reproduced": true
+    },
+    "relu/sqrt/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 28,
+      "ast5_pass": true,
+      "agent_nodes": 43,
+      "reproduced": true
+    },
+    "relu/square/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 55,
+      "ast5_pass": true,
+      "agent_nodes": 41,
+      "reproduced": false
+    },
+    "relu/square/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "relu/square/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "relu_wide/bump/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 1142,
+      "ast5_pass": true,
+      "agent_nodes": 1043,
+      "reproduced": false
+    },
+    "relu_wide/bump/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 1177,
+      "ast5_pass": true,
+      "agent_nodes": null,
+      "reproduced": null
+    },
+    "relu_wide/bump/seed2": {
+      "formula_found": false,
+      "ast5_nodes": 1093,
+      "ast5_pass": true,
+      "agent_nodes": 973,
+      "reproduced": false
+    },
+    "relu_wide/circle/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 25,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": false
+    },
+    "relu_wide/circle/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "relu_wide/circle/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 36,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": false
+    },
+    "relu_wide/dist/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 18,
+      "reproduced": true
+    },
+    "relu_wide/dist/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 18,
+      "reproduced": true
+    },
+    "relu_wide/dist/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "relu_wide/exp/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/exp/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/exp/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/log/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/log/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/log/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/product/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "relu_wide/product/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "relu_wide/product/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "relu_wide/recip/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 11,
+      "reproduced": true
+    },
+    "relu_wide/recip/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 11,
+      "reproduced": true
+    },
+    "relu_wide/recip/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/sqrt/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "relu_wide/sqrt/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "relu_wide/sqrt/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "relu_wide/square/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "relu_wide/square/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "relu_wide/square/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "sigmoid/bump/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 476,
+      "ast5_pass": true,
+      "agent_nodes": 413,
+      "reproduced": false
+    },
+    "sigmoid/bump/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 452,
+      "ast5_pass": true,
+      "agent_nodes": 413,
+      "reproduced": false
+    },
+    "sigmoid/bump/seed2": {
+      "formula_found": false,
+      "ast5_nodes": 466,
+      "ast5_pass": true,
+      "agent_nodes": 354,
+      "reproduced": false
+    },
+    "sigmoid/circle/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "sigmoid/circle/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 25,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": false
+    },
+    "sigmoid/circle/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "sigmoid/dist/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 462,
+      "ast5_pass": true,
+      "agent_nodes": 334,
+      "reproduced": false
+    },
+    "sigmoid/dist/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 392,
+      "ast5_pass": true,
+      "agent_nodes": 283,
+      "reproduced": false
+    },
+    "sigmoid/dist/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 38,
+      "ast5_pass": true,
+      "agent_nodes": 39,
+      "reproduced": true
+    },
+    "sigmoid/exp/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "sigmoid/exp/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "sigmoid/exp/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "sigmoid/log/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "sigmoid/log/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "sigmoid/log/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "sigmoid/product/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "sigmoid/product/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "sigmoid/product/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "sigmoid/recip/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 11,
+      "reproduced": true
+    },
+    "sigmoid/recip/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 11,
+      "reproduced": true
+    },
+    "sigmoid/recip/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 11,
+      "reproduced": true
+    },
+    "sigmoid/sqrt/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "sigmoid/sqrt/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 18,
+      "reproduced": true
+    },
+    "sigmoid/sqrt/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 12,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "sigmoid/square/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "sigmoid/square/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "sigmoid/square/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "tanh/bump/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 474,
+      "ast5_pass": true,
+      "agent_nodes": 501,
+      "reproduced": false
+    },
+    "tanh/bump/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 468,
+      "ast5_pass": true,
+      "agent_nodes": 468,
+      "reproduced": true
+    },
+    "tanh/bump/seed2": {
+      "formula_found": false,
+      "ast5_nodes": 468,
+      "ast5_pass": true,
+      "agent_nodes": 461,
+      "reproduced": false
+    },
+    "tanh/circle/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 25,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": false
+    },
+    "tanh/circle/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 18,
+      "reproduced": true
+    },
+    "tanh/circle/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 18,
+      "ast5_pass": true,
+      "agent_nodes": 23,
+      "reproduced": true
+    },
+    "tanh/dist/seed0": {
+      "formula_found": false,
+      "ast5_nodes": 470,
+      "ast5_pass": true,
+      "agent_nodes": 189,
+      "reproduced": false
+    },
+    "tanh/dist/seed1": {
+      "formula_found": false,
+      "ast5_nodes": 436,
+      "ast5_pass": true,
+      "agent_nodes": 106,
+      "reproduced": false
+    },
+    "tanh/dist/seed2": {
+      "formula_found": false,
+      "ast5_nodes": 464,
+      "ast5_pass": true,
+      "agent_nodes": 145,
+      "reproduced": false
+    },
+    "tanh/exp/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "tanh/exp/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "tanh/exp/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "tanh/log/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "tanh/log/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "tanh/log/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 17,
+      "reproduced": true
+    },
+    "tanh/product/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "tanh/product/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "tanh/product/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 12,
+      "reproduced": true
+    },
+    "tanh/recip/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "tanh/recip/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 11,
+      "reproduced": true
+    },
+    "tanh/recip/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 6,
+      "ast5_pass": true,
+      "agent_nodes": 6,
+      "reproduced": true
+    },
+    "tanh/sqrt/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 15,
+      "reproduced": true
+    },
+    "tanh/sqrt/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 35,
+      "reproduced": true
+    },
+    "tanh/sqrt/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 9,
+      "ast5_pass": true,
+      "agent_nodes": 20,
+      "reproduced": true
+    },
+    "tanh/square/seed0": {
+      "formula_found": true,
+      "ast5_nodes": 7,
+      "ast5_pass": true,
+      "agent_nodes": 7,
+      "reproduced": true
+    },
+    "tanh/square/seed1": {
+      "formula_found": true,
+      "ast5_nodes": 10,
+      "ast5_pass": true,
+      "agent_nodes": 47,
+      "reproduced": true
+    },
+    "tanh/square/seed2": {
+      "formula_found": true,
+      "ast5_nodes": 10,
+      "ast5_pass": true,
+      "agent_nodes": 35,
+      "reproduced": true
+    }
+  }
+}
