@@ -323,3 +323,30 @@ boundary points, the plot styling, and how the route's code is split across `nnd
   - bump formula on at least one net: not met (0);
   - tanh within 3 of sigmoid: met (21 vs 22);
   - PySR finds the formula on fewer nets than `ast5`, and on at least 5: met (60 vs 84).
+- **2026-10-31, development numbers after the distilled changes** (data commit `06b9a9d`, tool `ad62dfb`,
+  `runs_irr/REPORT.md`). `ast5` still passes all 108 nets. The expectations of changes 1–4, as written:
+  - sigmoid/dist 0–1 pass a formula (change 1): partly met. Seed 0 is now
+    `sqrt(1.03·x0² + 1.034·x1² + … + 0.125) − 0.09478`, a 0-term dist formula (462 → 55 nodes). Seed 1 passes a
+    formula of another family, `−1/u + 2·relu(u − 0.42) + 5.5` with `u` a quadratic (392 → 50 nodes, agent 283), so
+    it is reproduced by size but not counted as found.
+  - The prune route is smaller than the first run's `ast5` on tanh/dist and sigmoid/dist, and on sigmoid/bump: met.
+    tanh/dist 0–2: 470 → 205, 436 → 104, 464 → 172 (agents 189, 106, 145). sigmoid/dist went to the family route
+    instead (above). sigmoid/bump 0–2: 476 → 415, 452 → 422, 466 → 400 (agents 413, 413, 354). Not predicted: it also
+    wins on relu_wide/bump 0–2 (1142 → 1049, 1177 → 1016, 1093 → 1024) and tanh/bump 0–2 (474 → 464, 468 → 429,
+    468 → 429). relu/bump is unchanged, as expected.
+  - The 4 circles give `x0 * x0 + x1 * x1 < 4`: met. All 12 circle nets now give exactly that (18 nodes; agents 23).
+  - Reproduction rises from the Task 1 number: met, 89/107 → 98/107. Not reproduced:
+    - relu/square/0 (left);
+    - 5 bump nets, where the pruned net is within 0.5–13% of the agent's size, or smaller but without the agent's
+      `exp` (tanh/bump/0);
+    - tanh/dist 0 and 2 (205 vs 189, 172 vs 145).
+
+  Side effects of change 1's border sample. relu/product 0–2 got smaller (30 → 10, 53 → 41, 19 → 10); seeds 0 and 2
+  are now `0.9763 * x0 * x1` and `x0 * x1 + 0.003637`. relu/product/1 now counts as found, but its formula reaches the
+  product through the near-linear part of an exponential, `−46·exp(u) + 5·relu(u − 0.05) + 46.04` with
+  `u = −0.02157·x0·x1`. It is a product only to first order; the family check counts it because `x0 * x1` appears.
+
+  The first run's predictions, re-measured: formula found 86/100 (was 84); where found, `ast5` at least 5× smaller
+  than `ast4` 75/86 (still not met); bump formula 0 (still not met); tanh vs sigmoid 21 vs 23 (still met); PySR 60
+  vs 86 (still met). The gate-view design's third prediction is now met (found 10 before, 11 now; larger on 0 of 18,
+  was 1). Its second is still not met (79/88).
