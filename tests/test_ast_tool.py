@@ -93,3 +93,16 @@ def test_ast5_trace_near_is_the_failing_conic(monkeypatch):
     near = trace["near"]
     assert near["family"] == "conic" and near["src"] == wrong and near["terms"] == 0
     assert 0.3 < near["err"] < 0.7
+
+
+def test_ast5_prune_runs_only_without_formula(monkeypatch):
+    import nndc.ast_tool as at
+
+    mlp, spec = _x0_net(1), _spec(1)
+    monkeypatch.setattr(at, "family_candidates", lambda spec, mlp: ([], []))
+    _, trace = refactor(dump_program(mlp, spec), spec, mlp, version="ast5")
+    assert "prune_lp" in trace and any(c["route"] == "prune-lp" for c in trace["candidates"])
+    src = "def net(x0):\n    return x0\n"
+    monkeypatch.setattr(at, "family_candidates", lambda spec, mlp: ([("identity", src)], []))
+    _, trace = refactor(dump_program(mlp, spec), spec, mlp, version="ast5")
+    assert "prune_lp" not in trace

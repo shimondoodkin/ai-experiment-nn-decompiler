@@ -214,8 +214,8 @@ def linear_cascade(spec: Spec, mlp: MLP) -> str | None:
     return _first_passing([program(t) for t in SNAP_TOLS] + [program(None)], mlp, spec)
 
 
-def minimax(A: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, float]:
-    """min_c max |A c - y| by a linear program; returns (c, max error)."""
+def minimax(A: np.ndarray, y: np.ndarray, method: str = "highs") -> tuple[np.ndarray, float]:
+    """min_c max |A c - y| by a linear program; returns (c, max error), the error inf when the LP fails."""
     from scipy.optimize import linprog
 
     n, k = A.shape
@@ -224,7 +224,7 @@ def minimax(A: np.ndarray, y: np.ndarray) -> tuple[np.ndarray, float]:
     ones = np.ones((n, 1))
     A_ub = np.vstack([np.hstack([A, -ones]), np.hstack([-A, -ones])])
     b_ub = np.concatenate([y, -y])
-    r = linprog(cost, A_ub=A_ub, b_ub=b_ub, bounds=[(None, None)] * k + [(0, None)], method="highs")
+    r = linprog(cost, A_ub=A_ub, b_ub=b_ub, bounds=[(None, None)] * k + [(0, None)], method=method)
     if r.status != 0:
         return np.zeros(k), float("inf")
     return r.x[:k], float(r.x[-1])

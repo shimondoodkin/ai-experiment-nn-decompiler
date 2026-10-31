@@ -25,6 +25,7 @@ from .heuristics.fit import fit_expr
 from .heuristics.kinks import kink_merge
 from .heuristics.merge import merge_units, normalize
 from .heuristics.motifs import as_relu_sum, motif_expr
+from .heuristics.prune import prune_candidate
 from .heuristics.snap import snap_net
 from .heuristics.spline import spline_expr
 from .heuristics.truthtable import truth_table_expr
@@ -37,7 +38,7 @@ from .symnet import SymNet, from_dump, input_bounds, to_program
 ROUTES = ["structural-exact", "structural-snap", "spline", "boundary", "boundary-scan", "truth-table", "fit",
           "decision-list-snap", "decision-list",   # snapped first: when neither is exact, prefer round constants
           "sigmoid-replace-snap", "sigmoid-replace", "linear-cascade", "linear-scores", "knot-fit",   # non-ReLU nets
-          "kink-merge", "family", "conic"]
+          "kink-merge", "family", "conic", "prune-lp"]
 
 
 TOOL_VERSIONS = ("ast", "ast4", "ast5")   # ast: up to the sigmoid moves (project B, the ReLU runs' ast.py); ast4:
@@ -241,6 +242,11 @@ def refactor(dump_src: str, spec: Spec, mlp: MLP, version: str = "ast") -> tuple
             extra["near"] = near_formula(extra["families"], len(spec.inputs))
         else:
             extra["near"] = None
+        if spec.output == "regression" and not any(c.check["snap_pass"] for c in fam):
+            def prune_route() -> str | None:   # F3: only when no formula passes
+                src_p, extra["prune_lp"] = prune_candidate(spec, mlp)
+                return src_p
+            add("prune-lp", prune_route, ["F3"])
 
     passing = [c for c in cands if c.check["snap_pass"]]
     if passing:

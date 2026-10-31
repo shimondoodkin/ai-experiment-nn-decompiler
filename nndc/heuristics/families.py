@@ -503,6 +503,15 @@ def near_formula(rows: list[dict], dim: int) -> dict | None:
     return min(cands, key=lambda c: c["err"])
 
 
+def checker_hook(mlp: MLP, spec: Spec) -> Callable[[str], tuple[bool, np.ndarray]]:
+    """The checker's snap verdict against the net, with its counterexample inputs, shape (k, n_inputs)."""
+    def check(src: str) -> tuple[bool, np.ndarray]:
+        r = check_program(src, mlp, spec)
+        cex = [[c["inputs"][n] for n in spec.arg_names] for c in r.counterexamples]
+        return r.snap_pass, np.array(cex, dtype=np.float64).reshape(-1, len(spec.inputs))
+    return check
+
+
 def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray], np.ndarray] | None = None,
                       check: Callable[[str], tuple[bool, np.ndarray]] | None = None
                       ) -> tuple[list[tuple[str, str]], list[dict]]:
@@ -516,10 +525,7 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
     if predict is None:
         predict = lambda X: mlp.forward(X.astype(np.float32))[:, 0].astype(np.float64)   # noqa: E731
     if check is None:
-        def check(src: str) -> tuple[bool, np.ndarray]:
-            r = check_program(src, mlp, spec)
-            cex = [[c["inputs"][n] for n in spec.arg_names] for c in r.counterexamples]
-            return r.snap_pass, np.array(cex, dtype=np.float64).reshape(-1, len(spec.inputs))
+        check = checker_hook(mlp, spec)
     X, y = _fit_sample(spec, predict)
     R = float(y.max() - y.min())
     if not np.isfinite(R) or R <= 1e-12:
