@@ -4,43 +4,39 @@ Inputs: x0 in [-3, 3], x1 in [-3, 3]; output: regression.
 
 ## Formula
 
-No formula passes the check. Near formula (sqrt, 0 correction terms, 24 nodes), max error 2.6% of the output range (the check allows 2%):
+A family program passes the check (50 nodes):
 
 ```python
 def net(x0, x1):
-    return sqrt(x0 * x0 + x1 * x1 + 0.2) - 0.0753
+    u = 0.02238 * x0 * x0 + 0.02263 * x1 * x1 + 0.197
+    return -1 / u + 2 * relu(u - 0.42) + 5.5
 ```
-
-Where it is off (formula minus net, % of the output range):
-- largest error 2.6%, inside the box (x0 = -2.19, x1 = 0.22)
-- by distance from (0, 0), rings 0.423 wide, mean: +0.8 +1.7 +1.2 +0.2 -0.7 -1.0 -1.0 -0.8 -1.1 -1.4; largest: +1.7 +2.6 +2.5 +1.7 +2.6 +2.6 +2.3 +2.5 +2.4 +2.6
-- by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 -0.8 -0.3 -0.5 -0.6 -0.5 -0.3 -0.8 -0.5 -0.3 -0.5 -0.3; largest: +2.2 +1.6 +2.5 +2.2 +2.6 +2.6 +2.6 +2.3 +1.7 +2.4 +1.3 +2.3
 
 ## Faithful fit
 
-The sqrt formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no sqrt formula follows).
+The reciprocal formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no reciprocal formula follows).
 
 Faithful:
 
 ```python
 def net(x0, x1):
-    return sqrt(1.016 * x0 * x0 + 0.9935 * x1 * x1 - 0.001979 * x0 * x1 + 0.01893 * x0 + 0.004362 * x1 + 0.1072) - 0.04132
+    return -1 / (0.01145 * x0 * x0 + 0.01158 * x1 * x1 + 3.768e-05 * x0 * x1 - 3.94e-06 * x0 + 4.811e-05 * x1 + 0.1562) + 6.89
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return sqrt(1.016 * x0 * x0 + 0.9935 * x1 * x1 - 0.001979 * x0 * x1 + 0.01893 * x0 + 0.004362 * x1 + 0.1072) - 0.04132
+    return -1 / (0.01145 * x0 * x0 + 0.01158 * x1 * x1 + 3.768e-05 * x0 * x1 - 3.94e-06 * x0 + 4.811e-05 * x1 + 0.1562) + 6.89
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
-  - by distance from (-0.00932, -0.0022), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by distance from (0.000175, -0.00208), rings 0.423 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 2.2%, at the box edge (x0 = -3, x1 = 1.13)
-  - by distance from (-0.00932, -0.0022), rings 0.424 wide, mean: -0.8 +1.0 +1.1 +0.3 -0.3 -0.5 -0.4 -0.2 -0.4 -0.5; largest: +2.1 +2.1 +2.1 +2.1 +2.1 +2.1 +1.9 +2.2 +1.8 +1.8
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.8 -0.2 -0.1 -0.4 -0.3 -0.1 +0.0 -0.6 -0.6 -0.1 +0.1 +0.5; largest: +2.1 +2.0 +2.0 +2.0 +2.0 +2.2 +2.1 +2.0 +2.1 +2.0 +2.0 +2.0
+- ripple (faithful minus net): largest 3.4%, inside the box (x0 = -1.83, x1 = 0.178)
+  - by distance from (0.000175, -0.00208), rings 0.423 wide, mean: +2.6 +0.8 -1.2 -2.1 -1.7 -0.5 +0.7 +1.3 +0.5 -1.1; largest: +3.1 +2.5 +2.8 +3.3 +3.4 +3.0 +2.8 +3.3 +3.1 +3.3
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.2 -0.0 -0.3 -0.1 -0.5 -0.3 -0.3 -0.4 -0.2 -0.1 -0.4; largest: +3.1 +3.3 +3.1 +3.2 +3.3 +3.4 +3.3 +3.1 +3.1 +3.1 +3.1 +3.1
 
 ## Units
 

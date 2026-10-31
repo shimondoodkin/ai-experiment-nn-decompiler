@@ -4,29 +4,33 @@
   "seed": "seed0",
   "learned": true,
   "family": "sqrt",
-  "formula_found": false,
-  "found_terms": null,
-  "formula_nodes": null,
-  "other_families": [],
-  "route_pick": null,
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 55,
+  "other_families": [
+    "exp",
+    "log",
+    "quadratic"
+  ],
+  "route_pick": "sqrt",
   "ast4_nodes": 462,
   "ast4_pass": true,
-  "ast5_nodes": 462,
+  "ast5_nodes": 55,
   "ast5_pass": true,
-  "ast5_route": "sigmoid-replace",
+  "ast5_route": "family",
   "formula_py_pass": false,
-  "near_family": "sqrt",
-  "near_err": 0.02509091365248256,
-  "near_terms": 0,
-  "near_family_is_task_family": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
   "explain": true,
   "true_vs_net": 0.0828,
   "pysr_found": false,
   "agent_pass": true,
   "agent_nodes": 334,
   "agent_formula": false,
-  "ast5_formula": false,
-  "reproduced": false,
+  "ast5_formula": true,
+  "reproduced": true,
   "hinge_only": null,
   "model": {
     "err_by_radius": [
@@ -43,5 +47,5 @@
     ],
     "radius_max": 4.226
   },
-  "won_on_size": false
+  "won_on_size": true
 }

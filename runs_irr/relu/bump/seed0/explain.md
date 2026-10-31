@@ -4,44 +4,44 @@ Inputs: x0 in [-3, 3], x1 in [-3, 3]; output: regression.
 
 ## Formula
 
-No formula passes the check. Near formula (reciprocal, 2 correction terms, 61 nodes), max error 12.7% of the output range (the check allows 2%):
+No formula passes the check. Near formula (exp, 4 correction terms, 81 nodes), max error 12.5% of the output range (the check allows 2%):
 
 ```python
 def net(x0, x1):
-    u = 0.4 * x0 * x0 + 0.4 * x1 * x1 + 0.75
-    return 1 / u + 0.2 * relu(u - 2.5) - 0.2 * relu(u - 4) - 0.45
+    u = -5 * x0 * x0 - 5 * x1 * x1 + 0.25 * x0 * x1 - 0.2 * x0
+    return 0.25 * exp(u) + 0.05 * relu(u + 15) - 0.002831 * relu(u + 45) + 0.05
 ```
 
 Where it is off (formula minus net, % of the output range):
-- largest error 12.7%, at the box edge (x0 = -2.78, x1 = -0.636)
-- by distance from (0, 0), rings 0.423 wide, mean: -1.0 +1.6 +1.0 +2.9 -1.6 -1.6 +5.1 +5.7 +3.4 +1.5; largest: +9.4 +5.3 +6.6 +9.8 +10.6 +10.0 +12.7 +11.7 +7.4 +4.0
-- by angle, 12 sectors of 30 degrees from the x0 axis, mean: +1.4 +2.0 +1.5 +1.7 +2.9 +2.4 +2.5 +1.8 +1.9 +1.7 +2.4 +2.1; largest: +10.9 +10.4 +12.0 +11.0 +9.2 +10.4 +12.7 +10.6 +11.0 +10.2 +9.8 +10.0
+- largest error 12.5%, inside the box (x0 = -2.13, x1 = 0.012)
+- by distance from (-0.02, -0.0005), rings 0.425 wide, mean: -1.5 -0.8 +2.8 +1.2 -3.9 +0.2 +2.0 +4.7 +5.9 +6.5; largest: +6.8 +6.4 +9.0 +9.2 +12.5 +12.0 +8.5 +9.4 +8.6 +8.6
+- by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.2 +1.8 +0.3 +0.6 +2.8 +1.4 +1.7 +1.9 +1.0 +0.4 +2.1 +0.7; largest: +7.9 +8.7 +9.7 +9.1 +8.6 +12.5 +12.1 +10.5 +8.7 +9.8 +7.5 +11.6
 
 ## Faithful fit
 
-The reciprocal formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no reciprocal formula follows).
+The exp formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no exp formula follows).
 
 Faithful:
 
 ```python
 def net(x0, x1):
-    return 1 / (1.551 * x0 * x0 + 1.222 * x1 * x1 + 0.1431 * x0 * x1 - 0.02352 * x0 - 0.08732 * x1 + 0.8554) - 0.1137
+    return 1.026 * exp(-1.117 * x0 * x0 - 0.9127 * x1 * x1 - 0.09593 * x0 * x1 - 0.01951 * x0 - 0.06914 * x1) - 0.005116
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 1 / (1.551 * x0 * x0 + 1.222 * x1 * x1 + 0.1431 * x0 * x1 - 0.02352 * x0 - 0.08732 * x1 + 0.8554) - 0.1137
+    return 1.026 * exp(-1.117 * x0 * x0 - 0.9127 * x1 * x1 - 0.09593 * x0 * x1 - 0.01951 * x0 - 0.06914 * x1) - 0.005116
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
-  - by distance from (0.00595, 0.0354), rings 0.425 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by distance from (-0.00712, -0.0375), rings 0.425 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 14.8%, inside the box (x0 = -2.13, x1 = 0.012)
-  - by distance from (0.00595, 0.0354), rings 0.425 wide, mean: +7.1 -2.9 -5.6 +1.4 +3.0 +0.6 -3.0 -3.6 -3.7 -4.0; largest: +13.3 +13.1 +14.1 +11.5 +14.7 +14.8 +14.5 +13.9 +6.5 +5.9
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -2.3 -2.2 +0.4 +1.1 -0.5 -1.1 -1.7 -3.2 -0.5 -0.0 -1.5 -1.6; largest: +13.3 +10.2 +14.7 +14.4 +13.3 +13.9 +14.8 +8.7 +13.8 +13.9 +8.3 +12.9
+- ripple (faithful minus net): largest 13.9%, inside the box (x0 = -2.13, x1 = 0.012)
+  - by distance from (-0.00712, -0.0375), rings 0.425 wide, mean: +8.8 +3.7 -3.8 -1.7 +0.1 +0.1 -1.1 -0.1 +1.1 +1.8; largest: +12.3 +11.7 +13.0 +12.4 +13.9 +13.4 +11.6 +12.6 +3.8 +3.8
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -2.0 -1.0 -0.8 -0.1 +0.5 -0.5 -0.4 -0.6 +0.7 +0.9 +0.5 -0.7; largest: +13.0 +7.6 +12.6 +12.4 +11.8 +13.9 +12.5 +12.3 +12.2 +11.6 +10.3 +12.1
 
 ## Units
 

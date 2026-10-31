@@ -8,9 +8,9 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 
 | variant | task | seed | learned | true vs net | formula.py | formula found | route pick | ast4 nodes | ast5 nodes (route) | near formula | hinge-only | won | PySR | explain |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| relu | bump | seed0 | no | 14.7% | no | no | – | 284 | 284 (structural-exact) | reciprocal 12.7% | – | no | no | [explain](relu/bump/seed0/explain.md) |
-| relu | bump | seed1 | no | 10.0% | no | no | – | 318 | 318 (structural-exact) | reciprocal 9.7% | – | no | no | [explain](relu/bump/seed1/explain.md) |
-| relu | bump | seed2 | no | 12.0% | no | no | – | 331 | 331 (structural-exact) | reciprocal 9.8% | – | no | no | [explain](relu/bump/seed2/explain.md) |
+| relu | bump | seed0 | no | 14.7% | no | no | – | 284 | 284 (structural-exact) | exp 12.5% | – | no | no | [explain](relu/bump/seed0/explain.md) |
+| relu | bump | seed1 | no | 10.0% | no | no | – | 318 | 318 (structural-exact) | reciprocal 9.8% | – | no | no | [explain](relu/bump/seed1/explain.md) |
+| relu | bump | seed2 | no | 12.0% | no | no | – | 331 | 331 (structural-exact) | reciprocal 10.1% | – | no | no | [explain](relu/bump/seed2/explain.md) |
 | relu | circle | seed0 | yes | – | yes | yes (0) | conic | 262 | 18 (conic) | – | – | yes | no | [explain](relu/circle/seed0/explain.md) |
 | relu | circle | seed1 | yes | – | yes | yes (0) | conic | 199 | 18 (conic) | – | – | yes | no | [explain](relu/circle/seed1/explain.md) |
 | relu | circle | seed2 | yes | – | yes | yes (0) | conic | 321 | 18 (conic) | – | – | yes | no | [explain](relu/circle/seed2/explain.md) |
@@ -23,9 +23,9 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 | relu | log | seed0 | no | 62.9% | no | no | identity | 20 | 9 (family) | – | 0 hinges, 9 nodes | no | no | [explain](relu/log/seed0/explain.md) |
 | relu | log | seed1 | yes | 8.1% | no | yes (2) | identity | 50 | 35 (family) | – | 3 hinges, 48 nodes | yes | no | [explain](relu/log/seed1/explain.md) |
 | relu | log | seed2 | yes | 4.4% | no | no | reciprocal | 65 | 40 (family) | – | 5 hinges, 74 nodes | no | no | [explain](relu/log/seed2/explain.md) |
-| relu | product | seed0 | yes | 3.1% | no | yes (1) | quadratic | 276 | 30 (family) | – | – | yes | yes | [explain](relu/product/seed0/explain.md) |
-| relu | product | seed1 | yes | 3.6% | no | no | log | 323 | 53 (family) | – | – | no | no | [explain](relu/product/seed1/explain.md) |
-| relu | product | seed2 | yes | 2.0% | no | yes (1) | exp | 339 | 19 (family) | – | – | yes | no | [explain](relu/product/seed2/explain.md) |
+| relu | product | seed0 | yes | 3.1% | no | yes (0) | quadratic | 276 | 10 (family) | – | – | yes | yes | [explain](relu/product/seed0/explain.md) |
+| relu | product | seed1 | yes | 3.6% | no | yes (0) | exp | 323 | 41 (family) | – | – | yes | no | [explain](relu/product/seed1/explain.md) |
+| relu | product | seed2 | yes | 2.0% | no | yes (0) | quadratic | 339 | 10 (family) | – | – | yes | no | [explain](relu/product/seed2/explain.md) |
 | relu | recip | seed0 | no | 14.1% | no | no | identity | 24 | 24 (structural-exact) | – | 1 hinges, 24 nodes | no | no | [explain](relu/recip/seed0/explain.md) |
 | relu | recip | seed1 | no | 15.0% | no | no | identity | 24 | 24 (structural-exact) | – | 1 hinges, 24 nodes | no | no | [explain](relu/recip/seed1/explain.md) |
 | relu | recip | seed2 | yes | 6.2% | no | yes (2) | identity | 41 | 37 (family) | – | 3 hinges, 50 nodes | yes | no | [explain](relu/recip/seed2/explain.md) |
@@ -35,12 +35,12 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 | relu | square | seed0 | yes | 3.5% | no | no | – | 55 | 55 (structural-snap) | square 2.6% | fails | no | no | [explain](relu/square/seed0/explain.md) |
 | relu | square | seed1 | yes | 0.9% | yes | yes (0) | square | 84 | 7 (family) | – | 16 hinges, 219 nodes | yes | yes | [explain](relu/square/seed1/explain.md) |
 | relu | square | seed2 | yes | 1.8% | yes | yes (0) | square | 88 | 7 (family) | – | fails | yes | yes | [explain](relu/square/seed2/explain.md) |
-| relu_wide | bump | seed0 | yes | 3.1% | no | no | – | 1142 | 1142 (structural-exact) | exp 3.1% | – | no | no | [explain](relu_wide/bump/seed0/explain.md) |
-| relu_wide | bump | seed1 | yes | 4.6% | no | no | – | 1177 | 1177 (structural-exact) | exp 2.6% | – | no | no | [explain](relu_wide/bump/seed1/explain.md) |
-| relu_wide | bump | seed2 | yes | 2.8% | no | no | – | 1093 | 1093 (structural-exact) | exp 2.8% | – | no | no | [explain](relu_wide/bump/seed2/explain.md) |
-| relu_wide | circle | seed0 | yes | – | yes | yes (0) | conic | 442 | 25 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed0/explain.md) |
+| relu_wide | bump | seed0 | yes | 3.1% | no | no | – | 1142 | 1049 (prune-lp) | exp 3.1% | – | no | no | [explain](relu_wide/bump/seed0/explain.md) |
+| relu_wide | bump | seed1 | yes | 4.6% | no | no | – | 1177 | 1016 (prune-lp) | exp 2.6% | – | no | no | [explain](relu_wide/bump/seed1/explain.md) |
+| relu_wide | bump | seed2 | yes | 2.8% | no | no | – | 1093 | 1024 (prune-lp) | exp 2.8% | – | no | no | [explain](relu_wide/bump/seed2/explain.md) |
+| relu_wide | circle | seed0 | yes | – | yes | yes (0) | conic | 442 | 18 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed0/explain.md) |
 | relu_wide | circle | seed1 | yes | – | yes | yes (0) | conic | 1077 | 18 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed1/explain.md) |
-| relu_wide | circle | seed2 | yes | – | yes | yes (0) | conic | 458 | 36 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed2/explain.md) |
+| relu_wide | circle | seed2 | yes | – | yes | yes (0) | conic | 458 | 18 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed2/explain.md) |
 | relu_wide | dist | seed0 | yes | 0.7% | yes | yes (0) | sqrt | 916 | 18 (family) | – | – | yes | no | [explain](relu_wide/dist/seed0/explain.md) |
 | relu_wide | dist | seed1 | yes | 0.8% | yes | yes (0) | sqrt | 866 | 18 (family) | – | – | yes | no | [explain](relu_wide/dist/seed1/explain.md) |
 | relu_wide | dist | seed2 | yes | 0.8% | yes | yes (0) | sqrt | 309 | 18 (family) | – | – | yes | no | [explain](relu_wide/dist/seed2/explain.md) |
@@ -62,14 +62,14 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 | relu_wide | square | seed0 | yes | 0.3% | yes | yes (0) | square | 191 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](relu_wide/square/seed0/explain.md) |
 | relu_wide | square | seed1 | yes | 0.5% | yes | yes (0) | square | 261 | 7 (family) | – | 11 hinges, 151 nodes | yes | yes | [explain](relu_wide/square/seed1/explain.md) |
 | relu_wide | square | seed2 | yes | 0.4% | yes | yes (0) | square | 182 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](relu_wide/square/seed2/explain.md) |
-| sigmoid | bump | seed0 | yes | 2.6% | no | no | – | 476 | 476 (structural-exact) | exp 2.6% | – | no | no | [explain](sigmoid/bump/seed0/explain.md) |
-| sigmoid | bump | seed1 | yes | 4.7% | no | no | – | 452 | 452 (sigmoid-replace) | exp 4.7% | – | no | no | [explain](sigmoid/bump/seed1/explain.md) |
-| sigmoid | bump | seed2 | yes | 3.9% | no | no | – | 466 | 466 (structural-exact) | exp 3.9% | – | no | no | [explain](sigmoid/bump/seed2/explain.md) |
+| sigmoid | bump | seed0 | yes | 2.6% | no | no | – | 476 | 415 (prune-lp) | exp 2.6% | – | no | no | [explain](sigmoid/bump/seed0/explain.md) |
+| sigmoid | bump | seed1 | yes | 4.7% | no | no | – | 452 | 422 (prune-lp) | exp 4.7% | – | no | no | [explain](sigmoid/bump/seed1/explain.md) |
+| sigmoid | bump | seed2 | yes | 3.9% | no | no | – | 466 | 400 (prune-lp) | exp 3.9% | – | no | no | [explain](sigmoid/bump/seed2/explain.md) |
 | sigmoid | circle | seed0 | yes | – | yes | yes (0) | conic | 466 | 18 (conic) | – | – | yes | no | [explain](sigmoid/circle/seed0/explain.md) |
-| sigmoid | circle | seed1 | yes | – | yes | yes (0) | conic | 405 | 25 (conic) | – | – | yes | no | [explain](sigmoid/circle/seed1/explain.md) |
+| sigmoid | circle | seed1 | yes | – | yes | yes (0) | conic | 405 | 18 (conic) | – | – | yes | no | [explain](sigmoid/circle/seed1/explain.md) |
 | sigmoid | circle | seed2 | yes | – | yes | yes (0) | conic | 470 | 18 (conic) | – | – | yes | yes | [explain](sigmoid/circle/seed2/explain.md) |
-| sigmoid | dist | seed0 | yes | 8.3% | no | no | – | 462 | 462 (sigmoid-replace) | sqrt 2.5% | – | no | no | [explain](sigmoid/dist/seed0/explain.md) |
-| sigmoid | dist | seed1 | yes | 9.4% | no | no | – | 392 | 392 (sigmoid-replace) | sqrt 2.6% | – | no | no | [explain](sigmoid/dist/seed1/explain.md) |
+| sigmoid | dist | seed0 | yes | 8.3% | no | yes (0) | sqrt | 462 | 55 (family) | – | – | yes | no | [explain](sigmoid/dist/seed0/explain.md) |
+| sigmoid | dist | seed1 | yes | 9.4% | no | no | reciprocal | 392 | 50 (family) | – | – | no | no | [explain](sigmoid/dist/seed1/explain.md) |
 | sigmoid | dist | seed2 | yes | 9.2% | no | yes (0) | sqrt | 370 | 38 (family) | – | – | yes | no | [explain](sigmoid/dist/seed2/explain.md) |
 | sigmoid | exp | seed0 | yes | 0.7% | yes | yes (0) | exp | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](sigmoid/exp/seed0/explain.md) |
 | sigmoid | exp | seed1 | yes | 0.8% | yes | yes (0) | exp | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](sigmoid/exp/seed1/explain.md) |
@@ -89,15 +89,15 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 | sigmoid | square | seed0 | yes | 0.7% | yes | yes (0) | square | 86 | 7 (family) | – | 12 hinges, 164 nodes | yes | yes | [explain](sigmoid/square/seed0/explain.md) |
 | sigmoid | square | seed1 | yes | 1.2% | yes | yes (0) | square | 76 | 7 (family) | – | 8 hinges, 115 nodes | yes | yes | [explain](sigmoid/square/seed1/explain.md) |
 | sigmoid | square | seed2 | yes | 1.0% | yes | yes (0) | square | 76 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](sigmoid/square/seed2/explain.md) |
-| tanh | bump | seed0 | yes | 3.4% | no | no | – | 474 | 474 (structural-exact) | exp 3.4% | – | no | no | [explain](tanh/bump/seed0/explain.md) |
-| tanh | bump | seed1 | yes | 5.9% | no | no | – | 468 | 468 (structural-exact) | exp 5.9% | – | no | no | [explain](tanh/bump/seed1/explain.md) |
-| tanh | bump | seed2 | yes | 2.6% | no | no | – | 468 | 468 (structural-exact) | exp 2.7% | – | no | no | [explain](tanh/bump/seed2/explain.md) |
-| tanh | circle | seed0 | yes | – | yes | yes (0) | conic | 266 | 25 (conic) | – | – | yes | no | [explain](tanh/circle/seed0/explain.md) |
+| tanh | bump | seed0 | yes | 3.4% | no | no | – | 474 | 464 (prune-lp) | exp 3.4% | – | no | no | [explain](tanh/bump/seed0/explain.md) |
+| tanh | bump | seed1 | yes | 5.9% | no | no | – | 468 | 429 (prune-lp) | exp 5.9% | – | no | no | [explain](tanh/bump/seed1/explain.md) |
+| tanh | bump | seed2 | yes | 2.6% | no | no | – | 468 | 429 (prune-lp) | exp 2.7% | – | no | no | [explain](tanh/bump/seed2/explain.md) |
+| tanh | circle | seed0 | yes | – | yes | yes (0) | conic | 266 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed0/explain.md) |
 | tanh | circle | seed1 | yes | – | yes | yes (0) | conic | 332 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed1/explain.md) |
 | tanh | circle | seed2 | yes | – | yes | yes (0) | conic | 298 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed2/explain.md) |
-| tanh | dist | seed0 | yes | 13.3% | no | no | – | 470 | 470 (structural-exact) | reciprocal 3.8% | – | no | no | [explain](tanh/dist/seed0/explain.md) |
-| tanh | dist | seed1 | no | 17.7% | no | no | – | 436 | 436 (sigmoid-replace) | reciprocal 6.8% | – | no | no | [explain](tanh/dist/seed1/explain.md) |
-| tanh | dist | seed2 | yes | 17.2% | no | no | – | 464 | 464 (structural-exact) | reciprocal 2.7% | – | no | no | [explain](tanh/dist/seed2/explain.md) |
+| tanh | dist | seed0 | yes | 13.3% | no | no | – | 470 | 205 (prune-lp) | reciprocal 3.9% | – | no | no | [explain](tanh/dist/seed0/explain.md) |
+| tanh | dist | seed1 | no | 17.7% | no | no | – | 436 | 104 (prune-lp) | reciprocal 6.1% | – | no | no | [explain](tanh/dist/seed1/explain.md) |
+| tanh | dist | seed2 | yes | 17.2% | no | no | – | 464 | 172 (prune-lp) | reciprocal 3.1% | – | no | no | [explain](tanh/dist/seed2/explain.md) |
 | tanh | exp | seed0 | yes | 0.6% | yes | yes (0) | exp | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/exp/seed0/explain.md) |
 | tanh | exp | seed1 | yes | 0.8% | yes | yes (0) | exp | 45 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/exp/seed1/explain.md) |
 | tanh | exp | seed2 | yes | 0.9% | yes | yes (0) | exp | 45 | 6 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](tanh/exp/seed2/explain.md) |
@@ -248,9 +248,9 @@ Development nets.
 
 | variant | learned | formula found | with 0 terms | with 1–4 terms | route pick is the family | won on size | other family passed | PySR found | near formula within 3% (regression, of the family) |
 |---|---|---|---|---|---|---|---|---|---|
-| relu | 20 | 17 (85%) | 10 | 7 | 11 | 15 | 13 | 8 | 1 |
+| relu | 20 | 18 (90%) | 13 | 5 | 12 | 16 | 14 | 8 | 1 |
 | relu_wide | 27 | 24 (89%) | 24 | 0 | 24 | 24 | 18 | 17 | 2 |
-| sigmoid | 27 | 22 (81%) | 22 | 0 | 22 | 22 | 16 | 19 | 3 |
+| sigmoid | 27 | 23 (85%) | 23 | 0 | 23 | 23 | 18 | 19 | 1 |
 | tanh | 26 | 21 (81%) | 21 | 0 | 21 | 21 | 15 | 16 | 1 |
 
 ## Predictions
@@ -263,11 +263,11 @@ Written in the design before any tool code. Counts are over learned nets.
 | relu_wide learns at least 8 of 9 tasks on at least 2 of the 3 seeds | 9, 9, 9 | met |
 | sigmoid learns at least 8 of 9 tasks on at least 2 of the 3 seeds | 9, 9, 9 | met |
 | tanh learns at least 8 of 9 tasks on at least 2 of the 3 seeds | 9, 8, 9 | met |
-| formula found on at least 70% of the learned development nets | 84/100 (84%) | met |
-| where found, ast5's program is at least 5× smaller than ast4's | 73/84 (87%) | not met |
+| formula found on at least 70% of the learned development nets | 86/100 (86%) | met |
+| where found, ast5's program is at least 5× smaller than ast4's | 75/86 (87%) | not met |
 | bump: formula found on at least one net | 0 | not met |
-| tanh's formula-found count is within 3 of sigmoid's | 21 vs 22 | met |
-| PySR finds the formula on fewer development nets than ast5, and on at least 5 | 60 vs 84 | met |
+| tanh's formula-found count is within 3 of sigmoid's | 21 vs 23 | met |
+| PySR finds the formula on fewer development nets than ast5, and on at least 5 | 60 vs 86 | met |
 
 ## Predictions (near formulas and gate view)
 
@@ -275,9 +275,9 @@ Written in `docs/design/2026-10-31-formula-residual-gate-view-design.md` before 
 
 | prediction | measured | met |
 |---|---|---|
-| with minimax, the formula is found on at least 2 of the 3 sigmoid dist nets | 1/3 (33%) | not met |
+| with minimax, the formula is found on at least 2 of the 3 sigmoid dist nets | 2/3 (67%) | met |
 | on at least 90% of the learned regression development nets, the formula is found or the near formula is of the task's family and within 3% | 79/88 (90%) | not met |
-| on the nets run before minimax, ast5 finds the formula on at least as many, and is never larger where both pass | found 10 before, 10 now; larger on 1 of 18 | not met |
+| on the nets run before minimax, ast5 finds the formula on at least as many, and is never larger where both pass | found 10 before, 11 now; larger on 0 of 18 | met |
 
 ## Reproduction
 
@@ -285,30 +285,21 @@ Per development net with an agent attempt (`agent_1`, not excluded in `agent_exc
 
 | variant | agents passing | reproduced | smaller | equal | larger |
 |---|---|---|---|---|---|
-| relu | 27 | 25/27 (93%) | 20 | 5 | 2 |
-| relu_wide | 26 | 22/26 (85%) | 9 | 13 | 4 |
-| sigmoid | 27 | 21/27 (78%) | 15 | 6 | 6 |
-| tanh | 27 | 21/27 (78%) | 13 | 9 | 5 |
+| relu | 27 | 26/27 (96%) | 21 | 5 | 1 |
+| relu_wide | 26 | 24/26 (92%) | 11 | 13 | 2 |
+| sigmoid | 27 | 24/27 (89%) | 18 | 6 | 3 |
+| tanh | 27 | 24/27 (89%) | 17 | 8 | 2 |
 
-Total: 89/107 (83%).
+Total: 98/107 (92%).
 Before the distilled changes: 89/107 (83%) (`before_distill.json`).
 
 Not reproduced:
-- relu/product/seed0: ast5 30 nodes, agent 27 (larger)
 - relu/square/seed0: ast5 55 nodes, agent 41 (larger)
-- relu_wide/bump/seed0: ast5 1142 nodes, agent 1043 (larger)
-- relu_wide/bump/seed2: ast5 1093 nodes, agent 973 (larger, not the family)
-- relu_wide/circle/seed0: ast5 25 nodes, agent 23 (larger)
-- relu_wide/circle/seed2: ast5 36 nodes, agent 23 (larger)
-- sigmoid/bump/seed0: ast5 476 nodes, agent 413 (larger)
-- sigmoid/bump/seed1: ast5 452 nodes, agent 413 (larger)
-- sigmoid/bump/seed2: ast5 466 nodes, agent 354 (larger)
-- sigmoid/circle/seed1: ast5 25 nodes, agent 23 (larger)
-- sigmoid/dist/seed0: ast5 462 nodes, agent 334 (larger)
-- sigmoid/dist/seed1: ast5 392 nodes, agent 283 (larger)
-- tanh/bump/seed0: ast5 474 nodes, agent 501 (not the family)
-- tanh/bump/seed2: ast5 468 nodes, agent 461 (larger)
-- tanh/circle/seed0: ast5 25 nodes, agent 23 (larger)
-- tanh/dist/seed0: ast5 470 nodes, agent 189 (larger)
-- tanh/dist/seed1: ast5 436 nodes, agent 106 (larger)
-- tanh/dist/seed2: ast5 464 nodes, agent 145 (larger)
+- relu_wide/bump/seed0: ast5 1049 nodes, agent 1043 (larger)
+- relu_wide/bump/seed2: ast5 1024 nodes, agent 973 (larger, not the family)
+- sigmoid/bump/seed0: ast5 415 nodes, agent 413 (larger)
+- sigmoid/bump/seed1: ast5 422 nodes, agent 413 (larger)
+- sigmoid/bump/seed2: ast5 400 nodes, agent 354 (larger)
+- tanh/bump/seed0: ast5 464 nodes, agent 501 (not the family)
+- tanh/dist/seed0: ast5 205 nodes, agent 189 (larger)
+- tanh/dist/seed2: ast5 172 nodes, agent 145 (larger)

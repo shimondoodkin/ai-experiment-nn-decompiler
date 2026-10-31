@@ -4,48 +4,49 @@ Inputs: x0 in [-2, 2], x1 in [-2, 2]; output: regression.
 
 ## Formula
 
-A family program passes the check (19 nodes):
+A family program passes the check (10 nodes):
 
 ```python
 def net(x0, x1):
-    return 1188 * exp(0.0008335 * x0 * x1) - 1188
+    return x0 * x1 + 0.003637
 ```
 
 ## Faithful fit
 
-The exp formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no exp formula follows).
+The quadratic formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no quadratic formula follows).
 
 Faithful:
 
 ```python
 def net(x0, x1):
-    return 1188 * exp(-2.14e-06 * x0 * x0 + 1.003e-06 * x1 * x1 + 0.0008342 * x0 * x1 - 7.317e-07 * x0 - 3.249e-08 * x1) - 1188
+    return -0.001883 * x0 * x0 + 0.004413 * x1 * x1 + 0.9865 * x0 * x1 - 0.0009577 * x0 - 0.001514 * x1 - 0.002981
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 1188 * exp(0.0008335 * x0 * x1) - 1188
+    return x0 * x1 + 0.003637
 ```
 
 % of the output range:
-- distortion (clean minus faithful): largest 0.2%, at the box edge (x0 = 2, x1 = -0.68)
-  - by distance from (0, 0), rings 0.282 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.1; largest: +0.0 +0.0 +0.0 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.1
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 +0.0 -0.0 -0.0 +0.0 +0.1 +0.0 -0.0 -0.0 -0.0 +0.1 +0.1; largest: +0.2 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2
-- ripple (faithful minus net): largest 1.5%, at the box edge (x0 = -2, x1 = 1.99)
-  - by distance from (0, 0), rings 0.282 wide, mean: -0.0 -0.0 -0.0 +0.0 +0.0 -0.1 -0.0 +0.1 +0.0 -0.0; largest: +0.6 +0.8 +0.9 +0.8 +1.0 +1.1 +1.1 +1.2 +1.2 +1.5
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.2 -0.2 -0.0 +0.1 +0.3 +0.1 -0.1 -0.1 -0.1 +0.1 +0.1 -0.1; largest: +1.2 +1.3 +0.8 +0.9 +1.5 +1.1 +1.0 +1.0 +1.0 +0.7 +1.4 +0.8
+- distortion (clean minus faithful): largest 0.8%, at the box edge (x0 = 2, x1 = -1.99)
+  - by distance from (0, 0), rings 0.282 wide, mean: +0.1 +0.1 +0.1 +0.1 +0.1 +0.0 +0.0 +0.0 -0.0 -0.0; largest: +0.1 +0.1 +0.2 +0.2 +0.3 +0.4 +0.4 +0.5 +0.7 +0.8
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.2 +0.3 +0.1 -0.1 -0.2 +0.0 +0.2 +0.3 +0.0 -0.1 -0.3 +0.0; largest: +0.6 +0.7 +0.3 +0.5 +0.7 +0.3 +0.5 +0.6 +0.2 +0.5 +0.8 +0.3
+- ripple (faithful minus net): largest 1.3%, at the box edge (x0 = 1.39, x1 = 1.83)
+  - by distance from (0, 0), rings 0.282 wide, mean: -0.1 -0.1 -0.1 +0.0 +0.0 -0.0 +0.0 +0.1 +0.1 +0.0; largest: +0.6 +0.8 +0.9 +0.8 +1.0 +1.0 +1.0 +1.3 +1.3 +1.2
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.2 -0.3 -0.0 +0.2 +0.4 +0.1 -0.2 -0.2 -0.0 +0.2 +0.2 -0.1; largest: +1.3 +1.3 +0.8 +1.0 +1.2 +1.2 +1.1 +1.1 +1.0 +0.8 +1.2 +0.8
 
 The dirt: each fitted value against its clean one. Effect: the largest change over the box when only that value is changed, % of the output range (changes can offset each other).
 
 | term | clean | faithful | effect |
 |---|---|---|---|
-| x0² inside exp | 0 | -2.14e-06 | 0.13% |
-| x1² inside exp | 0 | 1.003e-06 | 0.06% |
-| x0·x1 inside exp | 0.0008335 | 0.0008342 | 0.04% |
-| x0 inside exp | 0 | -7.317e-07 | 0.02% |
-| x1 inside exp | 0 | -3.249e-08 | 0.00% |
+| x0·x1 | 1 | 0.9865 | 0.70% |
+| x1² | 0 | 0.004413 | 0.23% |
+| x0² | 0 | -0.001883 | 0.10% |
+| constant | 0.003637 | -0.002981 | 0.09% |
+| x1 | 0 | -0.001514 | 0.04% |
+| x0 | 0 | -0.0009577 | 0.02% |
 
 ## Units
 

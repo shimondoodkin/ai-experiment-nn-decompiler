@@ -24,23 +24,23 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return 0.9934 * exp(-0.9864 * x0 * x0 - 0.9881 * x1 * x1 + 8.997e-05 * x0 * x1 - 0.003922 * x0 + 0.002927 * x1) + 0.0005446
+    return 0.9933 * exp(-0.9875 * x0 * x0 - 0.9893 * x1 * x1 + 0.0001069 * x0 * x1 - 0.003932 * x0 + 0.002929 * x1) + 0.0008555
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 0.9934 * exp(-0.9864 * x0 * x0 - 0.9881 * x1 * x1 + 8.997e-05 * x0 * x1 - 0.003922 * x0 + 0.002927 * x1) + 0.0005446
+    return 0.9933 * exp(-0.9875 * x0 * x0 - 0.9893 * x1 * x1 + 0.0001069 * x0 * x1 - 0.003932 * x0 + 0.002929 * x1) + 0.0008555
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
   - by distance from (-0.00199, 0.00148), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 2.6%, at the box edge (x0 = -2.99, x1 = -1.92)
-  - by distance from (-0.00199, 0.00148), rings 0.424 wide, mean: -0.3 +0.2 +0.2 -0.3 -0.1 +0.3 +0.1 -0.1 -0.2 -0.4; largest: +0.5 +0.6 +0.6 +1.5 +1.9 +2.0 +1.8 +2.4 +2.6 +2.5
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 +0.2 -0.1 -0.3 -0.0 +0.0 -0.1 -0.2 +0.2 +0.2 +0.1 -0.0; largest: +2.3 +2.5 +2.0 +1.8 +2.4 +2.2 +2.5 +2.6 +2.5 +2.0 +2.5 +1.7
+- ripple (faithful minus net): largest 2.5%, at the box edge (x0 = 2.46, x1 = -2.99)
+  - by distance from (-0.00199, 0.00148), rings 0.424 wide, mean: -0.3 +0.2 +0.1 -0.3 -0.0 +0.3 +0.1 -0.1 -0.2 -0.3; largest: +0.5 +0.6 +0.6 +1.5 +2.0 +2.0 +1.8 +2.3 +2.5 +2.5
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 +0.2 -0.0 -0.3 -0.0 +0.1 -0.1 -0.1 +0.2 +0.3 +0.1 +0.0; largest: +2.4 +2.5 +2.0 +1.8 +2.3 +2.1 +2.4 +2.5 +2.5 +1.9 +2.5 +1.7
 
 ## Units
 

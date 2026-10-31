@@ -24,23 +24,23 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return 1.025 * exp(-1.066 * x0 * x0 - 1.033 * x1 * x1 + 0.003178 * x0 * x1 + 0.001323 * x0 - 0.01247 * x1) + 0.001474
+    return 1.025 * exp(-1.078 * x0 * x0 - 1.046 * x1 * x1 + 0.003583 * x0 * x1 - 0.003317 * x0 - 0.01026 * x1) + 0.002928
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 1.025 * exp(-1.066 * x0 * x0 - 1.033 * x1 * x1 + 0.003178 * x0 * x1 + 0.001323 * x0 - 0.01247 * x1) + 0.001474
+    return 1.025 * exp(-1.078 * x0 * x0 - 1.046 * x1 * x1 + 0.003583 * x0 * x1 - 0.003317 * x0 - 0.01026 * x1) + 0.002928
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
-  - by distance from (0.000612, -0.00603), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by distance from (-0.00155, -0.00491), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 3.3%, at the box edge (x0 = -1.2, x1 = -3)
-  - by distance from (0.000612, -0.00603), rings 0.424 wide, mean: +2.4 +0.8 -0.7 -0.9 -0.1 +0.5 +0.4 +0.1 +0.1 +0.1; largest: +3.1 +2.6 +2.2 +2.1 +2.1 +2.4 +2.0 +3.3 +2.4 +2.2
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 +0.3 +0.2 -0.1 +0.1 -0.0 -0.1 +0.1 +0.2 +0.2 +0.1 +0.0; largest: +3.0 +3.0 +2.9 +3.0 +3.0 +3.0 +3.1 +3.1 +3.3 +3.1 +3.0 +2.9
+- ripple (faithful minus net): largest 3.3%, inside the box (x0 = -0.0913, x1 = -0.0786)
+  - by distance from (-0.00155, -0.00491), rings 0.424 wide, mean: +2.5 +0.7 -0.9 -1.0 -0.1 +0.6 +0.5 +0.3 +0.3 +0.2; largest: +3.3 +2.6 +2.3 +2.2 +2.2 +2.5 +2.2 +3.1 +2.3 +2.3
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 +0.4 +0.2 -0.1 +0.2 +0.1 -0.0 +0.2 +0.2 +0.2 +0.1 +0.0; largest: +3.1 +3.1 +3.1 +3.1 +3.2 +3.2 +3.3 +3.3 +3.2 +3.2 +3.1 +3.1
 
 ## Units
 

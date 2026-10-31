@@ -4,18 +4,18 @@ Inputs: x0 in [-3, 3], x1 in [-3, 3]; output: regression.
 
 ## Formula
 
-No formula passes the check. Near formula (reciprocal, 2 correction terms, 61 nodes), max error 9.8% of the output range (the check allows 2%):
+No formula passes the check. Near formula (reciprocal, 3 correction terms, 61 nodes), max error 10.1% of the output range (the check allows 2%):
 
 ```python
 def net(x0, x1):
-    u = 0.8 * x0 * x0 + 0.75 * x1 * x1 + 0.75
-    return 1 / u + 0.25 * relu(u - 0.4) - 0.2256 * relu(u - 1.125) - 0.5
+    u = 0.75 * x0 * x0 + 0.75 * x1 * x1 + 1
+    return 1 / u + 0.2 * relu(u - 2.25) - 0.1771 * relu(u + 5) + 1
 ```
 
 Where it is off (formula minus net, % of the output range):
-- largest error 9.7%, at the box edge (x0 = 1.28, x1 = 3)
-- by distance from (0, 0), rings 0.423 wide, mean: -0.2 -1.4 -3.3 -2.0 -3.0 -2.9 -1.2 -0.9 -2.2 -0.4; largest: +6.3 +6.6 +8.3 +8.5 +9.3 +8.8 +7.5 +9.7 +7.9 +3.1
-- by angle, 12 sectors of 30 degrees from the x0 axis, mean: -2.6 -0.5 -1.8 -2.4 -1.0 -2.9 -2.8 -1.2 -2.5 -3.0 -1.8 -2.9; largest: +8.8 +8.9 +9.7 +7.3 +7.2 +7.2 +6.7 +8.0 +7.6 +9.3 +8.6 +8.7
+- largest error 10.0%, inside the box (x0 = 0.717, x1 = -1.69)
+- by distance from (0, 0), rings 0.423 wide, mean: +3.0 +2.6 -2.0 -3.7 -3.3 -2.8 -1.2 -1.0 -2.8 -1.4; largest: +7.8 +7.7 +9.2 +9.9 +10.0 +9.1 +7.5 +9.7 +8.2 +4.1
+- by angle, 12 sectors of 30 degrees from the x0 axis, mean: -2.2 -0.6 -1.9 -2.5 -1.1 -2.5 -2.4 -1.3 -2.7 -3.1 -1.9 -2.5; largest: +8.8 +8.5 +9.7 +8.1 +6.7 +7.3 +6.6 +8.2 +8.5 +10.0 +9.1 +9.9
 
 ## Faithful fit
 
@@ -25,23 +25,23 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return 1 / (1.713 * x0 * x0 + 1.801 * x1 * x1 + 0.08781 * x0 * x1 + 0.06975 * x0 + 0.007081 * x1 + 0.8866) - 0.07974
+    return 1 / (1.754 * x0 * x0 + 1.843 * x1 * x1 + 0.09005 * x0 * x1 + 0.07216 * x0 + 0.008332 * x1 + 0.888) - 0.0751
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 1 / (1.713 * x0 * x0 + 1.801 * x1 * x1 + 0.08781 * x0 * x1 + 0.06975 * x0 + 0.007081 * x1 + 0.8866) - 0.07974
+    return 1 / (1.754 * x0 * x0 + 1.843 * x1 * x1 + 0.09005 * x0 * x1 + 0.07216 * x0 + 0.008332 * x1 + 0.888) - 0.0751
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
-  - by distance from (-0.0203, -0.00147), rings 0.425 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by distance from (-0.0205, -0.00176), rings 0.425 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 12.0%, at the box edge (x0 = 3, x1 = -2.99)
-  - by distance from (-0.0203, -0.00147), rings 0.425 wide, mean: +4.8 -6.2 -6.7 -1.1 +0.2 +0.6 +0.9 -1.3 -6.3 -8.7; largest: +11.2 +11.5 +11.7 +9.3 +11.7 +9.9 +6.8 +10.2 +10.9 +12.0
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -1.2 -1.1 -1.2 -1.3 -0.9 -0.5 -0.7 -1.5 -1.7 -2.1 -2.0 -1.3; largest: +11.5 +11.5 +11.7 +9.4 +11.2 +10.3 +10.9 +11.1 +9.7 +11.4 +12.0 +11.7
+- ripple (faithful minus net): largest 11.9%, inside the box (x0 = 0.351, x1 = 0.875)
+  - by distance from (-0.0205, -0.00176), rings 0.425 wide, mean: +4.8 -6.4 -6.8 -1.0 +0.4 +0.9 +1.2 -1.0 -6.0 -8.4; largest: +11.4 +11.7 +11.9 +9.4 +11.8 +10.1 +7.1 +9.9 +10.6 +11.7
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -1.1 -0.9 -1.0 -1.1 -0.7 -0.4 -0.5 -1.3 -1.6 -1.9 -1.8 -1.1; largest: +11.6 +11.6 +11.9 +9.6 +10.9 +10.5 +11.1 +11.3 +9.8 +11.6 +11.8 +11.8
 
 ## Units
 

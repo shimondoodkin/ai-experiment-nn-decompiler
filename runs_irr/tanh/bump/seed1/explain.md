@@ -24,23 +24,23 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return 0.9789 * exp(-0.9706 * x0 * x0 - 0.9809 * x1 * x1 + 0.002348 * x0 * x1 + 0.01871 * x0 - 0.01176 * x1) + 0.004295
+    return 0.9796 * exp(-0.9671 * x0 * x0 - 0.9678 * x1 * x1 + 0.00115 * x0 * x1 + 0.01788 * x0 - 0.01239 * x1) + 0.002912
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 0.9789 * exp(-0.9706 * x0 * x0 - 0.9809 * x1 * x1 + 0.002348 * x0 * x1 + 0.01871 * x0 - 0.01176 * x1) + 0.004295
+    return 0.9796 * exp(-0.9671 * x0 * x0 - 0.9678 * x1 * x1 + 0.00115 * x0 * x1 + 0.01788 * x0 - 0.01239 * x1) + 0.002912
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
-  - by distance from (0.00963, -0.00598), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by distance from (0.00924, -0.0064), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 5.5%, at the box edge (x0 = 3, x1 = -0.91)
-  - by distance from (0.00963, -0.00598), rings 0.424 wide, mean: +0.3 -0.4 -0.6 -0.1 +0.4 +0.4 +0.1 +0.0 -0.0 +0.9; largest: +2.2 +2.2 +2.2 +2.6 +3.1 +3.1 +5.0 +5.5 +4.1 +3.8
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 -0.2 -0.0 +0.2 +0.6 +0.7 +0.5 +0.1 -0.2 -0.7 -0.1 +0.1; largest: +4.7 +3.8 +4.8 +4.6 +3.8 +3.1 +2.8 +4.0 +5.2 +5.4 +2.0 +5.5
+- ripple (faithful minus net): largest 5.6%, at the box edge (x0 = 0.2, x1 = -3)
+  - by distance from (0.00924, -0.0064), rings 0.424 wide, mean: +0.3 -0.3 -0.4 -0.1 +0.4 +0.3 -0.0 -0.1 -0.2 +0.7; largest: +2.2 +2.2 +2.1 +2.7 +3.0 +3.0 +5.1 +5.6 +4.3 +3.6
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.1 -0.3 -0.0 +0.2 +0.6 +0.6 +0.4 +0.1 -0.2 -0.7 -0.2 -0.0; largest: +4.8 +3.9 +4.7 +4.4 +3.6 +3.0 +2.7 +3.9 +5.4 +5.6 +2.0 +5.4
 
 ## Units
 

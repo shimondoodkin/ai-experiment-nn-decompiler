@@ -8,7 +8,7 @@ A family program passes the check (38 nodes):
 
 ```python
 def net(x0, x1):
-    return sqrt(x0 * x0 + x1 * x1 + 0.01 * x0 + 0.02 * x1 + 0.1061) - 0.04
+    return sqrt(x0 * x0 + x1 * x1 - 0.003092 * x0 + 0.05 * x1 + 0.1) - 0.03263
 ```
 
 ## Faithful fit
@@ -19,35 +19,35 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return sqrt(1.022 * x0 * x0 + 1.015 * x1 * x1 + 0.01229 * x0 * x1 + 0.0116 * x0 + 0.0206 * x1 + 0.1314) - 0.07145
+    return sqrt(1.018 * x0 * x0 + 1.013 * x1 * x1 + 0.01242 * x0 * x1 + 0.01167 * x0 + 0.02645 * x1 + 0.1264) - 0.06545
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return sqrt(x0 * x0 + x1 * x1 + 0.01 * x0 + 0.02 * x1 + 0.1061) - 0.04
+    return sqrt(x0 * x0 + x1 * x1 - 0.003092 * x0 + 0.05 * x1 + 0.1) - 0.03263
 ```
 
 % of the output range:
-- distortion (clean minus faithful): largest 0.6%, at the box edge (x0 = 3, x1 = 2.96)
-  - by distance from (-0.005, -0.01), rings 0.424 wide, mean: +0.0 +0.2 +0.3 +0.3 +0.2 +0.1 +0.0 -0.0 -0.1 -0.2; largest: +0.2 +0.3 +0.4 +0.4 +0.4 +0.4 +0.3 +0.4 +0.5 +0.6
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.1 +0.1 +0.3 +0.3 +0.2 -0.0 -0.1 +0.1 +0.3 +0.2 +0.1; largest: +0.4 +0.6 +0.3 +0.4 +0.4 +0.3 +0.4 +0.6 +0.3 +0.4 +0.4 +0.3
-- ripple (faithful minus net): largest 1.9%, at the box edge (x0 = 3, x1 = -2.99)
-  - by distance from (-0.00561, -0.0101), rings 0.424 wide, mean: -0.6 +0.9 +0.8 +0.0 -0.5 -0.7 -0.6 -0.3 -0.4 -0.0; largest: +1.8 +1.8 +1.8 +1.5 +1.7 +1.8 +1.8 +1.8 +1.7 +1.9
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.1 -0.1 -0.0 -0.1 -0.5 -0.2 -0.3 -0.3 -0.4 -0.3 -0.7 -0.1; largest: +1.8 +1.7 +1.8 +1.8 +1.8 +1.7 +1.8 +1.8 +1.8 +1.7 +1.9 +1.8
+- distortion (clean minus faithful): largest 0.8%, inside the box (x0 = -0.947, x1 = 1.45)
+  - by distance from (0.00155, -0.025), rings 0.425 wide, mean: +0.0 +0.3 +0.3 +0.3 +0.3 +0.2 +0.2 +0.1 +0.0 -0.0; largest: +0.4 +0.7 +0.8 +0.8 +0.8 +0.8 +0.8 +0.8 +0.7 +0.7
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.1 +0.4 +0.7 +0.7 +0.5 +0.2 -0.1 -0.0 +0.0 +0.0 +0.0; largest: +0.2 +0.4 +0.7 +0.8 +0.8 +0.7 +0.5 +0.5 +0.3 +0.3 +0.3 +0.2
+- ripple (faithful minus net): largest 1.9%, inside the box (x0 = 2.01, x1 = -2.48)
+  - by distance from (-0.00565, -0.013), rings 0.424 wide, mean: -0.6 +1.0 +0.9 +0.1 -0.5 -0.7 -0.5 -0.3 -0.4 -0.1; largest: +1.8 +1.8 +1.8 +1.5 +1.7 +1.8 +1.8 +1.9 +1.7 +1.8
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 +0.0 +0.1 +0.0 -0.4 -0.2 -0.3 -0.4 -0.4 -0.3 -0.7 -0.1; largest: +1.8 +1.8 +1.8 +1.8 +1.8 +1.8 +1.8 +1.8 +1.8 +1.7 +1.9 +1.8
 
 The dirt: each fitted value against its clean one. Effect: the largest change over the box when only that value is changed, % of the output range (changes can offset each other).
 
 | term | clean | faithful | effect |
 |---|---|---|---|
-| constant inside sqrt | 0.1061 | 0.1314 | 0.95% |
-| x0² inside sqrt | 1 | 1.022 | 0.84% |
-| offset | -0.04 | -0.07145 | 0.81% |
-| x1² inside sqrt | 1 | 1.015 | 0.57% |
-| x0·x1 inside sqrt | 0 | 0.01229 | 0.33% |
-| x0 inside sqrt | 0.01 | 0.0116 | 0.02% |
-| x1 inside sqrt | 0.02 | 0.0206 | 0.01% |
+| constant inside sqrt | 0.1 | 0.1264 | 1.01% |
+| offset | -0.03263 | -0.06545 | 0.84% |
+| x0² inside sqrt | 1 | 1.018 | 0.69% |
+| x1² inside sqrt | 1 | 1.013 | 0.50% |
+| x0·x1 inside sqrt | 0 | 0.01242 | 0.34% |
+| x1 inside sqrt | 0.05 | 0.02645 | 0.30% |
+| x0 inside sqrt | -0.003092 | 0.01167 | 0.19% |
 
 ## Units
 

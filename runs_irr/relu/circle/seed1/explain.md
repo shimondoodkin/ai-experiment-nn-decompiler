@@ -8,7 +8,7 @@ A conic program passes the check (18 nodes):
 
 ```python
 def net(x0, x1):
-    return x0 * x0 + x1 * x1 < 3.975
+    return x0 * x0 + x1 * x1 < 4
 ```
 
 ## Faithful fit
@@ -26,10 +26,10 @@ Clean:
 
 ```python
 def net(x0, x1):
-    return x0 * x0 + x1 * x1 < 3.975
+    return x0 * x0 + x1 * x1 < 4
 ```
 
-Share of the box where they decide differently: clean and faithful 0.34% (the dirt), faithful and the net 0.25% (what no conic follows), clean and the net 0.40%.
+Share of the box where they decide differently: clean and faithful 0.33% (the dirt), faithful and the net 0.25% (what no conic follows), clean and the net 0.41%.
 
 The dirt: each fitted value against its clean one. Effect: the largest change of the left side over the box when only that value is changed (for the threshold, its change), % of the clean threshold.
 

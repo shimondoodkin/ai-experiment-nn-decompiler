@@ -19,7 +19,7 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return sqrt(1.001 * x0 * x0 + 1.002 * x1 * x1 + 0.0002678 * x0 * x1 - 0.006167 * x0 - 0.001583 * x1 + 0.001705) - 0.002478
+    return sqrt(1.001 * x0 * x0 + 1.002 * x1 * x1 + 0.0002484 * x0 * x1 - 0.0065 * x0 - 0.001612 * x1 + 0.001711) - 0.00252
 ```
 
 Clean:
@@ -34,20 +34,20 @@ def net(x0, x1):
   - by distance from (0, 0), rings 0.423 wide, mean: -0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 -0.0 -0.0 -0.0; largest: +0.7 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 +0.1 +0.0 -0.0 -0.0 -0.0 -0.1 -0.1 -0.0 +0.0 +0.0 +0.1; largest: +0.4 +0.6 +0.3 +0.7 +0.4 +0.4 +0.4 +0.7 +0.3 +0.3 +0.2 +0.5
 - ripple (faithful minus net): largest 0.2%, inside the box (x0 = -0.0905, x1 = -0.00709)
-  - by distance from (0.00308, 0.00079), rings 0.423 wide, mean: -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.2 +0.1 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.2 +0.2 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2 +0.1 +0.2 +0.2 +0.2
+  - by distance from (0.00325, 0.000804), rings 0.423 wide, mean: -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.2 +0.1 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 +0.0 +0.0 +0.0 -0.0; largest: +0.2 +0.2 +0.1 +0.1 +0.2 +0.2 +0.2 +0.1 +0.1 +0.2 +0.2 +0.2
 
 The dirt: each fitted value against its clean one. Effect: the largest change over the box when only that value is changed, % of the output range (changes can offset each other).
 
 | term | clean | faithful | effect |
 |---|---|---|---|
-| constant inside sqrt | 0 | 0.001705 | 0.56% |
-| x0 inside sqrt | 0 | -0.006167 | 0.08% |
+| constant inside sqrt | 0 | 0.001711 | 0.56% |
+| x0 inside sqrt | 0 | -0.0065 | 0.08% |
 | x1² inside sqrt | 1 | 1.002 | 0.07% |
-| offset | 0 | -0.002478 | 0.06% |
+| offset | 0 | -0.00252 | 0.06% |
 | x0² inside sqrt | 1 | 1.001 | 0.04% |
-| x1 inside sqrt | 0 | -0.001583 | 0.02% |
-| x0·x1 inside sqrt | 0 | 0.0002678 | 0.01% |
+| x1 inside sqrt | 0 | -0.001612 | 0.02% |
+| x0·x1 inside sqrt | 0 | 0.0002484 | 0.01% |
 
 ## Units
 

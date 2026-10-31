@@ -24,23 +24,23 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return 1.003 * exp(-1.015 * x0 * x0 - 0.9935 * x1 * x1 + 0.01726 * x0 * x1 - 0.01046 * x0 + 9.448e-05 * x1) - 0.0002403
+    return 1.002 * exp(-1.018 * x0 * x0 - 0.9962 * x1 * x1 + 0.01639 * x0 * x1 - 0.01019 * x0 - 0.0004559 * x1) + 0.0005466
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 1.003 * exp(-1.015 * x0 * x0 - 0.9935 * x1 * x1 + 0.01726 * x0 * x1 - 0.01046 * x0 + 9.448e-05 * x1) - 0.0002403
+    return 1.002 * exp(-1.018 * x0 * x0 - 0.9962 * x1 * x1 + 0.01639 * x0 * x1 - 0.01019 * x0 - 0.0004559 * x1) + 0.0005466
 ```
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.822, x1 = 0.642)
-  - by distance from (-0.00515, 2.79e-06), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by distance from (-0.00501, -0.00027), rings 0.424 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
   - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
-- ripple (faithful minus net): largest 2.6%, at the box edge (x0 = -2.35, x1 = 3)
-  - by distance from (-0.00515, 2.79e-06), rings 0.424 wide, mean: +0.3 +0.4 -0.3 +0.1 -0.5 +0.1 +0.3 +0.1 -0.1 -0.1; largest: +2.4 +2.5 +2.5 +2.4 +2.3 +2.3 +2.4 +2.5 +2.6 +2.2
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.2 -0.1 -0.1 -0.2 -0.1 +0.1 +0.6 +0.8 +0.4 -0.2 -0.4 -0.5; largest: +2.3 +2.0 +2.3 +2.3 +2.6 +2.3 +2.3 +2.5 +2.5 +2.4 +2.5 +2.2
+- ripple (faithful minus net): largest 2.5%, inside the box (x0 = -2.51, x1 = -1.9)
+  - by distance from (-0.00501, -0.00027), rings 0.424 wide, mean: +0.2 +0.4 -0.4 +0.1 -0.5 +0.1 +0.4 +0.2 -0.0 -0.0; largest: +2.4 +2.5 +2.5 +2.4 +2.3 +2.4 +2.4 +2.5 +2.5 +2.2
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.1 -0.0 -0.1 -0.1 -0.0 +0.2 +0.6 +0.8 +0.5 -0.1 -0.4 -0.4; largest: +2.3 +2.1 +2.2 +2.3 +2.5 +2.3 +2.4 +2.5 +2.5 +2.4 +2.5 +2.2
 
 ## Units
 

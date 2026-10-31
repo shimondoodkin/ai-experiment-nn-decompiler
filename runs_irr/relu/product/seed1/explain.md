@@ -4,50 +4,39 @@ Inputs: x0 in [-2, 2], x1 in [-2, 2]; output: regression.
 
 ## Formula
 
-A family program passes the check (53 nodes):
+A family program passes the check (41 nodes):
 
 ```python
 def net(x0, x1):
-    u = 0.009233 * x0 * x1 + 1
-    return 108.5 * log(u) - 18 * relu(u - 1.03) + 6 * relu(0.9836 - u) - 0.004423
+    u = -0.02157 * x0 * x1
+    return -46 * exp(u) + 5 * relu(u - 0.05) + 46.04
 ```
 
 ## Faithful fit
 
-The log formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no log formula follows).
+The exp formula with every fitted value kept (4 significant digits) and no correction terms, next to its clean version. The net minus the clean formula is the sum of two parts: the distortion (clean minus faithful: the dirt) and the ripple (faithful minus net: what no exp formula follows).
 
 Faithful:
 
 ```python
 def net(x0, x1):
-    return 63.63 * log(0.000198 * x0 * x0 + 0.0001416 * x1 * x1 + 0.01546 * x0 * x1 - 0.0001023 * x0 + 6.036e-05 * x1 + 1) - 0.004423
+    return -16570 * exp(1.619e-07 * x0 * x0 + 9.045e-07 * x1 * x1 - 5.883e-05 * x0 * x1 + 7.752e-07 * x0 - 4.284e-07 * x1) + 16570
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return 108.5 * log(0.009094 * x0 * x1 + 1) - 0.004423
+    return -16570 * exp(1.619e-07 * x0 * x0 + 9.045e-07 * x1 * x1 - 5.883e-05 * x0 * x1 + 7.752e-07 * x0 - 4.284e-07 * x1) + 16570
 ```
 
 % of the output range:
-- distortion (clean minus faithful): largest 1.0%, at the box edge (x0 = -2, x1 = 1.68)
-  - by distance from (0, 0), rings 0.282 wide, mean: -0.0 -0.0 -0.1 -0.1 -0.2 -0.3 -0.4 -0.5 -0.5 -0.5; largest: +0.0 +0.1 +0.2 +0.3 +0.5 +0.6 +0.8 +0.9 +1.0 +1.0
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.2 -0.2 -0.3 -0.4 -0.6 -0.5 -0.4 -0.3 -0.2 -0.2 -0.2 -0.2; largest: +0.5 +0.4 +0.6 +0.8 +1.0 +0.9 +0.8 +0.6 +0.4 +0.4 +0.5 +0.5
-- ripple (faithful minus net): largest 2.3%, at the box edge (x0 = 2, x1 = -1.99)
-  - by distance from (0, 0), rings 0.282 wide, mean: -0.6 -0.0 +0.0 -0.3 -0.0 +0.3 +0.1 -0.2 -0.0 +0.3; largest: +1.2 +1.2 +1.4 +1.4 +1.6 +1.6 +1.8 +1.9 +1.8 +2.3
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.1 -0.4 -0.1 +0.0 -0.0 +0.2 +0.1 -0.4 +0.0 +0.1 +0.3 +0.4; largest: +1.7 +2.0 +1.2 +1.1 +1.3 +1.5 +1.9 +1.9 +1.6 +1.5 +2.3 +1.9
-
-The dirt: each fitted value against its clean one. Effect: the largest change over the box when only that value is changed, % of the output range (changes can offset each other).
-
-| term | clean | faithful | effect |
-|---|---|---|---|
-| x0·x1 inside log | 0.009094 | 0.01546 | 37.40% |
-| scale | 108.5 | 63.63 | 21.41% |
-| x0² inside log | 0 | 0.000198 | 1.17% |
-| x1² inside log | 0 | 0.0001416 | 0.83% |
-| x0 inside log | 0 | -0.0001023 | 0.30% |
-| x1 inside log | 0 | 6.036e-05 | 0.18% |
+- distortion (clean minus faithful): largest 0.0%, inside the box (x0 = 0.548, x1 = 0.428)
+  - by distance from (0, 0), rings 0.282 wide, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0
+- ripple (faithful minus net): largest 2.6%, inside the box (x0 = 1.61, x1 = 1.36)
+  - by distance from (0, 0), rings 0.282 wide, mean: -0.6 -0.0 -0.1 -0.5 -0.3 -0.2 -0.6 -0.9 -0.6 -0.3; largest: +1.2 +1.1 +1.5 +1.5 +1.5 +1.7 +2.6 +2.6 +2.5 +2.5
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.4 -1.1 -0.7 -0.4 -0.2 +0.1 -0.2 -1.0 -0.6 -0.5 -0.1 -0.1; largest: +1.8 +2.6 +2.2 +1.5 +1.2 +1.3 +1.9 +2.6 +2.5 +1.5 +2.5 +1.4
 
 ## Units
 

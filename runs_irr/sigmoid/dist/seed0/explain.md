@@ -4,17 +4,12 @@ Inputs: x0 in [-3, 3], x1 in [-3, 3]; output: regression.
 
 ## Formula
 
-No formula passes the check. Near formula (sqrt, 0 correction terms, 30 nodes), max error 2.5% of the output range (the check allows 2%):
+A family program passes the check (55 nodes):
 
 ```python
 def net(x0, x1):
-    return sqrt(1.045 * x0 * x0 + 1.05 * x1 * x1 + 0.2) - 0.125
+    return sqrt(1.03 * x0 * x0 + 1.034 * x1 * x1 + 0.01471 * x0 * x1 + 0.02 * x0 + 0.03 * x1 + 0.125) - 0.09478
 ```
-
-Where it is off (formula minus net, % of the output range):
-- largest error 2.5%, at the box edge (x0 = 3, x1 = -2.99)
-- by distance from (0, 0), rings 0.423 wide, mean: +0.4 +1.1 +0.5 -0.4 -0.7 -0.8 -0.6 -0.3 -0.3 +0.0; largest: +1.4 +1.8 +1.5 +1.6 +1.7 +1.6 +1.5 +1.5 +1.2 +2.5
-- by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.5 -0.6 -0.4 -0.4 -0.5 -0.3 -0.3 -0.3 -0.2 -0.0 -0.4 -0.3; largest: +1.7 +2.4 +1.8 +1.3 +1.6 +1.6 +1.5 +2.1 +1.5 +1.5 +2.5 +1.4
 
 ## Faithful fit
 
@@ -24,32 +19,31 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return sqrt(1.035 * x0 * x0 + 1.041 * x1 * x1 + 0.006223 * x0 * x1 + 0.01918 * x0 + 0.02652 * x1 + 0.1373) - 0.1025
+    return sqrt(1.03 * x0 * x0 + 1.034 * x1 * x1 + 0.01471 * x0 * x1 + 0.02612 * x0 + 0.03025 * x1 + 0.1285) - 0.09478
 ```
 
 Clean:
 
 ```python
 def net(x0, x1):
-    return sqrt(1.035 * x0 * x0 + 1.041 * x1 * x1 + 0.02 * x0 + 0.03 * x1 + 0.14) - 0.1025
+    return sqrt(1.03 * x0 * x0 + 1.034 * x1 * x1 + 0.01471 * x0 * x1 + 0.02 * x0 + 0.03 * x1 + 0.125) - 0.09478
 ```
 
 % of the output range:
-- distortion (clean minus faithful): largest 0.2%, at the box edge (x0 = -2.99, x1 = 2.99)
-  - by distance from (-0.00966, -0.0144), rings 0.424 wide, mean: +0.1 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0 +0.0; largest: +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.0 +0.0 +0.1 +0.1 +0.1 -0.0 -0.1 -0.1 +0.0 +0.1 +0.1; largest: +0.1 +0.1 +0.1 +0.2 +0.2 +0.1 +0.1 +0.2 +0.1 +0.1 +0.1 +0.1
-- ripple (faithful minus net): largest 2.1%, at the box edge (x0 = 3, x1 = -2.99)
-  - by distance from (-0.00923, -0.0127), rings 0.424 wide, mean: -0.6 +0.6 +0.2 -0.5 -0.8 -0.8 -0.7 -0.3 -0.4 -0.1; largest: +1.7 +1.7 +1.6 +1.8 +1.8 +1.8 +1.8 +1.9 +1.3 +2.1
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.3 -0.2 -0.1 -0.3 -0.6 -0.6 -0.6 -0.7 -0.6 -0.4 -0.7 -0.3; largest: +1.7 +2.0 +1.9 +1.6 +1.8 +1.8 +1.8 +1.7 +1.8 +1.8 +2.1 +1.5
+- distortion (clean minus faithful): largest 0.1%, inside the box (x0 = 0.204, x1 = 0.00337)
+  - by distance from (-0.00961, -0.0144), rings 0.424 wide, mean: -0.1 -0.1 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.1 -0.1 -0.0 -0.0 +0.0 +0.0 +0.0 +0.0 -0.0 -0.0 -0.1 -0.1; largest: +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1 +0.1
+- ripple (faithful minus net): largest 1.9%, inside the box (x0 = -1.81, x1 = 0.923)
+  - by distance from (-0.0126, -0.0145), rings 0.423 wide, mean: -0.7 +0.6 +0.3 -0.5 -0.8 -0.8 -0.7 -0.4 -0.5 -0.2; largest: +1.8 +1.9 +1.8 +1.9 +1.9 +1.9 +1.9 +1.9 +1.6 +1.8
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.2 -0.0 -0.0 -0.3 -0.8 -0.7 -0.7 -0.7 -0.7 -0.5 -0.8 -0.3; largest: +1.9 +1.9 +1.9 +1.7 +1.9 +1.9 +1.8 +1.8 +1.9 +1.8 +1.9 +1.6
 
 The dirt: each fitted value against its clean one. Effect: the largest change over the box when only that value is changed, % of the output range (changes can offset each other).
 
 | term | clean | faithful | effect |
 |---|---|---|---|
-| x0·x1 inside sqrt | 0 | 0.006223 | 0.16% |
-| constant inside sqrt | 0.14 | 0.1373 | 0.09% |
-| x1 inside sqrt | 0.03 | 0.02652 | 0.04% |
-| x0 inside sqrt | 0.02 | 0.01918 | 0.01% |
+| constant inside sqrt | 0.125 | 0.1285 | 0.12% |
+| x0 inside sqrt | 0.02 | 0.02612 | 0.07% |
+| x1 inside sqrt | 0.03 | 0.03025 | 0.00% |
 
 ## Units
 

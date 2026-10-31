@@ -19,7 +19,7 @@ Faithful:
 
 ```python
 def net(x0, x1):
-    return sqrt(0.9963 * x0 * x0 + 0.9958 * x1 * x1 - 0.0002926 * x0 * x1 - 0.004683 * x0 + 0.007179 * x1 + 0.002327) - 0.003267
+    return sqrt(0.9963 * x0 * x0 + 0.9958 * x1 * x1 - 0.0004091 * x0 * x1 - 0.004637 * x0 + 0.007447 * x1 + 0.002366) - 0.003413
 ```
 
 Clean:
@@ -31,23 +31,23 @@ def net(x0, x1):
 
 % of the output range:
 - distortion (clean minus faithful): largest 0.9%, inside the box (x0 = -0.00204, x1 = 0.00898)
-  - by distance from (0, 0), rings 0.423 wide, mean: -0.0 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2 +0.2 +0.3; largest: +0.9 +0.2 +0.2 +0.2 +0.3 +0.3 +0.3 +0.3 +0.3 +0.4
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.2 +0.2 +0.1 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.3 +0.3 +0.2; largest: +0.5 +0.7 +0.4 +0.9 +0.6 +0.5 +0.5 +0.8 +0.3 +0.3 +0.4 +0.7
+  - by distance from (0, 0), rings 0.423 wide, mean: -0.0 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2 +0.2 +0.3; largest: +0.9 +0.2 +0.2 +0.2 +0.3 +0.3 +0.3 +0.3 +0.4 +0.4
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: +0.2 +0.2 +0.1 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.3 +0.3 +0.2; largest: +0.6 +0.7 +0.4 +0.9 +0.6 +0.5 +0.5 +0.8 +0.3 +0.3 +0.4 +0.7
 - ripple (faithful minus net): largest 0.2%, inside the box (x0 = -0.00204, x1 = 0.00898)
-  - by distance from (0.00235, -0.0036), rings 0.424 wide, mean: +0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.2 +0.2 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2
-  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.0 -0.0 +0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.2 +0.2 +0.1 +0.2 +0.2 +0.2 +0.2 +0.2 +0.2 +0.2 +0.2 +0.1
+  - by distance from (0.00233, -0.00374), rings 0.424 wide, mean: +0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.2 +0.2 +0.1 +0.1 +0.1 +0.1 +0.2 +0.2 +0.2 +0.2
+  - by angle, 12 sectors of 30 degrees from the x0 axis, mean: -0.0 -0.0 -0.0 +0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0; largest: +0.2 +0.2 +0.1 +0.2 +0.2 +0.2 +0.2 +0.1 +0.2 +0.2 +0.2 +0.1
 
 The dirt: each fitted value against its clean one. Effect: the largest change over the box when only that value is changed, % of the output range (changes can offset each other).
 
 | term | clean | faithful | effect |
 |---|---|---|---|
-| constant inside sqrt | 0 | 0.002327 | 0.71% |
+| constant inside sqrt | 0 | 0.002366 | 0.71% |
 | x1² inside sqrt | 1 | 0.9958 | 0.15% |
 | x0² inside sqrt | 1 | 0.9963 | 0.13% |
-| x1 inside sqrt | 0 | 0.007179 | 0.09% |
-| offset | 0 | -0.003267 | 0.08% |
-| x0 inside sqrt | 0 | -0.004683 | 0.06% |
-| x0·x1 inside sqrt | 0 | -0.0002926 | 0.01% |
+| x1 inside sqrt | 0 | 0.007447 | 0.09% |
+| offset | 0 | -0.003413 | 0.08% |
+| x0 inside sqrt | 0 | -0.004637 | 0.06% |
+| x0·x1 inside sqrt | 0 | -0.0004091 | 0.01% |
 
 ## Units
 

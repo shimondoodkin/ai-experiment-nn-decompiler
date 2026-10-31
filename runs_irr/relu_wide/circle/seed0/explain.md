@@ -4,11 +4,11 @@ Inputs: x0 in [-3, 3], x1 in [-3, 3]; output: binary.
 
 ## Formula
 
-A conic program passes the check (25 nodes):
+A conic program passes the check (18 nodes):
 
 ```python
 def net(x0, x1):
-    return x0 * x0 + x1 * x1 - 0.02 * x0 < 4
+    return x0 * x0 + x1 * x1 < 4
 ```
 
 ## Faithful fit
@@ -26,10 +26,10 @@ Clean:
 
 ```python
 def net(x0, x1):
-    return x0 * x0 + x1 * x1 - 0.02 * x0 < 4
+    return x0 * x0 + x1 * x1 < 4
 ```
 
-Share of the box where they decide differently: clean and faithful 0.12% (the dirt), faithful and the net 0.07% (what no conic follows), clean and the net 0.13%.
+Share of the box where they decide differently: clean and faithful 0.14% (the dirt), faithful and the net 0.07% (what no conic follows), clean and the net 0.18%.
 
 The dirt: each fitted value against its clean one. Effect: the largest change of the left side over the box when only that value is changed (for the threshold, its change), % of the clean threshold.
 
