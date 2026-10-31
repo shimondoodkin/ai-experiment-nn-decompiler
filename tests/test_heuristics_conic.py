@@ -1,6 +1,6 @@
 import numpy as np
 
-from nndc.heuristics.conic import conic_candidate
+from nndc.heuristics.conic import _clean, conic_candidate
 from nndc.lang import evaluate, parse_program
 from nndc.spec import InputSpec, Spec
 
@@ -50,3 +50,35 @@ def test_not_applicable_to_regression_or_one_input():
     one = Spec(task="", output="binary", inputs=[InputSpec("x0", "x0", "float", 0, 1)])
     assert conic_candidate(spec_2d(0, 1, "regression"), None, decide=lambda X: X[:, 0] > 0, check=lambda s: True)[0] is None
     assert conic_candidate(one, None, decide=lambda X: X[:, 0] > 0.5, check=lambda s: True)[0] is None
+
+
+CLEAN = "def net(x0, x1):\n    return x0 * x0 + x1 * x1 < 4\n"
+
+
+def dirty_circle(X):
+    return (X[:, 0] ** 2 + X[:, 1] ** 2 - 0.01 * X[:, 0] + 0.01 * X[:, 1] < 3.977).astype(int)
+
+
+def test_clean_conic_drops_small_terms():
+    spec = spec_2d(-3, 3)
+    src, info = conic_candidate(spec, None, decide=dirty_circle, check=decision_check(dirty_circle, spec, 0.01))
+    assert src == CLEAN, (src, info)
+    assert info["clean"]["passed"] and info["passed"]
+
+
+def test_clean_conic_keeps_direction_and_sign():
+    def outside(X):
+        return (X[:, 0] ** 2 + X[:, 1] ** 2 - 0.01 * X[:, 0] > 3.977).astype(int)
+    spec = spec_2d(-3, 3)
+    src, _ = conic_candidate(spec, None, decide=outside, check=decision_check(outside, spec, 0.01))
+    assert src == "def net(x0, x1):\n    return x0 * x0 + x1 * x1 > 4\n", src
+    t = np.linspace(0, 2 * np.pi, 400)                     # boundary of x0² - x1² = -1.02 (a hyperbola), negative c
+    P = np.stack([np.sqrt(1.02) * np.sinh(t / 3), np.sqrt(1.02) * np.cosh(t / 3)], axis=1)
+    c = _clean(np.array([1.0, -1.0, 0.0, 0.005, 0.0, -1.02]), P)
+    assert c[3] == 0 and c[5] == -1
+
+
+def test_clean_conic_falls_back():
+    src, info = conic_candidate(spec_2d(-3, 3), None, decide=dirty_circle, check=lambda s: s != CLEAN)
+    assert src != CLEAN and info["passed"]
+    assert info["clean"] == {"src": CLEAN, "passed": False}

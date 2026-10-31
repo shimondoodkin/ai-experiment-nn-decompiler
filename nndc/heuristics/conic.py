@@ -16,6 +16,7 @@ from ..model import MLP
 from ..spec import Spec
 from .cleanup import join_terms, program_from_expr
 from .families import QUAD_ATOMS, SNAP_LEVELS, _is_nice, _quad_cols
+from .decision_list import nicest_in
 from .snap import nice
 
 N_SAMPLE = 20_000
@@ -23,6 +24,8 @@ N_BOUNDARY = 2000
 MIN_BOUNDARY = 20
 BISECT = 30
 SLACK = 0.001        # while snapping, the sample may disagree with the net on this much more than the plain fit
+CLEAN_FRAC = 0.02    # clean variant: drop x0·x1, x0, x1 terms below this share of the threshold on the boundary,
+                     # and round the threshold within this share (agents write x0² + x1² < 4)
 
 
 def _boundary(spec: Spec, decide: Callable[[np.ndarray], np.ndarray]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -68,12 +71,27 @@ def _refit(w: np.ndarray, fixed: np.ndarray, D: np.ndarray) -> np.ndarray:
     return w
 
 
+def _clean(w: np.ndarray, P: np.ndarray) -> np.ndarray:
+    """The clean coefficient vector: each x0·x1, x0, x1 term whose largest value on the boundary points P is below
+    CLEAN_FRAC of the threshold set to 0; the threshold refit as the mean of the left side on P, then the nicest
+    value within CLEAN_FRAC of it. Returns w itself when nothing changes."""
+    D = _design(P)
+    c = w.copy()
+    for i in (2, 3, 4):
+        if c[i] and float(np.abs(c[i] * D[:, i]).max()) < CLEAN_FRAC * abs(w[5]):
+            c[i] = 0.0
+    t = float(np.mean(D[:, :5] @ c[:5]))
+    lo, hi = sorted((t * (1 - CLEAN_FRAC), t * (1 + CLEAN_FRAC)))
+    c[5] = nicest_in(lo, hi) if hi > lo else t
+    return w if np.array_equal(c, w) else c
+
+
 def conic_candidate(spec: Spec, mlp: MLP | None, decide: Callable[[np.ndarray], np.ndarray] | None = None,
                     check: Callable[[str], bool] | None = None) -> tuple[str | None, dict]:
     """The conic program, or None; and an info row. decide and check are test hooks (default: the net's decision,
     and the checker's snap verdict against the net)."""
     info = {"family": "conic", "n_boundary": 0, "coefs": None, "snapped": None, "passed": False, "nodes": None,
-            "src": None, "terms": 0}
+            "src": None, "terms": 0, "clean": None}
     if spec.output != "binary" or len(spec.inputs) != 2:
         return None, info
     if decide is None:
@@ -134,5 +152,17 @@ def conic_candidate(spec: Spec, mlp: MLP | None, decide: Callable[[np.ndarray], 
     except ProgramError:
         return None, info
     info["src"] = src
+    wc = _clean(w, P)
+    if wc is not w:                  # the clean variant first; kept only if the checker passes it
+        csrc = _emit(wc, less, spec)
+        try:
+            cnodes = program_size(parse_program(csrc, spec.arg_names))["nodes"]
+            ok = bool(check(csrc))
+        except ProgramError:
+            ok = False
+        info["clean"] = {"src": csrc, "passed": ok}
+        if ok:
+            info.update(src=csrc, nodes=cnodes, passed=True)
+            return csrc, info
     info["passed"] = bool(check(src))
     return src, info
