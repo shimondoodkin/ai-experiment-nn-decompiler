@@ -314,3 +314,12 @@ boundary points, the plot styling, and how the route's code is split across `nnd
 
   Both stay in the distillation note for later. Changes 1–4 do not touch `ast4` or the ReLU equivalence anti-goal: they
   live in `ast5`'s routes only. The development numbers are re-reported after them, then the freeze.
+- **2026-10-31, first development run** (data commit `2962329`, `runs_irr/REPORT.md`, before the distilled changes
+  above). Predictions, as written:
+  - at least 3 of the 9 small ReLU nets fail to learn on each seed: not met (4, 2, 1);
+  - wide ReLU, sigmoid and tanh learn at least 8 of 9 tasks on at least 2 seeds: met (9 9 9; 9 9 9; 9 8 9);
+  - formula found on at least 70% of the learned nets: met (84/100);
+  - where found, `ast5` at least 5× smaller than `ast4`: not met (73/84);
+  - bump formula on at least one net: not met (0);
+  - tanh within 3 of sigmoid: met (21 vs 22);
+  - PySR finds the formula on fewer nets than `ast5`, and on at least 5: met (60 vs 84).

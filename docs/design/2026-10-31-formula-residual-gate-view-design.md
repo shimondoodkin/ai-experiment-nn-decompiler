@@ -149,3 +149,9 @@ split.
   It is report-only: `explain` re-runs the family route's own fit (`families.faithful_fit`, deterministic, the same
   fit `ast5` made). `ast5`'s programs and traces do not change, so no rerun is needed. This changes the constraint
   above: `explain` now uses SciPy through that fit; the gate view stays NumPy only. Neither runs in blind folders.
+- **2026-10-31, first development numbers** (data commit `2962329`, `runs_irr/REPORT.md`). Predictions, as written:
+  - formula found on at least 2 of the 3 sigmoid dist nets with minimax: not met (1/3);
+  - formula found, or a near formula of the task's family within 3%, on at least 90% of the learned regression nets:
+    not met (79/88, 89.8%);
+  - on the 18 nets run before minimax, at least as many formulas and never larger where both pass: not met (10
+    before, 10 now; larger on 1 of 18).
