@@ -31,6 +31,9 @@ LAWSON_ROUNDS = 40    # minimax refinement after each fit and hinge refit
 LAWSON_SNAP_ROUNDS = 10   # ... and inside snapping, on the snapping subsample
 NEAR_SLACK = 1.25     # near formulas: snapping may add at most a quarter to the fit's max error
 NEAR_WITHIN = 0.03    # near formulas within this share of the range: fewest correction terms wins
+N_BORDER = 250        # 2-D fit sample: points per box edge, corners included (agents fit on the border)
+MARGIN_SCALES = (0.8, 0.6)   # after a checker failure: re-snap with the tolerance scaled by these (agents' margin)
+MARGIN_RETRIES = 2    # at most this many such retries per family
 
 FAMILIES_1D = ("identity", "square", "exp", "log", "sqrt", "reciprocal")
 FAMILIES_2D = ("quadratic", "sqrt", "exp", "log", "reciprocal")
@@ -402,17 +405,23 @@ def _fit_sample(spec: Spec, predict: Callable[[np.ndarray], np.ndarray]) -> tupl
         X = np.linspace(i.lo, i.hi, N_GRID)[:, None]
         return X, np.asarray(predict(X), dtype=np.float64)
     rng = np.random.default_rng(0)
+    a, b = spec.inputs
     X = np.stack([rng.uniform(i.lo, i.hi, N_FIT_2D) for i in spec.inputs], axis=1)
+    ta, tb = np.linspace(a.lo, a.hi, N_BORDER), np.linspace(b.lo, b.hi, N_BORDER)
+    border = np.vstack([np.stack([ta, np.full(N_BORDER, b.lo)], 1), np.stack([ta, np.full(N_BORDER, b.hi)], 1),
+                        np.stack([np.full(N_BORDER, a.lo), tb], 1), np.stack([np.full(N_BORDER, a.hi), tb], 1)])
+    X = np.vstack([X, border])
     y = np.asarray(predict(X), dtype=np.float64)
     ext = np.argsort(-np.abs(y - np.median(y)), kind="stable")[:N_EXTREME]
     return np.vstack([X, X[ext]]), np.concatenate([y, y[ext]])
 
 
 def _snap_sample(X: np.ndarray, y: np.ndarray, dim: int) -> tuple[np.ndarray, np.ndarray]:
+    """1-D: the whole grid. 2-D: the first N_SNAP_2D uniform points, then the border, the extremes and any
+    counterexamples (everything after the N_FIT_2D uniform points)."""
     if dim == 1:
         return X, y
-    k = len(X) - N_EXTREME
-    return np.vstack([X[:N_SNAP_2D], X[k:]]), np.concatenate([y[:N_SNAP_2D], y[k:]])
+    return np.vstack([X[:N_SNAP_2D], X[N_FIT_2D:]]), np.concatenate([y[:N_SNAP_2D], y[N_FIT_2D:]])
 
 
 TERM_ATOMS = {"b": "x0", "c": "constant", "p0": "x0²", "p1": "x1²", "p2": "x0·x1", "p3": "x0", "p4": "x1",
@@ -495,15 +504,22 @@ def near_formula(rows: list[dict], dim: int) -> dict | None:
 
 
 def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray], np.ndarray] | None = None,
-                      check: Callable[[str], bool] | None = None) -> tuple[list[tuple[str, str]], list[dict]]:
+                      check: Callable[[str], tuple[bool, np.ndarray]] | None = None
+                      ) -> tuple[list[tuple[str, str]], list[dict]]:
     """Passing family programs as (family, src), and one info row per family tried. predict and check are test
-    hooks (default: the net's output, and the checker's snap verdict against the net)."""
+    hooks (default: the net's output, and the checker's snap verdict against the net with its counterexample
+    inputs, shape (k, n_inputs)). A snapped program within the tolerance on the fit sample that the checker fails
+    is retried with its counterexamples added to the sample, re-snapped at MARGIN_SCALES of the tolerance (at most
+    MARGIN_RETRIES per family)."""
     if spec.output != "regression" or len(spec.inputs) not in (1, 2):
         return [], []
     if predict is None:
         predict = lambda X: mlp.forward(X.astype(np.float32))[:, 0].astype(np.float64)   # noqa: E731
     if check is None:
-        check = lambda src: check_program(src, mlp, spec).snap_pass   # noqa: E731
+        def check(src: str) -> tuple[bool, np.ndarray]:
+            r = check_program(src, mlp, spec)
+            cex = [[c["inputs"][n] for n in spec.arg_names] for c in r.counterexamples]
+            return r.snap_pass, np.array(cex, dtype=np.float64).reshape(-1, len(spec.inputs))
     X, y = _fit_sample(spec, predict)
     R = float(y.max() - y.min())
     if not np.isfinite(R) or R <= 1e-12:
@@ -516,7 +532,8 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
     for family in (FAMILIES_1D if dim == 1 else FAMILIES_2D):
         m, e_ls, e = _fit_family(family, dim, X, y, Xs, ys, R)
         row = {"family": family, "fit_err": e_ls / R, "minimax_err": e / R, "snapped_err": None,
-               "terms": 0, "passed": False, "nodes": None, "src": None, "params": None, "near": []}
+               "terms": 0, "passed": False, "nodes": None, "src": None, "params": None, "near": [],
+               "retries": 0, "margin": 1.0}
         info.append(row)
         if m is None or not e / R <= DROP_FRAC:
             continue
@@ -528,15 +545,31 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
                     break
                 m = n
             pre.append((terms, m))
-            m = _snap(m, X, y, Xs, ys, R, tol)
-            src = _emit(m, spec)
-            try:
-                nodes = program_size(parse_program(src, spec.arg_names))["nodes"]
-            except ProgramError:
+            fit, scale = m, 1.0
+            while True:
+                m = _snap(fit, X, y, Xs, ys, R, scale * tol)
+                src = _emit(m, spec)
+                try:
+                    nodes = program_size(parse_program(src, spec.arg_names))["nodes"]
+                except ProgramError:
+                    src = None
+                    break
+                ok, cex = check(src)
+                ok = bool(ok)
+                row.update(snapped_err=_err(m, m.values, X, y) / R, terms=terms, passed=ok, nodes=nodes, src=src,
+                           params={n: float(x) for n, x in zip(m.names, m.values)})
+                if ok or row["retries"] >= MARGIN_RETRIES or not len(cex) or row["snapped_err"] > spec.snap_tol_frac:
+                    break
+                cex = np.asarray(cex, dtype=np.float64).reshape(-1, dim)   # the checker found points the sample missed
+                yc = np.asarray(predict(cex), dtype=np.float64)
+                X, y = np.vstack([X, cex]), np.concatenate([y, yc])
+                Xs, ys = np.vstack([Xs, cex]), np.concatenate([ys, yc])
+                fit = fit.copy()
+                fit.values = _lawson(fit, X, y, R, LAWSON_ROUNDS, 300)
+                scale = MARGIN_SCALES[row["retries"]]
+                row.update(retries=row["retries"] + 1, margin=scale)
+            if src is None:
                 break
-            ok = bool(check(src))
-            row.update(snapped_err=_err(m, m.values, X, y) / R, terms=terms, passed=ok, nodes=nodes, src=src,
-                       params={n: float(x) for n, x in zip(m.names, m.values)})
             if ok:
                 passing.append((family, src))
                 break

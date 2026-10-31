@@ -1,6 +1,7 @@
 import numpy as np
 
-from nndc.heuristics.families import MAX_TERMS, faithful_fit, family_candidates, near_formula
+from nndc.heuristics.families import (MARGIN_RETRIES, MAX_TERMS, N_BORDER, N_EXTREME, N_FIT_2D, _fit_sample,
+                                     faithful_fit, family_candidates, near_formula)
 from nndc.lang import evaluate, parse_program
 from nndc.spec import InputSpec, Spec
 
@@ -21,10 +22,12 @@ def max_err_check(f, spec, frac=0.02):
     y = f(X)
     tol = frac * float(y.max() - y.min())
 
-    def check(src: str) -> bool:
+    def check(src: str) -> tuple[bool, np.ndarray]:
         with np.errstate(all="ignore"):
             out = evaluate(parse_program(src, spec.arg_names), X)
-        return bool(np.isfinite(out).all() and np.abs(out - y).max() <= tol)
+        err = np.where(np.isfinite(out), np.abs(out - y), np.inf)
+        bad = err > tol
+        return bool(not bad.any()), X[np.argsort(-err)[:5]][err[np.argsort(-err)[:5]] > tol]
     return check
 
 
@@ -96,8 +99,8 @@ def test_lawson_keeps_ls_fit_when_minimax_goes_nonfinite(monkeypatch):
 
 def test_not_applicable_to_binary_or_three_inputs():
     three = Spec(task="", output="regression", inputs=[InputSpec(f"x{k}", f"x{k}", "float", 0, 1) for k in range(3)])
-    assert family_candidates(spec_1d(0, 1, "binary"), None, predict=lambda X: X[:, 0], check=lambda s: True) == ([], [])
-    assert family_candidates(three, None, predict=lambda X: X[:, 0], check=lambda s: True) == ([], [])
+    assert family_candidates(spec_1d(0, 1, "binary"), None, predict=lambda X: X[:, 0], check=lambda s: (True, np.empty((0, 1)))) == ([], [])
+    assert family_candidates(three, None, predict=lambda X: X[:, 0], check=lambda s: (True, np.empty((0, 1)))) == ([], [])
 
 
 def test_near_formula_prefers_fewer_terms_within_3pct():
@@ -156,3 +159,42 @@ def test_faithful_fit_labels_2d_terms():
 
 def test_faithful_fit_not_a_family():
     assert faithful_fit(spec_1d(0, 2), lambda X: X[:, 0], "conic") is None
+
+
+def test_fit_sample_has_border_and_corners():
+    X, y = _fit_sample(spec_2d(-3, 3), lambda X: X[:, 0] + X[:, 1])
+    assert len(X) == N_FIT_2D + 4 * N_BORDER + N_EXTREME == len(y)
+    for c in ([-3, -3], [-3, 3], [3, -3], [3, 3]):
+        assert (np.abs(X - c).max(axis=1) < 1e-12).any(), c
+
+
+def exp_stub(results):
+    """A check that answers the exp program from results in turn (then passes) and fails every other program
+    without counterexamples."""
+    calls = iter(results)
+
+    def check(src):
+        if "exp(" not in src:
+            return False, np.empty((0, 1))
+        return next(calls, (True, np.empty((0, 1))))
+    return check
+
+
+def exp_row(check):
+    _, info = family_candidates(spec_1d(-2, 2), None, predict=lambda X: np.exp(X[:, 0]), check=check)
+    return next(r for r in info if r["family"] == "exp")
+
+
+def test_margin_retry_after_checker_failure():
+    r = exp_row(exp_stub([(False, np.array([[2.0]]))]))
+    assert r["retries"] == 1 and r["margin"] == 0.8 and r["passed"]
+
+
+def test_no_retry_without_counterexamples():
+    r = exp_row(exp_stub([(False, np.empty((0, 1)))]))
+    assert r["retries"] == 0 and r["margin"] == 1.0
+
+
+def test_at_most_two_retries():
+    r = exp_row(exp_stub([(False, np.array([[2.0]]))] * 50))
+    assert r["retries"] == MARGIN_RETRIES == 2 and r["margin"] == 0.6
