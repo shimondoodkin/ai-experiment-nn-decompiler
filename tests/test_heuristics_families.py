@@ -1,6 +1,6 @@
 import numpy as np
 
-from nndc.heuristics.families import MAX_TERMS, family_candidates, near_formula
+from nndc.heuristics.families import MAX_TERMS, faithful_fit, family_candidates, near_formula
 from nndc.lang import evaluate, parse_program
 from nndc.spec import InputSpec, Spec
 
@@ -135,3 +135,24 @@ def test_near_rows_filled_when_family_fails():
 def test_near_rows_empty_for_a_passing_family():
     _, info = run(lambda X: np.exp(X[:, 0]), spec_1d(-2, 2))
     assert next(r for r in info if r["family"] == "exp")["near"] == []
+
+
+def test_faithful_fit_keeps_the_dirt():
+    ff = faithful_fit(spec_1d(0, 2), lambda X: 1.03 * np.exp(0.98 * X[:, 0]) + 0.02, "exp")
+    assert "exp(" in ff["src"] and ff["src"] != ff["clean_src"]
+    assert ff["err"] < 1e-3                       # the faithful fit follows the net
+    assert 0 < ff["distortion"] <= 0.021          # the clean formula is within the tolerance of it
+    effects = [d["effect"] for d in ff["dirt"]]
+    assert effects and effects == sorted(effects, reverse=True) and all(e > 0 for e in effects)
+    assert {"term", "clean", "faithful", "effect"} <= set(ff["dirt"][0])
+
+
+def test_faithful_fit_labels_2d_terms():
+    ff = faithful_fit(spec_2d(-2, 2), lambda X: 1.02 * X[:, 0] ** 2 + X[:, 1] ** 2 + 0.05 * X[:, 0] * X[:, 1],
+                      "quadratic")
+    assert ff["err"] < 1e-3
+    assert {d["term"] for d in ff["dirt"]} & {"x0²", "x0·x1"}
+
+
+def test_faithful_fit_not_a_family():
+    assert faithful_fit(spec_1d(0, 2), lambda X: X[:, 0], "conic") is None

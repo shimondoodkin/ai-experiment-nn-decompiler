@@ -114,3 +114,45 @@ def test_cli_explain(tmp_path, capsys):
     rd = _sigmoid_run(tmp_path, [(1.0, 2.0, -4.0)], SPEC1)
     assert main(["explain", "--all", "--root", str(tmp_path)]) == 0
     assert (rd / "explain.md").exists() and "explain.md" in capsys.readouterr().out
+
+
+def test_explain_faithful_fit_splits_distortion_and_ripple(tmp_path):
+    rd = _sigmoid_run(tmp_path, [(1.0, 0.3, -0.6)], SPEC1)          # nearly a line on [0, 4]
+    near = {"family": "identity", "src": "def net(x0):\n    return 0.07 * x0 + 0.36\n", "err": 0.025, "terms": 0,
+            "nodes": 5}
+    (rd / "ast5_trace.json").write_text(json.dumps({"candidates": [], "winner": "dump", "near": near}))
+    text = explain_run(rd)
+    sec = text.split("## Faithful fit", 1)[1].split("## Units", 1)[0]
+    assert "x0" in sec and "distortion" in sec and "ripple" in sec
+    assert "| term | clean | faithful | effect |" in sec
+
+
+def test_explain_faithful_fit_of_the_passing_family(tmp_path):
+    rd = _sigmoid_run(tmp_path, [(1.0, 2.0, -4.0)], SPEC1)
+    src = "def net(x0):\n    return exp(x0)\n"
+    cand = {"route": "family", "src": src, "nodes": 3, "check": {"snap_pass": True}}
+    rows = [{"family": "log", "src": "def net(x0):\n    return log(x0)\n"}, {"family": "exp", "src": src}]
+    (rd / "ast5_trace.json").write_text(json.dumps({"candidates": [cand], "winner": "family", "near": None,
+                                                    "families": rows}))
+    sec = explain_run(rd).split("## Faithful fit", 1)[1].split("## Units", 1)[0]
+    assert "exp(" in sec and "log(" not in sec
+
+
+def test_explain_faithful_conic(tmp_path):
+    spec = replace(SPEC2, output="binary", threshold=0.5)
+    rd = _sigmoid_run(tmp_path, [(1.0, 1.0, 0.0, 0.0)], spec)
+    src = "def net(x0, x1):\n    return x0 * x0 + x1 * x1 < 4\n"
+    cand = {"route": "conic", "src": src, "nodes": 18, "check": {"snap_pass": True}}
+    row = {"family": "conic", "coefs": [0.98743, 1.0, 0.014847, -0.0072522, -0.00024445, 3.94251],
+           "snapped": [1.0, 1.0, 0.0, 0.0, 0.0, 4.0], "src": src}
+    (rd / "ast5_trace.json").write_text(json.dumps({"candidates": [cand], "winner": "conic", "near": None,
+                                                    "families": [row]}))
+    sec = explain_run(rd).split("## Faithful fit", 1)[1].split("## Units", 1)[0]
+    assert "0.9874 * x0 * x0" in sec and "< 3.943" in sec
+    assert "| x0² | 1 | 0.9874 |" in sec and "decide differently" in sec
+
+
+def test_explain_no_faithful_without_formula(tmp_path):
+    rd = _sigmoid_run(tmp_path, [(1.0, 2.0, -4.0)], SPEC1)
+    (rd / "ast5_trace.json").write_text(json.dumps({"candidates": [], "winner": "dump", "near": None}))
+    assert "## Faithful fit" not in explain_run(rd)

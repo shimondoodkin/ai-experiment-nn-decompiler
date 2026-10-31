@@ -408,6 +408,60 @@ def _fit_sample(spec: Spec, predict: Callable[[np.ndarray], np.ndarray]) -> tupl
     return np.vstack([X, X[ext]]), np.concatenate([y, y[ext]])
 
 
+def _snap_sample(X: np.ndarray, y: np.ndarray, dim: int) -> tuple[np.ndarray, np.ndarray]:
+    if dim == 1:
+        return X, y
+    k = len(X) - N_EXTREME
+    return np.vstack([X[:N_SNAP_2D], X[k:]]), np.concatenate([y[:N_SNAP_2D], y[k:]])
+
+
+TERM_ATOMS = {"b": "x0", "c": "constant", "p0": "x0²", "p1": "x1²", "p2": "x0·x1", "p3": "x0", "p4": "x1",
+              "p5": "constant"}
+
+
+def _term(name: str, family: str) -> str:
+    if name in ("a", "d"):
+        return {"a": "scale", "d": "offset"}[name]
+    atom = TERM_ATOMS[name]
+    return atom if family in ("identity", "quadratic") else f"{atom} inside {family}"
+
+
+def faithful_fit(spec: Spec, predict: Callable[[np.ndarray], np.ndarray], family: str) -> dict | None:
+    """The family's 0-term minimax fit with every fitted value kept (4 significant digits), next to its clean
+    (snapped) version, as the route makes them. Shares of the net's output range: err, faithful vs the net (the
+    ripple no formula of this family follows); distortion, clean vs faithful (the dirt); and per value whose clean
+    version differs, the largest change over the fit sample when only that value is changed. Report only (explain)."""
+    dim = len(spec.inputs)
+    if spec.output != "regression" or dim not in (1, 2) or family not in (FAMILIES_1D if dim == 1 else FAMILIES_2D):
+        return None
+    X, y = _fit_sample(spec, predict)
+    R = float(y.max() - y.min())
+    if not np.isfinite(R) or R <= 1e-12:
+        return None
+    Xs, ys = _snap_sample(X, y, dim)
+    m, _, e = _fit_family(family, dim, X, y, Xs, ys, R)
+    if m is None or not np.isfinite(e):
+        return None
+    f = m.copy()
+    f.values = np.array([float(f"{x:.4g}") for x in m.values])
+    clean = _snap(m, X, y, Xs, ys, R, spec.snap_tol_frac * R)
+    base = clean.eval(clean.values, X)
+    dirt = []
+    for i, name in enumerate(m.names):
+        if f.values[i] == clean.values[i]:
+            continue
+        v = clean.values.copy()
+        v[i] = f.values[i]
+        r = np.abs(clean.eval(v, X) - base)
+        effect = float(np.max(np.where(np.isfinite(r), r, np.inf))) / R
+        if effect > 0:
+            dirt.append({"term": _term(name, family), "clean": float(clean.values[i]),
+                         "faithful": float(f.values[i]), "effect": effect})
+    dirt.sort(key=lambda d: -d["effect"])
+    return {"family": family, "src": _emit(f, spec), "clean_src": _emit(clean, spec), "err": _err(f, f.values, X, y) / R,
+            "distortion": _err(clean, clean.values, X, f.eval(f.values, X)) / R, "dirt": dirt}
+
+
 def _near_rows(pre: list[tuple[int, Model]], spec: Spec, X: np.ndarray, y: np.ndarray, Xs: np.ndarray,
                ys: np.ndarray, R: float, tol: float) -> list[dict]:
     """For a family that failed every term count: each term count's fit snapped with the relaxed tolerance
@@ -456,11 +510,7 @@ def family_candidates(spec: Spec, mlp: MLP | None, predict: Callable[[np.ndarray
         return [], []
     tol = spec.snap_tol_frac * R
     dim = len(spec.inputs)
-    if dim == 2:
-        k = len(X) - N_EXTREME
-        Xs, ys = np.vstack([X[:N_SNAP_2D], X[k:]]), np.concatenate([y[:N_SNAP_2D], y[k:]])
-    else:
-        Xs, ys = X, y
+    Xs, ys = _snap_sample(X, y, dim)
     passing, info = [], []
     pending: list[tuple[dict, list[tuple[int, Model]]]] = []
     for family in (FAMILIES_1D if dim == 1 else FAMILIES_2D):

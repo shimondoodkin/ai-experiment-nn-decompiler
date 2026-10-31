@@ -129,3 +129,23 @@ Everything in CLAUDE.md, as in the irrational design. `explain` and the gate vie
 
 The `explain.md` layout, the wording of group lines, how the Lawson loop guards against zero errors, and the module
 split.
+
+## Amendments
+
+- **2026-10-31, faithful fit in `explain.md`** (the user: "show user faithful formula with dirt terms also ... let
+  user see where error of the net comes from"). A new section, after Formula, for the family of the formula shown
+  there (the passing family or conic program, else the near formula's family):
+  - the family's 0-term minimax fit with every fitted value kept (4 significant digits), next to its clean
+    (snapped) version;
+  - the net minus the clean formula, split into **distortion** (clean minus faithful: the dirt) and **ripple**
+    (faithful minus net: what no formula of the family follows), each with its largest error and the slice or
+    ring/sector profile;
+  - the dirt table: each value whose clean version differs, and its effect, the largest change over the box when
+    only that value is changed (% of the output range; for a conic, % of the clean threshold). Changes can offset
+    each other: on sigmoid/exp/seed0, scale 1.035 and inner slope 0.983 move the output 3.6% and 3.4% alone, 0.4%
+    together;
+  - conic nets: the share of the box where clean, faithful and the net decide differently, in pairs.
+
+  It is report-only: `explain` re-runs the family route's own fit (`families.faithful_fit`, deterministic, the same
+  fit `ast5` made). `ast5`'s programs and traces do not change, so no rerun is needed. This changes the constraint
+  above: `explain` now uses SciPy through that fit; the gate view stays NumPy only. Neither runs in blind folders.
