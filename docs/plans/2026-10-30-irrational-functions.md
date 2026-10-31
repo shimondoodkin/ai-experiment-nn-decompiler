@@ -580,6 +580,10 @@ git commit -m "data: irrational development nets (108), ast4, ast5, pysr_irr, an
 
 ### Task 9: Development changes (optional), then the freeze
 
+> Amended 2026-10-31 (design, Amendments): a blind agent pass on all 108 development nets comes first; the
+> changes here are distilled from `runs_irr/HEURISTICS.md`, and the report gains a reproduction measure. Task 10 adds
+> agents on the 68 held-out nets (`runs_irr/HEURISTICS_heldout.md`).
+
 - [ ] **Step 1:** If the first run shows a fixable route problem, change the route using the development nets only.
   Each change is a design amendment with its reason; re-run `ast5` and the analysis on the development runs, re-report.
   Code commits and data commits stay apart. Predictions are not rewritten.

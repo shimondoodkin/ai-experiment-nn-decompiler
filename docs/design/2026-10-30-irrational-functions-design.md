@@ -224,3 +224,22 @@ the repo or `runs*/`, and tests that delete use `tmp_path`.
 
 The report command's name and layout details, the starting points of each family fit, the bisection details for
 boundary points, the plot styling, and how the route's code is split across `nndc/heuristics/`.
+
+## Amendments
+
+- **2026-10-31, the agent-first method is restored** (the user, in chat: "yes to all, maybe even first then develop
+  the tool then run the tests"). The non-goal "Blind Claude agents on these nets" is reversed. Development returns to
+  the project's original method (`2026-10-27-nn-decompiler-design.md`, step 3), which kink merge, `ast4` and this
+  project had dropped:
+  1. **Agent pass:** one fresh blind subagent per development net, all 108 (4 variants × 9 tasks × seeds 0–2). Same
+     `INSTRUCTIONS.md`, blind folders and audit as the earlier steps: no task name, target or family. Index
+     `runs_irr/blind_index.json`, heuristics to `runs_irr/HEURISTICS.md`. The programs are collected after the
+     gate-view rerun (`2026-10-31-formula-residual-gate-view-design.md`, Goal 7) finishes, so two jobs never write one
+     `results.json`. That rerun still gives the gate-view design its first numbers.
+  2. **Distill:** the next route changes (plan Task 9) come from heuristics that recur in `runs_irr/HEURISTICS.md`;
+     each change cites the entries it came from.
+  3. **Reproduction:** the report adds, per development net, whether `ast5` reproduces the agent's result (both pass;
+     `ast5` is not larger; the same formula family where the agent wrote one), as in step 3.
+  4. **Held-out:** after the freeze, agents also run on the 68 held-out nets, with heuristics to
+     `runs_irr/HEURISTICS_heldout.md`, which development never reads. Reproduction on the held-out nets is the
+     headline.
