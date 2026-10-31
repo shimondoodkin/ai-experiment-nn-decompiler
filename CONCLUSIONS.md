@@ -353,6 +353,58 @@ for versions without `heldout.json` (now `ast3`, whose set is in `heldout_ast3.j
   changes which of two equally short programs wins, and the trace's label;
 - `test_best_candidate_order` checks each tie-break alone, not their precedence.
 
+## Irrational functions: development (2026-10-30 to 31, before the freeze)
+
+Designs: `docs/design/2026-10-30-irrational-functions-design.md` and
+`docs/design/2026-10-31-formula-residual-gate-view-design.md`. Results: `runs_irr/REPORT.md`. Agent distillation:
+`runs_irr/DISTILL.md`. The tool is `ast5`: `ast4` plus the family route (minimax fits of exp, log, sqrt, x², 1/x,
+dist and product forms) and the conic route. These are development numbers (108 nets: 9 tasks × 4 variants × seeds
+0–2). The held-out nets come after the freeze.
+
+**What we learned**
+- **Small nets do learn smooth functions.** Wide ReLU and sigmoid learned all 9 tasks on every seed, and tanh 9, 8
+  and 9. Small ReLU nets failed less often than predicted: 4, 2 and 1 tasks per seed, against at least 3 each.
+- **The family route finds the formula on 86 of the 100 learned nets**, 81 of them with no correction terms. Where
+  found, `ast5` is at least 5× smaller than `ast4` on 75 of 86, short of the predicted all. PySR found 60.
+- **Circles come out exact.** After the clean conic snap, all 12 circle nets give `x0 * x0 + x1 * x1 < 4`
+  (18 nodes). Before it, 4 kept tiny cross and linear terms such as `0.01 * x0 * x1`.
+- **The box border decides 2-D fits.** In 7 nets, 16 family fits were within 2% on the fit sample and then failed the
+  checker at the edges. The fix was to add the border and corners to the sample, then refit on the checker's
+  counterexamples with a margin, as the agents did. It turned sigmoid/dist/0 into a clean `sqrt(...)` (462 → 55
+  nodes). It also made relu/product seeds 0 and 2 into just `x0 * x1` (30 → 10 and 19 → 10).
+- **Bump has no formula on any net.** The best programs are pruned nets. The prune route removes units greedily
+  with a minimax refit of the outputs, then snaps the weights one at a time. It cut sigmoid/bump to 400–422 nodes
+  and tanh/dist to 104–205, from 436–476 before.
+- **The agent-first loop works here too.** All 108 blind agents passed. Their heuristics gave four route changes.
+  The share of agent results `ast5` reproduces (it passes, is no larger, and uses the family's function where the
+  agent does) went from 89 to 98 of 107. `ast5` is now smaller than the agent on 67 nets, equal on 32 and larger on
+  8.
+- **The net's error can be shown, not just bounded.** The faithful fit in `explain.md` keeps every fitted value next
+  to the clean formula. It splits the net minus the clean formula into two parts:
+  - distortion: what snapping the values cost;
+  - ripple: the net's own wiggle around its best formula.
+
+  The dirt table gives each value's effect alone.
+
+**What did not work, or surprised us**
+- **A small passing program is not proof of the family.** sigmoid/dist/1 passes with `−1/u + 2·relu(u − 0.42) + 5.5`
+  (50 nodes): a reciprocal of a quadratic, not the distance's square root. relu/product/1 "finds" the product only to
+  first order, inside an exponential's near-linear range. The family check counts it because `x0 * x1` appears in it.
+- **Agents name formulas in comments,** and the family check first read them. Fixed in `34f035e`; that alone moved 4
+  runs to reproduced.
+- **One planned change was not needed.** Min/max of fewer lines for small 1-D ReLU nets was dropped: `ast5` was
+  already smaller than the agents there.
+- **PySR hangs on exit** (Julia) after writing its result: once for 4 hours, once for 3.5. The results were complete
+  both times. Batch scripts need a timeout around PySR.
+
+**Still open before the freeze:** 9 nets where `ast5` does not reproduce the agent:
+- tanh/dist 0 and 2: 205 vs 189 nodes and 172 vs 145;
+- 5 bump nets: 0.5–13% larger, or smaller but without the agent's `exp`;
+- relu/square/0.
+
+The gate-view prediction on near formulas is still not met (79/88). Next: the final review, the freeze, 68 held-out
+nets with their own agents, and the write-up.
+
 ## Open questions and next steps
 
 - **Step 5: compile to C and measure CPU speed against the net.** Also pruning. The programs already
@@ -363,8 +415,7 @@ for versions without `heldout.json` (now `ast3`, whose set is in `heldout_ast3.j
   - small RL policies;
   - one MLP block inside a small transformer, for decompile-fix-reinsert where relearning from cases
     is not enough.
-- **Smooth functions (the user's next idea):** can the decompiler and tools recognise functions that are not
-  piecewise linear, such as `exp`, `sqrt`, or a circle `x² + y² < r²`? Next to research.
+- **Smooth functions:** in progress (section above); held-out nets after the freeze.
 - **A harder fix population:** more planted-bug nets that learn their bug, and natural bugs with real
   failures, so that "with program" vs "cases only" can separate.
 - **Deferred minors** (none affects current results):
