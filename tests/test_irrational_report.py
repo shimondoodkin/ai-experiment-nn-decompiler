@@ -65,3 +65,19 @@ def test_gate_view_predictions(tmp_path):
     (tmp_path / "before_minimax.json").write_text(json.dumps({"runs": {
         "tanh/dist/seed9": {"formula_found": True, "ast5_nodes": 12, "ast5_pass": True}}}))
     assert "| found 0 before, 0 now; larger on 0 of 0 | – |" in build_irrational_report(tmp_path)   # nothing compared
+
+
+def test_report_reproduction_section(tmp_path):
+    fake(tmp_path, "relu", "square", 0, agent_pass=True, agent_nodes=41, ast5_nodes=55, agent_formula=False,
+         ast5_formula=False, reproduced=False)
+    fake(tmp_path, "relu", "square", 1, agent_pass=True, agent_nodes=12, ast5_nodes=7, agent_formula=True,
+         ast5_formula=True, reproduced=True)
+    fake(tmp_path, "relu", "square", 2, reproduced=None)                 # no agent attempt: not counted
+    md = build_irrational_report(tmp_path)
+    sec = md[md.index("## Reproduction"):]
+    assert "| relu | 2 | 1/2 (50%) | 1 | 0 | 1 |" in sec               # agents passing, reproduced, smaller/equal/larger
+    assert "relu/square/seed0" in sec and "55" in sec and "41" in sec and "larger" in sec
+    assert "Before the distilled changes" not in sec
+    (tmp_path / "before_distill.json").write_text(json.dumps({"runs": {
+        "relu/square/seed0": {"reproduced": False}, "relu/square/seed1": {"reproduced": False}}}))
+    assert "Before the distilled changes: 0/2" in build_irrational_report(tmp_path)

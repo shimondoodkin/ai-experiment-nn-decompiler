@@ -1,7 +1,7 @@
 import numpy as np
 
-from experiments.irrational_analysis import (formula_found, kinks_1d, merge_kinks, optimal_knots, pysr_found,
-                                             won_on_size)
+from experiments.irrational_analysis import (agent_fields, formula_found, kinks_1d, merge_kinks, optimal_knots,
+                                             pysr_found, reproduced, won_on_size)
 from nndc.model import MLP
 
 
@@ -66,3 +66,25 @@ def test_near_fields():
     assert near_fields(near, "exp")["near_family_is_task_family"] is False
     assert near_fields(None, "exp") == {"near_family": None, "near_err": None, "near_terms": None,
                                         "near_family_is_task_family": None}
+
+
+def test_reproduced_rules():
+    assert reproduced(True, True, 41, 55, False, False) is False         # ast5 larger
+    assert reproduced(True, True, 43, 35, True, False) is False          # the agent wrote the family, ast5 did not
+    assert reproduced(True, True, 43, 35, False, False) is True
+    assert reproduced(True, True, 43, 43, True, True) is True            # equal size counts
+    assert reproduced(True, False, 43, 10, True, True) is False          # ast5 fails
+
+
+def _res(agent_pass=True, agent_nodes=20, ast5_pass=True, ast5_nodes=10):
+    return {"agent_1": {"check": {"snap_pass": agent_pass}, "size": {"nodes": agent_nodes}},
+            "ast5": {"check": {"snap_pass": ast5_pass}, "size": {"nodes": ast5_nodes}}}
+
+
+def test_agent_fields():
+    a = agent_fields(_res(), "def net(x0):\n    return exp(x0)\n", "def net(x0):\n    return exp(x0)\n", "exp", False)
+    assert a == {"agent_pass": True, "agent_nodes": 20, "agent_formula": True, "ast5_formula": True,
+                 "reproduced": True}
+    none = dict.fromkeys(a)
+    assert agent_fields(_res(), "def net(x0):\n    return x0\n", "def net(x0):\n    return x0\n", "exp", True) == none
+    assert agent_fields({"ast5": _res()["ast5"]}, None, "def net(x0):\n    return x0\n", "exp", False) == none

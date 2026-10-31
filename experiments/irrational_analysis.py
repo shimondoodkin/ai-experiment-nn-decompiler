@@ -117,6 +117,29 @@ def pysr_found(src: str | None, family: str) -> bool:
     return re.search(FAMILY_TOKENS[family], body) is not None
 
 
+def reproduced(agent_pass: bool, ast5_pass: bool, agent_nodes: int | None, ast5_nodes: int | None,
+               agent_formula: bool, ast5_formula: bool) -> bool:
+    """ast5 reproduces the agent's result: both pass, ast5 is not larger, and where the agent's program uses the
+    task family's function, ast5's does too (design amendment 2026-10-31, agent-first, item 3)."""
+    if not (agent_pass and ast5_pass) or agent_nodes is None or ast5_nodes is None:
+        return False
+    return ast5_nodes <= agent_nodes and (ast5_formula or not agent_formula)
+
+
+def agent_fields(res: dict, agent_src: str | None, ast5_src: str | None, family: str, excluded: bool) -> dict:
+    """The agent_1 attempt against ast5, from results.json's versions and both programs; all None when the run has
+    no agent attempt or is excluded (agent_excluded.json)."""
+    keys = ("agent_pass", "agent_nodes", "agent_formula", "ast5_formula", "reproduced")
+    a, b = res.get("agent_1"), res.get("ast5")
+    if excluded or agent_src is None or not a or not b:
+        return dict.fromkeys(keys)
+    out = {"agent_pass": bool(a["check"]["snap_pass"]), "agent_nodes": (a.get("size") or {}).get("nodes"),
+           "agent_formula": pysr_found(agent_src, family), "ast5_formula": pysr_found(ast5_src, family)}
+    out["reproduced"] = reproduced(out["agent_pass"], bool(b["check"]["snap_pass"]), out["agent_nodes"],
+                                   (b.get("size") or {}).get("nodes"), out["agent_formula"], out["ast5_formula"])
+    return out
+
+
 def hinge_fit(spec: Spec, mlp: MLP) -> dict:
     """The from-scratch hinge program (spike): c0 + c1·x0 + Σ k·relu(x0 − t), greedy knots, each step checked."""
     i = spec.inputs[0]
@@ -237,6 +260,11 @@ def analyse_run(rd: Path) -> dict:
         out["true_vs_net"] = None
     pysr_src = (rd / "pysr_irr_snap.py").read_text(encoding="utf-8") if (rd / "pysr_irr_snap.py").exists() else None
     out["pysr_found"] = passes("pysr_irr_snap") and pysr_found(pysr_src, family)
+    ex_p = rd.parent.parent.parent / "agent_excluded.json"
+    excluded = ex_p.exists() and f"{rd.parent.parent.name}/{rd.parent.name}/{rd.name}" in \
+        json.loads(ex_p.read_text(encoding="utf-8"))["runs"]
+    read = lambda n: (rd / n).read_text(encoding="utf-8") if (rd / n).exists() else None   # noqa: E731
+    out |= agent_fields(res, read("agent_1.py"), read("ast5.py"), family, excluded)
 
     model: dict = {}
     if len(spec.inputs) == 1:

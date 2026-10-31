@@ -218,6 +218,50 @@ def _gate_predictions_md(dev: list[dict], base: Path) -> str:
                       "", "| prediction | measured | met |", "|---|---|---|", *rows]) + "\n"
 
 
+def _not_reproduced_why(a: dict) -> str:
+    why = []
+    if not a.get("ast5_pass"):
+        why.append("ast5 fails")
+    elif not a.get("agent_pass"):
+        why.append("the agent fails")
+    elif (a.get("ast5_nodes") or 0) > (a.get("agent_nodes") or 0):
+        why.append("larger")
+    if a.get("agent_formula") and not a.get("ast5_formula"):
+        why.append("not the family")
+    return ", ".join(why) or "–"
+
+
+def _reproduction_md(dev: list[dict], base: Path) -> str:
+    rows = [a for a in dev if a.get("reproduced") is not None]
+    out = ["## Reproduction", "",
+           "Per development net with an agent attempt (`agent_1`, not excluded in `agent_excluded.json`): `ast5` "
+           "reproduces it when both pass, `ast5` is not larger, and where the agent's program uses the task family's "
+           "function, `ast5`'s does too. Smaller / equal / larger compare the node counts where both pass.", "",
+           "| variant | agents passing | reproduced | smaller | equal | larger |", "|---|---|---|---|---|---|"]
+    for v in VARIANTS:
+        rs = [a for a in rows if a["variant"] == v]
+        if not rs:
+            continue
+        both = [a for a in rs if a.get("agent_pass") and a.get("ast5_pass")]
+        cmp = [(a["ast5_nodes"] > a["agent_nodes"]) - (a["ast5_nodes"] < a["agent_nodes"]) for a in both]
+        out.append(f"| {v} | {sum(bool(a.get('agent_pass')) for a in rs)} | "
+                   f"{_pct(sum(bool(a['reproduced']) for a in rs), len(rs))} | {cmp.count(-1)} | {cmp.count(0)} | "
+                   f"{cmp.count(1)} |")
+    out += ["", f"Total: {_pct(sum(bool(a['reproduced']) for a in rows), len(rows))}."]
+    p = Path(base) / "before_distill.json"
+    if p.exists():
+        before = [r for r in json.loads(p.read_text(encoding="utf-8"))["runs"].values()
+                  if r.get("reproduced") is not None]
+        out.append(f"Before the distilled changes: {_pct(sum(bool(r['reproduced']) for r in before), len(before))} "
+                   f"(`before_distill.json`).")
+    miss = [a for a in rows if not a["reproduced"]]
+    if miss:
+        out += ["", "Not reproduced:"] + [
+            f"- {a['variant']}/{a['task']}/{a['seed']}: ast5 {a.get('ast5_nodes')} nodes, agent {a.get('agent_nodes')} "
+            f"({_not_reproduced_why(a)})" for a in miss]
+    return "\n".join(out) + "\n"
+
+
 def build_irrational_report(base: Path) -> str:
     rows = load_rows(base)
     dev = [a for a in rows if not a["heldout"]]
@@ -229,7 +273,7 @@ def build_irrational_report(base: Path) -> str:
              "each run's `irr_analysis.json`.", "",
              _results_md(rows), _model_md(rows, base),
              "\n".join(["## Snapping to formulas", "", "Development nets.", "", *_snap_table(dev)]) + "\n",
-             _predictions_md(dev, held), _gate_predictions_md(dev, base)]
+             _predictions_md(dev, held), _gate_predictions_md(dev, base), _reproduction_md(dev, base)]
     if held:
         freezes = sorted({a["freeze"] for a in held if a["freeze"]})
         parts.append("\n".join(["## Held-out", "",
