@@ -1,0 +1,205 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "Max(-17.735178, 23.829103 - exp(Abs(x1) + Max(0.90581197, Abs(x0))/0.78567696))"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 212.8822,
+        "equation": "-5.34634"
+      },
+      {
+        "complexity": 4,
+        "loss": 152.14653,
+        "equation": "abs(x1) * -5.4588585"
+      },
+      {
+        "complexity": 5,
+        "loss": 132.84094,
+        "equation": "(x0 * -2.571275) * x0"
+      },
+      {
+        "complexity": 6,
+        "loss": 111.07325,
+        "equation": "abs(x0 * x1) * -3.7905083"
+      },
+      {
+        "complexity": 8,
+        "loss": 87.265175,
+        "equation": "(abs(x1 * x0) + -1.1806406) * -5.4588585"
+      },
+      {
+        "complexity": 9,
+        "loss": 73.67677,
+        "equation": "7.360289 - (exp(abs(x0)) + exp(abs(x1)))"
+      },
+      {
+        "complexity": 10,
+        "loss": 28.198132,
+        "equation": "max(-19.477879, 15.210697 - exp(abs(x0) + abs(x1)))"
+      },
+      {
+        "complexity": 11,
+        "loss": 28.194176,
+        "equation": "max(-19.495945, 15.238175 - exp(abs(x1) + abs(abs(x0))))"
+      },
+      {
+        "complexity": 12,
+        "loss": 20.902735,
+        "equation": "max(-18.058567, 21.926796 - (exp(abs(x1) + abs(x0)) * 1.6660018))"
+      },
+      {
+        "complexity": 14,
+        "loss": 12.901764,
+        "equation": "max(23.829103 - exp(abs(x1) + (max(0.90581197, abs(x0)) / 0.78567696)), -17.735178)"
+      },
+      {
+        "complexity": 16,
+        "loss": 12.760939,
+        "equation": "max(23.829103 - exp(abs(x1) + (max(0.90581197, abs(x0)) / 0.78567696)), -17.735178) - 0.20132157"
+      },
+      {
+        "complexity": 17,
+        "loss": 10.596665,
+        "equation": "relu(22.99024 - exp(abs(x1) + abs(x0))) - (exp(abs(x1)) + exp(abs(x0)))"
+      },
+      {
+        "complexity": 18,
+        "loss": 10.132494,
+        "equation": "max(1.0182104, 23.03178 - exp(abs(x0) + abs(x1))) - (exp(abs(x1)) + exp(abs(x0)))"
+      },
+      {
+        "complexity": 20,
+        "loss": 8.772972,
+        "equation": "(max(19.023691 - exp(abs(x0) + abs(x1)), 0.8834389) * 1.3754966) - (exp(abs(x1)) + exp(abs(x0)))"
+      },
+      {
+        "complexity": 25,
+        "loss": 8.6991205,
+        "equation": "max(log(abs(x1) + 1.3754966), (19.023691 - exp(abs(x0) + abs(x1))) * 1.3754966) - (exp(abs(x0)) + exp(abs(abs(x1))))"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 4,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 11,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 12,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 15,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 18,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 32,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 34,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 39,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 74,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 58,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 61,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 68,
+      "error": null
+    }
+  ],
+  "snap_passed": false,
+  "seconds": 141.94
+}

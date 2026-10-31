@@ -1,0 +1,47 @@
+{
+  "task": "product",
+  "variant": "relu_wide",
+  "seed": "seed0",
+  "learned": true,
+  "family": "quadratic",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 7,
+  "other_families": [
+    "exp",
+    "log",
+    "reciprocal",
+    "sqrt"
+  ],
+  "route_pick": "quadratic",
+  "ast4_nodes": 1121,
+  "ast4_pass": true,
+  "ast5_nodes": 7,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0072,
+  "pysr_found": true,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.0079,
+      0.0119,
+      0.0127,
+      0.0134,
+      0.0143,
+      0.0189,
+      0.0244,
+      0.0177,
+      0.029,
+      0.0493
+    ],
+    "radius_max": 2.817
+  },
+  "won_on_size": true
+}

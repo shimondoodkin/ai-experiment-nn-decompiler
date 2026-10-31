@@ -1,0 +1,73 @@
+{
+  "task": "sqrt",
+  "variant": "relu_wide",
+  "seed": "seed2",
+  "learned": true,
+  "family": "sqrt",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 9,
+  "other_families": [
+    "exp",
+    "log",
+    "reciprocal",
+    "square"
+  ],
+  "route_pick": "sqrt",
+  "ast4_nodes": 258,
+  "ast4_pass": true,
+  "ast5_nodes": 9,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": false,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0247,
+  "pysr_found": true,
+  "hinge_only": {
+    "hinges": 6,
+    "nodes": 87,
+    "passed": true
+  },
+  "model": {
+    "kinks": [
+      0.013,
+      0.089,
+      0.238,
+      0.446,
+      0.725,
+      0.897,
+      1.081,
+      1.517,
+      1.827,
+      2.037,
+      2.582,
+      3.246,
+      3.326,
+      3.998
+    ],
+    "dead_units": 12,
+    "optimal_knots": [
+      0.001,
+      0.004,
+      0.013,
+      0.035,
+      0.077,
+      0.148,
+      0.259,
+      0.423,
+      0.657,
+      0.975,
+      1.396,
+      1.942,
+      2.634,
+      3.497
+    ],
+    "knot_gap": 0.1779,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

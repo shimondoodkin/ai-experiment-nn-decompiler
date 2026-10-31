@@ -1,0 +1,366 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    return 0.031535786 + 0.024737624213168 * relu(0.08708887668480361 * x0 - x1 - 0.06378825579473538) + 0.12607941641010295 * relu(0.434130479920309 * x0 - x1 - 0.036263723155832664) + 0.12957615169416298 * relu(-0.6461875359306847 * x0 + x1 - 0.001969000756499725) + 0.0738339707345361 * relu(0.2802997892073592 * x0 + 0.9999999999999999 * x1 + 0.0025607867588266033) + 0.13754017725353399 * relu(-0.13179671657570757 * x0 - x1 - 0.009202269953637633) + 0.0766552853999115 * relu(-x0 - 0.9223151110417054 * x1 - 0.002692179435503481) + 0.09310804532793339 * relu(-x0 - 0.4979213984859304 * x1 - 0.010746492729413673) + 0.0706222340878457 * relu(-0.015934988937688827 * x0 + x1 - 0.01546779761781415) - 2.555738797187339e-05 * relu(0.2276844347424615 * x0 - 0.9999999999999999 * x1 - 2.6918571407608547) + 0.0084441919197978 * relu(-0.5413265640750566 * x0 - x1 - 0.060668090366506625) + 0.1248139467418872 * relu(x0 + 0.16368727159962965 * x1 - 0.005268741741578845) + 0.04332787430372864 * relu(0.24167126189090182 * x0 + x1 - 0.014996393751937832) + 0.0932529109459904 * relu(x0 + 0.7083869719281546 * x1 - 0.04671348322329944) + 0.006540007931043659 * relu(-0.0344675206294812 * x0 + 0.9999999999999999 * x1 - 0.19695169545677726) + 0.026225159141939902 * relu(0.02430121041138887 * x0 + 0.9999999999999999 * x1 - 0.03162362354786432) + 0.0015479938649937603 * relu(0.43859589397293175 * x0 - x1 - 0.2560389265202454) + 0.148277598557825 * relu(0.4242950507962984 * x0 + x1 - 0.003605265225826548) + 0.108700081752306 * relu(0.8935168741054553 * x0 - x1 - 0.004804382476284799) + 0.021370135269131 * relu(0.015888454683172674 * x0 - 0.9999999999999999 * x1 - 0.11156235248039903) + 0.09368658921823203 * relu(-x0 + 0.8244855880712537 * x1 - 0.05782547665069148) + 0.151569390927441 * relu(-x0 + 0.37439608837523347 * x1 - 0.003163422840287092) + 0.1617155336280834 * relu(0.23894806738049018 * x0 - x1 - 0.0033279230307392722) + 0.11951911302320553 * relu(-0.6348850939675411 * x0 - x1 - 0.003665107286460612) + 0.09847557950123749 * relu(x0 - 0.17755114458740284 * x1 - 0.07848347806499456) + 0.100038268779258 * relu(-0.9999999999999999 * x0 + 0.1796410248621587 * x1 - 0.07343967025037607) + 0.025953702551795597 * relu(-0.09185473706426699 * x0 + x1 - 0.030891449714738346) + 0.019510470443856 * relu(-0.9999999999999999 * x0 - 0.556525311176722 * x1 - 0.029726487328191283) + 0.034563422588037594 * relu(x0 - 0.8228492522740167 * x1 - 0.15853191459536947) + 0.005712521916201 * relu(x0 + 0.5137202737723803 * x1 - 0.1367726596466503) - 0.0001922724309105 * relu(-0.7030811170176329 * x0 - 0.9999999999999999 * x1 - 3.2350582862528934) + 0.084477098538066 * relu(-x0 - 0.3239423160550858 * x1 - 0.07843790630927781) - 7.55977050666872e-22 * relu(-0.13010382293499204 * x0 + x1 - 3.3608029331572364) + 0.0876136507803368 * relu(0.9999999999999999 * x0 + 0.3299825068482218 * x1 - 0.07207246691878721) + 0.10624942487136799 * relu(0.8538796461050048 * x0 + x1 - 0.008372692285657039) + 0.17291780346455998 * relu(-x0 - 0.014253310802025297 * x1 - 0.002080616258444389) + 0.14268101269847402 * relu(x0 - 0.5748049204401894 * x1 - 0.0013233904860791015) + 0.035444650251010006 * relu(-0.10164501551963652 * x0 + x1 - 0.025046810725187014) + 0.031024266095642402 * relu(x0 + 0.703635505807619 * x1 + 0.11528542961268366) + 0.03988497684955875 * relu(-0.4323979390704485 * x0 + x1 - 0.13613999711175265)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 419245,
+        "max_abs_err": 7.579958110071061e-07,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.08413901515305043,
+        "counterexamples": [],
+        "error": null
+      },
+      "nodes": 847
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    return 0.17500000000000002 * relu(-0.09142857142857143 * x0 - x1) + 0.30000000000000004 * relu(0.3333333333333333 * x0 - x1) + 0.168 * relu(-0.6250000000000001 * x0 + x1) + 0.28125 * relu(0.3333333333333333 * x0 + x1) + 0.075 * relu(-x0 - x1) + 0.196 * relu(-x0 - 0.42857142857142855 * x1) + 0.16 * relu(-0.039999999999999994 * x0 + x1) + 0.12 * relu(-0.6666666666666667 * x0 - x1) + 0.2 * relu(0.9999999999999999 * x0 + 0.22499999999999998 * x1) + 0.132 * relu(x0 + 0.6666666666666667 * x1) + 0.13 * relu(x0 - x1) + 0.09350000000000001 * relu(-x0 + 0.8181818181818181 * x1) + 0.24000000000000005 * relu(-0.9999999999999999 * x0 + 0.2933333333333333 * x1) + 0.105 * relu(x0 - 0.17142857142857143 * x1 - 0.1464285714285714) + 0.11000000000000001 * relu(0.8181818181818181 * x0 + x1) + 0.18 * relu(-x0 - 0.014053008898491466 * x1) + 0.1375 * relu(x0 - 0.6000000000000001 * x1)\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 419245,
+        "max_abs_err": 0.07153574718059819,
+        "disagreements_outside": 0,
+        "disagreements_inside": 0,
+        "zone_fraction": 0.0,
+        "margin": 0.08413901515305043,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 2.990754312516314,
+              "x1": 0.9997676633608514
+            },
+            "net": 3.1472020149230957,
+            "program": 3.0756662677424975,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9699999999999998,
+              "x1": 0.9899999999999998
+            },
+            "net": 3.1244595050811768,
+            "program": 3.0529319999999993,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.973421835981081,
+              "x1": -0.9906836756476842
+            },
+            "net": 3.1257176399230957,
+            "program": 3.055095796243749,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9699999999999998,
+              "x1": -0.9900000000000002
+            },
+            "net": 3.1222610473632812,
+            "program": 3.051645,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 3.0,
+              "x1": 0.9899999999999998
+            },
+            "net": 3.1529228687286377,
+            "program": 3.0823874999999994,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9626876027633884,
+              "x1": 0.9936581277160466
+            },
+            "net": 3.118664503097534,
+            "program": 3.0481434379480503,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9582688757388027,
+              "x1": 0.9920498314675461
+            },
+            "net": 3.113969564437866,
+            "program": 3.0435170190986622,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.91862251652873,
+              "x1": 0.9736626632753351
+            },
+            "net": 3.070610284805298,
+            "program": 3.000211699662044,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9874249109883673,
+              "x1": -0.9913319829221816
+            },
+            "net": 3.1391875743865967,
+            "program": 3.068827791613085,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.933544989650776,
+              "x1": 0.9823956713577209
+            },
+            "net": 3.087496519088745,
+            "program": 3.017333685002103,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9084973281645397,
+              "x1": 0.9724364446587503
+            },
+            "net": 3.0606205463409424,
+            "program": 2.990726405605807,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 3.0,
+              "x1": -0.9900000000000002
+            },
+            "net": 3.1506805419921875,
+            "program": 3.0808125000000004,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.952884915933864,
+              "x1": 0.9940641432963182
+            },
+            "net": 3.1094906330108643,
+            "program": 3.0396831681369827,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.918248508868321,
+              "x1": 0.9683448881648387
+            },
+            "net": 3.068594217300415,
+            "program": 2.9987903249877053,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.951138238431523,
+              "x1": -0.9801663016667215
+            },
+            "net": 3.1012957096099854,
+            "program": 3.031524294492142,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.88,
+              "x1": 0.96
+            },
+            "net": 3.029698133468628,
+            "program": 2.959953,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9882508778666246,
+              "x1": -1.0050371651379537
+            },
+            "net": 3.1442863941192627,
+            "program": 3.0746330850821337,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.931538756783474,
+              "x1": 0.9857329446864584
+            },
+            "net": 3.0866355895996094,
+            "program": 3.0170787763209868,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9399999999999995,
+              "x1": 0.9899999999999998
+            },
+            "net": 3.095996141433716,
+            "program": 3.0264764999999993,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.9138352863958827,
+              "x1": 0.9779016707848296
+            },
+            "net": 3.067392349243164,
+            "program": 2.9979135304268256,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "nodes": 309
+    }
+  ],
+  "winner": "structural-snap",
+  "trace_lines": [
+    "h1_0: dead (pre-activation in [-1.219406668, -0.03844673199999993]) -> removed",
+    "h1_1: dead (pre-activation in [-1.15879192579, -0.010612474209999969]) -> removed",
+    "h1_2: dead (pre-activation in [-1.0640883226000002, -0.19692815740000005]) -> removed",
+    "h1_5: dead (pre-activation in [-1.050405805, -0.210847195]) -> removed",
+    "h1_8: dead (pre-activation in [-0.14632729849999998, -0.0076337014999999925]) -> removed",
+    "h1_9: dead (pre-activation in [-1.278538217211, -0.001537782789000075]) -> removed",
+    "h1_10: dead (pre-activation in [-0.32484689650000004, -0.00345914349999999]) -> removed",
+    "h1_11: dead (pre-activation in [-0.6866838478999999, -0.004666912099999976]) -> removed",
+    "h1_12: dead (pre-activation in [-1.1329870879000001, -0.3331335121]) -> removed",
+    "h1_17: dead (pre-activation in [-2.15652775e-08, -1.3748650000000106e-10]) -> removed",
+    "h1_18: dead (pre-activation in [-1.51197181, -0.09259308999999999]) -> removed",
+    "h1_21: dead (pre-activation in [-1.1867637979999999, -0.003017402000000058]) -> removed",
+    "h1_22: dead (pre-activation in [-0.18924004228, -0.00014924571999999636]) -> removed",
+    "h1_24: dead (pre-activation in [-0.98357837, -0.21028643000000002]) -> removed",
+    "h1_27: dead (pre-activation in [-1.083062008, -0.24953219199999999]) -> removed",
+    "h1_34: dead (pre-activation in [-0.1680716646, -0.0003024953999999913]) -> removed",
+    "h1_37: dead (pre-activation in [-0.0097424306, -3.60848000000003e-05]) -> removed",
+    "h1_42: dead (pre-activation in [-1.09700921, -0.0016517900000000418]) -> removed",
+    "h1_46: dead (pre-activation in [-1.568236091, -0.011689709000000048]) -> removed",
+    "h1_51: dead (pre-activation in [-0.3927123718, -0.00119544819999999]) -> removed",
+    "h1_56: dead (pre-activation in [-1.481007559, -0.04773564100000001]) -> removed",
+    "h1_57: dead (pre-activation in [-1.171763415, -0.003608985000000016]) -> removed",
+    "h1_58: dead (pre-activation in [-1.1364064759799999, -0.0004015240200000436]) -> removed",
+    "h1_61: dead (pre-activation in [-0.3061673185, -0.0010742814999999961]) -> removed",
+    "h1_62: dead (pre-activation in [-0.1277443701, -0.009347757900000007]) -> removed",
+    "snap route: h1_33 merged into h1_3 (near-duplicate, threshold 0.08152132385128885)",
+    "snap route: h1_13 merged into h1_3 (near-duplicate, threshold 0.02559247571278259)",
+    "snap route: h1_38 merged into h1_4 (near-duplicate, threshold 0.013406789712487733)",
+    "snap route: h1_63 merged into h1_6 (near-duplicate, threshold 0.02102175094961488)",
+    "snap route: h1_25 merged into h1_7 (near-duplicate, threshold 0.0031058664949376504)",
+    "snap route: h1_31 merged into h1_7 (near-duplicate, threshold 0.0027683296233840236)",
+    "snap route: h1_44 merged into h1_15 (near-duplicate, threshold 0.009306346619553579)",
+    "snap route: h1_49 merged into h1_15 (near-duplicate, threshold 0.029135092729590098)",
+    "snap route: h1_29 merged into h1_16 (near-duplicate, threshold 0.019487920072596567)",
+    "snap route: h1_43 merged into h1_16 (near-duplicate, threshold 0.021453336717836734)",
+    "snap route: h1_59 merged into h1_16 (near-duplicate, threshold 0.02175501990638934)",
+    "snap route: h1_39 merged into h1_20 (near-duplicate, threshold 0.004559854725898923)",
+    "snap route: h1_52 merged into h1_23 (near-duplicate, threshold 0.026634719001544932)",
+    "snap route: h1_47 merged into h1_26 (near-duplicate, threshold 0.030587693583652355)",
+    "snap route: h1_60 merged into h1_26 (near-duplicate, threshold 0.007068593905764999)",
+    "snap route: h1_45 merged into h1_32 (near-duplicate, threshold 0.02232510092240583)",
+    "snap route: h1_41 merged into h1_36 (near-duplicate, threshold 0.023982963552758117)",
+    "snap route: h1_3: x0 coefficient -0.07653348684502373 -> -0.08",
+    "snap route: h1_3: x1 coefficient -0.8990486328050866 -> -0.875",
+    "snap route: h1_3: threshold 0.02679840388773046 -> 0",
+    "snap route: h1_4: x0 coefficient 0.24497250249313968 -> 0.25",
+    "snap route: h1_4: x1 coefficient -0.7550274975068605 -> -0.75",
+    "snap route: h1_4: threshold 0.013406789712487733 -> 0",
+    "snap route: h1_6: x0 coefficient -0.3733822501276155 -> -0.375",
+    "snap route: h1_6: x1 coefficient 0.6266177498723845 -> 0.6",
+    "snap route: h1_6: threshold 0.02156077020473321 -> 0",
+    "snap route: h1_7: x0 coefficient 0.2616830580936094 -> 0.25",
+    "snap route: h1_7: x1 coefficient 0.7383169419063904 -> 0.75",
+    "snap route: h1_7: threshold 0.0027683296233840236 -> 0",
+    "snap route: h1_14: x0 coefficient -0.5202060756095802 -> -0.5",
+    "snap route: h1_14: x1 coefficient -0.4797939243904198 -> -0.5",
+    "snap route: h1_14: threshold 0.001400488098980081 -> 0",
+    "snap route: h1_15: x0 coefficient -0.699714918519137 -> -0.7",
+    "snap route: h1_15: x1 coefficient -0.30028508148086297 -> -0.3",
+    "snap route: h1_15: threshold 0.029135092729590098 -> 0",
+    "snap route: h1_16: x0 coefficient -0.039005981288662256 -> -0.04",
+    "snap route: h1_16: x1 coefficient 0.953315443927237 -> 1",
+    "snap route: h1_16: threshold 0.02091828837152821 -> 0",
+    "snap route: h1_19: x0 coefficient 0.1854584356526636 -> 0.18",
+    "snap route: h1_19: x1 coefficient -0.8145415643473363 -> -0.8",
+    "snap route: h1_19: threshold 2.2373770677907086 -> 2.25",
+    "snap route: h1_20: x0 coefficient -0.38601762382547133 -> -0.4",
+    "snap route: h1_20: x1 coefficient -0.6139823761745286 -> -0.6",
+    "snap route: h1_20: threshold 0.004559854725898923 -> 0",
+    "snap route: h1_23: x0 coefficient 0.811507772169684 -> 0.8",
+    "snap route: h1_23: x1 coefficient 0.18849222783031594 -> 0.18",
+    "snap route: h1_23: threshold 0.027178284695454014 -> 0",
+    "snap route: h1_26: x0 coefficient 0.5886861104291647 -> 0.6",
+    "snap route: h1_26: x1 coefficient 0.41131388957083515 -> 0.4",
+    "snap route: h1_26: threshold 0.007068593905764999 -> 0",
+    "snap route: h1_28: x1 coefficient 0.9666809059326411 -> 1",
+    "snap route: h1_28: threshold 0.18425038739941857 -> 0.2",
+    "snap route: h1_30: x0 coefficient 0.30487776018995383 -> 0.3",
+    "snap route: h1_30: x1 coefficient -0.6951222398100462 -> -0.7",
+    "snap route: h1_30: threshold 0.1779783520813128 -> 0.2",
+    "snap route: h1_32: x0 coefficient 0.48986013176317555 -> 0.5",
+    "snap route: h1_32: x1 coefficient -0.5101398682368244 -> -0.5",
+    "snap route: h1_32: threshold 0.02232510092240583 -> 0",
+    "snap route: h1_35: x0 coefficient -0.548099698094708 -> -0.55",
+    "snap route: h1_35: x1 coefficient 0.451900301905292 -> 0.45",
+    "snap route: h1_35: threshold 0.03169412629442659 -> 0",
+    "snap route: h1_36: x0 coefficient -0.7710324941299768 -> -0.75",
+    "snap route: h1_36: x1 coefficient 0.22896750587002337 -> 0.22",
+    "snap route: h1_36: threshold 0.02472470469356507 -> 0",
+    "snap route: h1_40: x0 coefficient 0.8492200144312082 -> 0.875",
+    "snap route: h1_40: x1 coefficient -0.15077998556879177 -> -0.15",
+    "snap route: h1_40: threshold 0.06502413695118643 -> 0.125",
+    "snap route: h1_48: x0 coefficient -0.41282890755599494 -> -0.4",
+    "snap route: h1_48: x1 coefficient -0.5871710924440051 -> -0.6",
+    "snap route: h1_48: threshold 1.8995327080591424 -> 1.875",
+    "snap route: h1_50: x0 coefficient -0.11512554890496651 -> -0.12",
+    "snap route: h1_50: x1 coefficient 0.8848744510950336 -> 0.875",
+    "snap route: h1_50: threshold 2.9888328147900385 -> 3",
+    "snap route: h1_53: x0 coefficient 0.46059065802842336 -> 0.45",
+    "snap route: h1_53: x1 coefficient 0.5394093419715766 -> 0.55",
+    "snap route: h1_53: threshold 0.004516308436336759 -> 0",
+    "snap route: h1_54: x0 coefficient -0.9859469911015084 -> -1",
+    "snap route: h1_54: threshold 0.002022948821855397 -> 0",
+    "snap route: h1_55: x0 coefficient 0.6349992859563076 -> 0.625",
+    "snap route: h1_55: x1 coefficient -0.36500071404369244 -> -0.375",
+    "snap route: h1_55: threshold 0.0008403520137016003 -> 0",
+    "snap route: output 0: dropped h1_50, h1_19, h1_48, h1_30, h1_28 (combined effect 0.026201236693053156)",
+    "snap route: output 0: h1_3 coefficient 0.20426919082546202 -> 0.2",
+    "snap route: output 0: h1_4 coefficient 0.38117148181821203 -> 0.4",
+    "snap route: output 0: h1_6 coefficient 0.2704378045119753 -> 0.28",
+    "snap route: output 0: h1_7 coefficient 0.35951964329940056 -> 0.375",
+    "snap route: output 0: h1_14 coefficient 0.1473556134654645 -> 0.15",
+    "snap route: output 0: h1_15 coefficient 0.28167988003883737 -> 0.28",
+    "snap route: output 0: h1_16 coefficient 0.1659951562105077 -> 0.16",
+    "snap route: output 0: h1_20 coefficient 0.20841527364399284 -> 0.2",
+    "snap route: output 0: h1_23 coefficient 0.2617690240406052 -> 0.25",
+    "snap route: output 0: h1_26 coefficient 0.22081325965558884 -> 0.22",
+    "snap route: output 0: h1_32 coefficient 0.2688293480352691 -> 0.26",
+    "snap route: output 0: h1_35 coefficient 0.17092983182421603 -> 0.17",
+    "snap route: output 0: h1_36 coefficient 0.3263256239162915 -> 0.32",
+    "snap route: output 0: h1_40 coefficient 0.11596003135559 -> 0.12",
+    "snap route: output 0: h1_53 coefficient 0.19697364617939198 -> 0.2",
+    "snap route: output 0: h1_54 coefficient 0.1753824546605439 -> 0.18",
+    "snap route: output 0: h1_55 coefficient 0.224694760850946 -> 0.22",
+    "snap route: output 0: threshold -0.007913622584692597 -> 0",
+    "snap route: h1_50: dead (pre-activation in [-5.97, 0]) -> removed",
+    "spline: not applicable",
+    "spline: not applicable",
+    "fit: not applicable"
+  ]
+}

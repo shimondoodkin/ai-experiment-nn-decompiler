@@ -1,0 +1,168 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "x0*x1"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 1.7886139,
+        "equation": "-0.019153897"
+      },
+      {
+        "complexity": 3,
+        "loss": 4.577621e-05,
+        "equation": "x0 * x1"
+      },
+      {
+        "complexity": 5,
+        "loss": 4.3786426e-05,
+        "equation": "x0 * (x1 + -0.0012352464)"
+      },
+      {
+        "complexity": 7,
+        "loss": 4.1658248e-05,
+        "equation": "(x1 + cond(x0, -0.002537121)) * x0"
+      },
+      {
+        "complexity": 9,
+        "loss": 4.0582676e-05,
+        "equation": "(((x1 + -0.0012352464) * x0) * 1.0007782) + -0.0014332542"
+      },
+      {
+        "complexity": 10,
+        "loss": 4.056605e-05,
+        "equation": "(x0 * x1) + (relu(x0 - x1) * -0.002104824)"
+      },
+      {
+        "complexity": 11,
+        "loss": 4.053235e-05,
+        "equation": "((x1 - (x1 * -0.00092567946)) + cond(x0, -0.0020551176)) * x0"
+      },
+      {
+        "complexity": 12,
+        "loss": 4.0222265e-05,
+        "equation": "(x0 * x1) + (relu((x0 - x1) + -0.35219112) * -0.002104824)"
+      },
+      {
+        "complexity": 14,
+        "loss": 3.9928014e-05,
+        "equation": "(relu((greater(x1, x0) - x1) + x0) * -0.002104824) + (x0 * x1)"
+      },
+      {
+        "complexity": 16,
+        "loss": 3.7740974e-05,
+        "equation": "x1 * (cond(2.168924 - ((abs(-0.40939277) - x1) * x0), -0.00526255) + (x0 - -0.0047194357))"
+      },
+      {
+        "complexity": 18,
+        "loss": 3.774087e-05,
+        "equation": "(x1 * (x0 - -0.0047194357)) + cond(2.168924 - ((abs(-0.40939277) - x1) * x0), x1 * -0.00526255)"
+      },
+      {
+        "complexity": 21,
+        "loss": 3.735407e-05,
+        "equation": "(x1 * (x0 - -0.00526255)) + cond((0.928756 - -1.2401681) - (x0 * (sqrt(sqrt(0.15843414)) - x1)), x1 * -0.00526255)"
+      }
+    ]
+  ],
+  "errors": [
+    "pysr_irr_snap: unsupported ITE: ITE(x0 < x1, x0 - x1 < -1, x0 - x1 < 0)"
+  ],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 7,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 7,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 7,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 7,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 41,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 49,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 43,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 40,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 148.73
+}

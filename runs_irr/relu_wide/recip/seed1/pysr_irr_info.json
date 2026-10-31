@@ -1,0 +1,106 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "0.99956185/x0"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 0.15032868,
+        "equation": "0.5972406"
+      },
+      {
+        "complexity": 3,
+        "loss": 4.776532e-06,
+        "equation": "0.99956185 / x0"
+      },
+      {
+        "complexity": 5,
+        "loss": 4.6126083e-06,
+        "equation": "0.99827415 / (x0 + -0.0011297901)"
+      },
+      {
+        "complexity": 7,
+        "loss": 4.579168e-06,
+        "equation": "(0.99724203 / (x0 + -0.0016516907)) + 0.0004152629"
+      },
+      {
+        "complexity": 8,
+        "loss": 4.569876e-06,
+        "equation": "exp(cond(x0 + -0.8385728, -0.0010693755)) / x0"
+      },
+      {
+        "complexity": 9,
+        "loss": 4.307848e-06,
+        "equation": "(cond(greater(x0, 0.5808555), -0.0024159781) + 1.0016083) / x0"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 82.38
+}

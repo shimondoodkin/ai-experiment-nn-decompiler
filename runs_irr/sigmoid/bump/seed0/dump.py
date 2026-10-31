@@ -1,0 +1,21 @@
+# dumped from a neural network: 2 inputs -> 16 -> 1 outputs
+# inputs: x0: float [-3, 3], x1: float [-3, 3]
+# output: regression: the returned value
+def net(x0, x1):
+    h1_0 = sigmoid(-0.8216053 * x0 + 2.6316695 * x1 - 1.4050748)  # layer 1 neuron 0
+    h1_1 = sigmoid(-1.9791646 * x0 - 2.1205285 * x1 - 1.5588485)  # layer 1 neuron 1
+    h1_2 = sigmoid(0.80422795 * x0 - 1.3901833 * x1 - 2.0359929)  # layer 1 neuron 2
+    h1_3 = sigmoid(-1.3410666 * x0 + 0.66130924 * x1 - 1.7412833)  # layer 1 neuron 3
+    h1_4 = sigmoid(-0.86186874 * x0 - 0.9339288 * x1 - 1.2144197)  # layer 1 neuron 4
+    h1_5 = sigmoid(-2.471298 * x0 - 1.2946614 * x1 + 1.5062174)  # layer 1 neuron 5
+    h1_6 = sigmoid(-2.7145662 * x0 + 0.66584855 * x1 + 1.4366305)  # layer 1 neuron 6
+    h1_7 = sigmoid(-0.16701092 * x0 - 1.4558742 * x1 + 1.6352379)  # layer 1 neuron 7
+    h1_8 = sigmoid(0.15518327 * x0 + 2.7623026 * x1 + 1.4113362)  # layer 1 neuron 8
+    h1_9 = sigmoid(-2.6851776 * x0 - 0.34800425 * x1 - 1.3485421)  # layer 1 neuron 9
+    h1_10 = sigmoid(1.129517 * x0 + 2.5782695 * x1 - 1.4729692)  # layer 1 neuron 10
+    h1_11 = sigmoid(-2.314077 * x0 + 1.5573858 * x1 - 1.5251722)  # layer 1 neuron 11
+    h1_12 = sigmoid(-1.0082225 * x0 - 1.157671 * x1 - 1.9262959)  # layer 1 neuron 12
+    h1_13 = sigmoid(0.71746445 * x0 + 0.52481055 * x1 - 0.47153106)  # layer 1 neuron 13
+    h1_14 = sigmoid(-1.5761883 * x0 - 0.37202913 * x1 + 2.0500064)  # layer 1 neuron 14
+    h1_15 = sigmoid(-1.7470741 * x0 + 2.3018024 * x1 + 1.5666012)  # layer 1 neuron 15
+    return -0.7019212 * h1_0 - 0.58949536 * h1_1 + 0.44930172 * h1_2 + 0.5413125 * h1_3 + 0.1368169 * h1_4 + 0.6624195 * h1_5 + 0.6907686 * h1_6 - 0.5001141 * h1_7 + 0.7067986 * h1_8 - 0.737801 * h1_9 - 0.6661271 * h1_10 - 0.66094154 * h1_11 + 0.37436727 * h1_12 + 0.053056575 * h1_13 - 0.4582197 * h1_14 + 0.5945453 * h1_15 + 0.06596532

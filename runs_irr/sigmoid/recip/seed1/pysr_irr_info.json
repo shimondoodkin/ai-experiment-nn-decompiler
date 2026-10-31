@@ -1,0 +1,114 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "0.87278444*Min(1.1470662, exp(x0)**(1/4))/x0"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 0.15029566,
+        "equation": "0.59806406"
+      },
+      {
+        "complexity": 3,
+        "loss": 4.359013e-06,
+        "equation": "1.0003815 / x0"
+      },
+      {
+        "complexity": 5,
+        "loss": 3.459844e-06,
+        "equation": "1.0006449 / max(0.50741357, x0)"
+      },
+      {
+        "complexity": 9,
+        "loss": 2.5426727e-06,
+        "equation": "min(sqrt(exp(x0)), 1.3026887) * (0.768326 / x0)"
+      },
+      {
+        "complexity": 10,
+        "loss": 2.224402e-06,
+        "equation": "(min(sqrt(sqrt(exp(x0))), 1.1470662) / x0) * 0.87278444"
+      },
+      {
+        "complexity": 15,
+        "loss": 2.1764401e-06,
+        "equation": "min(sqrt(exp(max(x0, exp(x0 / exp(x0))))), 1.98974) * (0.50309306 / x0)"
+      },
+      {
+        "complexity": 17,
+        "loss": 2.1750498e-06,
+        "equation": "(0.50310767 / x0) * min(1.9897338, sqrt(exp(max(exp(x0 / exp(max(x0, 0.50310767))), x0))))"
+      }
+    ]
+  ],
+  "errors": [
+    "pysr_irr: power exp(x0)**(1/4)",
+    "pysr_irr_snap: power exp(x0)**(1/4)"
+  ],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 20,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 40,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 44,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 91.47
+}

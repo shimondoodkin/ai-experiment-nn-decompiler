@@ -1,0 +1,48 @@
+{
+  "task": "square",
+  "variant": "relu",
+  "seed": "seed0",
+  "learned": true,
+  "family": "square",
+  "formula_found": false,
+  "found_terms": null,
+  "formula_nodes": null,
+  "other_families": [],
+  "route_pick": null,
+  "ast4_nodes": 55,
+  "ast4_pass": true,
+  "ast5_nodes": 55,
+  "ast5_pass": true,
+  "ast5_route": "structural-snap",
+  "formula_py_pass": false,
+  "near_family": "square",
+  "near_err": 0.02587098733694298,
+  "near_terms": 0,
+  "near_family_is_task_family": true,
+  "explain": true,
+  "true_vs_net": 0.0353,
+  "pysr_found": false,
+  "hinge_only": {
+    "hinges": null,
+    "nodes": null,
+    "passed": false
+  },
+  "model": {
+    "kinks": [
+      -1.199,
+      -0.4,
+      0.402,
+      1.199
+    ],
+    "dead_units": 4,
+    "optimal_knots": [
+      -1.5,
+      -0.5,
+      0.5,
+      1.5
+    ],
+    "knot_gap": 0.05,
+    "max_err_at": "edge"
+  },
+  "won_on_size": false
+}

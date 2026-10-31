@@ -1,0 +1,46 @@
+{
+  "task": "square",
+  "variant": "tanh",
+  "seed": "seed0",
+  "learned": true,
+  "family": "square",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 7,
+  "other_families": [],
+  "route_pick": "square",
+  "ast4_nodes": 76,
+  "ast4_pass": true,
+  "ast5_nodes": 7,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.007,
+  "pysr_found": true,
+  "hinge_only": {
+    "hinges": 9,
+    "nodes": 125,
+    "passed": true
+  },
+  "model": {
+    "centres": [
+      -1.987,
+      -1.003,
+      1.192
+    ],
+    "dead_units": null,
+    "optimal_knots": [
+      -1.333,
+      -0.0,
+      1.333
+    ],
+    "knot_gap": 0.1498,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

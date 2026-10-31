@@ -1,0 +1,51 @@
+{
+  "task": "log",
+  "variant": "tanh",
+  "seed": "seed0",
+  "learned": true,
+  "family": "log",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 6,
+  "other_families": [
+    "exp",
+    "reciprocal",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "log",
+  "ast4_nodes": 48,
+  "ast4_pass": true,
+  "ast5_nodes": 6,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0171,
+  "pysr_found": true,
+  "hinge_only": {
+    "hinges": 5,
+    "nodes": 74,
+    "passed": true
+  },
+  "model": {
+    "centres": [
+      0.335,
+      0.7,
+      2.803
+    ],
+    "dead_units": null,
+    "optimal_knots": [
+      0.192,
+      0.708,
+      2.606
+    ],
+    "knot_gap": 0.0237,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

@@ -1,0 +1,43 @@
+{
+  "task": "circle",
+  "variant": "relu_wide",
+  "seed": "seed1",
+  "learned": true,
+  "family": "conic",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 18,
+  "other_families": [],
+  "route_pick": "conic",
+  "ast4_nodes": 1077,
+  "ast4_pass": true,
+  "ast5_nodes": 18,
+  "ast5_pass": true,
+  "ast5_route": "conic",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": null,
+  "pysr_found": false,
+  "hinge_only": null,
+  "model": {
+    "pieces": 95,
+    "boundary_points": 720,
+    "conic": [
+      1.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      3.95
+    ],
+    "radius_min_max": [
+      1.98,
+      2.001
+    ]
+  },
+  "won_on_size": true
+}

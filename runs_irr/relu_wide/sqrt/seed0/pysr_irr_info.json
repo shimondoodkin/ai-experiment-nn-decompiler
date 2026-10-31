@@ -1,0 +1,116 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "1.0049835*Max(0.002454403, x0)**0.49858224 - 0.005237736825894"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 0.22624424,
+        "equation": "1.3301864"
+      },
+      {
+        "complexity": 2,
+        "loss": 2.9533487e-06,
+        "equation": "sqrt(x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 2.7984827e-06,
+        "equation": "sqrt(max(0.0019724413, x0))"
+      },
+      {
+        "complexity": 5,
+        "loss": 2.6109133e-06,
+        "equation": "exp(log(x0) * 0.500407)"
+      },
+      {
+        "complexity": 7,
+        "loss": 2.4202411e-06,
+        "equation": "exp(log(x0) * 0.5006676) + -0.00058667717"
+      },
+      {
+        "complexity": 9,
+        "loss": 2.1688602e-06,
+        "equation": "(exp(log(x0) * 0.49864697) + -0.0049192985) * 1.0047603"
+      },
+      {
+        "complexity": 10,
+        "loss": 2.1227606e-06,
+        "equation": "exp(log(x0) * (0.5016381 - (log(x0) * 0.001189552)))"
+      },
+      {
+        "complexity": 11,
+        "loss": 1.8466898e-06,
+        "equation": "(exp(log(max(0.002454403, x0)) * 0.49858224) + -0.005211764) * 1.0049835"
+      },
+      {
+        "complexity": 14,
+        "loss": 1.8466886e-06,
+        "equation": "relu((exp(log(max(0.002454403, x0)) * 0.49858224) * 1.0049835) + (-0.005211764 * 1.0049835))"
+      }
+    ]
+  ],
+  "errors": [
+    "pysr_irr: power Max(0.002454403, x0)**0.49858224",
+    "pysr_irr_snap: power x0**0.5",
+    "pysr_irr_snap: power x0**0.5",
+    "pysr_irr_snap: power x0**0.5",
+    "pysr_irr_snap: power Max(0, x0)**0.5",
+    "pysr_irr_snap: power Max(0, x0)**0.5"
+  ],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 24,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 88.76
+}

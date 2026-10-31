@@ -1,0 +1,53 @@
+{
+  "task": "exp",
+  "variant": "sigmoid",
+  "seed": "seed1",
+  "learned": true,
+  "family": "exp",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 6,
+  "other_families": [
+    "log",
+    "reciprocal",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "exp",
+  "ast4_nodes": 48,
+  "ast4_pass": true,
+  "ast5_nodes": 6,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0077,
+  "pysr_found": true,
+  "hinge_only": {
+    "hinges": 5,
+    "nodes": 74,
+    "passed": true
+  },
+  "model": {
+    "centres": [
+      0.281,
+      0.753,
+      1.846,
+      1.941
+    ],
+    "dead_units": null,
+    "optimal_knots": [
+      -0.826,
+      0.445,
+      1.216,
+      1.771
+    ],
+    "knot_gap": 0.1384,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

@@ -1,0 +1,145 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "34.77167 - Max(1.8668636, Abs(x1) + Max(Abs(x0)*1.5989912, Abs(x1)))/0.1073088"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 195.9653,
+        "equation": "-5.7192364"
+      },
+      {
+        "complexity": 4,
+        "loss": 135.8171,
+        "equation": "abs(x1) * -5.563757"
+      },
+      {
+        "complexity": 5,
+        "loss": 118.15163,
+        "equation": "x1 * (x1 / -0.38191196)"
+      },
+      {
+        "complexity": 6,
+        "loss": 95.75981,
+        "equation": "abs(x0 * x1) * -3.8379557"
+      },
+      {
+        "complexity": 8,
+        "loss": 75.7287,
+        "equation": "(abs(x0 * x1) * -5.630867) + 6.720989"
+      },
+      {
+        "complexity": 9,
+        "loss": 23.830078,
+        "equation": "26.45867 - ((abs(x0) + abs(x1)) / 0.093513414)"
+      },
+      {
+        "complexity": 11,
+        "loss": 22.078327,
+        "equation": "28.429726 - ((abs(x1) + max(abs(x0), 0.54573274)) / 0.08978438)"
+      },
+      {
+        "complexity": 13,
+        "loss": 18.676111,
+        "equation": "34.7168 - ((max(0.74361145, abs(x1)) + max(0.74361145, abs(x0))) / 0.07893167)"
+      },
+      {
+        "complexity": 14,
+        "loss": 14.517645,
+        "equation": "29.547586 - ((max(abs(x1), abs(x0) * 1.6093415) + abs(x1)) / 0.12017177)"
+      },
+      {
+        "complexity": 16,
+        "loss": 12.139435,
+        "equation": "34.77167 - (max(max(abs(x1), abs(x0) * 1.5989912) + abs(x1), 1.8668636) / 0.1073088)"
+      },
+      {
+        "complexity": 18,
+        "loss": 11.138872,
+        "equation": "34.2528 - ((max(abs(x1), max(0.7349489, abs(x0)) * 1.5756667) + max(abs(x1), 0.62244844)) / 0.10694621)"
+      },
+      {
+        "complexity": 19,
+        "loss": 11.095166,
+        "equation": "34.813057 - ((abs(max(abs(x0 * 2.895308), max(2.6224113, abs(x1 * 2.2862394)))) + abs(x1)) / 0.16890614)"
+      },
+      {
+        "complexity": 21,
+        "loss": 9.444397,
+        "equation": "33.871136 - (max(max(abs(x1) * 1.548056, 1.4464449), max(abs(x1), abs(x0 * 0.5343895)) + abs(x0)) / 0.08480447)"
+      },
+      {
+        "complexity": 22,
+        "loss": 9.410259,
+        "equation": "33.896057 - (abs(max(1.429429, max(abs(x1 * 1.5030025), max(abs(x1), abs(x0 * -0.52219176)) + abs(x0)))) / 0.08343424)"
+      }
+    ]
+  ],
+  "errors": [
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo",
+    "pysr_irr_snap: unsupported ComplexInfinity: zoo"
+  ],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 4,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 11,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 15,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 18,
+      "error": null
+    }
+  ],
+  "snap_passed": false,
+  "seconds": 136.66
+}

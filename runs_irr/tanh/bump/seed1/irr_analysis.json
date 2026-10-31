@@ -1,0 +1,42 @@
+{
+  "task": "bump",
+  "variant": "tanh",
+  "seed": "seed1",
+  "learned": true,
+  "family": "exp",
+  "formula_found": false,
+  "found_terms": null,
+  "formula_nodes": null,
+  "other_families": [],
+  "route_pick": null,
+  "ast4_nodes": 468,
+  "ast4_pass": true,
+  "ast5_nodes": 468,
+  "ast5_pass": true,
+  "ast5_route": "structural-exact",
+  "formula_py_pass": false,
+  "near_family": "exp",
+  "near_err": 0.05900939949866895,
+  "near_terms": 0,
+  "near_family_is_task_family": true,
+  "explain": true,
+  "true_vs_net": 0.059,
+  "pysr_found": false,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.0305,
+      0.0246,
+      0.0325,
+      0.0349,
+      0.0304,
+      0.0265,
+      0.0521,
+      0.0602,
+      0.0431,
+      0.0331
+    ],
+    "radius_max": 4.226
+  },
+  "won_on_size": false
+}

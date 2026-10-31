@@ -1,0 +1,91 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "exp(x0)"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 3.535226,
+        "equation": "1.809521"
+      },
+      {
+        "complexity": 2,
+        "loss": 3.0217767e-05,
+        "equation": "exp(x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 2.7233655e-05,
+        "equation": "exp(min(1.9887869, x0))"
+      },
+      {
+        "complexity": 9,
+        "loss": 2.6891605e-05,
+        "equation": "min(min(exp(x0), 7.31152), exp(x0 / 0.99646544))"
+      },
+      {
+        "complexity": 17,
+        "loss": 2.6880454e-05,
+        "equation": "min(exp(min(max(x0, 0.99646544), max(x0, x0) / 0.99646544)), abs(exp(min(x0, exp(0.68752486)))))"
+      }
+    ]
+  ],
+  "errors": [
+    "pysr_irr_snap: unsupported re: re(Min(2.11700001661267, x0))"
+  ],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 99.25
+}

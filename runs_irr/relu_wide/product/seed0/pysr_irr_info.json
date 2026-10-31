@@ -1,0 +1,183 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "(x0 + 0.0017794955)*(x1 - 1*0.0024517353) + 0.0021339941"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 1.7824043,
+        "equation": "-0.01666293"
+      },
+      {
+        "complexity": 3,
+        "loss": 3.970424e-05,
+        "equation": "x0 * x1"
+      },
+      {
+        "complexity": 5,
+        "loss": 3.1593074e-05,
+        "equation": "(x1 + -0.0024564015) * x0"
+      },
+      {
+        "complexity": 7,
+        "loss": 2.711272e-05,
+        "equation": "(x0 * (x1 - 0.0024517353)) + 0.0021339941"
+      },
+      {
+        "complexity": 8,
+        "loss": 2.6857228e-05,
+        "equation": "(x0 * x1) + relu(x0 * -0.0043791016)"
+      },
+      {
+        "complexity": 9,
+        "loss": 2.3182802e-05,
+        "equation": "((x0 + 0.0017794955) * (x1 - 0.0024517353)) + 0.0021339941"
+      },
+      {
+        "complexity": 10,
+        "loss": 2.298072e-05,
+        "equation": "(x1 * (x0 + 0.0017401933)) + relu(x0 * -0.0043195924)"
+      },
+      {
+        "complexity": 11,
+        "loss": 2.1876282e-05,
+        "equation": "(((x0 + 0.0017794955) * (x1 - 0.0024517353)) + 0.0021339941) * 0.9991855"
+      },
+      {
+        "complexity": 12,
+        "loss": 2.170052e-05,
+        "equation": "(relu(x0 * -0.0043195924) + (x1 * (x0 + 0.0017401933))) * 0.99923563"
+      },
+      {
+        "complexity": 13,
+        "loss": 2.15736e-05,
+        "equation": "((x1 - 0.0006415424) * x0) - (min(0.15639727, x0 - x1) * 0.0030557646)"
+      },
+      {
+        "complexity": 14,
+        "loss": 2.1523718e-05,
+        "equation": "(((x0 * 0.9991855) + 0.0017243603) * (x1 - 0.0024517353)) + abs(x0 * 0.0017794955)"
+      },
+      {
+        "complexity": 15,
+        "loss": 2.1477597e-05,
+        "equation": "(((x0 + 0.0017875361) * (x1 - 0.00330514)) * 0.99910426) + (max(0.65692264, x0) * 0.002401149)"
+      },
+      {
+        "complexity": 17,
+        "loss": 2.119089e-05,
+        "equation": "((x1 - 0.0011943525) * x0) - min(0.00016681512, (min(x0 * x1, x0) - x1) * 0.0025923436)"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 7,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 7,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 12,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 26,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 12,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 26,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 12,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 26,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 34,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 22,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 46,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 140.08
+}

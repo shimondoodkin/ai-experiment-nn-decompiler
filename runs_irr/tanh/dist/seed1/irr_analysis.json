@@ -1,0 +1,42 @@
+{
+  "task": "dist",
+  "variant": "tanh",
+  "seed": "seed1",
+  "learned": false,
+  "family": "sqrt",
+  "formula_found": false,
+  "found_terms": null,
+  "formula_nodes": null,
+  "other_families": [],
+  "route_pick": null,
+  "ast4_nodes": 436,
+  "ast4_pass": true,
+  "ast5_nodes": 436,
+  "ast5_pass": true,
+  "ast5_route": "sigmoid-replace",
+  "formula_py_pass": false,
+  "near_family": "reciprocal",
+  "near_err": 0.06838647998650615,
+  "near_terms": 1,
+  "near_family_is_task_family": false,
+  "explain": true,
+  "true_vs_net": 0.1769,
+  "pysr_found": false,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.6264,
+      0.3283,
+      0.1299,
+      0.1318,
+      0.1343,
+      0.1191,
+      0.1313,
+      0.1965,
+      0.2201,
+      0.3455
+    ],
+    "radius_max": 4.226
+  },
+  "won_on_size": false
+}

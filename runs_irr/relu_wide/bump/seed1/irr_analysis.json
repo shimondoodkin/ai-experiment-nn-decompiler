@@ -1,0 +1,42 @@
+{
+  "task": "bump",
+  "variant": "relu_wide",
+  "seed": "seed1",
+  "learned": true,
+  "family": "exp",
+  "formula_found": false,
+  "found_terms": null,
+  "formula_nodes": null,
+  "other_families": [],
+  "route_pick": null,
+  "ast4_nodes": 1177,
+  "ast4_pass": true,
+  "ast5_nodes": 1177,
+  "ast5_pass": true,
+  "ast5_route": "structural-exact",
+  "formula_py_pass": false,
+  "near_family": "exp",
+  "near_err": 0.025965641925582622,
+  "near_terms": 1,
+  "near_family_is_task_family": true,
+  "explain": true,
+  "true_vs_net": 0.0456,
+  "pysr_found": false,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.0336,
+      0.0281,
+      0.0331,
+      0.0274,
+      0.0318,
+      0.0304,
+      0.0382,
+      0.0383,
+      0.0447,
+      0.0456
+    ],
+    "radius_max": 4.226
+  },
+  "won_on_size": false
+}

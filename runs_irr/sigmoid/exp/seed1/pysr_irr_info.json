@@ -1,0 +1,183 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "-Piecewise((Max(0.016904537, x0 - 1*1.8779588), x0 - 1*0.92052 > 0), (0.0, True)) + exp(x0*1.0037633)"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 3.5413637,
+        "equation": "1.8142121"
+      },
+      {
+        "complexity": 2,
+        "loss": 0.00010038591,
+        "equation": "exp(x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 8.667677e-05,
+        "equation": "exp(x0 - -0.0014168542)"
+      },
+      {
+        "complexity": 6,
+        "loss": 8.644415e-05,
+        "equation": "exp(x0 + cond(x0, 0.0014573621))"
+      },
+      {
+        "complexity": 8,
+        "loss": 6.9544985e-05,
+        "equation": "exp(x0 - cond(1.9056398 - x0, -0.002388984))"
+      },
+      {
+        "complexity": 9,
+        "loss": 5.2497613e-05,
+        "equation": "exp(x0 - -0.0023085054) - relu(x0 - 1.9192704)"
+      },
+      {
+        "complexity": 10,
+        "loss": 5.1961983e-05,
+        "equation": "(exp(x0) * 1.0025653) - max(x0 - 1.9184422, 0.0010763998)"
+      },
+      {
+        "complexity": 11,
+        "loss": 4.799444e-05,
+        "equation": "exp(x0 * 1.0015863) - log(max(x0 - 0.91678226, 0.99884415))"
+      },
+      {
+        "complexity": 13,
+        "loss": 4.750453e-05,
+        "equation": "exp(x0 * 1.0014739) - log(max(x0 - 0.9159268, 0.9992936) * 0.99994)"
+      },
+      {
+        "complexity": 14,
+        "loss": 3.085489e-05,
+        "equation": "exp(x0 * 1.0037633) - cond(x0 - 0.92052, max(x0 - 1.8779588, 0.016904537))"
+      },
+      {
+        "complexity": 15,
+        "loss": 2.8081673e-05,
+        "equation": "exp(x0 * 1.0042737) - min(log(max(x0 - 0.8697077, 1.0208168)), greater(x0, 1.0))"
+      },
+      {
+        "complexity": 17,
+        "loss": 2.5507894e-05,
+        "equation": "exp(max(x0 * 1.0041858, x0)) - min(greater(x0, 1.0041858), log(max(1.0212502, x0 - 0.8712061)))"
+      },
+      {
+        "complexity": 21,
+        "loss": 2.5504622e-05,
+        "equation": "exp(max(1.0041858 * x0, x0)) - min(greater(max(1.0041858 * x0, x0), 1.0041858), log(max(1.0212502, x0 - 0.8712061)))"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 9,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 30,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 24,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 27,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 27,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 36,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 38,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 38,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 38,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 120.66
+}

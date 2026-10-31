@@ -1,0 +1,67 @@
+{
+  "task": "log",
+  "variant": "relu_wide",
+  "seed": "seed1",
+  "learned": true,
+  "family": "log",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 6,
+  "other_families": [
+    "exp",
+    "reciprocal",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "log",
+  "ast4_nodes": 180,
+  "ast4_pass": true,
+  "ast5_nodes": 6,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0084,
+  "pysr_found": true,
+  "hinge_only": {
+    "hinges": 6,
+    "nodes": 87,
+    "passed": true
+  },
+  "model": {
+    "kinks": [
+      0.178,
+      0.297,
+      0.479,
+      0.728,
+      1.072,
+      1.33,
+      1.55,
+      2.102,
+      2.806,
+      3.337,
+      3.779
+    ],
+    "dead_units": 14,
+    "optimal_knots": [
+      0.12,
+      0.171,
+      0.244,
+      0.348,
+      0.496,
+      0.708,
+      1.01,
+      1.442,
+      2.057,
+      2.934,
+      4.186
+    ],
+    "knot_gap": 0.0882,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

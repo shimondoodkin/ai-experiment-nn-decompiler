@@ -1,0 +1,139 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "-0.005989872 + 1.0022793/x0"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 0.15098025,
+        "equation": "0.5934064"
+      },
+      {
+        "complexity": 3,
+        "loss": 1.8338493e-05,
+        "equation": "0.9952483 / x0"
+      },
+      {
+        "complexity": 5,
+        "loss": 7.85072e-06,
+        "equation": "(1.0022793 / x0) + -0.005989872"
+      },
+      {
+        "complexity": 7,
+        "loss": 6.680844e-06,
+        "equation": "(1.0030438 / max(x0, 0.5083063)) + -0.0062690563"
+      },
+      {
+        "complexity": 10,
+        "loss": 6.6792713e-06,
+        "equation": "relu(((0.9993385 / max(x0, 0.50831246)) + -0.006241879) / 0.9963176)"
+      },
+      {
+        "complexity": 11,
+        "loss": 5.4664397e-06,
+        "equation": "((1.0036085 / x0) - max(0.5314837, x0)) + (x0 + -0.0066069392)"
+      },
+      {
+        "complexity": 13,
+        "loss": 5.3609597e-06,
+        "equation": "max(0.52143705, x0) + (((1.0041242 / x0) - max(x0, 0.5412804)) + -0.0068950285)"
+      },
+      {
+        "complexity": 15,
+        "loss": 5.351983e-06,
+        "equation": "(((1.0037541 / x0) + max(0.52185977, x0)) + -0.006640278) - max(max(0.541125, x0), -0.006640278)"
+      },
+      {
+        "complexity": 22,
+        "loss": 5.3494673e-06,
+        "equation": "max(x0, max(abs(((1.0036211 / x0) + max(x0, max(0.5198703, x0 + -0.48375085))) + -0.0066089625), -0.48375085)) - max(x0, 0.5408597)"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 27,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 27,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 35,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 89.58
+}

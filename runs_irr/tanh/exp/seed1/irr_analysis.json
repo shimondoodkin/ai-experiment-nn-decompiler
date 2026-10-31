@@ -1,0 +1,49 @@
+{
+  "task": "exp",
+  "variant": "tanh",
+  "seed": "seed1",
+  "learned": true,
+  "family": "exp",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 6,
+  "other_families": [
+    "log",
+    "reciprocal",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "exp",
+  "ast4_nodes": 45,
+  "ast4_pass": true,
+  "ast5_nodes": 6,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0075,
+  "pysr_found": true,
+  "hinge_only": {
+    "hinges": 5,
+    "nodes": 74,
+    "passed": true
+  },
+  "model": {
+    "centres": [
+      0.741,
+      1.613
+    ],
+    "dead_units": null,
+    "optimal_knots": [
+      -0.091,
+      1.513
+    ],
+    "knot_gap": 0.1165,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

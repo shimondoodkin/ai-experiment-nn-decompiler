@@ -1,0 +1,45 @@
+{
+  "task": "dist",
+  "variant": "relu_wide",
+  "seed": "seed1",
+  "learned": true,
+  "family": "sqrt",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 18,
+  "other_families": [
+    "exp",
+    "quadratic"
+  ],
+  "route_pick": "sqrt",
+  "ast4_nodes": 866,
+  "ast4_pass": true,
+  "ast5_nodes": 18,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0081,
+  "pysr_found": false,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.0232,
+      0.0044,
+      0.0057,
+      0.0071,
+      0.0079,
+      0.0103,
+      0.0116,
+      0.0116,
+      0.0097,
+      0.0096
+    ],
+    "radius_max": 4.226
+  },
+  "won_on_size": true
+}
