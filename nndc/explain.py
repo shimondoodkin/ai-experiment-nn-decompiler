@@ -18,7 +18,7 @@ from .check import net_output, program_decision
 from .gate_view import groups, tolerance, unit_table
 from .heuristics.conic import _emit as conic_emit
 from .heuristics.families import _quad_cols, faithful_fit
-from .lang import evaluate, parse_program
+from .lang import ProgramError, evaluate, parse_program
 from .model import MLP, load_npz
 from .spec import Spec
 
@@ -245,14 +245,30 @@ def _faithful_section(spec: Spec, mlp: MLP, trace: dict | None) -> list[str]:
     return out
 
 
+def _conic_coefs(spec: Spec, src: str, X: np.ndarray) -> np.ndarray:
+    """The coefficients of a conic program `return q < t` (or `>`): q's five terms solved on X, then t. Taken from
+    the program itself, so they match it whether the snapped or the clean variant won."""
+    body = src.split("return ", 1)[1].strip()
+    op = " < " if " < " in body else " > "
+    q, t = body.rsplit(op, 1)
+    qsrc = f"def net({', '.join(spec.arg_names)}):\n    return {q}\n"
+    with np.errstate(all="ignore"):
+        y = np.asarray(evaluate(parse_program(qsrc, spec.arg_names), X), np.float64)
+    coef = np.linalg.lstsq(np.stack(_quad_cols(X)[:5], axis=1), y, rcond=None)[0]
+    return np.append(np.round(coef, 10) + 0.0, float(t.replace(" ", "")))     # + 0.0: no -0
+
+
 def _faithful_conic(spec: Spec, mlp: MLP, row: dict | None) -> list[str]:
-    if not row or not row.get("coefs") or not row.get("snapped") or not row.get("src"):
+    if not row or not row.get("coefs") or not row.get("src"):
         return []
     less = " < " in row["src"]
     w = np.array([float(f"{x:.4g}") for x in row["coefs"]])
-    c = np.array(row["snapped"], dtype=np.float64)
     src = conic_emit(w, less, spec)
     X = _sample(spec)
+    try:
+        c = _conic_coefs(spec, row["src"], X)
+    except (SyntaxError, ValueError, ProgramError, IndexError):
+        return []
     net = net_output(mlp, spec, X)[0]
 
     def decide(s: str) -> np.ndarray:

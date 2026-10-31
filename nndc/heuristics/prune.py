@@ -131,8 +131,17 @@ def prune_candidate(spec: Spec, mlp: MLP, check: Callable[[str], tuple[bool, np.
                     ) -> tuple[str | None, dict]:
     """The pruned, refit and snapped net as a program, or None; and an info dict (kept and folded units, max error
     on the fit points as a share of the range, retries, a note when not applicable). check is a test hook (default:
-    the checker against mlp, with its counterexamples)."""
+    the checker against mlp, with its counterexamples). A numerical failure (lstsq, linprog) gives None and a note."""
     info: dict = {"kept": [], "folded": [], "err": None, "retries": 0, "passed": False, "note": None}
+    try:
+        return _prune(spec, mlp, check, info)
+    except (np.linalg.LinAlgError, ValueError) as e:
+        info["note"] = f"numerical failure: {type(e).__name__}: {e}"
+        return None, info
+
+
+def _prune(spec: Spec, mlp: MLP, check: Callable[[str], tuple[bool, np.ndarray]] | None, info: dict
+           ) -> tuple[str | None, dict]:
     if (spec.output != "regression" or len(spec.inputs) not in (1, 2) or len(mlp.weights) != 2
             or mlp.weights[1].shape[0] != 1):
         info["note"] = "needs a one-hidden-layer regression net with 1 or 2 inputs"

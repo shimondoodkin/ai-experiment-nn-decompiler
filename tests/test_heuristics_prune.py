@@ -55,6 +55,15 @@ def test_prune_lp_failure_returns_none(monkeypatch):
     assert src is None and "LP" in info["note"]
 
 
+def test_prune_numerical_failure_returns_none(monkeypatch):
+    def broken(*args, **kwargs):
+        raise np.linalg.LinAlgError("SVD did not converge")
+    monkeypatch.setattr(prune.np.linalg, "lstsq", broken)
+    mlp = net(STRONG)
+    src, info = prune_candidate(SPEC1, mlp, check=dense_check(mlp, SPEC1))
+    assert src is None and "SVD" in info["note"]
+
+
 def test_prune_not_for_binary_or_two_layers():
     mlp = net(STRONG)
     binary = Spec(task="", output="binary", inputs=SPEC1.inputs)

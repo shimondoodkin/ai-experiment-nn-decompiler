@@ -74,7 +74,9 @@ def _refit(w: np.ndarray, fixed: np.ndarray, D: np.ndarray) -> np.ndarray:
 def _clean(w: np.ndarray, P: np.ndarray) -> np.ndarray:
     """The clean coefficient vector: each x0·x1, x0, x1 term whose largest value on the boundary points P is below
     CLEAN_FRAC of the threshold set to 0; the threshold refit as the mean of the left side on P, then the nicest
-    value within CLEAN_FRAC of it. Returns w itself when nothing changes."""
+    value within CLEAN_FRAC of it. A refit that is not nice never replaces a nice threshold (a threshold near 0 has
+    no nice value in its relative window); otherwise it is rounded to 4 digits, as the snap does. Returns w itself
+    when nothing changes."""
     D = _design(P)
     c = w.copy()
     for i in (2, 3, 4):
@@ -82,7 +84,10 @@ def _clean(w: np.ndarray, P: np.ndarray) -> np.ndarray:
             c[i] = 0.0
     t = float(np.mean(D[:, :5] @ c[:5]))
     lo, hi = sorted((t * (1 - CLEAN_FRAC), t * (1 + CLEAN_FRAC)))
-    c[5] = nicest_in(lo, hi) if hi > lo else t
+    t = nicest_in(lo, hi) if hi > lo else t
+    if not _is_nice(t):
+        t = float(w[5]) if _is_nice(float(w[5])) else float(f"{t:.4g}")
+    c[5] = t
     return w if np.array_equal(c, w) else c
 
 

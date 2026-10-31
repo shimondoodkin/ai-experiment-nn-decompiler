@@ -152,6 +152,21 @@ def test_explain_faithful_conic(tmp_path):
     assert "| x0² | 1 | 0.9874 |" in sec and "decide differently" in sec
 
 
+def test_explain_faithful_conic_against_the_clean_program(tmp_path):
+    spec = replace(SPEC2, output="binary", threshold=0.5)
+    rd = _sigmoid_run(tmp_path, [(1.0, 1.0, 0.0, 0.0)], spec)
+    src = "def net(x0, x1):\n    return x0 * x0 + x1 * x1 < 4\n"
+    cand = {"route": "conic", "src": src, "nodes": 18, "check": {"snap_pass": True}}
+    row = {"family": "conic", "coefs": [0.98743, 1.0, 0.014847, -0.0072522, -0.00024445, 3.94251],
+           "snapped": [1.0, 1.0, 0.01, 0.0, 0.01, 3.977], "src": src,
+           "clean": {"src": src, "passed": True}}
+    (rd / "ast5_trace.json").write_text(json.dumps({"candidates": [cand], "winner": "conic", "near": None,
+                                                    "families": [row]}))
+    sec = explain_run(rd).split("## Faithful fit", 1)[1].split("## Units", 1)[0]
+    assert "| threshold | 4 | 3.943 |" in sec and "| x0·x1 | 0 | 0.01485 |" in sec, sec
+    assert "3.977" not in sec
+
+
 def test_explain_no_faithful_without_formula(tmp_path):
     rd = _sigmoid_run(tmp_path, [(1.0, 2.0, -4.0)], SPEC1)
     (rd / "ast5_trace.json").write_text(json.dumps({"candidates": [], "winner": "dump", "near": None}))

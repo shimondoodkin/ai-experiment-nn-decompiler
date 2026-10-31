@@ -82,3 +82,14 @@ def test_clean_conic_falls_back():
     src, info = conic_candidate(spec_2d(-3, 3), None, decide=dirty_circle, check=lambda s: s != CLEAN)
     assert src != CLEAN and info["passed"]
     assert info["clean"] == {"src": CLEAN, "passed": False}
+
+
+def test_clean_conic_keeps_a_zero_threshold():
+    def quadrants(X):
+        return (X[:, 0] * X[:, 1] > 0).astype(int)
+    spec = spec_2d(-3, 3)
+    src, info = conic_candidate(spec, None, decide=quadrants, check=decision_check(quadrants, spec))
+    assert src == "def net(x0, x1):\n    return x0 * x1 > 0\n", (src, info)
+    P = np.stack([np.linspace(-3, 3, 200), np.full(200, 1e-13)], axis=1)   # a boundary where the left side is ~0
+    c = _clean(np.array([0.0, 0.0, 1.0, 0.0, 0.0, 0.0]), P)
+    assert c[5] == 0
