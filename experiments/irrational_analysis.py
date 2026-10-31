@@ -114,6 +114,7 @@ def pysr_found(src: str | None, family: str) -> bool:
     if not src:
         return False
     body = src.split("\n", 1)[1] if "\n" in src else src
+    body = "\n".join(line.split("#", 1)[0] for line in body.splitlines())   # agents name formulas in comments
     return re.search(FAMILY_TOKENS[family], body) is not None
 
 

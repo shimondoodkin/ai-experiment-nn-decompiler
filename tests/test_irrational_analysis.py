@@ -88,3 +88,9 @@ def test_agent_fields():
     none = dict.fromkeys(a)
     assert agent_fields(_res(), "def net(x0):\n    return x0\n", "def net(x0):\n    return x0\n", "exp", True) == none
     assert agent_fields({"ast5": _res()["ast5"]}, None, "def net(x0):\n    return x0\n", "exp", False) == none
+
+
+def test_family_check_ignores_comments():
+    src = "def net(x0):\n    # its shape follows sqrt(x0) closely\n    return min(0.5 * x0 + 0.5, x0)  # not sqrt(x0)\n"
+    assert not pysr_found(src, "sqrt")
+    assert pysr_found("def net(x0):\n    # a line\n    return sqrt(x0)\n", "sqrt")
