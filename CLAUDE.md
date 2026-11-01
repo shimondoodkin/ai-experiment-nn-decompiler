@@ -188,7 +188,11 @@ reconstructed from git history.
   - `nndc irr-analyse` writes `irr_analysis.json`. It is task-aware and report only; it also holds the reproduction
     fields against `agent_1`.
   - `nndc irr-report --base runs_irr --out runs_irr/REPORT.md` only reads.
-  - Run them in this order: `ast4`, `ast5`, `pysr_irr`, `explain`, `irr-analyse`. Each step rewrites `results.json`.
+  - Run them in this order: `ast4`, `ast5`, `pysr_irr`, `explain`, then `agent collect` once the tool steps are done,
+    then `irr-analyse`. `ast4`, `ast5`, `pysr_irr` and `collect` each rewrite `results.json`. `irr-analyse` reads the
+    agent attempt; run before `collect`, the reproduction fields come out None.
+  - Keep every held-out formula out of `tests/` and `nndc/`: the `ast5` freeze's logshift and ellipse were in unit
+    tests (a leak, found in its final review).
 - **Agents:** `--index runs_irr/blind_index.json`, heuristics `runs_irr/HEURISTICS.md` (development; distilled in
   `runs_irr/DISTILL.md`) and `runs_irr/HEURISTICS_heldout.md`.
 - **Held-out:** `ast5`'s are seed 3 of the 9 development tasks and seeds 0–1 of the 4 held-out tasks, in all 4 variants

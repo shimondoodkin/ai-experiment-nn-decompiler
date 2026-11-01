@@ -409,29 +409,45 @@ nets with their own agents, and the write-up.
 
 Freeze `f95f631`; data `c8c36cf`; `runs_irr/REPORT.md`, sections "Held-out" and "Reproduction (held-out)". The 68
 held-out nets were built after the freeze and run once: seed 3 of the 9 development tasks, plus seeds 0–1 of four
-tasks never used in development, all in 4 variants. The four new tasks are decay `3·exp(−x/2)`, logshift `log(x + 2)`,
-an off-centre ellipse and hypot1 `sqrt(x0² + x1² + 1)`. 66 learned. Each net also got its own blind agent.
+held-out tasks, all in 4 variants. The held-out tasks are decay `3·exp(−x/2)`, logshift `log(x + 2)`, an off-centre
+ellipse and hypot1 `sqrt(x0² + x1² + 1)`. 66 learned. Each net also got its own blind agent.
+
+**A leak, found in the final review.** Two of the four held-out functions were not unseen. Tool-development unit
+tests, written from our own plan, fit `log(x0 + 2)` on the logshift box and check the off-centre ellipse. So only
+decay and hypot1 test new functions. The nets were still built after the freeze, and no number changes; the numbers
+below are split accordingly. Next time a test must keep held-out formulas out of `tests/` and `nndc/`.
 
 **What we learned**
-- **The frozen tool generalises to new functions.** It finds the formula on 58 of the 66 learned nets (88%; predicted
-  at least 60%). That includes 7 of 8 off-centre ellipses and all 8 decay nets.
-- **Reproduction drops on the new tasks.** `ast5` reproduces the agent on 55 of 68 nets (81%, development 92%):
-  - 34 of 36 on seed 3 of the development tasks;
-  - 21 of 32 on the four new tasks.
+- **The frozen tool finds formulas on fresh nets.** It finds the formula on 58 of the 66 learned nets (88%; predicted
+  at least 60%). The split:
 
-  So the drop is in the functions development never saw, not in fresh seeds of the ones it did. Where both pass,
-  `ast5` is smaller than the agent on 50 nets, equal on 13 and larger on 5.
+  | | formula found | reproduced |
+  |---|---|---|
+  | seed 3 of the development tasks | 31/34 | 34/36 |
+  | logshift and ellipse (seen in tests) | 15/16 | 15/16 |
+  | decay and hypot1 (unseen) | 12/16 | 6/16 |
+
+  On the unseen functions the formula is still found on 12 of 16, including all 8 decay nets.
+- **Reproduction drops on the unseen functions.** `ast5` reproduces the agent on 55 of 68 nets (81%; development
+  92%). Fresh seeds of known tasks and the two functions in tests are 49 of 52. The two unseen functions are 6 of 16.
+  Where both pass, `ast5` is smaller than the agent on 50 nets, equal on 13 and larger on 5.
 - **Agents again pass every net** (68 of 68, 2 exact). Most agents read the function off a few values
   (ln 2, √3, a constant step ratio) and wrote a one-line formula, as in development.
 
 **What did not work, or surprised us**
 - **Fewest nodes picks the wrong formula on decay.** The exp formula passes on all 8 decay nets. On 7 of them the route
-  keeps a reciprocal instead, `23 / (x0 + 4) − 2.7`, because it is 2 nodes shorter than `3 * exp(−x0 / 2)`. Three
-  fitted constants buy a look-alike of a different family. The development data had a hint of this (sigmoid/dist/1
-  passes a reciprocal, above). On held-out nets it is the largest single cause of misses: 7 of 13.
+  keeps a reciprocal instead, such as `23 / (x0 + 4) − 2.7` or `17.4 / (x0 + 3.5) − 2`, because it is 2 nodes shorter
+  than `3 * exp(−x0 / 2)`. Three fitted constants buy a look-alike of a different family. The development data had a
+  hint of this (sigmoid/dist/1 passes a reciprocal, above). On held-out nets it is the largest single cause of misses:
+  7 of 13. It also happens on 3 nets that still count as reproduced or found:
+  - relu/product/3: `1 / (−1.104e−05 * x0 * x1 + 0.003356) − 298`, numerically fragile, counted only because
+    `x0 * x1` appears in it;
+  - relu/sqrt/3: a log, tied on nodes;
+  - tanh/hypot1/0: an exp.
 - **The conic snap rounds the wrong number.** On tanh/ellipse/0 the conic route snapped the expanded threshold to
-  0.95, which failed. The true value is 0.9375. Agents snap the centre and semi-axes and then complete the square,
-  which keeps it exact.
+  0.95, which failed, and a 248-node `sigmoid-replace` program won. The true value is 0.9375. The ellipses that pass
+  keep 0.95 or 0.92 too. Agents snap the centre and semi-axes and then complete the square, which gives the exact
+  ellipse.
 - **hypot1 is the hardest new task.** The formula is found on 4 of 8 nets. On tanh/0 the route still picks another
   family, an inverted Gaussian `4 − 2.95·exp(−0.13·r²)`, and on relu/1 and sigmoid/1 it picks `2·log(u)` with hinges.
   The agents also found `sqrt(1 + r²)` on 4 nets. Where the net sags they added a factor of 0.98 or a corner hinge; on

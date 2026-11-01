@@ -365,9 +365,29 @@ boundary points, the plot styling, and how the route's code is split across `nnd
   - On seed 3 of the development tasks it is 34/36. On the four new tasks it is 21/32.
   - `ast5` is smaller than the agent on 50 nets, equal on 13 and larger on 5.
   - 7 of the 13 misses are decay nets. The exp formula passes on all 8, but the route's pick, fewest nodes, is a
-    reciprocal on 7: `23 / (x0 + 4) - 2.7` (12 nodes) against the agents' `3 * exp(-x0 / 2)` (14).
-  - tanh/ellipse/0: the conic snap rounded the expanded threshold to 0.95, and the check failed, so it fell back to a
-    248-node pruned net. The true ellipse has 0.9375 there. The agents snap the centre and the semi-axes, then complete
-    the square.
+    reciprocal on 7. Examples are `23 / (x0 + 4) - 2.7` and `17.4 / (x0 + 3.5) - 2`, each 12 nodes; the agents'
+    `3 * exp(-x0 / 2)` is 14.
+  - Another family wins where the task's family also passes on 3 more nets, all still counted as reproduced or found:
+    - relu/product/3: a reciprocal, `1 / (-1.104e-05 * x0 * x1 + 0.003356) - 298` (21 nodes);
+    - relu/sqrt/3: a log, tied at 28 nodes;
+    - tanh/hypot1/0: an exp.
+  - tanh/ellipse/0: the conic snap rounded the expanded threshold to 0.95, and the check failed. The winner is
+    `sigmoid-replace`, at 248 nodes. The true ellipse has 0.9375 there. The passing ellipses also keep 0.95 or 0.92.
+    The agents snap the centre and the semi-axes, then complete the square.
   - The other misses are hypot1 relu/0 and tanh/0–1, relu_wide/circle/3 (25 vs 23 nodes, an `0.05 * x0` term kept)
     and relu_wide/bump/3.
+- **2026-11-01, a held-out leak found in the final review.** Two of the four held-out functions were in
+  tool-development unit tests, written from this project's own plan (Tasks 3 and 4):
+  - `log(x0 + 2)` on [−1.5, 4] (logshift) in `tests/test_heuristics_families.py`;
+  - the off-centre ellipse in `tests/test_heuristics_conic.py`.
+
+  Those tests shaped the family and conic routes, so logshift and ellipse were not unseen. The held-out nets themselves
+  were still built after the freeze and run once, and no number changes. Only the reading changes. The 58/66
+  "formula found" splits three ways:
+  - **unseen functions** (decay and hypot1): 12/16;
+  - **functions seen in tests** (logshift and ellipse): 15/16;
+  - **seed 3 of the development tasks**: 31/34.
+
+  Reproduction on the same three groups is 6/16, 15/16 and 34/36. The predictions stand as measured. The one on
+  "at least one ellipse net" no longer tests generalisation, though; the one on decay still does. For the next freeze,
+  a test should keep every held-out formula out of `tests/` and `nndc/`.

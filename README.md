@@ -76,13 +76,15 @@ a product, as ReLU, wide ReLU, sigmoid and tanh nets. The tool version for them 
 - **Prune route:** with a minimax output refit, for nets where no formula passes.
 
 The route changes were distilled from blind Claude agents, and the tool was then frozen and run once on 68 fresh nets.
-Four of the functions in that set were never seen in development: `3·exp(−x/2)`, `log(x + 2)`, an off-centre
-ellipse and `sqrt(x0² + x1² + 1)`.
-- **The frozen tool generalises.** It finds the formula on 58 of the 66 held-out nets that learned (88%). That
-  includes `x0 * x0 + x1 * x1 < 4` on 15 of the 16 circle nets (development and held-out) and the shifted ellipse on
-  7 of 8.
-- **It matches the agents less often on new functions.** It reproduces the agent's result on 55 of 68 held-out nets
-  (development: 98 of 107). Most misses are decay nets, where a 2-node-shorter reciprocal beats `3 * exp(-x0 / 2)`.
+The set has four held-out functions: `3·exp(−x/2)`, `log(x + 2)`, an off-centre ellipse and `sqrt(x0² + x1² + 1)`.
+The final review found that two of them, the log and the ellipse, had been used in the tool's unit tests, so only
+the other two are truly unseen.
+- **The frozen tool finds formulas on fresh nets.** It finds the formula on 58 of the 66 held-out nets that learned
+  (88%), and on 12 of 16 for the two unseen functions. Circles come out as `x0 * x0 + x1 * x1 < 4` on 15 of 16 nets
+  (development and held-out).
+- **It matches the agents less often on unseen functions.** It reproduces the agent's result on 55 of 68 held-out
+  nets (development: 98 of 107), but on only 6 of the 16 unseen-function nets. Most misses are decay nets, where a
+  2-node-shorter reciprocal beats `3 * exp(-x0 / 2)`.
 - **Some functions have no formula.** The bump `exp(−r²)` never gets one; the best programs are pruned nets.
 - **The net's error is shown, not just bounded.** `nndc explain` writes the net's fitted values next to the clean
   formula and splits the difference into snapping cost and the net's own ripple.
