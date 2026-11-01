@@ -1,0 +1,48 @@
+{
+  "task": "ellipse",
+  "variant": "tanh",
+  "seed": "seed0",
+  "learned": true,
+  "family": "conic",
+  "formula_found": false,
+  "found_terms": null,
+  "formula_nodes": null,
+  "other_families": [],
+  "route_pick": null,
+  "ast4_nodes": 248,
+  "ast4_pass": true,
+  "ast5_nodes": 248,
+  "ast5_pass": true,
+  "ast5_route": "sigmoid-replace",
+  "formula_py_pass": true,
+  "near_family": "conic",
+  "near_err": 3.564490545188829e-06,
+  "near_terms": 0,
+  "near_family_is_task_family": true,
+  "explain": true,
+  "true_vs_net": null,
+  "pysr_found": false,
+  "agent_pass": true,
+  "agent_nodes": 29,
+  "agent_formula": true,
+  "ast5_formula": false,
+  "reproduced": false,
+  "hinge_only": null,
+  "model": {
+    "pieces": null,
+    "boundary_points": 720,
+    "conic": [
+      0.25,
+      1.0,
+      0.0,
+      -0.25,
+      0.0,
+      0.95
+    ],
+    "radius_min_max": [
+      0.98,
+      2.02
+    ]
+  },
+  "won_on_size": false
+}

@@ -1,0 +1,62 @@
+{
+  "task": "sqrt",
+  "variant": "sigmoid",
+  "seed": "seed3",
+  "learned": true,
+  "family": "sqrt",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 9,
+  "other_families": [
+    "exp",
+    "log",
+    "reciprocal",
+    "square"
+  ],
+  "route_pick": "sqrt",
+  "ast4_nodes": 35,
+  "ast4_pass": true,
+  "ast5_nodes": 9,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": false,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0774,
+  "pysr_found": true,
+  "agent_pass": true,
+  "agent_nodes": 23,
+  "agent_formula": true,
+  "ast5_formula": true,
+  "reproduced": true,
+  "hinge_only": {
+    "hinges": 4,
+    "nodes": 61,
+    "passed": true
+  },
+  "model": {
+    "centres": [
+      0.14,
+      0.2,
+      2.223,
+      2.485,
+      3.146,
+      3.261
+    ],
+    "dead_units": null,
+    "optimal_knots": [
+      0.002,
+      0.035,
+      0.18,
+      0.57,
+      1.396,
+      2.902
+    ],
+    "knot_gap": 0.2654,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

@@ -11,111 +11,179 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 | relu | bump | seed0 | no | 14.7% | no | no | – | 284 | 284 (structural-exact) | exp 12.5% | – | no | no | [explain](relu/bump/seed0/explain.md) |
 | relu | bump | seed1 | no | 10.0% | no | no | – | 318 | 318 (structural-exact) | reciprocal 9.8% | – | no | no | [explain](relu/bump/seed1/explain.md) |
 | relu | bump | seed2 | no | 12.0% | no | no | – | 331 | 331 (structural-exact) | reciprocal 10.1% | – | no | no | [explain](relu/bump/seed2/explain.md) |
+| relu | bump | seed3 (held-out) | no | 8.4% | no | no | – | 355 | 355 (structural-exact) | exp 8.4% | – | no | no | [explain](relu/bump/seed3/explain.md) |
 | relu | circle | seed0 | yes | – | yes | yes (0) | conic | 262 | 18 (conic) | – | – | yes | no | [explain](relu/circle/seed0/explain.md) |
 | relu | circle | seed1 | yes | – | yes | yes (0) | conic | 199 | 18 (conic) | – | – | yes | no | [explain](relu/circle/seed1/explain.md) |
 | relu | circle | seed2 | yes | – | yes | yes (0) | conic | 321 | 18 (conic) | – | – | yes | no | [explain](relu/circle/seed2/explain.md) |
+| relu | circle | seed3 (held-out) | yes | – | yes | yes (0) | conic | 307 | 18 (conic) | – | – | yes | yes | [explain](relu/circle/seed3/explain.md) |
+| relu | decay | seed0 (held-out) | yes | 1.5% | yes | yes (0) | exp | 44 | 14 (family) | – | 7 hinges, 99 nodes | yes | yes | [explain](relu/decay/seed0/explain.md) |
+| relu | decay | seed1 (held-out) | yes | 1.2% | yes | yes (0) | reciprocal | 44 | 12 (family) | – | fails | yes | yes | [explain](relu/decay/seed1/explain.md) |
 | relu | dist | seed0 | yes | 1.9% | yes | yes (0) | sqrt | 260 | 18 (family) | – | – | yes | no | [explain](relu/dist/seed0/explain.md) |
 | relu | dist | seed1 | yes | 2.5% | no | yes (0) | sqrt | 324 | 21 (family) | – | – | yes | no | [explain](relu/dist/seed1/explain.md) |
 | relu | dist | seed2 | yes | 1.4% | yes | yes (0) | sqrt | 346 | 18 (family) | – | – | yes | yes | [explain](relu/dist/seed2/explain.md) |
+| relu | dist | seed3 (held-out) | yes | 2.2% | no | yes (0) | sqrt | 250 | 21 (family) | – | – | yes | yes | [explain](relu/dist/seed3/explain.md) |
+| relu | ellipse | seed0 (held-out) | yes | – | yes | yes (0) | conic | 214 | 28 (conic) | – | – | yes | no | [explain](relu/ellipse/seed0/explain.md) |
+| relu | ellipse | seed1 (held-out) | yes | – | yes | yes (0) | conic | 247 | 28 (conic) | – | – | yes | no | [explain](relu/ellipse/seed1/explain.md) |
 | relu | exp | seed0 | yes | 4.5% | no | yes (2) | identity | 58 | 35 (family) | – | 3 hinges, 48 nodes | yes | no | [explain](relu/exp/seed0/explain.md) |
 | relu | exp | seed1 | yes | 1.0% | yes | yes (0) | exp | 87 | 6 (family) | – | 7 hinges, 100 nodes | yes | yes | [explain](relu/exp/seed1/explain.md) |
 | relu | exp | seed2 | yes | 1.3% | yes | yes (0) | exp | 61 | 6 (family) | – | 5 hinges, 71 nodes | yes | yes | [explain](relu/exp/seed2/explain.md) |
+| relu | exp | seed3 (held-out) | yes | 3.5% | no | yes (2) | identity | 28 | 28 (spline) | – | 3 hinges, 48 nodes | no | no | [explain](relu/exp/seed3/explain.md) |
+| relu | hypot1 | seed0 (held-out) | yes | 2.7% | no | no | – | 280 | 280 (structural-exact) | sqrt 2.5% | – | no | no | [explain](relu/hypot1/seed0/explain.md) |
+| relu | hypot1 | seed1 (held-out) | yes | 3.7% | no | no | log | 254 | 51 (family) | – | – | no | no | [explain](relu/hypot1/seed1/explain.md) |
 | relu | log | seed0 | no | 62.9% | no | no | identity | 20 | 9 (family) | – | 0 hinges, 9 nodes | no | no | [explain](relu/log/seed0/explain.md) |
 | relu | log | seed1 | yes | 8.1% | no | yes (2) | identity | 50 | 35 (family) | – | 3 hinges, 48 nodes | yes | no | [explain](relu/log/seed1/explain.md) |
 | relu | log | seed2 | yes | 4.4% | no | no | reciprocal | 65 | 40 (family) | – | 5 hinges, 74 nodes | no | no | [explain](relu/log/seed2/explain.md) |
+| relu | log | seed3 (held-out) | yes | 3.0% | no | yes (0) | log | 75 | 12 (family) | – | 4 hinges, 61 nodes | yes | no | [explain](relu/log/seed3/explain.md) |
+| relu | logshift | seed0 (held-out) | yes | 3.8% | no | yes (2) | identity | 52 | 32 (family) | – | 3 hinges, 48 nodes | yes | no | [explain](relu/logshift/seed0/explain.md) |
+| relu | logshift | seed1 (held-out) | yes | 1.2% | yes | yes (0) | log | 95 | 9 (family) | – | 3 hinges, 48 nodes | yes | no | [explain](relu/logshift/seed1/explain.md) |
 | relu | product | seed0 | yes | 3.1% | no | yes (0) | quadratic | 276 | 10 (family) | – | – | yes | yes | [explain](relu/product/seed0/explain.md) |
 | relu | product | seed1 | yes | 3.6% | no | yes (0) | exp | 323 | 41 (family) | – | – | yes | no | [explain](relu/product/seed1/explain.md) |
 | relu | product | seed2 | yes | 2.0% | no | yes (0) | quadratic | 339 | 10 (family) | – | – | yes | no | [explain](relu/product/seed2/explain.md) |
+| relu | product | seed3 (held-out) | yes | 3.2% | no | yes (0) | reciprocal | 327 | 21 (family) | – | – | yes | no | [explain](relu/product/seed3/explain.md) |
 | relu | recip | seed0 | no | 14.1% | no | no | identity | 24 | 24 (structural-exact) | – | 1 hinges, 24 nodes | no | no | [explain](relu/recip/seed0/explain.md) |
 | relu | recip | seed1 | no | 15.0% | no | no | identity | 24 | 24 (structural-exact) | – | 1 hinges, 24 nodes | no | no | [explain](relu/recip/seed1/explain.md) |
 | relu | recip | seed2 | yes | 6.2% | no | yes (2) | identity | 41 | 37 (family) | – | 3 hinges, 50 nodes | yes | no | [explain](relu/recip/seed2/explain.md) |
+| relu | recip | seed3 (held-out) | yes | 5.1% | no | yes (2) | identity | 58 | 37 (family) | – | 3 hinges, 50 nodes | yes | no | [explain](relu/recip/seed3/explain.md) |
 | relu | sqrt | seed0 | no | 32.6% | no | no | identity | 9 | 9 (structural-exact) | – | 0 hinges, 9 nodes | no | no | [explain](relu/sqrt/seed0/explain.md) |
 | relu | sqrt | seed1 | yes | 9.4% | no | yes (1) | log | 28 | 28 (spline) | – | 3 hinges, 48 nodes | no | yes | [explain](relu/sqrt/seed1/explain.md) |
 | relu | sqrt | seed2 | yes | 9.5% | no | yes (1) | log | 28 | 28 (spline) | – | 3 hinges, 48 nodes | no | yes | [explain](relu/sqrt/seed2/explain.md) |
+| relu | sqrt | seed3 (held-out) | yes | 9.1% | no | yes (1) | log | 28 | 28 (spline) | – | 3 hinges, 48 nodes | no | no | [explain](relu/sqrt/seed3/explain.md) |
 | relu | square | seed0 | yes | 3.5% | no | no | – | 55 | 55 (structural-snap) | square 2.6% | fails | no | no | [explain](relu/square/seed0/explain.md) |
 | relu | square | seed1 | yes | 0.9% | yes | yes (0) | square | 84 | 7 (family) | – | 16 hinges, 219 nodes | yes | yes | [explain](relu/square/seed1/explain.md) |
 | relu | square | seed2 | yes | 1.8% | yes | yes (0) | square | 88 | 7 (family) | – | fails | yes | yes | [explain](relu/square/seed2/explain.md) |
+| relu | square | seed3 (held-out) | yes | 2.3% | no | yes (0) | square | 90 | 13 (family) | – | fails | yes | no | [explain](relu/square/seed3/explain.md) |
 | relu_wide | bump | seed0 | yes | 3.1% | no | no | – | 1142 | 1049 (prune-lp) | exp 3.1% | – | no | no | [explain](relu_wide/bump/seed0/explain.md) |
 | relu_wide | bump | seed1 | yes | 4.6% | no | no | – | 1177 | 1016 (prune-lp) | exp 2.6% | – | no | no | [explain](relu_wide/bump/seed1/explain.md) |
 | relu_wide | bump | seed2 | yes | 2.8% | no | no | – | 1093 | 1024 (prune-lp) | exp 2.8% | – | no | no | [explain](relu_wide/bump/seed2/explain.md) |
+| relu_wide | bump | seed3 (held-out) | no | 4.9% | no | no | – | 1238 | 1115 (prune-lp) | exp 2.5% | – | no | no | [explain](relu_wide/bump/seed3/explain.md) |
 | relu_wide | circle | seed0 | yes | – | yes | yes (0) | conic | 442 | 18 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed0/explain.md) |
 | relu_wide | circle | seed1 | yes | – | yes | yes (0) | conic | 1077 | 18 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed1/explain.md) |
 | relu_wide | circle | seed2 | yes | – | yes | yes (0) | conic | 458 | 18 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed2/explain.md) |
+| relu_wide | circle | seed3 (held-out) | yes | – | yes | yes (0) | conic | 1030 | 25 (conic) | – | – | yes | no | [explain](relu_wide/circle/seed3/explain.md) |
+| relu_wide | decay | seed0 (held-out) | yes | 0.3% | yes | yes (0) | reciprocal | 235 | 12 (family) | – | 10 hinges, 141 nodes | yes | yes | [explain](relu_wide/decay/seed0/explain.md) |
+| relu_wide | decay | seed1 (held-out) | yes | 0.2% | yes | yes (0) | reciprocal | 198 | 12 (family) | – | 3 hinges, 50 nodes | yes | yes | [explain](relu_wide/decay/seed1/explain.md) |
 | relu_wide | dist | seed0 | yes | 0.7% | yes | yes (0) | sqrt | 916 | 18 (family) | – | – | yes | no | [explain](relu_wide/dist/seed0/explain.md) |
 | relu_wide | dist | seed1 | yes | 0.8% | yes | yes (0) | sqrt | 866 | 18 (family) | – | – | yes | no | [explain](relu_wide/dist/seed1/explain.md) |
 | relu_wide | dist | seed2 | yes | 0.8% | yes | yes (0) | sqrt | 309 | 18 (family) | – | – | yes | no | [explain](relu_wide/dist/seed2/explain.md) |
+| relu_wide | dist | seed3 (held-out) | yes | 0.7% | yes | yes (0) | sqrt | 910 | 18 (family) | – | – | yes | yes | [explain](relu_wide/dist/seed3/explain.md) |
+| relu_wide | ellipse | seed0 (held-out) | yes | – | yes | yes (0) | conic | 449 | 28 (conic) | – | – | yes | no | [explain](relu_wide/ellipse/seed0/explain.md) |
+| relu_wide | ellipse | seed1 (held-out) | yes | – | yes | yes (0) | conic | 448 | 28 (conic) | – | – | yes | no | [explain](relu_wide/ellipse/seed1/explain.md) |
 | relu_wide | exp | seed0 | yes | 0.2% | yes | yes (0) | exp | 221 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](relu_wide/exp/seed0/explain.md) |
 | relu_wide | exp | seed1 | yes | 0.4% | yes | yes (0) | exp | 311 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](relu_wide/exp/seed1/explain.md) |
 | relu_wide | exp | seed2 | yes | 0.3% | yes | yes (0) | exp | 313 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](relu_wide/exp/seed2/explain.md) |
+| relu_wide | exp | seed3 (held-out) | yes | 0.4% | yes | yes (0) | exp | 355 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](relu_wide/exp/seed3/explain.md) |
+| relu_wide | hypot1 | seed0 (held-out) | yes | 0.8% | yes | yes (0) | sqrt | 1141 | 21 (family) | – | – | yes | yes | [explain](relu_wide/hypot1/seed0/explain.md) |
+| relu_wide | hypot1 | seed1 (held-out) | yes | 1.0% | yes | yes (0) | sqrt | 1070 | 21 (family) | – | – | yes | yes | [explain](relu_wide/hypot1/seed1/explain.md) |
 | relu_wide | log | seed0 | yes | 0.5% | yes | yes (0) | log | 248 | 6 (family) | – | 7 hinges, 100 nodes | yes | yes | [explain](relu_wide/log/seed0/explain.md) |
 | relu_wide | log | seed1 | yes | 0.8% | yes | yes (0) | log | 180 | 6 (family) | – | 6 hinges, 87 nodes | yes | yes | [explain](relu_wide/log/seed1/explain.md) |
 | relu_wide | log | seed2 | yes | 0.5% | yes | yes (0) | log | 299 | 6 (family) | – | 7 hinges, 100 nodes | yes | yes | [explain](relu_wide/log/seed2/explain.md) |
+| relu_wide | log | seed3 (held-out) | yes | 0.9% | yes | yes (0) | log | 205 | 6 (family) | – | 8 hinges, 113 nodes | yes | yes | [explain](relu_wide/log/seed3/explain.md) |
+| relu_wide | logshift | seed0 (held-out) | yes | 0.3% | yes | yes (0) | log | 186 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](relu_wide/logshift/seed0/explain.md) |
+| relu_wide | logshift | seed1 (held-out) | yes | 0.4% | yes | yes (0) | log | 168 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](relu_wide/logshift/seed1/explain.md) |
 | relu_wide | product | seed0 | yes | 0.7% | yes | yes (0) | quadratic | 1121 | 7 (family) | – | – | yes | yes | [explain](relu_wide/product/seed0/explain.md) |
 | relu_wide | product | seed1 | yes | 0.9% | yes | yes (0) | quadratic | 1098 | 7 (family) | – | – | yes | yes | [explain](relu_wide/product/seed1/explain.md) |
 | relu_wide | product | seed2 | yes | 0.8% | yes | yes (0) | quadratic | 1035 | 7 (family) | – | – | yes | yes | [explain](relu_wide/product/seed2/explain.md) |
+| relu_wide | product | seed3 (held-out) | yes | 0.8% | yes | yes (0) | quadratic | 878 | 7 (family) | – | – | yes | yes | [explain](relu_wide/product/seed3/explain.md) |
 | relu_wide | recip | seed0 | yes | 0.6% | yes | yes (0) | reciprocal | 215 | 6 (family) | – | 6 hinges, 89 nodes | yes | yes | [explain](relu_wide/recip/seed0/explain.md) |
 | relu_wide | recip | seed1 | yes | 0.6% | yes | yes (0) | reciprocal | 111 | 6 (family) | – | 6 hinges, 89 nodes | yes | yes | [explain](relu_wide/recip/seed1/explain.md) |
 | relu_wide | recip | seed2 | yes | 0.6% | yes | yes (0) | reciprocal | 204 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](relu_wide/recip/seed2/explain.md) |
+| relu_wide | recip | seed3 (held-out) | yes | 1.8% | yes | yes (0) | reciprocal | 125 | 6 (family) | – | 7 hinges, 102 nodes | yes | yes | [explain](relu_wide/recip/seed3/explain.md) |
 | relu_wide | sqrt | seed0 | yes | 1.9% | yes | yes (0) | sqrt | 265 | 6 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](relu_wide/sqrt/seed0/explain.md) |
 | relu_wide | sqrt | seed1 | yes | 2.5% | no | yes (0) | sqrt | 155 | 9 (family) | – | 4 hinges, 61 nodes | yes | no | [explain](relu_wide/sqrt/seed1/explain.md) |
 | relu_wide | sqrt | seed2 | yes | 2.5% | no | yes (0) | sqrt | 258 | 9 (family) | – | 6 hinges, 87 nodes | yes | yes | [explain](relu_wide/sqrt/seed2/explain.md) |
+| relu_wide | sqrt | seed3 (held-out) | yes | 2.9% | no | yes (0) | sqrt | 207 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](relu_wide/sqrt/seed3/explain.md) |
 | relu_wide | square | seed0 | yes | 0.3% | yes | yes (0) | square | 191 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](relu_wide/square/seed0/explain.md) |
 | relu_wide | square | seed1 | yes | 0.5% | yes | yes (0) | square | 261 | 7 (family) | – | 11 hinges, 151 nodes | yes | yes | [explain](relu_wide/square/seed1/explain.md) |
 | relu_wide | square | seed2 | yes | 0.4% | yes | yes (0) | square | 182 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](relu_wide/square/seed2/explain.md) |
+| relu_wide | square | seed3 (held-out) | yes | 0.3% | yes | yes (0) | square | 191 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](relu_wide/square/seed3/explain.md) |
 | sigmoid | bump | seed0 | yes | 2.6% | no | no | – | 476 | 415 (prune-lp) | exp 2.6% | – | no | no | [explain](sigmoid/bump/seed0/explain.md) |
 | sigmoid | bump | seed1 | yes | 4.7% | no | no | – | 452 | 422 (prune-lp) | exp 4.7% | – | no | no | [explain](sigmoid/bump/seed1/explain.md) |
 | sigmoid | bump | seed2 | yes | 3.9% | no | no | – | 466 | 400 (prune-lp) | exp 3.9% | – | no | no | [explain](sigmoid/bump/seed2/explain.md) |
+| sigmoid | bump | seed3 (held-out) | yes | 2.8% | no | no | – | 474 | 462 (prune-lp) | exp 2.7% | – | no | no | [explain](sigmoid/bump/seed3/explain.md) |
 | sigmoid | circle | seed0 | yes | – | yes | yes (0) | conic | 466 | 18 (conic) | – | – | yes | no | [explain](sigmoid/circle/seed0/explain.md) |
 | sigmoid | circle | seed1 | yes | – | yes | yes (0) | conic | 405 | 18 (conic) | – | – | yes | no | [explain](sigmoid/circle/seed1/explain.md) |
 | sigmoid | circle | seed2 | yes | – | yes | yes (0) | conic | 470 | 18 (conic) | – | – | yes | yes | [explain](sigmoid/circle/seed2/explain.md) |
+| sigmoid | circle | seed3 (held-out) | yes | – | yes | yes (0) | conic | 470 | 18 (conic) | – | – | yes | no | [explain](sigmoid/circle/seed3/explain.md) |
+| sigmoid | decay | seed0 (held-out) | yes | 0.6% | yes | yes (0) | reciprocal | 47 | 12 (family) | – | 4 hinges, 63 nodes | yes | no | [explain](sigmoid/decay/seed0/explain.md) |
+| sigmoid | decay | seed1 (held-out) | yes | 0.6% | yes | yes (0) | reciprocal | 37 | 12 (family) | – | 14 hinges, 193 nodes | yes | no | [explain](sigmoid/decay/seed1/explain.md) |
 | sigmoid | dist | seed0 | yes | 8.3% | no | yes (0) | sqrt | 462 | 55 (family) | – | – | yes | no | [explain](sigmoid/dist/seed0/explain.md) |
 | sigmoid | dist | seed1 | yes | 9.4% | no | no | reciprocal | 392 | 50 (family) | – | – | no | no | [explain](sigmoid/dist/seed1/explain.md) |
 | sigmoid | dist | seed2 | yes | 9.2% | no | yes (0) | sqrt | 370 | 38 (family) | – | – | yes | no | [explain](sigmoid/dist/seed2/explain.md) |
+| sigmoid | dist | seed3 (held-out) | yes | 8.2% | no | yes (0) | sqrt | 425 | 24 (family) | – | – | yes | no | [explain](sigmoid/dist/seed3/explain.md) |
+| sigmoid | ellipse | seed0 (held-out) | yes | – | yes | yes (0) | conic | 476 | 28 (conic) | – | – | yes | no | [explain](sigmoid/ellipse/seed0/explain.md) |
+| sigmoid | ellipse | seed1 (held-out) | yes | – | yes | yes (0) | conic | 468 | 28 (conic) | – | – | yes | no | [explain](sigmoid/ellipse/seed1/explain.md) |
 | sigmoid | exp | seed0 | yes | 0.7% | yes | yes (0) | exp | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](sigmoid/exp/seed0/explain.md) |
 | sigmoid | exp | seed1 | yes | 0.8% | yes | yes (0) | exp | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](sigmoid/exp/seed1/explain.md) |
 | sigmoid | exp | seed2 | yes | 0.8% | yes | yes (0) | exp | 48 | 6 (family) | – | 3 hinges, 45 nodes | yes | yes | [explain](sigmoid/exp/seed2/explain.md) |
+| sigmoid | exp | seed3 (held-out) | yes | 1.0% | yes | yes (0) | exp | 48 | 6 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](sigmoid/exp/seed3/explain.md) |
+| sigmoid | hypot1 | seed0 (held-out) | yes | 2.9% | no | yes (0) | sqrt | 313 | 24 (family) | – | – | yes | no | [explain](sigmoid/hypot1/seed0/explain.md) |
+| sigmoid | hypot1 | seed1 (held-out) | yes | 4.8% | no | no | log | 273 | 102 (family) | – | – | no | no | [explain](sigmoid/hypot1/seed1/explain.md) |
 | sigmoid | log | seed0 | yes | 2.0% | no | yes (0) | log | 48 | 9 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](sigmoid/log/seed0/explain.md) |
 | sigmoid | log | seed1 | yes | 2.4% | no | yes (0) | log | 48 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](sigmoid/log/seed1/explain.md) |
 | sigmoid | log | seed2 | yes | 2.9% | no | yes (0) | log | 48 | 9 (family) | – | 6 hinges, 87 nodes | yes | yes | [explain](sigmoid/log/seed2/explain.md) |
+| sigmoid | log | seed3 (held-out) | yes | 2.6% | no | yes (0) | log | 48 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](sigmoid/log/seed3/explain.md) |
+| sigmoid | logshift | seed0 (held-out) | yes | 1.1% | yes | yes (0) | log | 35 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](sigmoid/logshift/seed0/explain.md) |
+| sigmoid | logshift | seed1 (held-out) | yes | 1.3% | yes | yes (0) | log | 35 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](sigmoid/logshift/seed1/explain.md) |
 | sigmoid | product | seed0 | yes | 1.4% | yes | yes (0) | quadratic | 474 | 7 (family) | – | – | yes | yes | [explain](sigmoid/product/seed0/explain.md) |
 | sigmoid | product | seed1 | yes | 1.4% | yes | yes (0) | quadratic | 470 | 7 (family) | – | – | yes | yes | [explain](sigmoid/product/seed1/explain.md) |
 | sigmoid | product | seed2 | yes | 2.0% | yes | yes (0) | quadratic | 458 | 7 (family) | – | – | yes | yes | [explain](sigmoid/product/seed2/explain.md) |
+| sigmoid | product | seed3 (held-out) | yes | 1.2% | yes | yes (0) | quadratic | 470 | 7 (family) | – | – | yes | yes | [explain](sigmoid/product/seed3/explain.md) |
 | sigmoid | recip | seed0 | yes | 0.8% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](sigmoid/recip/seed0/explain.md) |
 | sigmoid | recip | seed1 | yes | 1.2% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](sigmoid/recip/seed1/explain.md) |
 | sigmoid | recip | seed2 | yes | 2.0% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](sigmoid/recip/seed2/explain.md) |
+| sigmoid | recip | seed3 (held-out) | yes | 1.5% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](sigmoid/recip/seed3/explain.md) |
 | sigmoid | sqrt | seed0 | yes | 7.3% | no | yes (0) | sqrt | 32 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](sigmoid/sqrt/seed0/explain.md) |
 | sigmoid | sqrt | seed1 | yes | 8.2% | no | yes (0) | sqrt | 35 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](sigmoid/sqrt/seed1/explain.md) |
 | sigmoid | sqrt | seed2 | yes | 8.9% | no | yes (0) | sqrt | 35 | 12 (family) | – | 9 hinges, 126 nodes | yes | yes | [explain](sigmoid/sqrt/seed2/explain.md) |
+| sigmoid | sqrt | seed3 (held-out) | yes | 7.7% | no | yes (0) | sqrt | 35 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](sigmoid/sqrt/seed3/explain.md) |
 | sigmoid | square | seed0 | yes | 0.7% | yes | yes (0) | square | 86 | 7 (family) | – | 12 hinges, 164 nodes | yes | yes | [explain](sigmoid/square/seed0/explain.md) |
 | sigmoid | square | seed1 | yes | 1.2% | yes | yes (0) | square | 76 | 7 (family) | – | 8 hinges, 115 nodes | yes | yes | [explain](sigmoid/square/seed1/explain.md) |
 | sigmoid | square | seed2 | yes | 1.0% | yes | yes (0) | square | 76 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](sigmoid/square/seed2/explain.md) |
+| sigmoid | square | seed3 (held-out) | yes | 0.9% | yes | yes (0) | square | 76 | 7 (family) | – | 9 hinges, 128 nodes | yes | yes | [explain](sigmoid/square/seed3/explain.md) |
 | tanh | bump | seed0 | yes | 3.4% | no | no | – | 474 | 464 (prune-lp) | exp 3.4% | – | no | no | [explain](tanh/bump/seed0/explain.md) |
 | tanh | bump | seed1 | yes | 5.9% | no | no | – | 468 | 429 (prune-lp) | exp 5.9% | – | no | no | [explain](tanh/bump/seed1/explain.md) |
 | tanh | bump | seed2 | yes | 2.6% | no | no | – | 468 | 429 (prune-lp) | exp 2.7% | – | no | no | [explain](tanh/bump/seed2/explain.md) |
+| tanh | bump | seed3 (held-out) | yes | 2.9% | no | no | – | 470 | 448 (prune-lp) | exp 2.9% | – | no | no | [explain](tanh/bump/seed3/explain.md) |
 | tanh | circle | seed0 | yes | – | yes | yes (0) | conic | 266 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed0/explain.md) |
 | tanh | circle | seed1 | yes | – | yes | yes (0) | conic | 332 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed1/explain.md) |
 | tanh | circle | seed2 | yes | – | yes | yes (0) | conic | 298 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed2/explain.md) |
+| tanh | circle | seed3 (held-out) | yes | – | yes | yes (0) | conic | 427 | 18 (conic) | – | – | yes | no | [explain](tanh/circle/seed3/explain.md) |
+| tanh | decay | seed0 (held-out) | yes | 0.4% | yes | yes (0) | reciprocal | 37 | 12 (family) | – | 3 hinges, 50 nodes | yes | no | [explain](tanh/decay/seed0/explain.md) |
+| tanh | decay | seed1 (held-out) | yes | 0.6% | yes | yes (0) | reciprocal | 37 | 12 (family) | – | 3 hinges, 50 nodes | yes | no | [explain](tanh/decay/seed1/explain.md) |
 | tanh | dist | seed0 | yes | 13.3% | no | no | – | 470 | 205 (prune-lp) | reciprocal 3.9% | – | no | no | [explain](tanh/dist/seed0/explain.md) |
 | tanh | dist | seed1 | no | 17.7% | no | no | – | 436 | 104 (prune-lp) | reciprocal 6.1% | – | no | no | [explain](tanh/dist/seed1/explain.md) |
 | tanh | dist | seed2 | yes | 17.2% | no | no | – | 464 | 172 (prune-lp) | reciprocal 3.1% | – | no | no | [explain](tanh/dist/seed2/explain.md) |
+| tanh | dist | seed3 (held-out) | yes | 12.1% | no | no | – | 474 | 196 (prune-lp) | exp 2.9% | – | no | no | [explain](tanh/dist/seed3/explain.md) |
+| tanh | ellipse | seed0 (held-out) | yes | – | yes | no | – | 248 | 248 (sigmoid-replace) | conic 0.0% | – | no | no | [explain](tanh/ellipse/seed0/explain.md) |
+| tanh | ellipse | seed1 (held-out) | yes | – | yes | yes (0) | conic | 221 | 28 (conic) | – | – | yes | no | [explain](tanh/ellipse/seed1/explain.md) |
 | tanh | exp | seed0 | yes | 0.6% | yes | yes (0) | exp | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/exp/seed0/explain.md) |
 | tanh | exp | seed1 | yes | 0.8% | yes | yes (0) | exp | 45 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/exp/seed1/explain.md) |
 | tanh | exp | seed2 | yes | 0.9% | yes | yes (0) | exp | 45 | 6 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](tanh/exp/seed2/explain.md) |
+| tanh | exp | seed3 (held-out) | yes | 0.8% | yes | yes (0) | exp | 45 | 6 (family) | – | 3 hinges, 45 nodes | yes | yes | [explain](tanh/exp/seed3/explain.md) |
+| tanh | hypot1 | seed0 (held-out) | yes | 4.2% | no | yes (1) | exp | 468 | 34 (family) | – | – | yes | no | [explain](tanh/hypot1/seed0/explain.md) |
+| tanh | hypot1 | seed1 (held-out) | yes | 5.6% | no | no | – | 392 | 96 (prune-lp) | log 3.4% | – | no | no | [explain](tanh/hypot1/seed1/explain.md) |
 | tanh | log | seed0 | yes | 1.7% | yes | yes (0) | log | 48 | 6 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/log/seed0/explain.md) |
 | tanh | log | seed1 | yes | 2.0% | no | yes (0) | log | 48 | 9 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/log/seed1/explain.md) |
 | tanh | log | seed2 | yes | 2.5% | no | yes (0) | log | 48 | 9 (family) | – | 6 hinges, 87 nodes | yes | yes | [explain](tanh/log/seed2/explain.md) |
+| tanh | log | seed3 (held-out) | yes | 2.5% | no | yes (0) | log | 48 | 9 (family) | – | 5 hinges, 74 nodes | yes | yes | [explain](tanh/log/seed3/explain.md) |
+| tanh | logshift | seed0 (held-out) | yes | 0.6% | yes | yes (0) | log | 35 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](tanh/logshift/seed0/explain.md) |
+| tanh | logshift | seed1 (held-out) | yes | 0.8% | yes | yes (0) | log | 35 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](tanh/logshift/seed1/explain.md) |
 | tanh | product | seed0 | yes | 1.6% | yes | yes (0) | quadratic | 464 | 7 (family) | – | – | yes | yes | [explain](tanh/product/seed0/explain.md) |
 | tanh | product | seed1 | yes | 0.9% | yes | yes (0) | quadratic | 470 | 7 (family) | – | – | yes | yes | [explain](tanh/product/seed1/explain.md) |
 | tanh | product | seed2 | yes | 1.4% | yes | yes (0) | quadratic | 468 | 7 (family) | – | – | yes | yes | [explain](tanh/product/seed2/explain.md) |
+| tanh | product | seed3 (held-out) | yes | 0.8% | yes | yes (0) | quadratic | 472 | 7 (family) | – | – | yes | yes | [explain](tanh/product/seed3/explain.md) |
 | tanh | recip | seed0 | yes | 1.5% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](tanh/recip/seed0/explain.md) |
 | tanh | recip | seed1 | yes | 1.4% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](tanh/recip/seed1/explain.md) |
 | tanh | recip | seed2 | yes | 1.5% | yes | yes (0) | reciprocal | 50 | 6 (family) | – | 5 hinges, 76 nodes | yes | yes | [explain](tanh/recip/seed2/explain.md) |
+| tanh | recip | seed3 (held-out) | yes | 2.1% | no | yes (0) | reciprocal | 63 | 9 (family) | – | 6 hinges, 89 nodes | yes | yes | [explain](tanh/recip/seed3/explain.md) |
 | tanh | sqrt | seed0 | yes | 6.0% | no | yes (0) | sqrt | 35 | 9 (family) | – | 3 hinges, 48 nodes | yes | yes | [explain](tanh/sqrt/seed0/explain.md) |
 | tanh | sqrt | seed1 | yes | 6.7% | no | yes (0) | sqrt | 35 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](tanh/sqrt/seed1/explain.md) |
 | tanh | sqrt | seed2 | yes | 6.8% | no | yes (0) | sqrt | 35 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](tanh/sqrt/seed2/explain.md) |
+| tanh | sqrt | seed3 (held-out) | yes | 7.7% | no | yes (0) | sqrt | 35 | 9 (family) | – | 4 hinges, 61 nodes | yes | yes | [explain](tanh/sqrt/seed3/explain.md) |
 | tanh | square | seed0 | yes | 0.7% | yes | yes (0) | square | 76 | 7 (family) | – | 9 hinges, 125 nodes | yes | yes | [explain](tanh/square/seed0/explain.md) |
 | tanh | square | seed1 | yes | 2.2% | no | yes (0) | square | 63 | 10 (family) | – | 8 hinges, 115 nodes | yes | no | [explain](tanh/square/seed1/explain.md) |
 | tanh | square | seed2 | yes | 2.7% | no | yes (0) | square | 76 | 10 (family) | – | 8 hinges, 115 nodes | yes | no | [explain](tanh/square/seed2/explain.md) |
+| tanh | square | seed3 (held-out) | yes | 1.5% | yes | yes (0) | square | 73 | 7 (family) | – | 11 hinges, 154 nodes | yes | yes | [explain](tanh/square/seed3/explain.md) |
 
 ## How the nets model the functions
 
@@ -123,66 +191,102 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 
 | variant | task | seed | units in box | dead | gap | max error at | true vs net |
 |---|---|---|---|---|---|---|---|
+| relu | decay | seed0 | 3 | 4 | 12.4% | edge | 1.5% |
+| relu | decay | seed1 | 3 | 1 | 6.6% | edge | 1.2% |
 | relu | exp | seed0 | 2 | 4 | 5.9% | edge | 4.5% |
 | relu | exp | seed1 | 6 | 1 | 9.2% | edge | 1.0% |
 | relu | exp | seed2 | 4 | 2 | 4.8% | edge | 1.3% |
+| relu | exp | seed3 | 2 | 2 | 5.9% | edge | 3.5% |
 | relu | log | seed0 | 1 | 5 | 12.3% | edge | 62.9% |
 | relu | log | seed1 | 2 | 3 | 2.9% | edge | 8.1% |
 | relu | log | seed2 | 4 | 2 | 4.3% | edge | 4.4% |
+| relu | log | seed3 | 4 | 3 | 5.0% | edge | 3.0% |
+| relu | logshift | seed0 | 2 | 4 | 5.9% | edge | 3.8% |
+| relu | logshift | seed1 | 5 | 0 | 7.5% | edge | 1.2% |
 | relu | recip | seed0 | 1 | 6 | 4.7% | edge | 14.1% |
 | relu | recip | seed1 | 1 | 3 | 4.9% | edge | 15.0% |
 | relu | recip | seed2 | 2 | 2 | 3.9% | edge | 6.2% |
+| relu | recip | seed3 | 4 | 4 | 10.5% | edge | 5.1% |
 | relu | sqrt | seed0 | 0 | 6 | – | edge | 32.6% |
 | relu | sqrt | seed1 | 2 | 2 | 7.8% | edge | 9.4% |
 | relu | sqrt | seed2 | 2 | 2 | 8.3% | edge | 9.5% |
+| relu | sqrt | seed3 | 2 | 3 | 8.4% | edge | 9.1% |
 | relu | square | seed0 | 4 | 4 | 5.0% | edge | 3.5% |
 | relu | square | seed1 | 8 | 0 | 2.8% | edge | 0.9% |
 | relu | square | seed2 | 6 | 2 | 3.9% | edge | 1.8% |
+| relu | square | seed3 | 5 | 2 | 5.0% | interior | 2.3% |
+| relu_wide | decay | seed0 | 16 | 9 | 10.2% | edge | 0.3% |
+| relu_wide | decay | seed1 | 14 | 8 | 4.2% | interior | 0.2% |
 | relu_wide | exp | seed0 | 18 | 7 | 9.4% | interior | 0.2% |
 | relu_wide | exp | seed1 | 17 | 8 | 5.5% | interior | 0.4% |
 | relu_wide | exp | seed2 | 17 | 8 | 7.0% | interior | 0.3% |
+| relu_wide | exp | seed3 | 18 | 7 | 7.9% | edge | 0.4% |
 | relu_wide | log | seed0 | 13 | 14 | 4.0% | edge | 0.5% |
 | relu_wide | log | seed1 | 11 | 14 | 8.8% | edge | 0.8% |
 | relu_wide | log | seed2 | 20 | 9 | 10.6% | edge | 0.5% |
+| relu_wide | log | seed3 | 10 | 16 | 9.2% | edge | 0.9% |
+| relu_wide | logshift | seed0 | 14 | 11 | 13.7% | edge | 0.3% |
+| relu_wide | logshift | seed1 | 14 | 9 | 11.8% | edge | 0.4% |
 | relu_wide | recip | seed0 | 16 | 11 | 10.6% | edge | 0.6% |
 | relu_wide | recip | seed1 | 13 | 11 | 10.0% | edge | 0.6% |
 | relu_wide | recip | seed2 | 15 | 11 | 14.9% | edge | 0.6% |
+| relu_wide | recip | seed3 | 7 | 17 | 14.1% | edge | 1.8% |
 | relu_wide | sqrt | seed0 | 15 | 11 | 19.0% | edge | 1.9% |
 | relu_wide | sqrt | seed1 | 10 | 14 | 10.6% | edge | 2.5% |
 | relu_wide | sqrt | seed2 | 14 | 12 | 17.8% | edge | 2.5% |
+| relu_wide | sqrt | seed3 | 11 | 14 | 12.3% | edge | 2.9% |
 | relu_wide | square | seed0 | 21 | 5 | 4.1% | edge | 0.3% |
 | relu_wide | square | seed1 | 18 | 9 | 3.7% | edge | 0.5% |
 | relu_wide | square | seed2 | 20 | 5 | 4.6% | edge | 0.4% |
+| relu_wide | square | seed3 | 23 | 7 | 3.8% | edge | 0.3% |
+| sigmoid | decay | seed0 | 6 | – | 14.1% | edge | 0.6% |
+| sigmoid | decay | seed1 | 7 | – | 14.6% | edge | 0.6% |
 | sigmoid | exp | seed0 | 5 | – | 19.2% | edge | 0.7% |
 | sigmoid | exp | seed1 | 4 | – | 13.8% | edge | 0.8% |
 | sigmoid | exp | seed2 | 4 | – | 16.1% | edge | 0.8% |
+| sigmoid | exp | seed3 | 3 | – | 12.8% | edge | 1.0% |
 | sigmoid | log | seed0 | 5 | – | 8.0% | edge | 2.0% |
 | sigmoid | log | seed1 | 4 | – | 10.1% | edge | 2.4% |
 | sigmoid | log | seed2 | 5 | – | 17.0% | edge | 2.9% |
+| sigmoid | log | seed3 | 6 | – | 11.9% | edge | 2.6% |
+| sigmoid | logshift | seed0 | 5 | – | 14.7% | edge | 1.1% |
+| sigmoid | logshift | seed1 | 7 | – | 22.9% | edge | 1.3% |
 | sigmoid | recip | seed0 | 0 | – | – | edge | 0.8% |
 | sigmoid | recip | seed1 | 3 | – | 20.2% | edge | 1.2% |
 | sigmoid | recip | seed2 | 1 | – | 9.2% | edge | 2.0% |
+| sigmoid | recip | seed3 | 3 | – | 18.7% | edge | 1.5% |
 | sigmoid | sqrt | seed0 | 7 | – | 15.0% | edge | 7.3% |
 | sigmoid | sqrt | seed1 | 6 | – | 21.8% | edge | 8.2% |
 | sigmoid | sqrt | seed2 | 4 | – | 19.3% | edge | 8.9% |
+| sigmoid | sqrt | seed3 | 6 | – | 26.5% | edge | 7.7% |
 | sigmoid | square | seed0 | 7 | – | 13.2% | edge | 0.7% |
 | sigmoid | square | seed1 | 8 | – | 4.7% | edge | 1.2% |
 | sigmoid | square | seed2 | 8 | – | 3.4% | edge | 1.0% |
+| sigmoid | square | seed3 | 8 | – | 15.1% | edge | 0.9% |
+| tanh | decay | seed0 | 2 | – | 10.2% | edge | 0.4% |
+| tanh | decay | seed1 | 2 | – | 23.5% | edge | 0.6% |
 | tanh | exp | seed0 | 2 | – | 14.1% | edge | 0.6% |
 | tanh | exp | seed1 | 2 | – | 11.7% | edge | 0.8% |
 | tanh | exp | seed2 | 2 | – | 11.7% | edge | 0.9% |
+| tanh | exp | seed3 | 3 | – | 20.0% | edge | 0.8% |
 | tanh | log | seed0 | 3 | – | 2.4% | edge | 1.7% |
 | tanh | log | seed1 | 4 | – | 4.5% | edge | 2.0% |
 | tanh | log | seed2 | 2 | – | 6.6% | edge | 2.5% |
+| tanh | log | seed3 | 4 | – | 13.4% | edge | 2.5% |
+| tanh | logshift | seed0 | 4 | – | 10.7% | edge | 0.6% |
+| tanh | logshift | seed1 | 5 | – | 23.3% | edge | 0.8% |
 | tanh | recip | seed0 | 2 | – | 29.4% | edge | 1.5% |
 | tanh | recip | seed1 | 1 | – | 9.7% | edge | 1.4% |
 | tanh | recip | seed2 | 2 | – | 11.2% | edge | 1.5% |
+| tanh | recip | seed3 | 3 | – | 4.9% | edge | 2.1% |
 | tanh | sqrt | seed0 | 2 | – | 20.6% | edge | 6.0% |
 | tanh | sqrt | seed1 | 5 | – | 23.3% | edge | 6.7% |
 | tanh | sqrt | seed2 | 4 | – | 44.7% | edge | 6.8% |
+| tanh | sqrt | seed3 | 4 | – | 25.7% | edge | 7.7% |
 | tanh | square | seed0 | 3 | – | 15.0% | edge | 0.7% |
 | tanh | square | seed1 | 2 | – | 20.6% | edge | 2.2% |
 | tanh | square | seed2 | 2 | – | 20.7% | edge | 2.7% |
+| tanh | square | seed3 | 3 | – | 15.9% | edge | 1.5% |
 
 Binary 2-D nets: the decision boundary along 720 rays from the true centre. *pieces*: distinct ReLU activation patterns on it (straight sides).
 
@@ -191,15 +295,27 @@ Binary 2-D nets: the decision boundary along 720 rays from the true centre. *pie
 | relu | circle | seed0 | 20 | 1.993–2.045 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.05] |
 | relu | circle | seed1 | 18 | 1.964–2.032 | [1.0, 1.0, 0.0, 0.0, 0.0, 3.975] |
 | relu | circle | seed2 | 28 | 1.98–2.029 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
+| relu | circle | seed3 | 28 | 1.976–2.024 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
+| relu | ellipse | seed0 | 24 | 0.998–2.0 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.95] |
+| relu | ellipse | seed1 | 22 | 0.991–2.021 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.93] |
 | relu_wide | circle | seed0 | 88 | 1.989–2.014 | [1.0, 1.0, 0.0, -0.02, 0.0, 4.0] |
 | relu_wide | circle | seed1 | 95 | 1.98–2.001 | [1.0, 1.0, 0.0, 0.0, 0.0, 3.95] |
 | relu_wide | circle | seed2 | 83 | 1.975–2.013 | [1.0, 1.0, 0.01, 0.0, 0.01, 3.977] |
+| relu_wide | circle | seed3 | 90 | 1.984–2.042 | [1.0, 1.0, 0.0, 0.05, -0.02, 4.05] |
+| relu_wide | ellipse | seed0 | 101 | 0.993–2.007 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
+| relu_wide | ellipse | seed1 | 89 | 1.003–2.002 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
 | sigmoid | circle | seed0 | – | 1.972–2.026 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
 | sigmoid | circle | seed1 | – | 1.972–2.009 | [1.0, 1.0, 0.0, -0.01, 0.0, 3.97] |
 | sigmoid | circle | seed2 | – | 1.971–2.02 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
+| sigmoid | circle | seed3 | – | 1.978–2.019 | [1.0, 1.0, 0.0, 0.0, -0.02368, 4.0] |
+| sigmoid | ellipse | seed0 | – | 0.99–1.996 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
+| sigmoid | ellipse | seed1 | – | 0.999–2.014 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
 | tanh | circle | seed0 | – | 1.969–2.033 | [1.0, 1.0, 0.0, 0.0, 0.03, 4.0] |
 | tanh | circle | seed1 | – | 1.968–2.009 | [1.0, 1.0, 0.0, 0.0, 0.0, 3.95] |
 | tanh | circle | seed2 | – | 1.977–2.022 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
+| tanh | circle | seed3 | – | 1.971–2.02 | [1.0, 1.0, 0.0, -0.02, -0.02, 4.0] |
+| tanh | ellipse | seed0 | – | 0.98–2.02 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.95] |
+| tanh | ellipse | seed1 | – | 0.983–2.054 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.95] |
 
 2-D regression nets: the largest |net − true| in 10 rings of distance from the centre, innermost first.
 
@@ -208,39 +324,59 @@ Binary 2-D nets: the decision boundary along 720 rays from the true centre. *pie
 | relu | bump | seed0 | 0.124, 0.12, 0.124, 0.125, 0.155, 0.163, 0.127, 0.135, 0.0487, 0.0467 |
 | relu | bump | seed1 | 0.0668, 0.0669, 0.087, 0.112, 0.115, 0.0908, 0.0927, 0.0986, 0.0711, 0.0312 |
 | relu | bump | seed2 | 0.133, 0.124, 0.0825, 0.104, 0.105, 0.0879, 0.0859, 0.125, 0.0792, 0.0799 |
+| relu | bump | seed3 | 0.0652, 0.0508, 0.0597, 0.0884, 0.0713, 0.0918, 0.0792, 0.0646, 0.0666, 0.0646 |
 | relu | dist | seed0 | 0.0667, 0.0248, 0.0279, 0.0301, 0.0355, 0.0428, 0.0501, 0.0537, 0.0418, 0.0372 |
 | relu | dist | seed1 | 0.0889, 0.0307, 0.0242, 0.0246, 0.0299, 0.0345, 0.0412, 0.0438, 0.0362, 0.037 |
 | relu | dist | seed2 | 0.0438, 0.0165, 0.0154, 0.0191, 0.0262, 0.0299, 0.0362, 0.039, 0.0273, 0.0294 |
+| relu | dist | seed3 | 0.0807, 0.0259, 0.0209, 0.0264, 0.0306, 0.0344, 0.039, 0.0347, 0.0337, 0.0341 |
+| relu | hypot1 | seed0 | 0.0264, 0.0538, 0.0523, 0.0417, 0.0373, 0.0332, 0.0396, 0.0533, 0.042, 0.0331 |
+| relu | hypot1 | seed1 | 0.0727, 0.0326, 0.0459, 0.0454, 0.0246, 0.0279, 0.0254, 0.028, 0.0403, 0.0351 |
 | relu | product | seed0 | 0.0547, 0.0718, 0.0874, 0.0946, 0.0831, 0.0936, 0.108, 0.0863, 0.1, 0.2 |
 | relu | product | seed1 | 0.0884, 0.09, 0.105, 0.102, 0.105, 0.117, 0.116, 0.141, 0.107, 0.243 |
 | relu | product | seed2 | 0.0413, 0.0568, 0.0638, 0.06, 0.0637, 0.085, 0.0914, 0.0713, 0.0693, 0.133 |
+| relu | product | seed3 | 0.0676, 0.0802, 0.0935, 0.0856, 0.128, 0.135, 0.107, 0.113, 0.111, 0.222 |
 | relu_wide | bump | seed0 | 0.0293, 0.0287, 0.0211, 0.0266, 0.0191, 0.0258, 0.0311, 0.0301, 0.0254, 0.0168 |
 | relu_wide | bump | seed1 | 0.0336, 0.0281, 0.0331, 0.0274, 0.0318, 0.0304, 0.0382, 0.0383, 0.0447, 0.0456 |
 | relu_wide | bump | seed2 | 0.0271, 0.0235, 0.0284, 0.0244, 0.0241, 0.0246, 0.024, 0.0255, 0.0261, 0.0222 |
+| relu_wide | bump | seed3 | 0.0514, 0.0292, 0.0329, 0.0325, 0.0374, 0.0337, 0.0364, 0.0414, 0.0457, 0.0465 |
 | relu_wide | dist | seed0 | 0.0209, 0.0064, 0.0072, 0.0086, 0.0111, 0.0135, 0.0158, 0.0169, 0.0179, 0.0198 |
 | relu_wide | dist | seed1 | 0.0232, 0.0044, 0.0057, 0.0071, 0.0079, 0.0103, 0.0116, 0.0116, 0.0097, 0.0096 |
 | relu_wide | dist | seed2 | 0.0227, 0.0073, 0.0091, 0.0103, 0.0145, 0.0172, 0.0188, 0.0185, 0.0192, 0.0214 |
+| relu_wide | dist | seed3 | 0.0212, 0.0044, 0.0038, 0.0037, 0.005, 0.0061, 0.0072, 0.0075, 0.0076, 0.0075 |
+| relu_wide | hypot1 | seed0 | 0.009, 0.0153, 0.0143, 0.0126, 0.0124, 0.0132, 0.0125, 0.0138, 0.0145, 0.0155 |
+| relu_wide | hypot1 | seed1 | 0.0118, 0.0104, 0.0132, 0.0157, 0.0132, 0.0129, 0.0169, 0.0191, 0.0163, 0.0188 |
 | relu_wide | product | seed0 | 0.0079, 0.0119, 0.0127, 0.0134, 0.0143, 0.0189, 0.0244, 0.0177, 0.029, 0.0493 |
 | relu_wide | product | seed1 | 0.0144, 0.0157, 0.0169, 0.0203, 0.0222, 0.025, 0.0301, 0.0313, 0.0365, 0.0697 |
 | relu_wide | product | seed2 | 0.0129, 0.0145, 0.0196, 0.0199, 0.0217, 0.0235, 0.0255, 0.0289, 0.0311, 0.0586 |
+| relu_wide | product | seed3 | 0.0117, 0.0148, 0.0155, 0.0168, 0.0196, 0.0202, 0.0216, 0.0229, 0.0395, 0.0429 |
 | sigmoid | bump | seed0 | 0.0023, 0.0041, 0.0092, 0.0181, 0.0196, 0.0195, 0.0175, 0.0251, 0.0265, 0.0249 |
 | sigmoid | bump | seed1 | 0.011, 0.0142, 0.022, 0.0305, 0.0308, 0.0278, 0.0405, 0.0478, 0.0313, 0.0348 |
 | sigmoid | bump | seed2 | 0.0056, 0.0079, 0.0195, 0.03, 0.0308, 0.0268, 0.0236, 0.0374, 0.0395, 0.0395 |
+| sigmoid | bump | seed3 | 0.0086, 0.0098, 0.0091, 0.0165, 0.0262, 0.0266, 0.0247, 0.027, 0.026, 0.026 |
 | sigmoid | dist | seed0 | 0.307, 0.0616, 0.0617, 0.0618, 0.0561, 0.0349, 0.0586, 0.0804, 0.0577, 0.0873 |
 | sigmoid | dist | seed1 | 0.342, 0.0779, 0.067, 0.068, 0.0712, 0.0715, 0.0641, 0.0912, 0.0756, 0.0597 |
 | sigmoid | dist | seed2 | 0.336, 0.0754, 0.0681, 0.0526, 0.0449, 0.0458, 0.0639, 0.0992, 0.0783, 0.0876 |
+| sigmoid | dist | seed3 | 0.293, 0.0473, 0.046, 0.0446, 0.0426, 0.0354, 0.0527, 0.0629, 0.0776, 0.0938 |
+| sigmoid | hypot1 | seed0 | 0.0231, 0.0193, 0.0143, 0.017, 0.0161, 0.0115, 0.0193, 0.0313, 0.0303, 0.0509 |
+| sigmoid | hypot1 | seed1 | 0.0387, 0.0401, 0.0373, 0.0261, 0.0232, 0.0212, 0.0274, 0.0409, 0.0483, 0.0896 |
 | sigmoid | product | seed0 | 0.0046, 0.0078, 0.0092, 0.0101, 0.0108, 0.0108, 0.0131, 0.0187, 0.0189, 0.0921 |
 | sigmoid | product | seed1 | 0.0033, 0.0052, 0.0054, 0.0074, 0.0075, 0.0076, 0.0113, 0.0172, 0.0203, 0.099 |
 | sigmoid | product | seed2 | 0.0085, 0.0104, 0.0104, 0.0117, 0.0122, 0.0144, 0.0146, 0.0238, 0.0267, 0.133 |
+| sigmoid | product | seed3 | 0.0058, 0.0072, 0.0073, 0.008, 0.0088, 0.0086, 0.0118, 0.0194, 0.0196, 0.0919 |
 | tanh | bump | seed0 | 0.0096, 0.011, 0.0093, 0.0144, 0.0233, 0.0247, 0.0198, 0.0344, 0.0255, 0.0206 |
 | tanh | bump | seed1 | 0.0305, 0.0246, 0.0325, 0.0349, 0.0304, 0.0265, 0.0521, 0.0602, 0.0431, 0.0331 |
 | tanh | bump | seed2 | 0.0113, 0.014, 0.0143, 0.0177, 0.0232, 0.0275, 0.0251, 0.0252, 0.0264, 0.0209 |
+| tanh | bump | seed3 | 0.0121, 0.0119, 0.0117, 0.0157, 0.0194, 0.0213, 0.0186, 0.0251, 0.0241, 0.026 |
 | tanh | dist | seed0 | 0.451, 0.174, 0.135, 0.146, 0.136, 0.0909, 0.192, 0.202, 0.161, 0.201 |
 | tanh | dist | seed1 | 0.626, 0.328, 0.13, 0.132, 0.134, 0.119, 0.131, 0.197, 0.22, 0.345 |
 | tanh | dist | seed2 | 0.57, 0.272, 0.114, 0.119, 0.0969, 0.0662, 0.112, 0.122, 0.155, 0.306 |
+| tanh | dist | seed3 | 0.431, 0.15, 0.0859, 0.0863, 0.0636, 0.0655, 0.0976, 0.131, 0.0821, 0.208 |
+| tanh | hypot1 | seed0 | 0.0353, 0.0353, 0.0296, 0.0199, 0.0215, 0.0208, 0.0292, 0.0369, 0.0382, 0.0744 |
+| tanh | hypot1 | seed1 | 0.0594, 0.0531, 0.0359, 0.0223, 0.0292, 0.041, 0.0452, 0.057, 0.0645, 0.0911 |
 | tanh | product | seed0 | 0.0176, 0.0181, 0.018, 0.02, 0.0248, 0.0273, 0.0274, 0.0298, 0.0323, 0.108 |
 | tanh | product | seed1 | 0.0023, 0.004, 0.0048, 0.0067, 0.0074, 0.0098, 0.014, 0.0175, 0.0196, 0.0676 |
 | tanh | product | seed2 | 0.004, 0.0077, 0.0105, 0.0149, 0.0171, 0.017, 0.0152, 0.0166, 0.0243, 0.0855 |
+| tanh | product | seed3 | 0.0042, 0.0055, 0.0062, 0.0068, 0.0068, 0.0094, 0.0116, 0.0121, 0.013, 0.0537 |
 
 ## Snapping to formulas
 
@@ -268,6 +404,9 @@ Written in the design before any tool code. Counts are over learned nets.
 | bump: formula found on at least one net | 0 | not met |
 | tanh's formula-found count is within 3 of sigmoid's | 21 vs 23 | met |
 | PySR finds the formula on fewer development nets than ast5, and on at least 5 | 60 vs 86 | met |
+| held-out: formula found on at least 60% of the learned held-out nets | 58/66 (88%) | met |
+| held-out: formula found on at least one ellipse net | 7 | met |
+| held-out: formula found on at least one decay net | 8 | met |
 
 ## Predictions (near formulas and gate view)
 
@@ -303,3 +442,42 @@ Not reproduced:
 - tanh/bump/seed0: ast5 464 nodes, agent 501 (not the family)
 - tanh/dist/seed0: ast5 205 nodes, agent 189 (larger)
 - tanh/dist/seed2: ast5 172 nodes, agent 145 (larger)
+
+## Held-out
+
+Built after the freeze and run once (ast5, freeze f95f631).
+
+| variant | learned | formula found | with 0 terms | with 1–4 terms | route pick is the family | won on size | other family passed | PySR found | near formula within 3% (regression, of the family) |
+|---|---|---|---|---|---|---|---|---|---|
+| relu | 16 | 14 (88%) | 10 | 4 | 8 | 12 | 11 | 4 | 1 |
+| relu_wide | 16 | 16 (100%) | 16 | 0 | 14 | 16 | 12 | 13 | 0 |
+| sigmoid | 17 | 15 (88%) | 15 | 0 | 13 | 15 | 12 | 8 | 1 |
+| tanh | 17 | 13 (76%) | 12 | 1 | 10 | 13 | 10 | 8 | 1 |
+
+## Reproduction (held-out)
+
+Per held-out net with an agent attempt (`agent_1`, not excluded in `agent_excluded.json`): `ast5` reproduces it when both pass, `ast5` is not larger, and where the agent's program uses the task family's function, `ast5`'s does too. Smaller / equal / larger compare the node counts where both pass.
+
+| variant | agents passing | reproduced | smaller | equal | larger |
+|---|---|---|---|---|---|
+| relu | 17 | 15/17 (88%) | 16 | 0 | 1 |
+| relu_wide | 17 | 13/17 (76%) | 10 | 5 | 2 |
+| sigmoid | 17 | 15/17 (88%) | 14 | 3 | 0 |
+| tanh | 17 | 12/17 (71%) | 10 | 5 | 2 |
+
+Total: 55/68 (81%).
+
+Not reproduced:
+- relu/decay/seed1: ast5 12 nodes, agent 14 (not the family)
+- relu/hypot1/seed0: ast5 280 nodes, agent 264 (larger)
+- relu_wide/bump/seed3: ast5 1115 nodes, agent 961 (larger, not the family)
+- relu_wide/circle/seed3: ast5 25 nodes, agent 23 (larger)
+- relu_wide/decay/seed0: ast5 12 nodes, agent 14 (not the family)
+- relu_wide/decay/seed1: ast5 12 nodes, agent 14 (not the family)
+- sigmoid/decay/seed0: ast5 12 nodes, agent 14 (not the family)
+- sigmoid/decay/seed1: ast5 12 nodes, agent 14 (not the family)
+- tanh/decay/seed0: ast5 12 nodes, agent 14 (not the family)
+- tanh/decay/seed1: ast5 12 nodes, agent 14 (not the family)
+- tanh/ellipse/seed0: ast5 248 nodes, agent 29 (larger, not the family)
+- tanh/hypot1/seed0: ast5 34 nodes, agent 54 (not the family)
+- tanh/hypot1/seed1: ast5 96 nodes, agent 78 (larger)

@@ -1,0 +1,124 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "exp(x0)"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 3.5409012,
+        "equation": "1.8102053"
+      },
+      {
+        "complexity": 2,
+        "loss": 9.9261684e-05,
+        "equation": "exp(x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 9.2325405e-05,
+        "equation": "exp(min(1.9853957, x0))"
+      },
+      {
+        "complexity": 6,
+        "loss": 9.137349e-05,
+        "equation": "min(x0 - -5.2823963, exp(x0))"
+      },
+      {
+        "complexity": 7,
+        "loss": 8.5889194e-05,
+        "equation": "exp(min(exp(0.3438263 * x0), x0))"
+      },
+      {
+        "complexity": 10,
+        "loss": 8.588443e-05,
+        "equation": "relu(relu(min(exp(exp(x0 * 0.3438454)), exp(x0))))"
+      },
+      {
+        "complexity": 12,
+        "loss": 8.2062994e-05,
+        "equation": "x0 - ((x0 - min(1.9401083, x0)) - (exp(x0) - x0))"
+      },
+      {
+        "complexity": 14,
+        "loss": 7.575302e-05,
+        "equation": "(exp(x0) - x0) - ((x0 - x0) - min(1.9387851, x0 / 0.99791574))"
+      }
+    ]
+  ],
+  "errors": [
+    "pysr_irr_snap: unsupported ITE: ITE(Min(exp(x0), exp(exp(0.35*x0))) < 0, False, Min(exp(x0), exp(exp(0.35*x0))) < 0)"
+  ],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 14,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 17,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 123.39
+}

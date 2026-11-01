@@ -1,0 +1,1172 @@
+{
+  "candidates": [
+    {
+      "route": "structural-exact",
+      "src": "def net(x0, x1):\n    h1_0 = sigmoid(0.035231926 * x0 + 0.024831364 * x1 + 6.01965)\n    h1_1 = sigmoid(-0.035018332 * x0 - 0.021669261 * x1 - 6.647818)\n    h1_2 = sigmoid(-4.562226 * x0 + 4.424634 * x1 - 7.2048993)\n    h1_3 = sigmoid(3.0787156 * x0 + 5.3818626 * x1 - 9.0430155)\n    h1_4 = sigmoid(0.03640371 * x0 + 0.024728071 * x1 + 5.970314)\n    h1_5 = sigmoid(-0.034955107 * x0 - 0.025300058 * x1 - 6.6065636)\n    h1_6 = sigmoid(0.80556905 * x0 - 8.333246 * x1 + 7.33794)\n    h1_7 = sigmoid(-0.037431236 * x0 - 0.024231162 * x1 - 5.1976957)\n    h1_8 = sigmoid(0.036672205 * x0 + 0.02417163 * x1 + 6.335499)\n    h1_9 = sigmoid(4.943382 * x0 + 2.676176 * x1 + 7.2743897)\n    h1_10 = sigmoid(-3.9755323 * x0 + 1.1068512 * x1 + 9.773401)\n    h1_11 = sigmoid(-0.0347546 * x0 - 0.025299177 * x1 - 6.6203504)\n    h1_12 = sigmoid(-0.037279863 * x0 - 0.024459926 * x1 - 5.139793)\n    h1_13 = sigmoid(1.7030414 * x0 + 8.101428 * x1 + 7.1462092)\n    h1_14 = sigmoid(-0.034724705 * x0 - 0.025285115 * x1 - 6.365676)\n    h1_15 = sigmoid(-2.2648666 * x0 + 6.4420404 * x1 + 8.388138)\n    return -7.9272656 * h1_0 + 7.191046 * h1_1 - 12.569797 * h1_2 - 15.123095 * h1_3 - 5.9358215 * h1_4 + 10.166538 * h1_5 + 15.7238865 * h1_6 + 7.2624416 * h1_7 - 5.530605 * h1_8 + 12.478977 * h1_9 + 12.492288 * h1_10 + 10.816977 * h1_11 + 5.4342318 * h1_12 + 15.361785 * h1_13 + 10.469843 * h1_14 + 14.869076 * h1_15 - 39.886196\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": true,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 274750,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 1442,
+        "zone_fraction": 0.023495,
+        "margin": 1.5291918373107911,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 0.34211733498087327,
+              "x1": 1.0010220408439696
+            },
+            "net": 0.0,
+            "program": 5.9256180406919157e-08,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.4756220579147525,
+              "x1": -0.2545238082206622
+            },
+            "net": 0.0,
+            "program": 9.725297047680215e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.4114423686216178,
+              "x1": 0.8849162757396813
+            },
+            "net": 0.0,
+            "program": 7.090125535569314e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.293416976928711,
+              "x1": -0.43102526664733887
+            },
+            "net": 0.0,
+            "program": 1.0136293795426354e-06,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.8732098937034647,
+              "x1": -0.7267668779486557
+            },
+            "net": 0.0,
+            "program": 5.318200209103452e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.9748479127883911,
+              "x1": 0.6946067214012146
+            },
+            "net": 0.0,
+            "program": 6.050087222320144e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.2284232378005986,
+              "x1": -0.4832659396712598
+            },
+            "net": 0.0,
+            "program": 1.5117499927441713e-06,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.3487247228622525,
+              "x1": 0.3533863394889452
+            },
+            "net": 0.0,
+            "program": 3.0184911281594395e-06,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.7406808057877625,
+              "x1": 0.7973506152629932
+            },
+            "net": 0.0,
+            "program": 2.384251402531845e-06,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.310873024650617,
+              "x1": -0.9261036217212992
+            },
+            "net": 0.0,
+            "program": 1.6691714321837026e-06,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.0364898967264224,
+              "x1": -0.9595979750156416
+            },
+            "net": 0.0,
+            "program": 2.0500499431364005e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -1.0567585825920096,
+              "x1": 0.6425740888837416
+            },
+            "net": 1.0,
+            "program": -4.029787845638566e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.17006341760332,
+              "x1": -0.9459966123104226
+            },
+            "net": 0.0,
+            "program": 8.52070982659825e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.4686014468519948,
+              "x1": 1.000472366809846
+            },
+            "net": 0.0,
+            "program": 6.771095968360896e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.0405521490747525,
+              "x1": -0.9592438042163935
+            },
+            "net": 0.0,
+            "program": 6.369895473312681e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.182647641406387,
+              "x1": -0.9444814026355877
+            },
+            "net": 0.0,
+            "program": 2.9436002080274193e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.9514548924397386,
+              "x1": -0.9662835896015183
+            },
+            "net": 0.0,
+            "program": 2.325271388770034e-06,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.299757443888546,
+              "x1": -0.9279363453388279
+            },
+            "net": 0.0,
+            "program": 9.927782684826525e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.9869105815887451,
+              "x1": 0.6876199245452881
+            },
+            "net": 0.0,
+            "program": 2.43336977234776e-07,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.2391092777252197,
+              "x1": -0.47487297654151917
+            },
+            "net": 0.0,
+            "program": 5.2533291494683e-07,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "nodes": 470
+    },
+    {
+      "route": "structural-snap",
+      "src": "def net(x0, x1):\n    h1_0 = sigmoid(0.035231926 * x0 + 0.024831364 * x1 + 6.0213448225)\n    h1_1 = sigmoid(-0.035018332 * x0 - 0.021669261 * x1 - 6.6466202792499995)\n    h1_2 = sigmoid(-4.5 * x0 + 4.5 * x1 - 6.75)\n    h1_3 = sigmoid(3 * x0 + 5.5 * x1 - 9.350000000000001)\n    h1_4 = sigmoid(0.03640371 * x0 + 0.024728071 * x1 + 5.967990120124999)\n    h1_5 = sigmoid(-0.034955107 * x0 - 0.025300058 * x1 - 6.603966084)\n    h1_6 = sigmoid(0.8 * x0 - 8 * x1 + 7.040000000000001)\n    h1_7 = sigmoid(-0.037431236 * x0 - 0.024231162 * x1 - 5.1950570315)\n    h1_8 = sigmoid(0.036672205 * x0 + 0.02417163 * x1 + 6.3353643193749996)\n    h1_9 = sigmoid(5 * x0 + 2.75 * x1 + 6.9750000000000005)\n    h1_10 = sigmoid(-4 * x0 + 1.125 * x1 + 9.609375)\n    h1_11 = sigmoid(-0.0347546 * x0 - 0.025299177 * x1 - 6.620928914249999)\n    h1_12 = sigmoid(-0.037279863 * x0 - 0.024459926 * x1 - 5.13983743425)\n    h1_13 = sigmoid(1.75 * x0 + 8 * x1 + 7.3125)\n    h1_14 = sigmoid(-0.034724705 * x0 - 0.025285115 * x1 - 6.3685421475)\n    h1_15 = sigmoid(-2.25 * x0 + 6.5 * x1 + 8.75)\n    return -8 * h1_0 + 7 * h1_1 - 13 * h1_2 - 15 * h1_3 - 6 * h1_4 + 10 * h1_5 + 16 * h1_6 + 7 * h1_7 - 5.5 * h1_8 + 12 * h1_9 + 12 * h1_10 + 11 * h1_11 + 5.5 * h1_12 + 15 * h1_13 + 10 * h1_14 + 15 * h1_15 - 40.32\n",
+      "passes": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P9"
+      ],
+      "check": {
+        "exact_pass": false,
+        "snap_pass": false,
+        "label": "empirical",
+        "n_inputs": 274750,
+        "max_abs_err": null,
+        "disagreements_outside": 1449,
+        "disagreements_inside": 6671,
+        "zone_fraction": 0.023495,
+        "margin": 1.5291918373107911,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": -1.35,
+              "x1": 0.08999999999999986
+            },
+            "net": 1.0,
+            "program": -0.014630075838574896,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.321906194355303,
+              "x1": 0.19285163328365318
+            },
+            "net": 1.0,
+            "program": -0.04616371416934584,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3304909943731225,
+              "x1": 0.170143999530886
+            },
+            "net": 1.0,
+            "program": -0.08053540655608771,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3515734212252632,
+              "x1": 0.09314923471611891
+            },
+            "net": 1.0,
+            "program": -0.08140960951465814,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.2858979371345918,
+              "x1": 0.28053611910822607
+            },
+            "net": 1.0,
+            "program": -0.01584135127456676,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.354953306749887,
+              "x1": 0.07989348545278041
+            },
+            "net": 1.0,
+            "program": -0.08933650233543489,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.2753734934782246,
+              "x1": 0.3018769914824335
+            },
+            "net": 1.0,
+            "program": -0.014968615334410629,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3584011449043436,
+              "x1": 0.06617101022025906
+            },
+            "net": 1.0,
+            "program": -0.1004154524108074,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3088401134630343,
+              "x1": 0.2348880948317369
+            },
+            "net": 1.0,
+            "program": -0.10290175451759609,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3305530217976491,
+              "x1": 0.1768932391583613
+            },
+            "net": 1.0,
+            "program": -0.14056486810697066,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.2589137105263952,
+              "x1": 0.33088506776060084
+            },
+            "net": 1.0,
+            "program": -0.0023754543014504748,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.260256104655781,
+              "x1": 0.3294720626043565
+            },
+            "net": 1.0,
+            "program": -0.014246838667808959,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.26,
+              "x1": 0.33000000000000007
+            },
+            "net": 1.0,
+            "program": -0.01541901729699191,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3563417976123051,
+              "x1": 0.0830247582707817
+            },
+            "net": 1.0,
+            "program": -0.15014965993716345,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.32,
+              "x1": 0.20999999999999996
+            },
+            "net": 1.0,
+            "program": -0.15415044208160822,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3683545298171922,
+              "x1": 0.011926973538069152
+            },
+            "net": 1.0,
+            "program": -0.08056865379384703,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3661034745221614,
+              "x1": 0.03433043570386207
+            },
+            "net": 1.0,
+            "program": -0.13417959642554678,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.269282550000869,
+              "x1": 0.3183889725164282
+            },
+            "net": 1.0,
+            "program": -0.07831091545480717,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.315857841384022,
+              "x1": 0.22425619220910908
+            },
+            "net": 1.0,
+            "program": -0.18120972957081705,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.2701039842274973,
+              "x1": 0.31789948172855054
+            },
+            "net": 1.0,
+            "program": -0.0912495205625774,
+            "in_zone": false
+          }
+        ],
+        "error": null
+      },
+      "nodes": 470
+    },
+    {
+      "route": "sigmoid-replace",
+      "src": "def net(x0, x1):\n    h1_2 = min(max(-1.1405565 * x0 + 1.1061585 * x1 - 1.301224825, 0), 1)\n    h1_3 = sigmoid(3.0787156 * x0 + 5.3818626 * x1 - 9.0430155)\n    h1_6 = sigmoid(0.80556905 * x0 - 8.333246 * x1 + 7.33794)\n    h1_9 = min(max(1.2358455 * x0 + 0.669044 * x1 + 2.318597425, 0), 1)\n    h1_10 = min(max(-0.993883075 * x0 + 0.2767128 * x1 + 2.94335025, 0), 1)\n    h1_13 = sigmoid(1.7030414 * x0 + 8.101428 * x1 + 7.1462092)\n    h1_15 = sigmoid(-2.2648666 * x0 + 6.4420404 * x1 + 8.388138)\n    return -12.569797 * h1_2 - 15.123095 * h1_3 + 15.7238865 * h1_6 + 12.478977 * h1_9 + 12.492288 * h1_10 + 15.361785 * h1_13 + 14.869076 * h1_15 - 59.10831018975356\n",
+      "passes": [
+        "S1",
+        "S2"
+      ],
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 274750,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 4859,
+        "zone_fraction": 0.023495,
+        "margin": 1.5291918373107911,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 1.7112137441635644,
+              "x1": -0.8680397361597931
+            },
+            "net": 0.0,
+            "program": 0.006961948083599623,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.13,
+              "x1": 0.6599999999999997
+            },
+            "net": 0.0,
+            "program": 0.12325054135455815,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.7281765384533863,
+              "x1": -0.8545007429173128
+            },
+            "net": 0.0,
+            "program": 0.0998459346233318,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.158802002547228,
+              "x1": 0.6347231122629275
+            },
+            "net": 0.0,
+            "program": 0.01648141771067202,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -0.19155304970610487,
+              "x1": 0.9791550481500777
+            },
+            "net": 0.0,
+            "program": 0.20283222445851123,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.6741837241164301,
+              "x1": -0.8756705924900867
+            },
+            "net": 0.0,
+            "program": 0.016512240771966447,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -0.5952856241134152,
+              "x1": -0.8841485786968573
+            },
+            "net": 0.0,
+            "program": 0.13148749309780783,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.7205782408459047,
+              "x1": -0.8561596187176743
+            },
+            "net": 0.0,
+            "program": 0.19147700210768193,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.157937305710419,
+              "x1": 0.633586252281165
+            },
+            "net": 0.0,
+            "program": 0.052150642215579524,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -0.5484714326289124,
+              "x1": -0.9000689674201086
+            },
+            "net": 0.0,
+            "program": 0.035767706143609246,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.6720359476282063,
+              "x1": -0.8745330327941945
+            },
+            "net": 0.0,
+            "program": 0.055714440001402465,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.16,
+              "x1": 0.6299999999999999
+            },
+            "net": 0.0,
+            "program": 0.06285736884313309,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.0947051457165724,
+              "x1": 0.679972763453061
+            },
+            "net": 0.0,
+            "program": 0.03680922128037878,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.7539807002459131,
+              "x1": -0.8389715564252813
+            },
+            "net": 0.0,
+            "program": 0.047199116652144824,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -0.18934717312282423,
+              "x1": 0.9774288812303142
+            },
+            "net": 0.0,
+            "program": 0.2584385510813476,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.7131379130842257,
+              "x1": -0.8571047503876006
+            },
+            "net": 0.0,
+            "program": 0.2553777897462055,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 2.1221834078322255,
+              "x1": 0.6590048222548361
+            },
+            "net": 0.0,
+            "program": 0.20952440369470082,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.6799999999999997,
+              "x1": -0.8700000000000001
+            },
+            "net": 0.0,
+            "program": 0.12484943422457206,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -0.591580054194214,
+              "x1": -0.8827114572060477
+            },
+            "net": 0.0,
+            "program": 0.2545365147192271,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 1.6602827554608766,
+              "x1": -0.8773441796001928
+            },
+            "net": 0.0,
+            "program": 0.04753915182252655,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "nodes": 221
+    },
+    {
+      "route": "sigmoid-replace-snap",
+      "src": "def net(x0, x1):\n    h1_2 = min(max(-1.125 * x0 + 1.125 * x1 - 1.1875, 0), 1)\n    h1_3 = sigmoid(3 * x0 + 5.5 * x1 - 9.350000000000001)\n    h1_6 = sigmoid(0.8 * x0 - 8 * x1 + 7.040000000000001)\n    h1_9 = min(max(1.25 * x0 + 0.6875 * x1 + 2.2437500000000004, 0), 1)\n    h1_10 = min(max(-x0 + 0.28125 * x1 + 2.90234375, 0), 1)\n    h1_13 = sigmoid(1.75 * x0 + 8 * x1 + 7.3125)\n    h1_15 = sigmoid(-2.25 * x0 + 6.5 * x1 + 8.75)\n    return -13 * h1_2 - 15 * h1_3 + 16 * h1_6 + 12 * h1_9 + 12 * h1_10 + 15 * h1_13 + 15 * h1_15 - 58.8\n",
+      "passes": [
+        "S1",
+        "S2",
+        "P3"
+      ],
+      "check": {
+        "exact_pass": false,
+        "snap_pass": false,
+        "label": "empirical",
+        "n_inputs": 274750,
+        "max_abs_err": null,
+        "disagreements_outside": 490,
+        "disagreements_inside": 6801,
+        "zone_fraction": 0.023495,
+        "margin": 1.5291918373107911,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": -1.3800000000000001,
+              "x1": 0.08999999999999986
+            },
+            "net": 1.0,
+            "program": -0.034546790261700266,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3901980650248493,
+              "x1": 0.04922314577458664
+            },
+            "net": 1.0,
+            "program": -0.07546474536272996,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.35,
+              "x1": 0.20999999999999996
+            },
+            "net": 1.0,
+            "program": -0.008336129384844071,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3741547061213408,
+              "x1": 0.13038040525312944
+            },
+            "net": 1.0,
+            "program": -0.13559665108321894,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3638975260083601,
+              "x1": 0.16792302254967684
+            },
+            "net": 1.0,
+            "program": -0.10028624035376765,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3531464538135567,
+              "x1": 0.20231585256185625
+            },
+            "net": 1.0,
+            "program": -0.0415830492128606,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3718506189515938,
+              "x1": 0.14320220872232792
+            },
+            "net": 1.0,
+            "program": -0.15760723518967268,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3560649852346087,
+              "x1": 0.19945342896566398
+            },
+            "net": 1.0,
+            "program": -0.10625261874581327,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.381248516158735,
+              "x1": 0.10942019916666013
+            },
+            "net": 1.0,
+            "program": -0.20217526423017063,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3992189871714669,
+              "x1": 0.011937364761783087
+            },
+            "net": 1.0,
+            "program": -0.11720556744981536,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3800000000000001,
+              "x1": 0.1200000000000001
+            },
+            "net": 1.0,
+            "program": -0.23751146218886277,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.4018183764157133,
+              "x1": -0.0047562726304235525
+            },
+            "net": 1.0,
+            "program": -0.0973668317023666,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3761156248087052,
+              "x1": 0.13835348192624508
+            },
+            "net": 1.0,
+            "program": -0.25018302794464375,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3781912946457686,
+              "x1": 0.13093345465553963
+            },
+            "net": 1.0,
+            "program": -0.25971196878785463,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.403236375413783,
+              "x1": -0.011839022204280347
+            },
+            "net": 1.0,
+            "program": -0.09924254605077465,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3562205206723412,
+              "x1": 0.20691559745422516
+            },
+            "net": 1.0,
+            "program": -0.16946438395384433,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.345227467678289,
+              "x1": 0.23698961880949332
+            },
+            "net": 1.0,
+            "program": -0.08579493031288621,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.35573653192053,
+              "x1": 0.20940911715910193
+            },
+            "net": 1.0,
+            "program": -0.17477637752103448,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3750837114682704,
+              "x1": 0.1467222275891107
+            },
+            "net": 1.0,
+            "program": -0.27910525958041177,
+            "in_zone": false
+          },
+          {
+            "inputs": {
+              "x0": -1.3803371900564023,
+              "x1": 0.1297251614221362
+            },
+            "net": 1.0,
+            "program": -0.31516841682514496,
+            "in_zone": false
+          }
+        ],
+        "error": null
+      },
+      "nodes": 218
+    },
+    {
+      "route": "conic",
+      "src": "def net(x0, x1):\n    return 0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95\n",
+      "passes": [
+        "F2"
+      ],
+      "check": {
+        "exact_pass": false,
+        "snap_pass": true,
+        "label": "empirical",
+        "n_inputs": 274750,
+        "max_abs_err": null,
+        "disagreements_outside": 0,
+        "disagreements_inside": 5639,
+        "zone_fraction": 0.023495,
+        "margin": 1.5291918373107911,
+        "counterexamples": [
+          {
+            "inputs": {
+              "x0": 0.5860456824302673,
+              "x1": -1.0052881240844727
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5860457423931673,
+              "x1": -1.005288064479827
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5860458016395569,
+              "x1": -1.0052878856658936
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5857493877410889,
+              "x1": -1.0052258968353271
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.585749423472445,
+              "x1": -1.0052258372306768
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5857495069503784,
+              "x1": -1.005225658416748
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5729259839623762,
+              "x1": -1.0054589131461573
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5377554667215927,
+              "x1": -1.0057866480810207
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5864976981714091,
+              "x1": -1.004569916880434
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5791577681944564,
+              "x1": -1.0046335796415
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5860581490761775,
+              "x1": -1.0044354648490743
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.6650524865549756,
+              "x1": -1.0022572965087977
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5606025172547668,
+              "x1": -1.0047847227668514
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5796523094177246,
+              "x1": -1.0039441585540771
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5796523552699577,
+              "x1": -1.003944098949423
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.5796524286270142,
+              "x1": -1.003943920135498
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.580146942345459,
+              "x1": -1.003254618257346
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": -1.3800000000000001,
+              "x1": -0.3600000000000003
+            },
+            "net": 1.0,
+            "program": 0.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.7281843487331279,
+              "x1": -0.9976676662281028
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          },
+          {
+            "inputs": {
+              "x0": 0.6303545665476431,
+              "x1": -1.0003568556872586
+            },
+            "net": 0.0,
+            "program": 1.0,
+            "in_zone": true
+          }
+        ],
+        "error": null
+      },
+      "nodes": 28
+    }
+  ],
+  "winner": "conic",
+  "trace_lines": [
+    "tanh layers rewritten as sigmoid layers",
+    "snap route: h1_0: threshold -100.22178272285785 -> -100.25",
+    "snap route: h1_1: threshold 117.27112844604287 -> 117.25",
+    "snap route: h1_2: x0 coefficient -4.562226 -> -4.5",
+    "snap route: h1_2: x1 coefficient 4.424634 -> 4.5",
+    "snap route: h1_2: threshold 0.8005443666666667 -> 0.75",
+    "snap route: h1_3: x0 coefficient 3.0787156 -> 3",
+    "snap route: h1_3: x1 coefficient 5.3818626 -> 5.5",
+    "snap route: h1_3: threshold 1.0638841764705882 -> 1.1",
+    "snap route: h1_4: threshold -97.66301426748879 -> -97.625",
+    "snap route: h1_5: threshold 109.643108603221 -> 109.6",
+    "snap route: h1_6: x0 coefficient 0.80556905 -> 0.8",
+    "snap route: h1_6: x1 coefficient -8.333246 -> -8",
+    "snap route: h1_6: threshold -0.8338568181818181 -> -0.8",
+    "snap route: h1_7: threshold 84.29279218106308 -> 84.25",
+    "snap route: h1_8: threshold -104.12721354595746 -> -104.125",
+    "snap route: h1_9: x0 coefficient 4.943382 -> 5",
+    "snap route: h1_9: x1 coefficient 2.676176 -> 2.75",
+    "snap route: h1_9: threshold -0.9386309290322581 -> -0.9",
+    "snap route: h1_10: x0 coefficient -3.9755323 -> -4",
+    "snap route: h1_10: x1 coefficient 1.1068512 -> 1.125",
+    "snap route: h1_10: threshold -1.9070050731707318 -> -1.875",
+    "snap route: h1_11: threshold 110.24036672997272 -> 110.25",
+    "snap route: h1_12: threshold 83.24928029799389 -> 83.25",
+    "snap route: h1_13: x0 coefficient 1.7030414 -> 1.75",
+    "snap route: h1_13: x1 coefficient 8.101428 -> 8",
+    "snap route: h1_13: threshold -0.7329445333333334 -> -0.75",
+    "snap route: h1_14: threshold 106.07723869193407 -> 106.125",
+    "snap route: h1_15: x0 coefficient -2.2648666 -> -2.25",
+    "snap route: h1_15: x1 coefficient 6.4420404 -> 6.5",
+    "snap route: h1_15: threshold -0.9586443428571428 -> -1",
+    "snap route: output 0: h1_0 coefficient -7.9272656 -> -8",
+    "snap route: output 0: h1_1 coefficient 7.191046 -> 7",
+    "snap route: output 0: h1_2 coefficient -12.569797 -> -13",
+    "snap route: output 0: h1_3 coefficient -15.123095 -> -15",
+    "snap route: output 0: h1_4 coefficient -5.9358215 -> -6",
+    "snap route: output 0: h1_5 coefficient 10.166538 -> 10",
+    "snap route: output 0: h1_6 coefficient 15.7238865 -> 16",
+    "snap route: output 0: h1_7 coefficient 7.2624416 -> 7",
+    "snap route: output 0: h1_8 coefficient -5.530605 -> -5.5",
+    "snap route: output 0: h1_9 coefficient 12.478977 -> 12",
+    "snap route: output 0: h1_10 coefficient 12.492288 -> 12",
+    "snap route: output 0: h1_11 coefficient 10.816977 -> 11",
+    "snap route: output 0: h1_12 coefficient 5.4342318 -> 5.5",
+    "snap route: output 0: h1_13 coefficient 15.361785 -> 15",
+    "snap route: output 0: h1_14 coefficient 10.469843 -> 10",
+    "snap route: output 0: h1_15 coefficient 14.869076 -> 15",
+    "snap route: output 0: threshold 0.23741783333333333 -> 0.24",
+    "spline: not applicable",
+    "spline: not applicable",
+    "boundary: not applicable",
+    "boundary-scan: not applicable",
+    "truth-table: not applicable",
+    "sigmoid: h1_0: const (soft share 0.000)",
+    "sigmoid: h1_1: const (soft share 0.000)",
+    "sigmoid: h1_11: const (soft share 0.000)",
+    "sigmoid: h1_12: const (soft share 0.000)",
+    "sigmoid: h1_14: const (soft share 0.000)",
+    "sigmoid: h1_4: const (soft share 0.000)",
+    "sigmoid: h1_5: const (soft share 0.000)",
+    "sigmoid: h1_7: const (soft share 0.000)",
+    "sigmoid: h1_8: const (soft share 0.000)",
+    "sigmoid: h1_6: kept sigmoid (soft share 0.142)",
+    "sigmoid: h1_13: kept sigmoid (soft share 0.146)",
+    "sigmoid: h1_15: kept sigmoid (soft share 0.168)",
+    "sigmoid: h1_3: kept sigmoid (soft share 0.169)",
+    "sigmoid: h1_2: clamp (soft share 0.176)",
+    "sigmoid: h1_10: clamp (soft share 0.189)",
+    "sigmoid: h1_9: clamp (soft share 0.199)",
+    "sigmoid snap: h1_2: x0 coefficient -4.562226 -> -4.5",
+    "sigmoid snap: h1_2: x1 coefficient 4.424634 -> 4.5",
+    "sigmoid snap: h1_2: threshold 0.8005443666666667 -> 0.75",
+    "sigmoid snap: h1_3: x0 coefficient 3.0787156 -> 3",
+    "sigmoid snap: h1_3: x1 coefficient 5.3818626 -> 5.5",
+    "sigmoid snap: h1_3: threshold 1.0638841764705882 -> 1.1",
+    "sigmoid snap: h1_6: x0 coefficient 0.80556905 -> 0.8",
+    "sigmoid snap: h1_6: x1 coefficient -8.333246 -> -8",
+    "sigmoid snap: h1_6: threshold -0.8338568181818181 -> -0.8",
+    "sigmoid snap: h1_9: x0 coefficient 4.943382 -> 5",
+    "sigmoid snap: h1_9: x1 coefficient 2.676176 -> 2.75",
+    "sigmoid snap: h1_9: threshold -0.9386309290322581 -> -0.9",
+    "sigmoid snap: h1_10: x0 coefficient -3.9755323 -> -4",
+    "sigmoid snap: h1_10: x1 coefficient 1.1068512 -> 1.125",
+    "sigmoid snap: h1_10: threshold -1.9070050731707318 -> -1.875",
+    "sigmoid snap: h1_13: x0 coefficient 1.7030414 -> 1.75",
+    "sigmoid snap: h1_13: x1 coefficient 8.101428 -> 8",
+    "sigmoid snap: h1_13: threshold -0.7329445333333334 -> -0.75",
+    "sigmoid snap: h1_15: x0 coefficient -2.2648666 -> -2.25",
+    "sigmoid snap: h1_15: x1 coefficient 6.4420404 -> 6.5",
+    "sigmoid snap: h1_15: threshold -0.9586443428571428 -> -1",
+    "sigmoid snap: output 0: h1_2 coefficient -12.569797 -> -13",
+    "sigmoid snap: output 0: h1_3 coefficient -15.123095 -> -15",
+    "sigmoid snap: output 0: h1_6 coefficient 15.7238865 -> 16",
+    "sigmoid snap: output 0: h1_9 coefficient 12.478977 -> 12",
+    "sigmoid snap: output 0: h1_10 coefficient 12.492288 -> 12",
+    "sigmoid snap: output 0: h1_13 coefficient 15.361785 -> 15",
+    "sigmoid snap: output 0: h1_15 coefficient 14.869076 -> 15",
+    "sigmoid snap: output 0: threshold 0.603146022344424 -> 0.6",
+    "kink-merge: not applicable"
+  ],
+  "kink_merge": {
+    "applies": null,
+    "per_offset": [
+      {
+        "off": 0.02,
+        "kinks": 256,
+        "lines": 128,
+        "cancelled": 0
+      },
+      {
+        "off": 0.1,
+        "kinks": 256,
+        "lines": 64,
+        "cancelled": 1
+      }
+    ],
+    "winner": null
+  },
+  "families": [
+    {
+      "family": "conic",
+      "n_boundary": 2000,
+      "coefs": [
+        0.24277232299129436,
+        1.0,
+        0.0008725826349459094,
+        -0.24087503787908543,
+        -0.0017397295801993213,
+        0.9324038321406284
+      ],
+      "snapped": [
+        0.25,
+        1.0,
+        0.0,
+        -0.25,
+        0.0,
+        0.95
+      ],
+      "passed": true,
+      "nodes": 28,
+      "src": "def net(x0, x1):\n    return 0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95\n",
+      "terms": 0,
+      "clean": null
+    }
+  ],
+  "near": null
+}

@@ -1,0 +1,51 @@
+{
+  "task": "product",
+  "variant": "sigmoid",
+  "seed": "seed3",
+  "learned": true,
+  "family": "quadratic",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 7,
+  "other_families": [
+    "exp",
+    "log",
+    "sqrt"
+  ],
+  "route_pick": "quadratic",
+  "ast4_nodes": 470,
+  "ast4_pass": true,
+  "ast5_nodes": 7,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0124,
+  "pysr_found": true,
+  "agent_pass": true,
+  "agent_nodes": 12,
+  "agent_formula": true,
+  "ast5_formula": true,
+  "reproduced": true,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.0058,
+      0.0072,
+      0.0073,
+      0.008,
+      0.0088,
+      0.0086,
+      0.0118,
+      0.0194,
+      0.0196,
+      0.0919
+    ],
+    "radius_max": 2.817
+  },
+  "won_on_size": true
+}

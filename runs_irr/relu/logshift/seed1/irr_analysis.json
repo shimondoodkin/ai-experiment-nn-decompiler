@@ -1,0 +1,60 @@
+{
+  "task": "logshift",
+  "variant": "relu",
+  "seed": "seed1",
+  "learned": true,
+  "family": "log",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 9,
+  "other_families": [
+    "exp",
+    "reciprocal",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "log",
+  "ast4_nodes": 95,
+  "ast4_pass": true,
+  "ast5_nodes": 9,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0117,
+  "pysr_found": false,
+  "agent_pass": true,
+  "agent_nodes": 14,
+  "agent_formula": true,
+  "ast5_formula": true,
+  "reproduced": true,
+  "hinge_only": {
+    "hinges": 3,
+    "nodes": 48,
+    "passed": true
+  },
+  "model": {
+    "kinks": [
+      -1.115,
+      -0.492,
+      0.326,
+      1.19,
+      2.242
+    ],
+    "dead_units": 0,
+    "optimal_knots": [
+      -1.359,
+      -0.946,
+      -0.267,
+      0.848,
+      2.68
+    ],
+    "knot_gap": 0.0753,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

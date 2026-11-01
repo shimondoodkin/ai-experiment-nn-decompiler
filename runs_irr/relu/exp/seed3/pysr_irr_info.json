@@ -1,0 +1,183 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "Min(exp(x0*Abs(x0 + 0.8612377)) - 0.1256381, exp(x0))"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 3.5720546,
+        "equation": "1.8027587"
+      },
+      {
+        "complexity": 2,
+        "loss": 0.007787893,
+        "equation": "exp(x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 0.007340198,
+        "equation": "min(7.012814, exp(x0))"
+      },
+      {
+        "complexity": 6,
+        "loss": 0.0071778274,
+        "equation": "min(7.012814, exp(x0 * 1.0027945))"
+      },
+      {
+        "complexity": 7,
+        "loss": 0.006891603,
+        "equation": "exp(min(exp(x0) + -1.1458123, x0))"
+      },
+      {
+        "complexity": 8,
+        "loss": 0.0066391556,
+        "equation": "exp(min(exp(relu(x0)) + -1.1458123, x0))"
+      },
+      {
+        "complexity": 9,
+        "loss": 0.00621664,
+        "equation": "exp(min((x0 + -0.09613494) * exp(x0), x0))"
+      },
+      {
+        "complexity": 10,
+        "loss": 0.006021262,
+        "equation": "exp(min(exp(x0) * (exp(x0) + -1.1458123), x0))"
+      },
+      {
+        "complexity": 12,
+        "loss": 0.005072903,
+        "equation": "min(exp(x0), exp(abs(x0 + 0.8612377) * x0) + -0.1256381)"
+      },
+      {
+        "complexity": 17,
+        "loss": 0.0050519425,
+        "equation": "max(x0 + (0.72742265 + x0), min(exp(x0), max(x0 + exp(x0), 1.2281948) + -0.3954096))"
+      },
+      {
+        "complexity": 20,
+        "loss": 0.0050171334,
+        "equation": "min(exp(x0 + max(x0, min(0.2261465 / exp(x0), exp(x0)) / exp(x0))) + -0.38490346, exp(x0))"
+      },
+      {
+        "complexity": 22,
+        "loss": 0.004999215,
+        "equation": "min(exp(x0 + (max(x0, min(0.20884913 / exp(x0), exp(x0))) / exp(x0 / 1.0342846))) + -0.3599891, exp(x0))"
+      },
+      {
+        "complexity": 24,
+        "loss": 0.004741803,
+        "equation": "min(exp(x0), -0.38490346 + exp(x0 + max(min(exp(x0), 0.2261465 / exp(x0)) / exp(x0), x0 / 1.1007553))) + 0.029679734"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 10,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 19,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 26,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 26,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 29,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 38,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 59,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 59,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 62,
+      "error": null
+    }
+  ],
+  "snap_passed": false,
+  "seconds": 121.07
+}

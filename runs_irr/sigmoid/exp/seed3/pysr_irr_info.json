@@ -1,0 +1,172 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "Piecewise((0.0, exp(x0) < 0), (exp(x0), True)) - Max(x0 - 1*1.9138877, Max(1.1402297, x0)*(-0.027469005) - 1*(-0.027640851))"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 3.533914,
+        "equation": "1.8155178"
+      },
+      {
+        "complexity": 2,
+        "loss": 0.00012304266,
+        "equation": "exp(x0)"
+      },
+      {
+        "complexity": 4,
+        "loss": 0.000100480625,
+        "equation": "exp(x0) - -0.004770124"
+      },
+      {
+        "complexity": 6,
+        "loss": 0.00010028453,
+        "equation": "exp(x0 - -0.00026677788) + 0.004173561"
+      },
+      {
+        "complexity": 8,
+        "loss": 6.0346334e-05,
+        "equation": "exp(x0) - max(-0.005588612, x0 - 1.9248567)"
+      },
+      {
+        "complexity": 10,
+        "loss": 5.0264192e-05,
+        "equation": "exp(x0 - -0.0020761865) - max(-0.0020761865, x0 - 1.9105374)"
+      },
+      {
+        "complexity": 13,
+        "loss": 4.8898448e-05,
+        "equation": "exp(x0) - max(x0 - 1.9209479, exp(max(x0, 0.83576864)) * -0.0023948888)"
+      },
+      {
+        "complexity": 15,
+        "loss": 4.0042905e-05,
+        "equation": "relu(exp(x0)) - max((max(1.1402297, x0) * -0.027469005) - -0.027640851, x0 - 1.9138877)"
+      },
+      {
+        "complexity": 16,
+        "loss": 3.898678e-05,
+        "equation": "exp(x0) - max((-0.027469005 * max(1.1402297, x0 + -0.027640851)) - -0.027640851, x0 - 1.9138877)"
+      },
+      {
+        "complexity": 17,
+        "loss": 3.873713e-05,
+        "equation": "abs(exp(x0) - max(((max(1.1436601, x0) + -0.027560519) * -0.02523838) - -0.024351746, x0 - 1.9227095))"
+      },
+      {
+        "complexity": 22,
+        "loss": 3.823006e-05,
+        "equation": "exp(x0) - max((-0.027469005 * max(1.1402297, max(1.1402297, x0 + -0.027640851) + -0.027640851)) - -0.027640851, max(-0.027469005, x0) - 1.9138877)"
+      },
+      {
+        "complexity": 23,
+        "loss": 3.743668e-05,
+        "equation": "abs(exp(x0) - max(max(-0.02245096, max((max(1.141948, x0 + -0.029489849) * -0.03289614) - -0.034114454, x0 - 1.9280777)), x0 - 1.9280777))"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 6,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 9,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 9,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 24,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 27,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 37,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 47,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 37,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 40,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 41,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 41,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 125.77
+}

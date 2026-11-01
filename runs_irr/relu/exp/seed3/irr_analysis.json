@@ -1,0 +1,54 @@
+{
+  "task": "exp",
+  "variant": "relu",
+  "seed": "seed3",
+  "learned": true,
+  "family": "exp",
+  "formula_found": true,
+  "found_terms": 2,
+  "formula_nodes": 41,
+  "other_families": [
+    "log",
+    "reciprocal",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "identity",
+  "ast4_nodes": 28,
+  "ast4_pass": true,
+  "ast5_nodes": 28,
+  "ast5_pass": true,
+  "ast5_route": "spline",
+  "formula_py_pass": false,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0349,
+  "pysr_found": false,
+  "agent_pass": true,
+  "agent_nodes": 50,
+  "agent_formula": false,
+  "ast5_formula": false,
+  "reproduced": true,
+  "hinge_only": {
+    "hinges": 3,
+    "nodes": 48,
+    "passed": true
+  },
+  "model": {
+    "kinks": [
+      0.097,
+      1.226
+    ],
+    "dead_units": 2,
+    "optimal_knots": [
+      -0.091,
+      1.513
+    ],
+    "knot_gap": 0.0594,
+    "max_err_at": "edge"
+  },
+  "won_on_size": false
+}

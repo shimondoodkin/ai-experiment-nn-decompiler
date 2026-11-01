@@ -1,0 +1,139 @@
+{
+  "settings": {
+    "binary_operators": [
+      "+",
+      "-",
+      "*",
+      "max",
+      "min",
+      "greater",
+      "cond",
+      "/"
+    ],
+    "unary_operators": [
+      "abs",
+      "relu",
+      "exp",
+      "log",
+      "sqrt"
+    ],
+    "maxsize": 25,
+    "niterations": 40,
+    "timeout_in_seconds": 120,
+    "deterministic": true,
+    "parallelism": "serial",
+    "random_state": 0
+  },
+  "n_samples": 5000,
+  "best": [
+    "log(x0 + 1.9992367) + 0.0023621838"
+  ],
+  "fronts": [
+    [
+      {
+        "complexity": 1,
+        "loss": 0.39427474,
+        "equation": "1.0147445"
+      },
+      {
+        "complexity": 3,
+        "loss": 0.06506849,
+        "equation": "sqrt(relu(x0))"
+      },
+      {
+        "complexity": 4,
+        "loss": 7.5676335e-06,
+        "equation": "log(x0 + 2.0023816)"
+      },
+      {
+        "complexity": 6,
+        "loss": 5.4038755e-06,
+        "equation": "log(x0 + 1.9992367) - -0.0023621838"
+      },
+      {
+        "complexity": 8,
+        "loss": 5.2590945e-06,
+        "equation": "log(max(0.50544685, x0 + 1.9989896)) - -0.0024382526"
+      },
+      {
+        "complexity": 13,
+        "loss": 4.859107e-06,
+        "equation": "log(max(log(x0 + 2.002386) + 1.0, x0 + 1.9987936)) - -0.002444736"
+      },
+      {
+        "complexity": 15,
+        "loss": 4.8046677e-06,
+        "equation": "log(max(log((x0 - -0.0048279334) + 1.9987936) + 1.0, x0 + 1.9987936)) - -0.002444736"
+      },
+      {
+        "complexity": 18,
+        "loss": 4.7774356e-06,
+        "equation": "log(max(log(log((x0 - -0.0048279334) + 1.9987936) + 1.0) + 1.0, x0 + 1.9987936)) - -0.002444736"
+      },
+      {
+        "complexity": 20,
+        "loss": 4.77302e-06,
+        "equation": "log(max(log(log(((x0 - -0.002444736) - -0.002444736) + 1.9987936) + 1.0) + 1.0, x0 + 1.9987936)) - -0.002444736"
+      }
+    ]
+  ],
+  "errors": [],
+  "snap_candidates": [
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 2,
+      "error": null
+    },
+    {
+      "snap_pass": false,
+      "exact_pass": false,
+      "nodes": 13,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 9,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 9,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 13,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 23,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 29,
+      "error": null
+    },
+    {
+      "snap_pass": true,
+      "exact_pass": false,
+      "nodes": 29,
+      "error": null
+    }
+  ],
+  "snap_passed": true,
+  "seconds": 123.91
+}

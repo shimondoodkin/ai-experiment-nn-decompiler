@@ -1,0 +1,61 @@
+{
+  "task": "square",
+  "variant": "sigmoid",
+  "seed": "seed3",
+  "learned": true,
+  "family": "square",
+  "formula_found": true,
+  "found_terms": 0,
+  "formula_nodes": 7,
+  "other_families": [],
+  "route_pick": "square",
+  "ast4_nodes": 76,
+  "ast4_pass": true,
+  "ast5_nodes": 7,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": true,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.009,
+  "pysr_found": true,
+  "agent_pass": true,
+  "agent_nodes": 7,
+  "agent_formula": true,
+  "ast5_formula": true,
+  "reproduced": true,
+  "hinge_only": {
+    "hinges": 9,
+    "nodes": 128,
+    "passed": true
+  },
+  "model": {
+    "centres": [
+      -1.959,
+      -1.897,
+      -1.84,
+      -0.975,
+      -0.825,
+      0.174,
+      0.871,
+      1.87
+    ],
+    "dead_units": null,
+    "optimal_knots": [
+      -1.75,
+      -1.25,
+      -0.75,
+      -0.25,
+      0.25,
+      0.75,
+      1.25,
+      1.75
+    ],
+    "knot_gap": 0.1507,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

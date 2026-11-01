@@ -1,0 +1,58 @@
+{
+  "task": "recip",
+  "variant": "relu",
+  "seed": "seed3",
+  "learned": true,
+  "family": "reciprocal",
+  "formula_found": true,
+  "found_terms": 2,
+  "formula_nodes": 38,
+  "other_families": [
+    "exp",
+    "log",
+    "sqrt",
+    "square"
+  ],
+  "route_pick": "identity",
+  "ast4_nodes": 58,
+  "ast4_pass": true,
+  "ast5_nodes": 37,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": false,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0512,
+  "pysr_found": false,
+  "agent_pass": true,
+  "agent_nodes": 79,
+  "agent_formula": false,
+  "ast5_formula": false,
+  "reproduced": true,
+  "hinge_only": {
+    "hinges": 3,
+    "nodes": 50,
+    "passed": true
+  },
+  "model": {
+    "kinks": [
+      0.501,
+      0.714,
+      0.971,
+      1.871
+    ],
+    "dead_units": 4,
+    "optimal_knots": [
+      0.592,
+      0.872,
+      1.408,
+      2.65
+    ],
+    "knot_gap": 0.1046,
+    "max_err_at": "edge"
+  },
+  "won_on_size": true
+}

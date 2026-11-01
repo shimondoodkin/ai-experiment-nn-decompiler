@@ -1,0 +1,42 @@
+def net(x0, x1):
+    # A Gaussian bump exp(-(x0^2 + x1^2)) on a small constant floor, plus ridge-hinge
+    # corrections that reproduce the network's piecewise-linear facets.
+    bump = exp(-(x0 * x0 + x1 * x1))
+    # hinges active outside |r| ~ -1.2 (relu(n.x + ~1.2)), positive weight
+    outer_0 = relu(-0.49 * x0 - 0.16 * x1 + 0.62)
+    outer_1 = relu(-0.39 * x0 - 0.28 * x1 + 0.47)
+    outer_2 = relu(-0.14 * x0 - 0.6 * x1 + 0.73)
+    outer_3 = relu(0.03 * x0 - 0.5 * x1 + 0.59)
+    outer_4 = relu(0.12 * x0 - 0.33 * x1 + 0.48)
+    outer_5 = relu(0.32 * x0 - 0.23 * x1 + 0.45)
+    outer_6 = relu(0.27 * x0 + 0.44 * x1 + 0.51)
+    outer_7 = relu(0.07 * x0 + 0.35 * x1 + 0.41)
+    outer_8 = relu(-0.03 * x0 + 0.58 * x1 + 0.69)
+    outer_9 = relu(-0.33 * x0 + 0.09 * x1 + 0.4)
+    # hinges through the origin (relu(n.x)), negative weight
+    mid_10 = relu(-0.72 * x0 - 0.08 * x1 + 0.02)
+    mid_11 = relu(-0.65 * x0 - 0.41 * x1 + 0.03)
+    mid_12 = relu(-0.41 * x0 - 0.5 * x1 + 0.02)
+    mid_13 = relu(-0.28 * x0 - 0.69 * x1 - 0.01)
+    mid_14 = relu(-0.09 * x0 - 0.77 * x1 + 0.11)
+    mid_15 = relu(0.26 * x0 - 0.36 * x1 - 0.09)
+    mid_16 = relu(0.44 * x0 - 0.46 * x1 - 0.05)
+    mid_17 = relu(0.58 * x0 - 0.21 * x1 + 0.07)
+    mid_18 = relu(0.7 * x0 - 0.04 * x1 - 0.06)
+    mid_19 = relu(0.06 * x0 + 0.6 * x1 + 0.09)
+    mid_20 = relu(-0.3 * x0 + 0.64 * x1 + 0.04)
+    mid_21 = relu(-0.49 * x0 + 0.34 * x1 + 0.04)
+    mid_22 = relu(-0.5 * x0 + 0.2 * x1 + 0.1)
+    # hinges active beyond n.x ~ 1.2, positive weight
+    inner_23 = relu(-0.61 * x0 - 0.05 * x1 - 0.73)
+    inner_24 = relu(-0.6 * x0 - 0.33 * x1 - 0.86)
+    inner_25 = relu(-0.38 * x0 - 0.6 * x1 - 0.98)
+    inner_26 = relu(0.3 * x0 - 0.62 * x1 - 0.94)
+    inner_27 = relu(0.4 * x0 - 0.43 * x1 - 0.71)
+    inner_28 = relu(0.61 * x0 - 0.33 * x1 - 0.86)
+    inner_29 = relu(0.68 * x0 + 0.01 * x1 - 0.85)
+    inner_30 = relu(0.33 * x0 + 0.5 * x1 - 0.69)
+    inner_31 = relu(-0.38 * x0 + 0.51 * x1 - 0.73)
+    inner_32 = relu(-0.57 * x0 + 0.19 * x1 - 0.63)
+    facets = sum((0.1144 * outer_0, 0.0309 * outer_1, 0.0518 * outer_2, 0.0546 * outer_3, 0.0658 * outer_4, 0.0589 * outer_5, 0.0466 * outer_6, 0.018 * outer_7, 0.1041 * outer_8, 0.1472 * outer_9, -0.0839 * mid_10, -0.1098 * mid_11, -0.0868 * mid_12, -0.0661 * mid_13, -0.0712 * mid_14, 0.1037 * mid_15, -0.0753 * mid_16, -0.1038 * mid_17, -0.0655 * mid_18, -0.0701 * mid_19, -0.1577 * mid_20, -0.1163 * mid_21, 0.0222 * mid_22, 0.0766 * inner_23, 0.0534 * inner_24, 0.0685 * inner_25, 0.0361 * inner_26, 0.0893 * inner_27, 0.009 * inner_28, 0.0227 * inner_29, 0.0938 * inner_30, 0.0611 * inner_31, 0.09 * inner_32))
+    return -0.0422 + 0.7318 * bump + facets

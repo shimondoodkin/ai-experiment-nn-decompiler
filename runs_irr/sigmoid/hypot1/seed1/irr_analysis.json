@@ -1,0 +1,49 @@
+{
+  "task": "hypot1",
+  "variant": "sigmoid",
+  "seed": "seed1",
+  "learned": true,
+  "family": "sqrt",
+  "formula_found": false,
+  "found_terms": null,
+  "formula_nodes": null,
+  "other_families": [
+    "log"
+  ],
+  "route_pick": "log",
+  "ast4_nodes": 273,
+  "ast4_pass": true,
+  "ast5_nodes": 102,
+  "ast5_pass": true,
+  "ast5_route": "family",
+  "formula_py_pass": false,
+  "near_family": null,
+  "near_err": null,
+  "near_terms": null,
+  "near_family_is_task_family": null,
+  "explain": true,
+  "true_vs_net": 0.0479,
+  "pysr_found": false,
+  "agent_pass": true,
+  "agent_nodes": 182,
+  "agent_formula": false,
+  "ast5_formula": false,
+  "reproduced": true,
+  "hinge_only": null,
+  "model": {
+    "err_by_radius": [
+      0.0387,
+      0.0401,
+      0.0373,
+      0.0261,
+      0.0232,
+      0.0212,
+      0.0274,
+      0.0409,
+      0.0483,
+      0.0896
+    ],
+    "radius_max": 2.817
+  },
+  "won_on_size": false
+}
