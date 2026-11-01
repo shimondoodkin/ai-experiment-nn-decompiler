@@ -100,7 +100,7 @@ def _model_md(rows: list[dict], base: Path) -> str:
     if circ:
         out += ["", "Binary 2-D nets: the decision boundary along 720 rays from the true centre. *pieces*: distinct "
                 "ReLU activation patterns on it (straight sides).", "",
-                "| variant | task | seed | pieces | radius min–max | snapped conic |", "|---|---|---|---|---|---|"]
+                "| variant | task | seed | pieces | radius min–max | conic route's program |", "|---|---|---|---|---|---|"]
         for a in circ:
             m = a["model"]
             r = m.get("radius_min_max")

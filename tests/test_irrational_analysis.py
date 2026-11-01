@@ -1,7 +1,7 @@
 import numpy as np
 
-from experiments.irrational_analysis import (agent_fields, formula_found, kinks_1d, merge_kinks, optimal_knots,
-                                             pysr_found, reproduced, won_on_size)
+from experiments.irrational_analysis import (agent_fields, conic_shown, formula_found, kinks_1d, merge_kinks,
+                                             optimal_knots, pysr_found, reproduced, won_on_size)
 from nndc.model import MLP
 
 
@@ -23,6 +23,17 @@ def test_identity_never_counts():
 
 def test_more_than_four_terms_is_not_found():
     assert not formula_found([row("exp", terms=5)], "exp")["formula_found"]
+
+
+def test_conic_shown_is_the_kept_program():
+    clean = "def net(x0, x1):\n    return x0 * x0 + x1 * x1 < 4\n"
+    rows = [row("sqrt", passed=False),
+            {"family": "conic", "passed": True, "snapped": [1, 1, 0, 0, 0, 4.05], "src": clean}]
+    assert conic_shown(rows) == "`x0 * x0 + x1 * x1 < 4`"
+    rows[1].update(passed=False, src="def net(x0, x1):\n    return 0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95\n")
+    assert conic_shown(rows) == "`0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` (fails)"
+    assert conic_shown([row("sqrt")]) is None
+    assert conic_shown([{"family": "conic", "passed": False, "src": None}]) is None
 
 
 def test_merge_kinks_counts_stacked_units_once():

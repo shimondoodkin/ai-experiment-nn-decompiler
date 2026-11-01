@@ -199,14 +199,22 @@ def _boundary_rays(spec: Spec, mlp: MLP, centre: tuple[float, float]) -> tuple[n
     return pts[ok], np.linalg.norm(pts[ok] - np.array([cx, cy]), axis=1)
 
 
+def conic_shown(rows: list[dict]) -> str | None:
+    """The conic route's kept program (after the clean snap) as its return expression, marked when it fails."""
+    r = next((r for r in rows if r["family"] == "conic"), None)
+    if not r or not r.get("src"):
+        return None
+    expr = r["src"].split("return ", 1)[1].strip()
+    return f"`{expr}`" + ("" if r.get("passed") else " (fails)")
+
+
 def _model_2d_binary(task: str, spec: Spec, mlp: MLP, rows: list[dict]) -> dict:
     pts, radius = _boundary_rays(spec, mlp, CENTRE[task])
     pieces = None
     if len(pts) and mlp.acts[0] == "relu":
         pre = pts.astype(np.float32) @ mlp.weights[0].T + mlp.biases[0]
         pieces = len({tuple(p) for p in (pre > 0)})
-    conic = next((r.get("snapped") for r in rows if r["family"] == "conic"), None)
-    return {"pieces": pieces, "boundary_points": int(len(pts)), "conic": conic,
+    return {"pieces": pieces, "boundary_points": int(len(pts)), "conic": conic_shown(rows),
             "radius_min_max": [round(float(radius.min()), 3), round(float(radius.max()), 3)] if len(pts) else None}
 
 
