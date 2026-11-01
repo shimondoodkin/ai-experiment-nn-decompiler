@@ -167,6 +167,33 @@ reconstructed from git history.
   seed 3 of xor, window, neareq, absdiff and tax (`runs_tanh/heldout.json`, no agents).
 - **Report:** `nndc report --root runs_tanh --out runs_tanh/REPORT.md --compare-to runs_sigmoid`.
 
+**Irrational runs** (`runs_irr/`, design `docs/design/2026-10-30-irrational-functions-design.md`, plans in `docs/plans/`):
+- **Tasks:** `experiments/irrational.py`.
+  - `IRRATIONAL_TASKS` (development): exp, log, sqrt, square, recip, circle, dist, bump, product.
+  - `IRRATIONAL_HELDOUT_TASKS`: decay, logshift, ellipse, hypot1.
+  - `FAMILY` maps each task to its formula family, for the report only; `nndc/heuristics/` never imports this module.
+- **Build:** four roots, `runs_irr/{relu,relu_wide,sigmoid,tanh}`. Use `nndc run irrational --act A [--wide] --root
+  runs_irr/V`, `irrational-heldout` for the held-out tasks, and `--seed K` for one seed.
+- **Language:** the program language gains `exp`, `log`, `sqrt` and division by an expression. `compile_back` refuses
+  them.
+- **Tool `ast5`** (`nndc ast RUNS --name ast5`): `ast4` plus three routes.
+  - The family route (`nndc/heuristics/families.py`): Lawson minimax fits of each family with up to 4 hinge
+    corrections, plus a border-aware 2-D sample and a margin retry.
+  - The conic route (`conic.py`), with a clean snap that drops tiny terms.
+  - The prune-lp route (`prune.py`): greedy unit elimination with a minimax output refit and a fold of near-linear
+    units. It runs only when no formula passes.
+- **Other steps:**
+  - `nndc baseline pysr_irr`: run it under a timeout, because Julia can hang on exit after writing its files.
+  - `nndc explain` writes `explain.md`: the formula or near formula, the faithful fit and the dirt table.
+  - `nndc irr-analyse` writes `irr_analysis.json`. It is task-aware and report only; it also holds the reproduction
+    fields against `agent_1`.
+  - `nndc irr-report --base runs_irr --out runs_irr/REPORT.md` only reads.
+  - Run them in this order: `ast4`, `ast5`, `pysr_irr`, `explain`, `irr-analyse`. Each step rewrites `results.json`.
+- **Agents:** `--index runs_irr/blind_index.json`, heuristics `runs_irr/HEURISTICS.md` (development; distilled in
+  `runs_irr/DISTILL.md`) and `runs_irr/HEURISTICS_heldout.md`.
+- **Held-out:** `ast5`'s are seed 3 of the 9 development tasks and seeds 0–1 of the 4 held-out tasks, in all 4 variants
+  (68 nets, each root's `heldout.json`). They have agents.
+
 ## Practical notes
 
 - **Running agent passes:**
@@ -197,12 +224,15 @@ reconstructed from git history.
   - kink merge (`ast2`): sigmoid seeds 3–5 of xor, window, neareq, absdiff and tax, built after its freeze;
   - `ast3`: sigmoid seeds 6–8 of the same five tasks, tanh formula seed 2 and tanh Iris seeds 3–5
     (`heldout_ast3.json`);
-  - `ast4`: sigmoid seeds 9–11 and tanh seed 3 of the same five tasks (`heldout.json`).
+  - `ast4`: sigmoid seeds 9–11 and tanh seed 3 of the same five tasks (`heldout.json`);
+  - `ast5` (irrational): seed 3 of the 9 development tasks and seeds 0–1 of decay, logshift, ellipse and hypot1, in all
+    4 variants (`runs_irr/*/heldout.json`). Development never reads `runs_irr/HEURISTICS_heldout.md`.
 - **Freezes:** the tool version used on each held-out run is the `ast:` line of its `run_git.txt`
   (step 3: `1076f21`; Iris v1: `e62d74b`, later overwritten by v2; Iris v2: `363b8c9`; sigmoid: `15b943b`, whose
   held-out runs record `797e0ae`, a data-only commit on top of it; kink merge (`ast2`): `93d7199`, whose held-out
   runs record `fad7e52`, data and docs on top of it; `ast3`: `38b1e15`, whose held-out runs record
-  `b438fbb`; `ast4`: `5ed6ee8`, whose held-out runs record `8cef8ac`). Commit the tool
+  `b438fbb`; `ast4`: `5ed6ee8`, whose held-out runs record `8cef8ac`; `ast5`: tool code `65deb10`, freeze commit
+  `f95f631`, which every held-out run records for every step). Commit the tool
   before running held-out models. Changing the AST tool or heuristics means a new freeze and a fresh
   held-out set, not re-running old held-out models.
 - **Blindness:** no task name, real input names, `expected` formula or target may enter a blind

@@ -405,6 +405,42 @@ dist and product forms) and the conic route. These are development numbers (108 
 The gate-view prediction on near formulas is still not met (79/88). Next: the final review, the freeze, 68 held-out
 nets with their own agents, and the write-up.
 
+## Irrational functions: held-out (2026-11-01)
+
+Freeze `f95f631`; data `c8c36cf`; `runs_irr/REPORT.md`, sections "Held-out" and "Reproduction (held-out)". The 68
+held-out nets were built after the freeze and run once: seed 3 of the 9 development tasks, plus seeds 0–1 of four
+tasks never used in development, all in 4 variants. The four new tasks are decay `3·exp(−x/2)`, logshift `log(x + 2)`,
+an off-centre ellipse and hypot1 `sqrt(x0² + x1² + 1)`. 66 learned. Each net also got its own blind agent.
+
+**What we learned**
+- **The frozen tool generalises to new functions.** It finds the formula on 58 of the 66 learned nets (88%; predicted
+  at least 60%). That includes 7 of 8 off-centre ellipses and all 8 decay nets.
+- **Reproduction drops on the new tasks.** `ast5` reproduces the agent on 55 of 68 nets (81%, development 92%):
+  - 34 of 36 on seed 3 of the development tasks;
+  - 21 of 32 on the four new tasks.
+
+  So the drop is in the functions development never saw, not in fresh seeds of the ones it did. Where both pass,
+  `ast5` is smaller than the agent on 50 nets, equal on 13 and larger on 5.
+- **Agents again pass every net** (68 of 68, 2 exact). Most agents read the function off a few values
+  (ln 2, √3, a constant step ratio) and wrote a one-line formula, as in development.
+
+**What did not work, or surprised us**
+- **Fewest nodes picks the wrong formula on decay.** The exp formula passes on all 8 decay nets. On 7 of them the route
+  keeps a reciprocal instead, `23 / (x0 + 4) − 2.7`, because it is 2 nodes shorter than `3 * exp(−x0 / 2)`. Three
+  fitted constants buy a look-alike of a different family. The development data had a hint of this (sigmoid/dist/1
+  passes a reciprocal, above). On held-out nets it is the largest single cause of misses: 7 of 13.
+- **The conic snap rounds the wrong number.** On tanh/ellipse/0 the conic route snapped the expanded threshold to
+  0.95, which failed. The true value is 0.9375. Agents snap the centre and semi-axes and then complete the square,
+  which keeps it exact.
+- **hypot1 is the hardest new task.** The formula is found on 4 of 8 nets. On tanh/0 the route still picks another
+  family, an inverted Gaussian `4 − 2.95·exp(−0.13·r²)`, and on relu/1 and sigmoid/1 it picks `2·log(u)` with hinges.
+  The agents also found `sqrt(1 + r²)` on 4 nets. Where the net sags they added a factor of 0.98 or a corner hinge; on
+  the other 4 they wrote pruned or folded nets.
+- **Bump has no formula on held-out nets either.**
+
+Changing the route after these results means a new freeze and a new held-out set. The decay and conic findings are
+the first candidates.
+
 ## Open questions and next steps
 
 - **Step 5: compile to C and measure CPU speed against the net.** Also pruning. The programs already
@@ -415,7 +451,10 @@ nets with their own agents, and the write-up.
   - small RL policies;
   - one MLP block inside a small transformer, for decompile-fix-reinsert where relearning from cases
     is not enough.
-- **Smooth functions:** in progress (section above); held-out nets after the freeze.
+- **Smooth functions:** held out and written up (sections above). Next for the route, under a new freeze:
+  - break node ties by family plausibility (fitted constants count against a formula);
+  - snap conics in centred form;
+  - make `ast5` the default on the other roots (a non-goal until the held-out result, which is now in).
 - **A harder fix population:** more planted-bug nets that learn their bug, and natural bugs with real
   failures, so that "with program" vs "cases only" can separate.
 - **Deferred minors** (none affects current results):

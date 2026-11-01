@@ -350,3 +350,24 @@ boundary points, the plot styling, and how the route's code is split across `nnd
   than `ast4` 75/86 (still not met); bump formula 0 (still not met); tanh vs sigmoid 21 vs 23 (still met); PySR 60
   vs 86 (still met). The gate-view design's third prediction is now met (found 10 before, 11 now; larger on 0 of 18,
   was 1). Its second is still not met (79/88).
+- **2026-11-01, the freeze and the held-out nets** (freeze `f95f631`, an empty commit on the tool code of `65deb10`;
+  data commit `c8c36cf`; report section added in `ada7ebd`, report code only). The 68 held-out nets were built after
+  the freeze. Every step on each of them records `f95f631`: build, `ast4`, `ast5`, `pysr_irr`, explain and analysis.
+  They are seed 3 of the 9 development tasks and seeds 0–1 of decay, logshift, ellipse and hypot1, in all 4 variants.
+  Each root's `heldout.json` names them. 66 learned; relu and relu_wide bump/3 did not. One blind agent per net, as on
+  the development nets; heuristics in `runs_irr/HEURISTICS_heldout.md`. All 68 agents pass (2 exact). The held-out
+  predictions, as written:
+  - formula found on at least 60% of the learned held-out nets: met (58/66, 88%);
+  - at least one ellipse net: met (7 of 8);
+  - at least one decay net: met (8 of 8).
+
+  Reproduction, the headline of the agent-first amendment: 55/68 (81%), against 98/107 on the development nets.
+  - On seed 3 of the development tasks it is 34/36. On the four new tasks it is 21/32.
+  - `ast5` is smaller than the agent on 50 nets, equal on 13 and larger on 5.
+  - 7 of the 13 misses are decay nets. The exp formula passes on all 8, but the route's pick, fewest nodes, is a
+    reciprocal on 7: `23 / (x0 + 4) - 2.7` (12 nodes) against the agents' `3 * exp(-x0 / 2)` (14).
+  - tanh/ellipse/0: the conic snap rounded the expanded threshold to 0.95, and the check failed, so it fell back to a
+    248-node pruned net. The true ellipse has 0.9375 there. The agents snap the centre and the semi-axes, then complete
+    the square.
+  - The other misses are hypot1 relu/0 and tanh/0–1, relu_wide/circle/3 (25 vs 23 nodes, an `0.05 * x0` term kept)
+    and relu_wide/bump/3.

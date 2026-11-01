@@ -67,6 +67,28 @@ reference program.
 Results are in [runs_sigmoid/REPORT.md](runs_sigmoid/REPORT.md) and [runs_tanh/REPORT.md](runs_tanh/REPORT.md); what
 each version taught us is in [CONCLUSIONS.md](CONCLUSIONS.md).
 
+## Irrational functions
+
+Nets trained on functions that are not piecewise linear: exp, log, sqrt, x², 1/x, a circle, a distance, a bump and
+a product, as ReLU, wide ReLU, sigmoid and tanh nets. The tool version for them is `ast5`: `ast4` plus three routes.
+- **Family route:** minimax fits of each function family, with up to 4 hinge corrections.
+- **Conic route:** for 2-input decision boundaries.
+- **Prune route:** with a minimax output refit, for nets where no formula passes.
+
+The route changes were distilled from blind Claude agents, and the tool was then frozen and run once on 68 fresh nets.
+Four of the functions in that set were never seen in development: `3·exp(−x/2)`, `log(x + 2)`, an off-centre
+ellipse and `sqrt(x0² + x1² + 1)`.
+- **The frozen tool generalises.** It finds the formula on 58 of the 66 held-out nets that learned (88%). That
+  includes `x0 * x0 + x1 * x1 < 4` on 15 of the 16 circle nets (development and held-out) and the shifted ellipse on
+  7 of 8.
+- **It matches the agents less often on new functions.** It reproduces the agent's result on 55 of 68 held-out nets
+  (development: 98 of 107). Most misses are decay nets, where a 2-node-shorter reciprocal beats `3 * exp(-x0 / 2)`.
+- **Some functions have no formula.** The bump `exp(−r²)` never gets one; the best programs are pruned nets.
+- **The net's error is shown, not just bounded.** `nndc explain` writes the net's fitted values next to the clean
+  formula and splits the difference into snapping cost and the net's own ripple.
+
+Results are in [runs_irr/REPORT.md](runs_irr/REPORT.md).
+
 Each run folder records the git commit each step ran with in `run_git.txt`.
 
 ## Usage
@@ -78,6 +100,9 @@ uv run nndc run all                # build/train every model (step-1 and Iris) i
 uv run nndc check my.py --run runs/absdiff/seed0
 uv run nndc ast --all              # deterministic heuristics tool (no LLM, ast4); --split heldout for seed 2
 uv run nndc run all --act sigmoid --root runs_sigmoid   # the sigmoid nets (--act tanh --root runs_tanh)
+uv run nndc run irrational --act sigmoid --root runs_irr/sigmoid   # irrational-function nets (--wide for wide ReLU)
+uv run nndc ast runs_irr/sigmoid/exp/seed0 --name ast5             # the irrational tool version
+uv run nndc irr-analyse --all --root runs_irr/sigmoid && uv run nndc irr-report --base runs_irr --out runs_irr/REPORT.md
 ```
 
 Refactoring with Claude Code (you run Claude yourself; the tool never launches it):
