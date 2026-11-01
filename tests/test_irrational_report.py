@@ -81,3 +81,20 @@ def test_report_reproduction_section(tmp_path):
     (tmp_path / "before_distill.json").write_text(json.dumps({"runs": {
         "relu/square/seed0": {"reproduced": False}, "relu/square/seed1": {"reproduced": False}}}))
     assert "Before the distilled changes: 0/2" in build_irrational_report(tmp_path)
+
+
+def test_heldout_reproduction_section(tmp_path):
+    fake(tmp_path, "relu", "square", 0, agent_pass=True, agent_nodes=12, ast5_nodes=7, agent_formula=True,
+         ast5_formula=True, reproduced=True)
+    fake(tmp_path, "relu", "decay", 0, family="exp", agent_pass=True, agent_nodes=8, ast5_nodes=30,
+         agent_formula=True, ast5_formula=False, reproduced=False)
+    (tmp_path / "relu" / "heldout.json").write_text(json.dumps({"version": "ast5", "freeze": "abc",
+                                                                "runs": ["decay/seed0"]}))
+    (tmp_path / "before_distill.json").write_text(json.dumps({"runs": {"relu/square/seed0": {"reproduced": False}}}))
+    md = build_irrational_report(tmp_path)
+    dev = md[md.index("## Reproduction\n"):md.index("## Held-out")]
+    assert "| relu | 1 | 1/1 (100%) | 1 | 0 | 0 |" in dev and "decay" not in dev
+    held = md[md.index("## Reproduction (held-out)"):]
+    assert "| relu | 1 | 0/1 (0%) | 0 | 0 | 1 |" in held
+    assert "relu/decay/seed0: ast5 30 nodes, agent 8 (larger, not the family)" in held
+    assert "Before the distilled changes" not in held

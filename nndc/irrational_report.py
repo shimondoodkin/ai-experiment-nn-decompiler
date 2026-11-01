@@ -231,10 +231,11 @@ def _not_reproduced_why(a: dict) -> str:
     return ", ".join(why) or "–"
 
 
-def _reproduction_md(dev: list[dict], base: Path) -> str:
+def _reproduction_md(dev: list[dict], base: Path, held: bool = False) -> str:
     rows = [a for a in dev if a.get("reproduced") is not None]
-    out = ["## Reproduction", "",
-           "Per development net with an agent attempt (`agent_1`, not excluded in `agent_excluded.json`): `ast5` "
+    out = ["## Reproduction (held-out)" if held else "## Reproduction", "",
+           f"Per {'held-out' if held else 'development'} net with an agent attempt (`agent_1`, not excluded in "
+           "`agent_excluded.json`): `ast5` "
            "reproduces it when both pass, `ast5` is not larger, and where the agent's program uses the task family's "
            "function, `ast5`'s does too. Smaller / equal / larger compare the node counts where both pass.", "",
            "| variant | agents passing | reproduced | smaller | equal | larger |", "|---|---|---|---|---|---|"]
@@ -249,7 +250,7 @@ def _reproduction_md(dev: list[dict], base: Path) -> str:
                    f"{cmp.count(1)} |")
     out += ["", f"Total: {_pct(sum(bool(a['reproduced']) for a in rows), len(rows))}."]
     p = Path(base) / "before_distill.json"
-    if p.exists():
+    if p.exists() and not held:
         before = [r for r in json.loads(p.read_text(encoding="utf-8"))["runs"].values()
                   if r.get("reproduced") is not None]
         out.append(f"Before the distilled changes: {_pct(sum(bool(r['reproduced']) for r in before), len(before))} "
@@ -279,4 +280,5 @@ def build_irrational_report(base: Path) -> str:
         parts.append("\n".join(["## Held-out", "",
                                 f"Built after the freeze and run once (ast5, freeze {', '.join(freezes) or '–'}).", "",
                                 *_snap_table(held)]) + "\n")
+        parts.append(_reproduction_md(held, base, held=True))
     return "\n".join(parts)
