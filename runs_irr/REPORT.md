@@ -290,32 +290,32 @@ One row per net. *formula found*: a passing `ast5` family program of the task's 
 
 Binary 2-D nets: the decision boundary along 720 rays from the true centre. *pieces*: distinct ReLU activation patterns on it (straight sides).
 
-| variant | task | seed | pieces | radius min–max | snapped conic |
+| variant | task | seed | pieces | radius min–max | conic route's program |
 |---|---|---|---|---|---|
-| relu | circle | seed0 | 20 | 1.993–2.045 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.05] |
-| relu | circle | seed1 | 18 | 1.964–2.032 | [1.0, 1.0, 0.0, 0.0, 0.0, 3.975] |
-| relu | circle | seed2 | 28 | 1.98–2.029 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
-| relu | circle | seed3 | 28 | 1.976–2.024 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
-| relu | ellipse | seed0 | 24 | 0.998–2.0 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.95] |
-| relu | ellipse | seed1 | 22 | 0.991–2.021 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.93] |
-| relu_wide | circle | seed0 | 88 | 1.989–2.014 | [1.0, 1.0, 0.0, -0.02, 0.0, 4.0] |
-| relu_wide | circle | seed1 | 95 | 1.98–2.001 | [1.0, 1.0, 0.0, 0.0, 0.0, 3.95] |
-| relu_wide | circle | seed2 | 83 | 1.975–2.013 | [1.0, 1.0, 0.01, 0.0, 0.01, 3.977] |
-| relu_wide | circle | seed3 | 90 | 1.984–2.042 | [1.0, 1.0, 0.0, 0.05, -0.02, 4.05] |
-| relu_wide | ellipse | seed0 | 101 | 0.993–2.007 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
-| relu_wide | ellipse | seed1 | 89 | 1.003–2.002 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
-| sigmoid | circle | seed0 | – | 1.972–2.026 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
-| sigmoid | circle | seed1 | – | 1.972–2.009 | [1.0, 1.0, 0.0, -0.01, 0.0, 3.97] |
-| sigmoid | circle | seed2 | – | 1.971–2.02 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
-| sigmoid | circle | seed3 | – | 1.978–2.019 | [1.0, 1.0, 0.0, 0.0, -0.02368, 4.0] |
-| sigmoid | ellipse | seed0 | – | 0.99–1.996 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
-| sigmoid | ellipse | seed1 | – | 0.999–2.014 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.94] |
-| tanh | circle | seed0 | – | 1.969–2.033 | [1.0, 1.0, 0.0, 0.0, 0.03, 4.0] |
-| tanh | circle | seed1 | – | 1.968–2.009 | [1.0, 1.0, 0.0, 0.0, 0.0, 3.95] |
-| tanh | circle | seed2 | – | 1.977–2.022 | [1.0, 1.0, 0.0, 0.0, 0.0, 4.0] |
-| tanh | circle | seed3 | – | 1.971–2.02 | [1.0, 1.0, 0.0, -0.02, -0.02, 4.0] |
-| tanh | ellipse | seed0 | – | 0.98–2.02 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.95] |
-| tanh | ellipse | seed1 | – | 0.983–2.054 | [0.25, 1.0, 0.0, -0.25, 0.0, 0.95] |
+| relu | circle | seed0 | 20 | 1.993–2.045 | `x0 * x0 + x1 * x1 < 4` |
+| relu | circle | seed1 | 18 | 1.964–2.032 | `x0 * x0 + x1 * x1 < 4` |
+| relu | circle | seed2 | 28 | 1.98–2.029 | `x0 * x0 + x1 * x1 < 4` |
+| relu | circle | seed3 | 28 | 1.976–2.024 | `x0 * x0 + x1 * x1 < 4` |
+| relu | ellipse | seed0 | 24 | 0.998–2.0 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` |
+| relu | ellipse | seed1 | 22 | 0.991–2.021 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.92` |
+| relu_wide | circle | seed0 | 88 | 1.989–2.014 | `x0 * x0 + x1 * x1 < 4` |
+| relu_wide | circle | seed1 | 95 | 1.98–2.001 | `x0 * x0 + x1 * x1 < 4` |
+| relu_wide | circle | seed2 | 83 | 1.975–2.013 | `x0 * x0 + x1 * x1 < 4` |
+| relu_wide | circle | seed3 | 90 | 1.984–2.042 | `x0 * x0 + x1 * x1 + 0.05 * x0 < 4` |
+| relu_wide | ellipse | seed0 | 101 | 0.993–2.007 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` |
+| relu_wide | ellipse | seed1 | 89 | 1.003–2.002 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` |
+| sigmoid | circle | seed0 | – | 1.972–2.026 | `x0 * x0 + x1 * x1 < 4` |
+| sigmoid | circle | seed1 | – | 1.972–2.009 | `x0 * x0 + x1 * x1 < 4` |
+| sigmoid | circle | seed2 | – | 1.971–2.02 | `x0 * x0 + x1 * x1 < 4` |
+| sigmoid | circle | seed3 | – | 1.978–2.019 | `x0 * x0 + x1 * x1 < 4` |
+| sigmoid | ellipse | seed0 | – | 0.99–1.996 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` |
+| sigmoid | ellipse | seed1 | – | 0.999–2.014 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` |
+| tanh | circle | seed0 | – | 1.969–2.033 | `x0 * x0 + x1 * x1 < 4` |
+| tanh | circle | seed1 | – | 1.968–2.009 | `x0 * x0 + x1 * x1 < 4` |
+| tanh | circle | seed2 | – | 1.977–2.022 | `x0 * x0 + x1 * x1 < 4` |
+| tanh | circle | seed3 | – | 1.971–2.02 | `x0 * x0 + x1 * x1 < 4` |
+| tanh | ellipse | seed0 | – | 0.98–2.02 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` (fails) |
+| tanh | ellipse | seed1 | – | 0.983–2.054 | `0.25 * x0 * x0 + x1 * x1 - 0.25 * x0 < 0.95` |
 
 2-D regression nets: the largest |net − true| in 10 rings of distance from the centre, innermost first.
 
@@ -377,6 +377,8 @@ Binary 2-D nets: the decision boundary along 720 rays from the true centre. *pie
 | tanh | product | seed1 | 0.0023, 0.004, 0.0048, 0.0067, 0.0074, 0.0098, 0.014, 0.0175, 0.0196, 0.0676 |
 | tanh | product | seed2 | 0.004, 0.0077, 0.0105, 0.0149, 0.0171, 0.017, 0.0152, 0.0166, 0.0243, 0.0855 |
 | tanh | product | seed3 | 0.0042, 0.0055, 0.0062, 0.0068, 0.0068, 0.0094, 0.0116, 0.0121, 0.013, 0.0537 |
+
+Plots (seed 0): [bump_relu](plots/bump_relu.png), [bump_relu_wide](plots/bump_relu_wide.png), [bump_sigmoid](plots/bump_sigmoid.png), [bump_tanh](plots/bump_tanh.png), [circle_relu](plots/circle_relu.png), [circle_relu_wide](plots/circle_relu_wide.png), [circle_sigmoid](plots/circle_sigmoid.png), [circle_tanh](plots/circle_tanh.png), [decay_relu](plots/decay_relu.png), [decay_relu_wide](plots/decay_relu_wide.png), [decay_sigmoid](plots/decay_sigmoid.png), [decay_tanh](plots/decay_tanh.png), [dist_relu](plots/dist_relu.png), [dist_relu_wide](plots/dist_relu_wide.png), [dist_sigmoid](plots/dist_sigmoid.png), [dist_tanh](plots/dist_tanh.png), [ellipse_relu](plots/ellipse_relu.png), [ellipse_relu_wide](plots/ellipse_relu_wide.png), [ellipse_sigmoid](plots/ellipse_sigmoid.png), [ellipse_tanh](plots/ellipse_tanh.png), [exp_relu](plots/exp_relu.png), [exp_relu_wide](plots/exp_relu_wide.png), [exp_sigmoid](plots/exp_sigmoid.png), [exp_tanh](plots/exp_tanh.png), [hypot1_relu](plots/hypot1_relu.png), [hypot1_relu_wide](plots/hypot1_relu_wide.png), [hypot1_sigmoid](plots/hypot1_sigmoid.png), [hypot1_tanh](plots/hypot1_tanh.png), [log_relu](plots/log_relu.png), [log_relu_wide](plots/log_relu_wide.png), [log_sigmoid](plots/log_sigmoid.png), [log_tanh](plots/log_tanh.png), [logshift_relu](plots/logshift_relu.png), [logshift_relu_wide](plots/logshift_relu_wide.png), [logshift_sigmoid](plots/logshift_sigmoid.png), [logshift_tanh](plots/logshift_tanh.png), [product_relu](plots/product_relu.png), [product_relu_wide](plots/product_relu_wide.png), [product_sigmoid](plots/product_sigmoid.png), [product_tanh](plots/product_tanh.png), [recip_relu](plots/recip_relu.png), [recip_relu_wide](plots/recip_relu_wide.png), [recip_sigmoid](plots/recip_sigmoid.png), [recip_tanh](plots/recip_tanh.png), [sqrt_relu](plots/sqrt_relu.png), [sqrt_relu_wide](plots/sqrt_relu_wide.png), [sqrt_sigmoid](plots/sqrt_sigmoid.png), [sqrt_tanh](plots/sqrt_tanh.png), [square_relu](plots/square_relu.png), [square_relu_wide](plots/square_relu_wide.png), [square_sigmoid](plots/square_sigmoid.png), [square_tanh](plots/square_tanh.png).
 
 ## Snapping to formulas
 

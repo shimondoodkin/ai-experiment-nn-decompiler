@@ -31,14 +31,7 @@
   "model": {
     "pieces": 90,
     "boundary_points": 720,
-    "conic": [
-      1.0,
-      1.0,
-      0.0,
-      0.05,
-      -0.02,
-      4.05
-    ],
+    "conic": "`x0 * x0 + x1 * x1 + 0.05 * x0 < 4`",
     "radius_min_max": [
       1.984,
       2.042
